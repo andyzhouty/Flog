@@ -15,7 +15,6 @@ Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.3
 Flask-Moment==0.10.0
-Flask-Share==0.1.1
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.3
 idna==2.10

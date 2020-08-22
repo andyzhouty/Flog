@@ -5,6 +5,7 @@ Copyright(c) all rights reserved 2020
 # -*- coding:utf-8 -*-
 from flask import (render_template, request, flash,
                    url_for, Blueprint, current_app)
+from flask_login import current_user
 from ..models import Article
 from ..forms import ArticleForm
 from ..extensions import db
@@ -33,6 +34,16 @@ def articles():
 @articles_bp.route('/new/', endpoint='new')
 def create_article():
     form = ArticleForm()
+    if form.validate_on_submit():
+        article = Article(
+            title=form.title.data,
+            date=form.date.data,
+            author=current_user.name,
+            content=form.content.data
+        )
+        db.session.add(article)
+        db.session.commit()
+
     return render_template('articles/new.html', form=form)
 
 

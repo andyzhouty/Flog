@@ -8,10 +8,6 @@ from .models import User
 
 
 class ArticleForm(FlaskForm):
-    name = StringField("Your name(English, Chinese, Arabic Numbers):",
-                       validators=[DataRequired()])
-    password = PasswordField("You will need a password to create an article",
-                             validators=[DataRequired()])
     date = DateField("Date(yyyy-mm-dd)(2020-01-01)",
                      validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired()])

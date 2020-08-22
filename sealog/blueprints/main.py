@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-from flask import render_template, Blueprint, current_app, abort, make_response
-from ..utils import get_html_from, redirect_back
+from flask import render_template, Blueprint, current_app, abort, make_response, url_for, redirect
+from ..utils import redirect_back
 
 main_bp = Blueprint('main', __name__)
 
@@ -19,3 +19,13 @@ def change_theme(theme_name):
     response = make_response(redirect_back())
     response.set_cookie('theme', theme_name, max_age=30*24*60*60) # noqa
     return response
+
+
+@main_bp.route('/register/')
+def register():
+    return redirect(url_for('auth.register'))
+
+
+@main_bp.route('/login/')
+def login():
+    return redirect(url_for('auth.login'))

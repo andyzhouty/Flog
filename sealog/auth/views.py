@@ -29,7 +29,7 @@ def login():
             if next is None or next.startswith('/'):
                 next = url_for('main.main')
             return redirect(next)
-        flash('Invalid username or password!', "error")
+        flash('Invalid username or password!', "danger")
     return render_template('auth/login.html', form=form)
 
 
@@ -37,5 +37,5 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('You have been logged out.', "info")
     return redirect(url_for('main.main'))

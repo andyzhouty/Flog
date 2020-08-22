@@ -17,12 +17,13 @@ class Article(db.Model):
     """
     __tablename__ = 'articles'
     # initialize columns
+    id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(64), index=True)
-    author = db.Column(db.String(64))
+    author = db.relationship('User', back_populates='articles')
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.String(64))
     content = db.Column(db.Text(2048))
-    id = db.Column(db.Integer(), primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.now, index=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     def __repr__(self) -> str:
         return f'<Article {self.title}>'
@@ -77,7 +78,7 @@ class Role(db.Model):
             self.permissions = 0
 
     def __repr__(self):
-        return f"<Role '{self.name}'>"
+        return self.name
 
     def add_permission(self, perm):
         if not self.has_permission(perm):
@@ -124,6 +125,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255))
     name = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    articles = db.relationship('Article', back_populates='author')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = db.relationship('Role', back_populates='users')
 

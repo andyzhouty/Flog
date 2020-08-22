@@ -15,13 +15,16 @@
             <a href="https://ls202201.pythonanywhere.com">lsfd202201 website</a>
         </h1>
         <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Join Now!</a>
-        {% else %}
-            <h1>Welcome, {{ current_user.name }}</h1>
+        {% elif not current_user.is_administrator() %}
+            <h1>Welcome, {{ current_user.role }} {{ current_user.name }}</h1>
             <p>You can choose to ...</p>
             <ul>
                 <li>Write an article</li>
                 <li>Leave a comment</li>
             </ul>
+        {% else %}
+            <h1>Welcome, Administrator {{ current_user.name }}</h1>
+
         {% endif %}
     </div>
 {% endblock %}

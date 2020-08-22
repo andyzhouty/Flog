@@ -12,14 +12,6 @@
         <form method="POST" action="{{ url_for('articles.result') }}" role="form">
             {{ form.hidden_tag() }}
             <div class="form-group">
-                {{ form.name.label }}<br>
-                {{ form.name(class='form-control') }}
-            </div>
-            <div class="form-group">
-                {{ form.password.label }}<br>
-                {{ form.password(class='form-control') }}
-            </div>
-            <div class="form-group">
                 <label>
                     Date(yyyy-mm-dd)
                 </label>

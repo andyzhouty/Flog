@@ -4,7 +4,7 @@ import unittest
 import logging
 import click
 from flask import Flask
-from .models import User, Role
+from .models import Permission, User, Role
 
 COVERAGE = None
 if os.getenv('FLASK_COVERAGE', False):
@@ -43,27 +43,34 @@ def register_commands(app: Flask, db): # noqa
             click.echo("Your data is deleted.")
             db.drop_all(app=app)
         db.create_all(app=app)
+        Role.insert_roles()
 
     @app.cli.command()
-    @click.option('--name', prompt=True)
-    @click.option('--email', prompt=True)
-    @click.option('--password', prompt=True, hide_input=True)
+    @click.option('--name')
+    @click.option('--email')
+    @click.option('--password')
     def create_admin(name, email, password):
+        name = os.getenv('ADMIN_NAME', name)
+        email = os.getenv('ADMIN_EMAIL', email)
+        password = os.getenv('ADMIN_PASSWORD', password)
         if User.query.filter_by(email=email).count() == 0:
             admin = User(name=name, email=email)
             admin.set_password(password)
+            admin.role.add_permission(Permission.ADMIN)
             db.session.add(admin)
             db.session.commit()
         else:
             click.echo("Exceeded the max number of admins: 1")
 
     @app.cli.command()
+    @click.option('--users', default=10, help="Generates fake users")
     @click.option('--articles', default=10, help='Generates fake articles')
-    @click.option('--feedback', default=10, help='Generates fake feedbacks')
-    def forge(articles, feedback):
+    @click.option('--feedbacks', default=10, help='Generates fake feedbacks')
+    def forge(articles, feedbacks):
         """Generates fake data"""
         from . import fakes as f
         db.drop_all()
         db.create_all()
+        f.generate_fake_users()
         f.generate_fake_articles(articles)
-        f.generate_fake_feedback(feedback)
+        f.generate_fake_feedbacks(feedbacks)
