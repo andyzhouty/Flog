@@ -1,16 +1,6 @@
 # LSFD202201V3
 
-[![Coverage Status](https://coveralls.io/repos/github/z-t-y/LSFD202201/badge.svg)](https://coveralls.io/github/z-t-y/LSFD202201)  
-兰生复旦中学 2022 届 1 班第三版[班级网站](https://ls202201.pythonanywhere.com)  
-
-## 目标
-
-这个项目旨在以我们自己的方式为班级做贡献以及锻炼我们的编程能力
-
-## 关于我们班
-
-兰生复旦中学，位于上海杨浦区世界路八号。2022 届 1 班（我们班）是其中的一个班级。  
-交通方式：轨道交通 8 号线嫩江路站、轨道交通 10 号线三门路站、90 路公交车、966 路公交车、55 路公交车、大桥三线
+为LSFD202201项目所开发的博客程序
 
 ## 项目参与者
 

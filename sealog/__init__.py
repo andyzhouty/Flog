@@ -20,7 +20,7 @@ from .auth import auth_bp
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
-    app = Flask('lsfd202201')
+    app = Flask('sealog')
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
@@ -44,7 +44,7 @@ def register_logger(app: Flask):
                                   "%(message)s")
     if app.debug:
         file_handler = RotatingFileHandler(
-            filename="logs/lsfd202201.log",
+            filename="logs/sealog.log",
             maxBytes=10 * 1024 * 1024,
             backupCount=10
         )

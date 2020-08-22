@@ -14,9 +14,6 @@ class Base:
 
     SECRET_KEY = os.getenv('SECRET_KEY')
 
-    ARTICLE_PASSWORD_HASH = generate_password_hash(os.getenv('PASSWORD'))
-    ADMIN_PASSWORD_HASH = generate_password_hash(os.getenv('ADMIN_PASSWORD'))
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.getenv("MAIL_SERVER")
@@ -31,8 +28,7 @@ class Base:
 
     # ('theme name': 'display name')
     BOOTSTRAP_THEMES = {'default': 'Default', 'ubuntu': 'Ubuntu',
-                       'lite': 'Lite', 'Dark': 'Dark'}
-    BOOTSTRAP_SERVE_LOCAL = True
+                       'lite': 'Lite', 'dark': 'Dark'}
 
 
 class Production(Base):
