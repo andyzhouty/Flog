@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% block title %} Admin Login {% endblock title %}
+{% block page_content %}
+    <div class="container">
+        {{ render_form(form, action=url_for('admin.admin')) }}
+    </div>
+{% endblock page_content %}

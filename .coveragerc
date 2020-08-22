@@ -1,0 +1,10 @@
+[run]
+source = lsfd202201
+branch = True
+omit =
+    */test_*.py
+    */__init__.py
+    */fakes.py
+    */extensions.py
+    */commands.py
+    */models.py

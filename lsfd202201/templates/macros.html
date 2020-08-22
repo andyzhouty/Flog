@@ -1,0 +1,12 @@
+{% macro static_file(type, filename_or_url, local=True, alt=None) %}
+    {% if local -%}
+        {% set filename_or_url = url_for('static', filename=filename_or_url) %}
+    {%- endif %}
+    {% if type == 'css' -%}
+        <link rel="stylesheet" href="{{ filename_or_url }}">
+    {% elif type == 'js' -%}
+        <script src="{{ filename_or_url }}"></script>
+    {% elif type == 'icon' -%}
+        <link rel="icon" href="{{ filename_or_url }}">
+    {%- endif %}
+{% endmacro %}

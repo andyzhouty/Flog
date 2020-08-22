@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+    Create Article
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    {{ static_file('css', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css', local=False) }}
+{% endblock %}
+{% block page_content %}
+    <div class="container">
+        <h1 class="display-4">New Article</h1>
+        <form method="POST" action="{{ url_for('articles.result') }}" role="form">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.name.label }}<br>
+                {{ form.name(class='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label }}<br>
+                {{ form.password(class='form-control') }}
+            </div>
+            <div class="form-group">
+                <label>
+                    Date(yyyy-mm-dd)
+                </label>
+                <br>
+                <label for="date">
+                    <input type="text" name="date" id="date" class="form-control">
+                </label>
+            </div>
+            <div class="form-group">
+                {{ form.title.label }}<br>
+                {{ form.title(class='form-control') }}
+            </div>
+            <div class="form-group">
+                {{ form.content.label }}<br>
+                {{ form.content(class='form-control') }}
+            </div>
+            {{ form.submit(class="btn btn-default btn-light") }}
+        </form>
+        <p style="font-weight: bold; font-size: 20px; max-width: 30%; min-width:20%">
+            WARNING: YOU MUST CHECK YOUR ARTICLE BEFORE SUBMITTING.<br>
+            IT CANNOT BE CHANGED IF YOU DON'T CONTACT THE
+            <a href="mailto:andyforever0108@outlook.com">ADMIN</a>.<br>
+        </p>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {{ static_file('js', 'https://cdn.staticfile.org/ckeditor5/21.0.0/ckeditor.js', local=False) }}
+    {{ static_file('js', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', local=False)}}
+    <script>
+        $(document).ready(function () {
+            $('#date').datepicker({
+                format: 'yyyy-mm-dd',
+                language: 'en-US',
+                todayHighlight: 1
+            });
+        });
+    </script>
+{% endblock scripts %}

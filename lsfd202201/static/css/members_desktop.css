@@ -1,0 +1,21 @@
+@media screen and (min-width: 1080px) {
+
+    h3, caption {
+        margin-left: 40px;
+        width: 95%
+    }
+    caption {
+        caption-side: top;
+    }
+    th, td {
+        text-align: center;
+    }
+
+    ul.info {
+        list-style-type: none;
+    }
+
+    ul.info li {
+        font-size: 1.5em;
+    }
+}

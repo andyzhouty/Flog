@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <form method="POST" action="{{ url_for('admin.article_edit_result', id=id) }}" id="form" role="form">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.content.label }}<br>
+            {{ ckeditor.create(value=old_content) }}
+        </div>
+        {{ form.submit(class='btn btn-default btn-light') }}
+    </form>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {{ ckeditor.load()}}
+{% endblock %}

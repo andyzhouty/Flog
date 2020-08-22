@@ -1,0 +1,48 @@
+@media screen and (max-width: 992px) {
+
+    nav {
+        padding: 15px !important;
+    }
+    .focus {
+        font-size: 2em;
+    }
+
+    .focus-title {
+        color: #000050;
+    }
+
+    .col-lg-3 {
+        margin-left: 1.5em;
+        border-bottom: thin solid #999999;
+        letter-spacing: 0.1em;
+        line-height: 1.5em;
+        font-size: 1.2em;
+        width: 97%;
+    }
+
+    .main {
+        padding: 1em;
+    }
+
+    .idea, .main-passage {
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .head {
+        font-size: 1.9em;
+    }
+
+    .main-passage {
+        margin-top: 45px;
+        padding: 3px;
+        letter-spacing: 0.1em;
+        line-height: 1.5em;
+        font-size: 1.1em;
+    }
+
+    footer {
+        float: left;
+        padding-left: 2%;
+    }
+}

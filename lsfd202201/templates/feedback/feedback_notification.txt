@@ -1,0 +1,5 @@
+Hello, Admin!
+A new feedback was added just now!
+Feedbacker: {{ author }}
+Feedback Content: {{ content[:50] }}...
+If it is a junk one, please delete it immediately!

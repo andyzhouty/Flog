@@ -1,0 +1,14 @@
+<div style="width: 580px; padding: 20px">
+    <h3>Hello, Admin!</h3>
+    <p>A new article was added just now!</p>
+    <p>Article Title: {{ title }}</p>
+    <p>Article Author: {{ author }}</p>
+    <p>Article Content:
+        {% if content|length > 50 %}
+            {{ content[:50]|striptags }}...
+        {% else %}
+            {{ content }}
+        {% endif %}
+    </p>
+    <p>If it is a junk one, please delete it immediately!</p>
+</div>

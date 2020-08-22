@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% extends 'base.html' %}
+{% block title %}
+    Starred Articles
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    {{ static_file('css', 'css/main_mobile.css' ) }}
+    {{ static_file('css', 'css/main_desktop.css') }}
+{% endblock %}
+{% block page_content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 left-column">
+                <div class="focus-title">
+                    <h3 class="focus">
+                        Necessary Info
+                    </h3>
+                </div>
+                <div id="left-focus">
+                    <hr>
+                    <ul>
+                        <li>
+                            You must sign in to add your own articles.
+                        </li>
+                        <li>
+                            Though you can create your own articles in this website,<br>
+                            but only the starred articles can be shown here.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="idea">
+                        <h2 style="float:left;font-size:2.2em;">
+                            {{ this_article.title }}
+                        </h2><br>
+                        <div style="float:right">
+                            <h4>
+                                {{ this_article.date }}
+                            </h4>
+                            <h4>
+                                {{ this_article.author }}
+                            </h4>
+                        </div>
+                </div>
+                <div class="main-passage">
+                    <p class="main-passage">
+                        {% block article_content %}
+                            {{ content | safe }}
+                        {% endblock article_content %}
+
+                    </p>
+                </div>
+                {% block pagination %}
+                    {{ render_pagination(pagination) }}
+                {% endblock pagination %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Main
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    {{ static_file('css', 'css/main_mobile.css' ) }}
+    {{ static_file('css', 'css/main_desktop.css') }}
+{% endblock %}
+{% block page_content %}
+    <div class="container">
+        {% if not current_user.is_authenticated %}
+        <h1 class="display-3">SeaLog</h1>
+        <h1 class="text-muted">The blog website built for the
+            <a href="https://ls202201.pythonanywhere.com">lsfd202201 website</a>
+        </h1>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Join Now!</a>
+        {% else %}
+            <h1>Welcome, {{ current_user.name }}</h1>
+            <p>You can choose to ...</p>
+            <ul>
+                <li>Write an article</li>
+                <li>Leave a comment</li>
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+    Result
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        window.onload = function () {
+            sleep(1500); // 等待1.5s
+            window.location.replace("{{ url }}");
+        }
+
+        function sleep(d) {
+            for (var t = Date.now(); Date.now() - t <= d;) ;
+        }
+    </script>
+{% endblock %}
