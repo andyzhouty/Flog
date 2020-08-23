@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 from flask import (render_template, request, flash,
-                   redirect, url_for, session, Blueprint, current_app)
+                   redirect, url_for, session, current_app)
+from flask_login.utils import current_user
 from ..models import db, Article, Feedback
 from ..forms import AdminLoginForm, EditForm
-from ..utils import admin_required, check_admin_login
-
-admin_bp = Blueprint('admin', __name__)
+from ..decorators import admin_required
+from . import admin_bp
 
 
 @admin_bp.before_request
@@ -15,41 +15,12 @@ def before_request():
         return redirect(url_for('main.main'))
 
 
-@admin_bp.route('/login/')
-def login():
-    if session['admin']:
-        return redirect(url_for('admin.admin'))
-
-    session['admin'] = False
-    form = AdminLoginForm()
-    return render_template("admin/admin_login.html", form=form)
-
-
-@admin_bp.route('/logout/')
-@admin_required
-def logout():
-    current_app.logger.info(f"Admin {session['admin_name']} logged out")
-    return redirect(url_for('main.main'))
-
-
 @admin_bp.route('/', methods=['GET', 'POST'])
 @admin_bp.route('/articles/', methods=['GET', 'POST'])
+@admin_required
 def admin():
-    if not session['admin']:
-        if request.method.lower() != 'post':
-            return redirect(url_for('admin.login'))
-        input_name = request.form['name']
-        input_password = request.form['password']
-
-        if not check_admin_login(input_password, input_name):
-            return redirect(url_for('admin.login'))
-        session['admin_name'] = input_name
-        current_app.logger.info(f"Admin {session['admin_name']} logged in")
-
-    session['admin'] = True
     return render_template(
         'admin/admin.html',
-        name=session['admin_name'].capitalize()
     )
 
 

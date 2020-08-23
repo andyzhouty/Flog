@@ -10,11 +10,12 @@ from .models import Article, Feedback, Role, Permission, User
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
-from .blueprints.admin import admin_bp
 from .blueprints.articles import articles_bp
 from .blueprints.main import main_bp
 from .blueprints.feedback import feedback_bp
+from .admin import admin_bp
 from .auth import auth_bp
+from .dashboard import dashboard_bp
 
 
 def create_app(config_name=None) -> Flask:
@@ -75,6 +76,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(articles_bp, url_prefix="/articles")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
+    app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
 
 
 def register_context(app: Flask) -> None:
@@ -89,8 +91,8 @@ def register_context(app: Flask) -> None:
     @app.context_processor
     def make_template_context():
         articles = Article.query.order_by(Article.timestamp.desc()).all()
-        feedback = Feedback.query.order_by(Feedback.timestamp.desc()).all()
+        feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
         return dict(
             articles=articles,
-            feedback=feedback
+            feedbacks=feedbacks
         )

@@ -10,7 +10,6 @@ from ..models import Article
 from ..forms import ArticleForm
 from ..extensions import db
 from ..emails import send_email
-from ..utils import check_article_password
 
 articles_bp = Blueprint("articles", __name__)
 
@@ -43,41 +42,16 @@ def create_article():
         )
         db.session.add(article)
         db.session.commit()
-
+        email_data = {
+            'title': form.title.data,
+            'author': current_user.name,
+            'content': form.content.data
+        }
+        recipients = current_app.config['ADMIN_EMAIL_LIST']
+        send_email(
+            recipients=recipients,
+            subject="A new article was added just now!",
+            template="articles/article_notification",
+            **email_data
+        )
     return render_template('articles/new.html', form=form)
-
-
-@articles_bp.route('/result/', methods=['POST'], endpoint='result')
-def create_article_result():
-    # get values from article page
-    name = request.form['name']
-    password = request.form['password']
-    date = request.form['date']
-    title = request.form['title']
-    content = request.form['content']
-    # password protection
-    if not (check_article_password(password)):
-        flash("Wrong Password", "warning")
-        return render_template('result.html', url=url_for("articles.new"))
-    # commit data
-    current_app.logger.info("The article was ready to commit.")
-    article = Article(
-        title=title, author=name, content=content, date=date
-    )
-    db.session.add(article)
-    db.session.commit()
-    # send email to 2 admins
-    email_data = {
-        'title': title,
-        'author': name,
-        'content': content
-    }
-    recipients = current_app.config['ADMIN_EMAIL_LIST']
-    send_email(
-        recipients=recipients,
-        subject="A new article was added just now!",
-        template="articles/article_notification",
-        **email_data
-    )
-    flash("Success", "success")
-    return render_template('result.html', url=url_for("articles.articles"))

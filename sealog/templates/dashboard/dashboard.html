@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+    Main
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    {{ static_file('css', 'css/main_mobile.css' ) }}
+    {{ static_file('css', 'css/main_desktop.css') }}
+{% endblock %}
+{% block page_content %}
+    <div class="container">
+        {% if not current_user.is_authenticated %}
+            {% include 'dashboard/_not_authenticated.html' %}
+        {% elif not current_user.is_administrator() %}
+            {% include 'dashboard/_not_admin.html' %}
+        {% else %}
+            <script>
+                window.onload = function () {
+                    window.location.replace("{{ url_for('admin.admin')")
+                }
+        {% endif %}
+    </div>
+{% endblock %}
