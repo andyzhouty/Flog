@@ -5,7 +5,7 @@ from random import randint as rint
 from faker import Faker
 from flask import current_app
 import click
-from .models import db, Article, Feedback, User
+from .models import db, Article, Feedback, User, Role
 
 fake = Faker('zh-CN')
 
@@ -18,6 +18,7 @@ def generate_fake_users(count: int=10) -> None:
             email=fake.email(),
         )
         user.set_password(fake.password())
+        user.role = Role.query.filter_by(name='User').first()
         db.session.add(user)
     db.session.commit()
     if not current_app.config['TESTING']:

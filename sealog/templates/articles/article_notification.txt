@@ -1,6 +1,0 @@
-Hello, Admin {{ name|capitalize }}
-A new article was added just now!
-Article Title: {{ title }}
-Article Author: {{ author }}
-Article Content: {{ content[:50] }}...
-If it is a junk one, please delete it immediately!

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from flask import render_template, Blueprint, current_app, abort, make_response, url_for, redirect
+from flask import Blueprint, current_app, abort, make_response, url_for, redirect
 from ..utils import redirect_back
 
 main_bp = Blueprint('main', __name__)
@@ -9,7 +9,7 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/index')
 @main_bp.route('/main/')
 def main():
-    return render_template('main/main.html')
+    return redirect(url_for('dashboard.dashboard'))
 
 
 @main_bp.route('/change-theme/<theme_name>')

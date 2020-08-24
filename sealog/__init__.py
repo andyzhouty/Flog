@@ -10,12 +10,12 @@ from .models import Article, Feedback, Role, Permission, User
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
-from .blueprints.articles import articles_bp
 from .blueprints.main import main_bp
 from .blueprints.feedback import feedback_bp
 from .admin import admin_bp
 from .auth import auth_bp
 from .dashboard import dashboard_bp
+from .user import user_bp
 
 
 def create_app(config_name=None) -> Flask:
@@ -43,7 +43,7 @@ def register_logger(app: Flask):
 
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s "
                                   "%(message)s")
-    if app.debug:
+    if app.config['FLASK_CONFIG'] == 'Development':
         file_handler = RotatingFileHandler(
             filename="logs/sealog.log",
             maxBytes=10 * 1024 * 1024,
@@ -74,14 +74,15 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(admin_bp, url_prefix="/admin")
-    app.register_blueprint(articles_bp, url_prefix="/articles")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
+    app.register_blueprint(user_bp, url_prefix="/user")
 
 
 def register_context(app: Flask) -> None:
     @app.shell_context_processor
     def make_shell_context():
+        Role.insert_roles()
         return dict(
             db=db,
             Article=Article, Feedback=Feedback,

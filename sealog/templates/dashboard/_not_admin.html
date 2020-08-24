@@ -3,12 +3,14 @@
 </div>
 <div class="row">
     <div class="col-md-8">
-        {% for article in Article.query.all() %}
-            <div class="section">
+        <ul class="list-group">
+        {% for article in articles %}
+            <li class="list-group-item">
                 <h3 class="text-primary">{{ article.title }}</h3>
                 <p>{{ article.content | safe | truncate(100) }}...</p>
-            </div>
+            </li>
         {% endfor %}
+        </ul>
     </div>
     <div class="col-md-4"></div>
 </div>

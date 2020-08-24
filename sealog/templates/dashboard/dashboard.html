@@ -16,8 +16,9 @@
         {% else %}
             <script>
                 window.onload = function () {
-                    window.location.replace("{{ url_for('admin.admin')")
+                    window.location.replace("{{ url_for('admin.admin') }}");
                 }
+            </script>
         {% endif %}
     </div>
 {% endblock %}

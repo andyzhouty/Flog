@@ -93,7 +93,7 @@ class Role(db.Model):
 
     def has_permission(self, perm):
         """
-        Check if a individual permission is in a combined permission
+        Check if a single permission is in a combined permission
         """
         return self.permissions & perm == perm
 

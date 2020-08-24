@@ -45,32 +45,42 @@ def register_commands(app: Flask, db): # noqa
         db.create_all(app=app)
         Role.insert_roles()
 
+
     @app.cli.command()
     @click.option('--name')
     @click.option('--email')
     @click.option('--password')
-    def create_admin(name, email, password):
-        name = os.getenv('ADMIN_NAME', name)
-        email = os.getenv('ADMIN_EMAIL', email)
-        password = os.getenv('ADMIN_PASSWORD', password)
-        if User.query.filter_by(email=email).count() == 0:
+    @click.option('--role', required=True, prompt=True)
+    def create_user(name, email, password, role):
+        role = role.capitalize()
+        if User.query.filter_by(email=email).count() == 0 and role == 'Admin':
+            name = os.getenv('ADMIN_NAME', name)
+            email = os.getenv('ADMIN_EMAIL', email)
+            password = os.getenv('ADMIN_PASSWORD', password)
             admin = User(name=name, email=email)
             admin.set_password(password)
-            admin.role.add_permission(Permission.ADMIN)
+            admin.role = Role.query.filter_by(name='Administrator').first()
             db.session.add(admin)
             db.session.commit()
+        elif role == 'User':
+            user = User(name=name, email=email)
+            user.set_password(password)
+            user.role = Role.query.filter_by(name=role).first()
+            db.session.add(user)
+            db.session.commit()
         else:
-            click.echo("Exceeded the max number of admins: 1")
+            click.echo("Either exceeded the max number of admins: 1 or the role is invalid")
 
     @app.cli.command()
     @click.option('--users', default=10, help="Generates fake users")
     @click.option('--articles', default=10, help='Generates fake articles')
     @click.option('--feedbacks', default=10, help='Generates fake feedbacks')
-    def forge(articles, feedbacks):
+    def forge(users, articles, feedbacks):
         """Generates fake data"""
         from . import fakes as f
         db.drop_all()
         db.create_all()
-        f.generate_fake_users()
+        f.generate_fake_users(users)
         f.generate_fake_articles(articles)
         f.generate_fake_feedbacks(feedbacks)
+        Role.insert_roles()
