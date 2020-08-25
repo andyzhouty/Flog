@@ -12,7 +12,7 @@ class ModelsTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        fakes.generate_fake_articles()
+        fakes.generate_fake_posts()
         fakes.generate_fake_feedbacks()
 
     def tearDown(self) -> None:
@@ -20,6 +20,6 @@ class ModelsTestCase(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
-    def test_articles_and_feedbacks_exists(self):
+    def test_posts_and_feedbacks_exists(self):
         self.assertGreater(len(Post.query.all()), 0)
         self.assertGreater(len(Feedback.query.all()), 0)

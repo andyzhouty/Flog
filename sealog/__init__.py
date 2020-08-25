@@ -10,8 +10,8 @@ from .models import Post, Feedback, Role, Permission, User
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
-from .blueprints.main import main_bp
-from .blueprints.feedback import feedback_bp
+from .main import main_bp
+from .feedback import feedback_bp
 from .admin import admin_bp
 from .auth import auth_bp
 from .dashboard import dashboard_bp
@@ -91,9 +91,9 @@ def register_context(app: Flask) -> None:
 
     @app.context_processor
     def make_template_context():
-        articles = Post.query.order_by(Post.timestamp.desc()).all()
+        posts = Post.query.order_by(Post.timestamp.desc()).all()
         feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
         return dict(
-            articles=articles,
+            posts=posts,
             feedbacks=feedbacks
         )

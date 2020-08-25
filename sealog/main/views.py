@@ -1,8 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, current_app, abort, make_response, url_for, redirect
+from . import main_bp
 from ..utils import redirect_back
-
-main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route('/')

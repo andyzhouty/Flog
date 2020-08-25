@@ -13,9 +13,9 @@ from .extensions import login_manager
 
 class Post(db.Model):
     """
-    A model for articles
+    A model for posts
     """
-    __tablename__ = 'articles'
+    __tablename__ = 'posts'
     # initialize columns
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(64), index=True)
@@ -27,10 +27,6 @@ class Post(db.Model):
 
     def __repr__(self) -> str:
         return f'<Post {self.title}>'
-
-    @staticmethod
-    def query_by_id(id: int) -> db.Model:
-        return Post.query.filter_by(id=id).first()
 
     def delete(self):
         if self in db.session:
@@ -47,10 +43,6 @@ class Feedback(db.Model):
 
     def __repr__(self):
         return f'<Feedback {self.body[:10]}...>'
-
-    @staticmethod
-    def query_by_id(self, id: int) -> db.Model:
-        return self.query.filter_by(id=id).first()
 
     def delete(self):
         db.session.delete(self)

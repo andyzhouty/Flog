@@ -10,7 +10,7 @@ from .models import db, Post, Feedback, User, Role
 fake = Faker()
 
 
-def generate_fake_users(count: int=10) -> None:
+def users(count: int=10) -> None:
     """Generates fake users."""
     for i in range(count):
         user = User(
@@ -25,8 +25,8 @@ def generate_fake_users(count: int=10) -> None:
         click.echo(f"Generated {count} fake users.")
 
 
-def generate_fake_articles(count: int=10) -> None:
-    """Generates fake articles."""
+def posts(count: int=10) -> None:
+    """Generates fake posts."""
     for i in range(count):
         post = Post(
             title=fake.sentence(),
@@ -38,10 +38,10 @@ def generate_fake_articles(count: int=10) -> None:
         db.session.add(post)
     db.session.commit()
     if not current_app.config['TESTING']:
-        click.echo(f"Generated {count} fake articles.")
+        click.echo(f"Generated {count} fake posts.")
 
 
-def generate_fake_feedbacks(count: int=10) -> None:
+def feedbacks(count: int=10) -> None:
     """Generates fake feedback."""
     for i in range(count):
         feedback = Feedback(

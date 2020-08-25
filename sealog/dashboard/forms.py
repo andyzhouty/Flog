@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired
 from flask_ckeditor import CKEditorField
 
 
-class ArticleForm(FlaskForm):
+class PostForm(FlaskForm):
     date = DateField("Date(yyyy-mm-dd)(2020-01-01)",
                      validators=[DataRequired()])
     title = StringField("Title", validators=[DataRequired()])

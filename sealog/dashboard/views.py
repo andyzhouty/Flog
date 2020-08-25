@@ -1,7 +1,7 @@
 from flask import render_template, request
 from flask_login import current_user
 from ..models import db, Post
-from .forms import ArticleForm
+from .forms import PostForm
 from . import dashboard_bp
 
 
@@ -11,8 +11,8 @@ def dashboard():
 
 
 @dashboard_bp.route('/write/', endpoint='write')
-def create_article():
-    form = ArticleForm()
+def create_post():
+    form = PostForm()
     if form.validate_on_submit():
         post = Post(
             title=form.title.data,
@@ -21,4 +21,4 @@ def create_article():
             content=request.form.get('ckeditor')
         )
         db.session.add(post)
-    return render_template('dashboard/new_article.html', form=form)
+    return render_template('dashboard/new_post.html', form=form)

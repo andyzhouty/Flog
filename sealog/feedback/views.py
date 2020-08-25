@@ -1,10 +1,8 @@
+from flask import flash, render_template, current_app
 from ..emails import send_email
 from ..models import Feedback, db
-from ..forms import FeedbackForm
-from flask import (Blueprint, flash, render_template,
-                   current_app)
-
-feedback_bp = Blueprint('feedback', __name__)
+from .forms import FeedbackForm
+from . import feedback_bp
 
 
 @feedback_bp.route('/', methods=['GET', 'POST'])

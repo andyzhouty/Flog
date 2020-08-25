@@ -1,60 +1,42 @@
 # -*- coding:utf-8 -*-
-from flask import (render_template, request, flash,
-                   redirect, url_for, session, current_app)
+from flask import render_template, request, flash, url_for, current_app
+from werkzeug.utils import redirect
+from wtforms.validators import url
 from ..models import db, Post, Feedback
 from ..decorators import admin_required
 from .forms import EditForm
 from . import admin_bp
 
 
-@admin_bp.before_request
-def before_request():
-    session.setdefault('admin', False)
-    if 'Mozilla' not in request.user_agent.string and not current_app.config['TESTING']:
-        return redirect(url_for('main.main'))
-
-
 @admin_bp.route('/', methods=['GET', 'POST'])
-@admin_bp.route('/articles/', methods=['GET', 'POST'])
+@admin_bp.route('/posts/', methods=['GET', 'POST'])
 @admin_required
 def admin():
-    return render_template(
-        'admin/admin.html',
-    )
+    return render_template('admin/admin.html')
 
 
-@admin_bp.route('/articles/delete/<int:id>/', methods=['POST'])
+@admin_bp.route('/posts/delete/<int:id>/', methods=['POST'])
 @admin_required
-def delete_article(id):
-    """
-    A view function for administrators to delete an articles.
-    """
-    post = Post.query_by_id(id)
+def delete_post(id):
+    post = Post.query.get(id)
     post.delete()
     flash(f"Post id {id} deleted", "success")
     current_app.logger.info(f"{str(post)} deleted.")
-    return render_template("result.html", url=url_for("admin.admin"))
+    return redirect(url_for('admin.admin'))
 
 
-@admin_bp.route('/articles/edit/<int:id>')
+@admin_bp.route('/posts/edit/<int:id>', methods=['POST', 'GET'])
 @admin_required
-def edit_article(id):
+def edit_post(id):
     form = EditForm()
-    content = Post.query_by_id(id).content
+    content = Post.query.get(id).content
+    if form.validate_on_submit():
+        post = Post.query.get(id)
+        post.content = request.form.get('ckeditor')
+        db.session.add(post)
+        db.session.commit()
+        flash("Edit Succeeded!")
     return render_template("admin/edit.html", id=id, form=form, old_content=content)
-
-
-@admin_bp.route('/articles/edit_result/<int:id>', methods=['POST'])
-@admin_required
-def article_edit_result(id):
-    article_content = request.form['ckeditor']
-    id = id
-    post = Post.query_by_id(id)
-    post.content = article_content
-    db.session.add(post)
-    db.session.commit()
-    flash("Edit Succeeded!")
-    return render_template("result.html", url=url_for("admin.admin"))
 
 
 @admin_bp.route('/feedbacks/')
@@ -63,11 +45,11 @@ def manage_feedback():
     return render_template("admin/feedbacks.html")
 
 
-@admin_bp.route('/feedback/delete/<int:id>', methods=['POST'])
+@admin_bp.route('/feedbacks/delete/<int:id>', methods=['POST'])
 @admin_required
 def delete_feedback(id):
-    feedback = Feedback.query_by_id(id)
+    feedback = Feedback.query.get(id)
     feedback.delete()
     flash(f"{str(feedback)} deleted.", "success")
     current_app.logger.info(f"Feedback id {id} deleted.")
-    return render_template("result.html", url=url_for("admin.manage_feedback"))
+    return redirect(url_for('admin.manage_feedback'))

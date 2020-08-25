@@ -5,21 +5,21 @@
 
     <h1>Welcome, Administrator {{ current_user.name }}!</h1>
     <nav class="nav nav-tabs">
-        <a href="#" class="nav-link active">Articles</a>
+        <a href="#" class="nav-link active">Posts</a>
         <a href="{{ url_for("admin.manage_feedback") }}" class="nav-link">Feedbacks</a>
     </nav>
     <ul class="list-group">
-        {% for post in articles %}
+        {% for post in posts %}
             <li class="list-group-item">
                 <h4>{{ post.title }}</h4>
                     ——{{ post.author }}
-                    <a href="{{ url_for('admin.edit_article', id=post.id) }}">
+                    <a href="{{ url_for('admin.edit_post', id=post.id) }}">
                         <button class="btn btn-primary" style="float: right">
                             EDIT
                         </button>
                     </a>
                     <form class="inline" method="POST"
-                        action="{{ url_for('admin.delete_article', id=post.id)}}"
+                        action="{{ url_for('admin.delete_post', id=post.id)}}"
                         style="float: right">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="btn btn-danger" onclick="return confirm('Are you sure?');">

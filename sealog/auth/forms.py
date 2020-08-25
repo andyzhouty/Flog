@@ -1,14 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Email, ValidationError
-from .models import User
-
-
-class FeedbackForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired(), Length(1, 20)])
-    body = TextAreaField('Feedback', validators=[DataRequired(), Length(1, 200)])  # noqa
-    submit = SubmitField()
+from ..models import User
 
 
 class RegisterationForm(FlaskForm):
