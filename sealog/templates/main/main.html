@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block title %}
     Main
 {% endblock %}
@@ -9,21 +10,26 @@
 {% endblock %}
 {% block page_content %}
     <div class="container">
-        {% if not current_user.is_authenticated %}
-        <h1 class="display-3">SeaLog</h1>
-        <h1 class="text-muted">The blog website built for the
-            <a href="https://ls202201.pythonanywhere.com">lsfd202201 website</a>
-        </h1>
-        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Join Now!</a>
-        {% elif not current_user.is_administrator() %}
-            <h1>Welcome, {{ current_user.role }} {{ current_user.name }}</h1>
-            <p>You can choose to ...</p>
-            <ul>
-                <li>Write an post</li>
-                <li>Leave a comment</li>
-            </ul>
-        {% else %}
-            <h1>Welcome, Administrator {{ current_user.name }}</h1>
-        {% endif %}
+        <div class="page-header">
+            <h1 class="display-4">Welcome, {{ current_user.role }} {{ current_user.name }}</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                {% include 'main/_posts.html' %}
+            </div>
+            <div class="col-md-4 sidebar">
+                <div class="card mb-3">
+                    <div class="card-header">Quick Actions</div>
+                    <ul class="list-group list-group-flush">
+                        <a class="list-group-item" href="{{ url_for('main.write') }}">
+                            Write a post
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="pagination">
+            {{ render_pagination(pagination) }}
+        </div>
     </div>
 {% endblock %}

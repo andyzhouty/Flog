@@ -1,30 +1,35 @@
-# -*- coding:utf-8 -*-
-from flask import Blueprint, current_app, abort, make_response, url_for, redirect
+from flask import render_template, request, redirect, url_for, current_app
+from flask_login import current_user
+from flask_login.utils import login_required
+from ..models import db, Post
+from .forms import PostForm
 from . import main_bp
-from ..utils import redirect_back
 
 
 @main_bp.route('/')
-@main_bp.route('/index')
-@main_bp.route('/main/')
 def main():
-    return redirect(url_for('dashboard.dashboard'))
+    if not current_user.is_authenticated:
+        return render_template('main/not_authorized.html')
+    if current_user.is_administrator():
+        return redirect(url_for('admin.admin'))
+    page = request.args.get('page', 1 ,type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
+    )
+    posts = pagination.items
+    return render_template('main/main.html', pagination=pagination, posts=posts)
 
 
-@main_bp.route('/change-theme/<theme_name>')
-def change_theme(theme_name):
-    if theme_name not in current_app.config['BOOTSTRAP_THEMES'].keys():
-        abort(404)
-    response = make_response(redirect_back())
-    response.set_cookie('theme', theme_name, max_age=30*24*60*60) # noqa
-    return response
-
-
-@main_bp.route('/register/')
-def register():
-    return redirect(url_for('auth.register'))
-
-
-@main_bp.route('/login/')
-def login():
-    return redirect(url_for('auth.login'))
+@main_bp.route('/write/', endpoint='write')
+@login_required
+def create_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(
+            title=form.title.data,
+            date=form.date.data,
+            author=current_user.name,
+            content=request.form.get('ckeditor')
+        )
+        db.session.add(post)
+    return render_template('main/new_post.html', form=form)

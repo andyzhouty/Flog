@@ -12,7 +12,12 @@ from . import admin_bp
 @admin_bp.route('/posts/', methods=['GET', 'POST'])
 @admin_required
 def admin():
-    return render_template('admin/admin.html')
+    page = request.args.get('page', 1 ,type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
+    )
+    posts = pagination.items
+    return render_template('admin/admin.html', pagination=pagination, posts=posts)
 
 
 @admin_bp.route('/posts/delete/<int:id>/', methods=['POST'])

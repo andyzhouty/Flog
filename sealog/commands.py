@@ -72,9 +72,9 @@ def register_commands(app: Flask, db): # noqa
             click.echo("Either exceeded the max number of admins: 1 or the role is invalid")
 
     @app.cli.command()
-    @click.option('--users', default=10, help="Generates fake users")
-    @click.option('--posts', default=10, help='Generates fake posts')
-    @click.option('--feedbacks', default=10, help='Generates fake feedbacks')
+    @click.option('--users', default=20, help="Generates fake users")
+    @click.option('--posts', default=20, help='Generates fake posts')
+    @click.option('--feedbacks', default=20, help='Generates fake feedbacks')
     def forge(users, posts, feedbacks):
         """Generates fake data"""
         from . import fakes as fake

@@ -32,6 +32,8 @@ class Base:
 
     CKEDITOR_SERVE_LOCAL = True
 
+    POSTS_PER_PAGE = 8
+
 class Production(Base):
     FLASK_CONFIG = 'production'
     SQLALCHEMY_DATABASE_URI = os.getenv(

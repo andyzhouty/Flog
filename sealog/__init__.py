@@ -10,11 +10,11 @@ from .models import Post, Feedback, Role, Permission, User
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
-from .main import main_bp
+from .others import others_bp
 from .feedback import feedback_bp
 from .admin import admin_bp
 from .auth import auth_bp
-from .dashboard import dashboard_bp
+from .main import main_bp
 from .user import user_bp
 
 
@@ -72,10 +72,10 @@ def register_extensions(app: Flask) -> None:
 
 def register_blueprints(app: Flask) -> None:
     app.register_blueprint(main_bp)
+    app.register_blueprint(others_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
-    app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
     app.register_blueprint(user_bp, url_prefix="/user")
 
 

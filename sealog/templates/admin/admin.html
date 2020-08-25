@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block title %} ADMIN {% endblock title %}
 {% block page_content %}
     <div class="container">
@@ -27,10 +28,10 @@
                         </button>
                     </form>
                 <p style="text-indent: 2em">
-                    {{ post.content[:50] }} ...
+                    {{ post.content[:50] }} &hellip;
                 </p>
             </li>
         {% endfor %}
     </ul>
-    </div>
+    {{ render_pagination(pagination) }}
 {% endblock page_content %}

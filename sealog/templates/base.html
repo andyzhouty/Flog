@@ -35,13 +35,16 @@
                 {{ render_nav_item('feedback.feedback', 'Feedback') }}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item">
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('auth.logout') }}" class="nav-link">Log out</a>
+                        <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px">
+                        <li class="nav-item">
+                                <a href="{{ url_for('auth.logout') }}" class="nav-link">Log out</a>
+                        </li>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="nav-link">Log in / Register</a>
+                        <li class="nav-item">
+                            <a href="{{ url_for('auth.login') }}" class="nav-link">Log in / Register</a>
+                        </li>
                     {% endif %}
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Theme
@@ -49,7 +52,7 @@
                     <div class="dropdown-menu">
                         {% for theme_name, display_name in config.BOOTSTRAP_THEMES.items() %}
                             <a class="dropdown-item"
-                                href="{{ url_for('main.change_theme', theme_name=theme_name, next=request.full_path) }}">
+                                href="{{ url_for('others.change_theme', theme_name=theme_name, next=request.full_path) }}">
                                 {{ display_name }}
                             </a>
                         {% endfor %}

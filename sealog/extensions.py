@@ -23,5 +23,4 @@ login_manager = LoginManager()
 def load_user(user_id):
     from .models import User
     admin = User.query.get(user_id)
-    print('Here # load_user')
     return admin

@@ -1,0 +1,10 @@
+<ul class="list-group">
+{% for post in posts %}
+    {% if post.author != current_user %}
+    <li class="list-group-item">
+        <h3 class="text-primary">{{ post.title }}</h3>
+            <p>{{ post.content | safe | truncate(150) }}&hellip;</p>
+    </li>
+    {% endif %}
+{% endfor %}
+</ul>
