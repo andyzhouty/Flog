@@ -3,7 +3,6 @@
 {% block title %} ADMIN {% endblock title %}
 {% block page_content %}
     <div class="container">
-
     <h1>Welcome, Administrator {{ current_user.name }}!</h1>
     <nav class="nav nav-tabs">
         <a href="#" class="nav-link active">Posts</a>
@@ -33,5 +32,5 @@
             </li>
         {% endfor %}
     </ul>
-    {{ render_pagination(pagination) }}
+    </div>
 {% endblock page_content %}

@@ -1,12 +1,18 @@
 # flake8: noqa
+import re
 from urllib.parse import urlparse, urljoin
-from functools import wraps
-import requests
-from flask import redirect, session, url_for, current_app, request
-from werkzeug.security import check_password_hash
-from markdown import markdown
-from .models import User
+from unidecode import unidecode
+from flask import redirect, url_for, request
 
+
+_punct_re = re.compile(r'[\t !"#$%&\]\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+
+def slugify(text, delim=u'-'):
+    """生成ASCII标题"""
+    result = []
+    for word in _punct_re.split(text.lower()):
+        result.extend(unidecode(word).lower().split())
+    return unidecode(delim.join(result))
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)

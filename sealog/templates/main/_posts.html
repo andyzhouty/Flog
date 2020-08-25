@@ -1,9 +1,9 @@
 <ul class="list-group">
 {% for post in posts %}
-    {% if post.author != current_user %}
+    {% if post.author != current_user and not current_user.is_administrator() %}
     <li class="list-group-item">
         <h3 class="text-primary">{{ post.title }}</h3>
-            <p>{{ post.content | safe | truncate(150) }}&hellip;</p>
+        <p>{{ post.content | safe | truncate(150) }}&hellip;</p>
     </li>
     {% endif %}
 {% endfor %}

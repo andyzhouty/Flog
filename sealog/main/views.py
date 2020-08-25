@@ -33,3 +33,10 @@ def create_post():
         )
         db.session.add(post)
     return render_template('main/new_post.html', form=form)
+
+
+@main_bp.route('/post/<slug>')
+@login_required
+def full_post(slug):
+    post = Post.query.filter_by(slug=slug).first_or_404()
+    return render_template('main/post.html', post=post)

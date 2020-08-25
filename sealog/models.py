@@ -10,6 +10,7 @@ from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from .extensions import login_manager
+from .utils import slugify
 
 
 class Post(db.Model):
@@ -22,9 +23,15 @@ class Post(db.Model):
     title = db.Column(db.String(64), index=True)
     author = db.relationship('User', back_populates='posts')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    slug = db.Column(db.String(128))
     date = db.Column(db.String(64))
     content = db.Column(db.Text(2048))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+    def __init__(self, **kwargs):
+        super(Post, self).__init__(**kwargs)
+        if self.title:
+            self.slug = slugify(self.title)
 
     def __repr__(self) -> str:
         return f'<Post {self.title}>'
