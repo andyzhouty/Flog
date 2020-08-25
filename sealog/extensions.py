@@ -1,4 +1,3 @@
-import os
 from flask_bootstrap import Bootstrap
 from flask_share import Share
 from flask_wtf import CSRFProtect

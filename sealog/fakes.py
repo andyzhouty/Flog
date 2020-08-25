@@ -5,9 +5,9 @@ from random import randint as rint
 from faker import Faker
 from flask import current_app
 import click
-from .models import db, Article, Feedback, User, Role
+from .models import db, Post, Feedback, User, Role
 
-fake = Faker('zh-CN')
+fake = Faker()
 
 
 def generate_fake_users(count: int=10) -> None:
@@ -17,7 +17,7 @@ def generate_fake_users(count: int=10) -> None:
             name=fake.name(),
             email=fake.email(),
         )
-        user.set_password(fake.password())
+        user.set_password('123456')
         user.role = Role.query.filter_by(name='User').first()
         db.session.add(user)
     db.session.commit()
@@ -28,14 +28,14 @@ def generate_fake_users(count: int=10) -> None:
 def generate_fake_articles(count: int=10) -> None:
     """Generates fake articles."""
     for i in range(count):
-        article = Article(
+        post = Post(
             title=fake.sentence(),
             date=fake.date_time_this_year().strftime("%Y-%m-%d"),
             content=fake.text(200),
             timestamp=fake.date_time_this_year()
         )
-        article.author = User.query.get(rint(1, len(User.query.all())))
-        db.session.add(article)
+        post.author = User.query.get(rint(1, len(User.query.all())))
+        db.session.add(post)
     db.session.commit()
     if not current_app.config['TESTING']:
         click.echo(f"Generated {count} fake articles.")

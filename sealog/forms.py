@@ -1,29 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, PasswordField, SubmitField,
-                     DateField, TextAreaField)
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.fields.core import BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length, Email, ValidationError
-from flask_ckeditor import CKEditorField
 from .models import User
-
-
-class ArticleForm(FlaskForm):
-    date = DateField("Date(yyyy-mm-dd)(2020-01-01)",
-                     validators=[DataRequired()])
-    title = StringField("Title", validators=[DataRequired()])
-    content = CKEditorField("Content", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
-
-class AdminLoginForm(FlaskForm):
-    name = StringField("Your name: ", validators=[DataRequired()])
-    password = PasswordField("ADMIN PASSWORD", validators=[DataRequired()])
-    submit = SubmitField("Login")
-
-
-class EditForm(FlaskForm):
-    content = CKEditorField("Content", validators=[DataRequired()])
-    submit = SubmitField("Publish", validators=[DataRequired()])
 
 
 class FeedbackForm(FlaskForm):

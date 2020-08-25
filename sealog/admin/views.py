@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
 from flask import (render_template, request, flash,
                    redirect, url_for, session, current_app)
-from flask_login.utils import current_user
-from ..models import db, Article, Feedback
-from ..forms import AdminLoginForm, EditForm
+from ..models import db, Post, Feedback
 from ..decorators import admin_required
+from .forms import EditForm
 from . import admin_bp
 
 
@@ -30,10 +29,10 @@ def delete_article(id):
     """
     A view function for administrators to delete an articles.
     """
-    article = Article.query_by_id(id)
-    article.delete()
-    flash(f"Article id {id} deleted", "success")
-    current_app.logger.info(f"{str(article)} deleted.")
+    post = Post.query_by_id(id)
+    post.delete()
+    flash(f"Post id {id} deleted", "success")
+    current_app.logger.info(f"{str(post)} deleted.")
     return render_template("result.html", url=url_for("admin.admin"))
 
 
@@ -41,7 +40,7 @@ def delete_article(id):
 @admin_required
 def edit_article(id):
     form = EditForm()
-    content = Article.query_by_id(id).content
+    content = Post.query_by_id(id).content
     return render_template("admin/edit.html", id=id, form=form, old_content=content)
 
 
@@ -50,9 +49,9 @@ def edit_article(id):
 def article_edit_result(id):
     article_content = request.form['ckeditor']
     id = id
-    article = Article.query_by_id(id)
-    article.content = article_content
-    db.session.add(article)
+    post = Post.query_by_id(id)
+    post.content = article_content
+    db.session.add(post)
     db.session.commit()
     flash("Edit Succeeded!")
     return render_template("result.html", url=url_for("admin.admin"))

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% block title %}
+    Create Post
+{% endblock %}
+{% block styles %}
+    {{ super() }}
+    {{ static_file('css', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css', local=False) }}
+{% endblock %}
+{% block page_content %}
+    <div class="container">
+        <h1 class="display-4">New Post</h1>
+        {{ render_form(form) }}
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    {{ ckeditor.load() }}
+    {{ static_file('js', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', local=False)}}
+    <script>
+        $(document).ready(function () {
+            $('#date').datepicker({
+                format: 'yyyy-mm-dd',
+                language: 'en-US',
+                todayHighlight: 1
+            });
+        });
+    </script>
+{% endblock scripts %}

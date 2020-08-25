@@ -2,7 +2,7 @@ import unittest
 import logging
 from flask import current_app
 from sealog import create_app, db, fakes
-from sealog.models import Article, Feedback
+from sealog.models import Post, Feedback
 
 
 class ModelsTestCase(unittest.TestCase):
@@ -21,5 +21,5 @@ class ModelsTestCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_articles_and_feedbacks_exists(self):
-        self.assertGreater(len(Article.query.all()), 0)
+        self.assertGreater(len(Post.query.all()), 0)
         self.assertGreater(len(Feedback.query.all()), 0)

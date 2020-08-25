@@ -80,7 +80,7 @@ def register_commands(app: Flask, db): # noqa
         from . import fakes as f
         db.drop_all()
         db.create_all()
+        Role.insert_roles()
         f.generate_fake_users(users)
         f.generate_fake_articles(articles)
         f.generate_fake_feedbacks(feedbacks)
-        Role.insert_roles()

@@ -3,7 +3,7 @@
     <form method="POST" action="{{ url_for('admin.article_edit_result', id=id) }}" id="form" role="form">
         {{ form.hidden_tag() }}
         <div class="form-group">
-            {{ form.content.label }}<br>
+            {{ form.ckeditor.label }}<br>
             {{ ckeditor.create(value=old_content) }}
         </div>
         {{ form.submit(class='btn btn-default btn-light') }}
@@ -11,5 +11,5 @@
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    {{ ckeditor.load()}}
+    {{ ckeditor.load() }}
 {% endblock %}

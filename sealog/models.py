@@ -11,7 +11,7 @@ from . import db
 from .extensions import login_manager
 
 
-class Article(db.Model):
+class Post(db.Model):
     """
     A model for articles
     """
@@ -19,18 +19,18 @@ class Article(db.Model):
     # initialize columns
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(64), index=True)
-    author = db.relationship('User', back_populates='articles')
+    author = db.relationship('User', back_populates='posts')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.String(64))
     content = db.Column(db.Text(2048))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     def __repr__(self) -> str:
-        return f'<Article {self.title}>'
+        return f'<Post {self.title}>'
 
     @staticmethod
     def query_by_id(id: int) -> db.Model:
-        return Article.query.filter_by(id=id).first()
+        return Post.query.filter_by(id=id).first()
 
     def delete(self):
         if self in db.session:
@@ -125,7 +125,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255))
     name = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    articles = db.relationship('Article', back_populates='author')
+    posts = db.relationship('Post', back_populates='author')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = db.relationship('Role', back_populates='users')
 
