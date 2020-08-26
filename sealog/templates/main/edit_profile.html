@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
+{% block title %}Edit Profile{% endblock title %}
 {% block page_content %}
     <div class="container">
-        <h1 class="display-4">Register</h1>
+        <h1 class="display-3">Edit Profile</h1>
         {{ render_form(form) }}
     </div>
 {% endblock page_content %}

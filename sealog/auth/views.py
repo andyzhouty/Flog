@@ -9,7 +9,7 @@ def register():
     form = RegisterationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data.lower(),
-                    name=form.name.data)
+                    name=form.username.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -22,7 +22,9 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(name=form.name.data).first()
+        user_by_name = User.query.filter_by(name=form.name_or_email.data).first()
+        user_by_email = User.query.filter_by(email=form.name_or_email.data.lower()).first()
+        user = user_by_name if user_by_name is not None else user_by_email
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')

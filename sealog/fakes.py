@@ -6,6 +6,7 @@ from faker import Faker
 from flask import current_app
 import click
 from .models import db, Post, Feedback, User, Role
+from .utils import slugify
 
 fake = Faker()
 
@@ -13,8 +14,10 @@ fake = Faker()
 def users(count: int=10) -> None:
     """Generates fake users."""
     for i in range(count):
+        name = fake.name()
         user = User(
-            name=fake.name(),
+            username=slugify(name),
+            name=name,
             email=fake.email(),
         )
         user.set_password('123456')
@@ -53,4 +56,3 @@ def feedbacks(count: int=10) -> None:
     db.session.commit()
     if not current_app.config['TESTING']:
         click.echo(f"Generated {count} fake feedbacks.")
-

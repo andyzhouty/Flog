@@ -1,8 +1,8 @@
-from flask import render_template, request, redirect, url_for, current_app
+from flask import render_template, request, redirect, url_for, current_app, flash
 from flask_login import current_user
 from flask_login.utils import login_required
 from ..models import db, Post
-from .forms import PostForm
+from .forms import PostForm, EditProfileForm
 from . import main_bp
 
 
@@ -33,8 +33,26 @@ def create_post():
     return render_template('main/new_post.html', form=form)
 
 
-@main_bp.route('/post/<slug>')
+@main_bp.route('/post/<slug>/')
 @login_required
 def full_post(slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
     return render_template('main/full_post.html', post=post)
+
+
+@main_bp.route('/edit-profile/', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.location = form.location.data
+        current_user.about_me = form.about_me.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+        flash('Your profile has been updated!', "success")
+        return redirect(url_for('main.main'))
+    form.name.data = current_user.name
+    form.location.data = current_user.location
+    form.about_me.data = current_user.about_me
+    return render_template('main/edit_profile.html', form=form)

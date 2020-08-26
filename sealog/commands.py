@@ -54,10 +54,10 @@ def register_commands(app: Flask, db): # noqa
     def create_user(name, email, password, role):
         role = role.capitalize()
         if User.query.filter_by(email=email).count() == 0 and role == 'Admin':
-            name = os.getenv('ADMIN_NAME', name)
+            username = os.getenv('ADMIN_NAME', name)
             email = os.getenv('ADMIN_EMAIL', email)
             password = os.getenv('ADMIN_PASSWORD', password)
-            admin = User(name=name, email=email)
+            admin = User(username=username, email=email, name=username)
             admin.set_password(password)
             admin.role = Role.query.filter_by(name='Administrator').first()
             db.session.add(admin)

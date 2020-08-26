@@ -122,13 +122,19 @@ class Role(db.Model):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255))
-    name = db.Column(db.String(20), unique=True, index=True)
+    email = db.Column(db.String(256))
+    username = db.Column(db.String(32), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', back_populates='author')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = db.relationship('Role', back_populates='users')
     avatar_hash = db.Column(db.String(32))
+
+    name = db.Column(db.String(64))
+    location = db.Column(db.String(64))
+    about_me = db.Column(db.Text())
+    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -141,7 +147,7 @@ class User(db.Model, UserMixin):
             self.avatar_hash = self.gravatar_hash()
 
     def __repr__(self):
-        return f"<User '{self.name}'>"
+        return f"<User '{self.username}'>"
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -163,6 +169,10 @@ class User(db.Model, UserMixin):
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}&d={default}&r={rating}"
 
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm): return False

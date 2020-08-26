@@ -35,16 +35,26 @@
                 {{ render_nav_item('feedback.feedback', 'Feedback') }}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('user.profile', username=current_user.username) }}" class="nav-link">
                         <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px">
-                        <li class="nav-item">
-                                <a href="{{ url_for('auth.logout') }}" class="nav-link">Log out</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{{ url_for('auth.login') }}" class="nav-link">Log in / Register</a>
-                        </li>
-                    {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                            Account
+                        </a>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item">Edit Profile</a>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Log out</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.login') }}" class="nav-link">Log in / Register</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Theme
@@ -77,7 +87,7 @@
         {% block share %}{% endblock %}
     </div>
     <footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px">
-        &copy Copyright 2020 LSFD Class 202201
+        &copy; Copyright 2020 LSFD Class 202201
     </footer>
 {% endblock %}
 </body>

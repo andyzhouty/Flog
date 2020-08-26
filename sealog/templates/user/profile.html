@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}
+    SeaLog - {{ user.username }}
+{% endblock title %}
+{% block page_content %}
+<div class="row">
+    <div class="col-lg-2">
+        <img class="img-fluid" src="{{ user.gravatar() }}" width="100%" height=auto>
+    </div>
+    <div class="col-lg-10">
+    <h1>{{ user.username }}</h1>
+    {% if user.name or user.location %}
+    <p>
+        {% if user.name %}{{ user.name }}{% endif %}
+        {% if user.location %}
+            from <a href="http://bing.com/maps/?q={{ user.location }}">
+                {{ user.location }}
+            </a>
+        {% endif %}
+    </p>
+    {% endif %}
+    {% if current_user.is_administrator() %}
+        <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+    {% endif %}
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    <p>
+        {% if user.member_since %}
+        Member since {{ moment(user.member_since).format('L') }}
+        {% endif %}
+        {% if user.last_seen %}
+        Last seen {{ moment(user.last_seen).fromNow() }}
+        {% endif %}
+    </p>
+    </div>
+</div>
+{% endblock page_content %}
