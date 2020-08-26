@@ -11,7 +11,7 @@
                     Date: {{ post.date }}
                 </small>
             </div><br>
-            {{ post.content }}
+            {{ post.content | safe }}
         </div>
         {% include 'main/_sidebar.html' %}
     </div>
