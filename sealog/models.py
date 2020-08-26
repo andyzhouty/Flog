@@ -26,7 +26,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     slug = db.Column(db.String(128))
     date = db.Column(db.String(64))
-    content = db.Column(db.Text(2048))
+    content = db.Column(db.Text())
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     def __init__(self, **kwargs):
@@ -134,7 +134,7 @@ class User(db.Model, UserMixin):
 
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
-    about_me = db.Column(db.Text(1024))
+    about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
