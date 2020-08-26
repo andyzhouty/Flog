@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, current_app, flash
 from flask_login import current_user
 from flask_login.utils import login_required
+from wtforms.validators import url
 from ..models import db, Post
 from .forms import PostForm, EditProfileForm
 from . import main_bp
@@ -18,7 +19,7 @@ def main():
     return render_template('main/main.html', pagination=pagination, posts=posts)
 
 
-@main_bp.route('/write/', endpoint='write')
+@main_bp.route('/write/', endpoint='write', methods=['GET', 'POST'])
 @login_required
 def create_post():
     form = PostForm()
@@ -26,10 +27,13 @@ def create_post():
         post = Post(
             title=form.title.data,
             date=form.date.data,
-            author=current_user.name,
             content=request.form.get('ckeditor')
         )
+        post.author = current_user
         db.session.add(post)
+        db.session.commit()
+        flash('Your post has been added', "success")
+        return redirect(url_for('main.main'))
     return render_template('main/new_post.html', form=form)
 
 
