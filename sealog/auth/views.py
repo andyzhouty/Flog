@@ -20,7 +20,7 @@ def register():
         try:
             token = user.generate_confirmation_token()
             send_email([user.email], 'Confirm your account', 'auth/email/confirm', user=user, token=token)
-            flash("A confirmation email has been sent to you by email!")
+            flash("A confirmation email has been sent to you by email!", "info")
             return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.delete(user)
@@ -64,7 +64,17 @@ def confirm(token):
         return redirect(url_for('main.main'))
     if current_user.confirm(token):
         db.session.commit()
-        flash('You have confirmed your account. Thanks !')
+        flash('You have confirmed your account. Thanks !', "success")
     else:
-        flash('The confirmation link is invalid or has expired')
+        flash('The confirmation link is invalid or has expired', "warning")
     return redirect(url_for('main.main'))
+
+
+@auth_bp.route('/confirm/')
+@login_required
+def resend_confirmation():
+    token = current_user.generate_confirmation_token()
+    send_email(current_user.email, 'Confirm Your Account',
+               'auth/email/confirm', user=current_user, token=token)
+    flash('A new confirmation email has been sent to you by email', 'info')
+    return redirect(url_for('main.index'))

@@ -1,5 +1,6 @@
 # flake8: noqa
 import os
+from flask.app import Flask
 from werkzeug.security import generate_password_hash
 
 
@@ -11,6 +12,7 @@ def generate_sqlite_file(str: str):
 class Base:
     DEBUG = False
     TESTING = False
+    SSL_REDIRECT = False
 
     SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -34,10 +36,38 @@ class Base:
 
     POSTS_PER_PAGE = 8
 
+    @classmethod
+    def init_app(cls, app):
+        pass
+
+
 class Production(Base):
     FLASK_CONFIG = 'production'
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL", generate_sqlite_file('data'))
+
+    @classmethod
+    def init_app(cls, app):
+        Base.init_app(app)
+        
+        import logging
+        from logging.handlers import SMTPHandler
+        credentials = None
+        secure = None
+        if getattr(cls, 'ADMIN_EMAIL', None) is not None:
+            credentials = (cls.ADMIN_EMAIL, cls.ADMIN_PASSWORD)
+            if getattr(cls, 'MAIL_USE_TLS', None):
+                secure = ()
+        mail_handler = SMTPHandler(
+            mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
+            fromaddr=cls.DEFAULT_EMAIL_SENDER,
+            toaddrs=[cls.ADMIN_EMAIL],
+            subject='Application Error',
+            credentials=credentials, secure=secure
+        )
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
+        
 
 
 class Development(Base):
@@ -56,8 +86,25 @@ class Test(Base):
     ADMIN_EMAIL_LIST = [os.getenv("ADMIN_TWO_EMAIL")]
 
 
+class Heroku(Production):
+    SSL_REDIRECT = True if os.getenv('DYNO') else False
+    @classmethod
+    def init_app(cls, app: Flask):
+        Production.init_app(app)
+        
+        import logging
+        from logging import StreamHandler
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
+        from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+
+
 config = {
     'production': Production,
     'development': Development,
-    'testing': Test
+    'testing': Test,
+    'heroku': Heroku
 }

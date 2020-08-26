@@ -52,7 +52,7 @@ def register_logger(app: Flask):
         file_handler.setFormatter(formatter)
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
-    if not app.debug:
+    else:
         default_handler.setLevel(logging.INFO)
         app.logger.addHandler(default_handler)
 
@@ -68,6 +68,9 @@ def register_extensions(app: Flask) -> None:
     moment.init_app(app)
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+    if app.config['SSL_REDIRECT']:
+        from flask_sslify import SSLify
+        sslify = SSLify(app)
 
 
 def register_blueprints(app: Flask) -> None:

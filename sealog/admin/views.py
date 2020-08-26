@@ -27,7 +27,7 @@ def edit_post(id):
         post.content = request.form.get('ckeditor')
         db.session.add(post)
         db.session.commit()
-        flash("Edit Succeeded!")
+        flash("Edit Succeeded!", "success")
     return render_template("admin/edit.html", id=id, form=form, old_content=content)
 
 

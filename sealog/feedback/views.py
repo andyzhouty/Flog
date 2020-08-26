@@ -21,5 +21,5 @@ def feedback():
             template="feedback/feedback_notification",
             **dict(author=author, content=body)
         )
-        flash('Your idea has been sent to the admins!', "success")
+        flash('Your feedback has been sent to the admins!', "success")
     return render_template('feedback/feedback.html', form=form)

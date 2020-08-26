@@ -13,11 +13,6 @@
             {{ static_file('icon', 'favicon/favicon.ico')}}
             {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
         {% endblock styles %}
-        {% block scripts %}
-            {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
-            {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
-            {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
-        {% endblock scripts %}
     {% endblock head %}
 </head>
 <body>
@@ -38,7 +33,7 @@
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="{{ url_for('user.profile', username=current_user.username) }}" class="nav-link">
-                        <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px">
+                            <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px">
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -48,6 +43,9 @@
                         <div class="dropdown-menu">
                             <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item">Edit Profile</a>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Log out</a>
+                            {% if not current_user.confirmed %}
+                            <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item">Resend Confirmation Email</a>
+                            {% endif %}
                         </div>
                     </li>
                 {% else %}
@@ -86,9 +84,14 @@
         {% block page_content %}{% endblock %}
         {% block share %}{% endblock %}
     </div>
-    <footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px">
-        &copy; Copyright 2020 LSFD Class 202201
-    </footer>
 {% endblock %}
+{% block scripts %}
+    {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
+    {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
+    {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
+{% endblock scripts %}
+<footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px; margin-top: 100px">
+    &copy; Copyright 2020 LSFD Class 202201
+</footer>
 </body>
 </html>

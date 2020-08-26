@@ -57,5 +57,5 @@ def edit_profile():
         form.location.data = current_user.location
         form.about_me.data = current_user.about_me
         return render_template('main/edit_profile.html', form=form)
-    flash("Your email has not been confirmed yet!")
-    return redirect('main.main')
+    flash("Your email has not been confirmed yet!", "warning")
+    return redirect(url_for('main.main'))

@@ -84,3 +84,12 @@ def register_commands(app: Flask, db): # noqa
         fake.users(users)
         fake.posts(posts)
         fake.feedbacks(feedbacks)
+
+    @app.cli.command()
+    def deploy():
+        """运行部署任务"""
+        from flask_migrate import upgrade
+        from .models import Role, User
+        # 把数据库迁移到最新修订版本
+        upgrade()
+        Role.insert_roles()
