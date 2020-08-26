@@ -1,9 +1,27 @@
 <ul class="list-group">
 {% for post in posts %}
-    {% if post.author != current_user and not current_user.is_administrator() %}
+    {% if post.author != current_user %}
     <li class="list-group-item">
         <h3 class="text-primary">{{ post.title }}</h3>
-        <p>{{ post.content | safe | truncate(150) }}&hellip;</p>
+        <div>{{ post.content | safe | truncate(200) }}
+        <small class="text-primary">
+            <a href="{{ url_for('main.full_post', slug=post.slug) }}">Read More</a>
+        </small>
+        {% if current_user.is_administrator() %}
+        <span class="float-right">
+        <a class="btn btn-primary" href="{{ url_for('admin.edit_post', id=post.id) }}">
+            EDIT
+        </a>
+        <form class="inline" method="POST" action="{{ url_for('admin.delete_post', id=post.id)}}"
+            style="display: inline !important">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                DELETE
+            </button>
+        </form>
+        </span>
+        {% endif %}
+        </div>
     </li>
     {% endif %}
 {% endfor %}

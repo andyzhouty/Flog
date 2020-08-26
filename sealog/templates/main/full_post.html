@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <div class="container">
+        <div class="row">
+        <div class="col-lg-8" style="font-size: large">
+            <div class="page-header">
+                <h1>
+                    {{ post.title }}
+                </h1>
+                <small>
+                    Date: {{ post.date }}
+                </small>
+            </div><br>
+            {{ post.content }}
+        </div>
+        {% include 'main/_sidebar.html' %}
+    </div>
+{% endblock page_content %}

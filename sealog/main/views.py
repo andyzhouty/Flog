@@ -10,8 +10,6 @@ from . import main_bp
 def main():
     if not current_user.is_authenticated:
         return render_template('main/not_authorized.html')
-    if current_user.is_administrator():
-        return redirect(url_for('admin.admin'))
     page = request.args.get('page', 1 ,type=int)
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
@@ -39,4 +37,4 @@ def create_post():
 @login_required
 def full_post(slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
-    return render_template('main/post.html', post=post)
+    return render_template('main/full_post.html', post=post)

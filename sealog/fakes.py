@@ -31,7 +31,7 @@ def posts(count: int=10) -> None:
         post = Post(
             title=fake.sentence(),
             date=fake.date_time_this_year().strftime("%Y-%m-%d"),
-            content=fake.text(200),
+            content=fake.text(1000),
             timestamp=fake.date_time_this_year()
         )
         post.author = User.query.get(rint(1, len(User.query.all())))
