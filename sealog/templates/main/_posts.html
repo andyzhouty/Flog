@@ -2,7 +2,7 @@
 {% for post in posts %}
     <li class="list-group-item">
         <h3 class="text-primary">{{ post.title }}</h3>
-        <div>{{ post.content | safe | truncate(200) }}
+        <div>{{ post.content | striptags | truncate(200) }}
         <small class="text-primary">
             <a href="{{ url_for('main.full_post', slug=post.slug) }}">Read More</a>
         </small>
