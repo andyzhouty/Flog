@@ -28,6 +28,7 @@ def edit_post(id):
         db.session.add(post)
         db.session.commit()
         flash("Edit Succeeded!", "success")
+        return redirect(url_for('main.main'))
     return render_template("admin/edit.html", id=id, form=form, old_content=content)
 
 

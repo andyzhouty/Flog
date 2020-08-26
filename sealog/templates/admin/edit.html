@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block page_content %}
-    <form method="POST" action="{{ url_for('main.main', id=id) }}" id="form" role="form">
+    <form method="POST" action="{{ url_for('admin.edit_post', id=id) }}" id="form" role="form">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.ckeditor.label }}<br>

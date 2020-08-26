@@ -27,7 +27,7 @@ def create_post():
         post = Post(
             title=form.title.data,
             date=form.date.data,
-            content=request.form.get('ckeditor')
+            content=form.content.data
         )
         post.author = current_user
         db.session.add(post)
