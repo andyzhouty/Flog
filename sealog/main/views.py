@@ -43,16 +43,19 @@ def full_post(slug):
 @main_bp.route('/edit-profile/', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    form = EditProfileForm()
-    if form.validate_on_submit():
-        current_user.name = form.name.data
-        current_user.location = form.location.data
-        current_user.about_me = form.about_me.data
-        db.session.add(current_user._get_current_object())
-        db.session.commit()
-        flash('Your profile has been updated!', "success")
-        return redirect(url_for('main.main'))
-    form.name.data = current_user.name
-    form.location.data = current_user.location
-    form.about_me.data = current_user.about_me
-    return render_template('main/edit_profile.html', form=form)
+    if current_user.confirmed:
+        form = EditProfileForm()
+        if form.validate_on_submit():
+            current_user.name = form.name.data
+            current_user.location = form.location.data
+            current_user.about_me = form.about_me.data
+            db.session.add(current_user._get_current_object())
+            db.session.commit()
+            flash('Your profile has been updated!', "success")
+            return redirect(url_for('main.main'))
+        form.name.data = current_user.name
+        form.location.data = current_user.location
+        form.about_me.data = current_user.about_me
+        return render_template('main/edit_profile.html', form=form)
+    flash("Your email has not been confirmed yet!")
+    return redirect('main.main')

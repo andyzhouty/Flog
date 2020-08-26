@@ -4,6 +4,7 @@
 """
 import hashlib
 from datetime import datetime
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
@@ -125,6 +126,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(256))
     username = db.Column(db.String(32), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    confirmed = db.Column(db.Boolean, default=False)
     posts = db.relationship('Post', back_populates='author')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = db.relationship('Role', back_populates='users')
@@ -172,6 +174,25 @@ class User(db.Model, UserMixin):
     def ping(self):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
+        db.session.commit()
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.id}).decode('utf-8')
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        if data.get('confirm') != self.id: return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()
 
 class AnonymousUser(AnonymousUserMixin):

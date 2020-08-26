@@ -19,8 +19,8 @@ class Base:
     MAIL_SERVER = os.getenv("MAIL_SERVER")
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
-    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+    MAIL_USERNAME = os.getenv("SEALOG_EMAIL")
+    MAIL_PASSWORD = os.getenv("SEALOG_EMAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER")
 
     ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')

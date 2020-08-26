@@ -1,0 +1,9 @@
+Hello, {{ user.username }}
+
+Welcome to Sealog!
+
+To confirm your account please click on the following link:
+
+{{ url_for('auth.confirm', token=token, _external=True) }}
+
+Note: Replies to this email will be ignored. :)

@@ -19,6 +19,7 @@ def users(count: int=10) -> None:
             username=slugify(name),
             name=name,
             email=fake.email(),
+            confirmed=True
         )
         user.set_password('123456')
         user.role = Role.query.filter_by(name='User').first()

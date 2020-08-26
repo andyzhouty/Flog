@@ -2,10 +2,15 @@
 {% block title %}
     SeaLog - {{ user.username }}
 {% endblock title %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment(local_js="https://cdn.staticfile.org/moment.js/2.9.0/moment-with-locales.min.js") }}
+    {{ moment.locale() }}
+{% endblock scripts %}
 {% block page_content %}
-<div class="row">
+<div class="row container">
     <div class="col-lg-2">
-        <img class="img-fluid" src="{{ user.gravatar() }}" width="100%" height=auto>
+        <img class="img-fluid" src="{{ user.gravatar() }}" width="200px" height="200px">
     </div>
     <div class="col-lg-10">
     <h1>{{ user.username }}</h1>
