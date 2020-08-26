@@ -134,7 +134,7 @@ class User(db.Model, UserMixin):
 
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
-    about_me = db.Column(db.Text())
+    about_me = db.Column(db.Text(1024))
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
