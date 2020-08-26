@@ -1,6 +1,5 @@
 <ul class="list-group">
 {% for post in posts %}
-    {% if post.author != current_user %}
     <li class="list-group-item">
         <h3 class="text-primary">{{ post.title }}</h3>
         <div>{{ post.content | safe | truncate(200) }}
@@ -20,7 +19,6 @@
             </button>
         </form>
         </span>
-        {% endif %}
         </div>
     </li>
     {% endif %}
