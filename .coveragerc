@@ -1,5 +1,5 @@
 [run]
-source = lsfd202201
+source = sealog
 branch = True
 omit =
     */test_*.py
