@@ -33,12 +33,13 @@
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="{{ url_for('user.profile', username=current_user.username) }}" class="nav-link">
-                            <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px">
+                            <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px"
+                            style="border-radius:50%">
                         </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                            Account
+                            Edit Profile
                         </a>
                         <div class="dropdown-menu">
                             <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item">Edit Profile</a>

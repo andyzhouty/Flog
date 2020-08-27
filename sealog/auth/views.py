@@ -1,10 +1,17 @@
 from flask import url_for, flash, redirect, request, render_template, abort
+from flask.globals import current_app
 from flask_login import login_user, logout_user, login_required
 from flask_login.utils import current_user
 from . import auth_bp
 from .forms import LoginForm, RegisterationForm
 from ..models import User, db
 from ..emails import send_email
+
+
+@auth_bp.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
 
 
 @auth_bp.route('/register/', methods=['GET', 'POST'])
@@ -18,10 +25,14 @@ def register():
         db.session.add(user)
         db.session.commit()
         try:
-            token = user.generate_confirmation_token()
-            send_email([user.email], 'Confirm your account', 'auth/email/confirm', user=user, token=token)
-            flash("A confirmation email has been sent to you by email!", "info")
-            return redirect(url_for('auth.login'))
+            if not current_app.config['TESTING']:
+                token = user.generate_confirmation_token()
+                send_email([user.email], 'Confirm your account', 'auth/email/confirm', user=user, token=token)
+                flash("A confirmation email has been sent to you by email! You can now login!", "info")
+                return redirect(url_for('auth.login'))
+            else:
+                flash('You can now login!')
+                return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.delete(user)
             db.session.commit()
@@ -36,9 +47,9 @@ def login():
         return redirect(url_for('main.main'))
     form = LoginForm()
     if form.validate_on_submit():
-        user_by_name = User.query.filter_by(name=form.name_or_email.data).first()
-        user_by_email = User.query.filter_by(email=form.name_or_email.data.lower()).first()
-        user = user_by_name if user_by_name is not None else user_by_email
+        user_by_username = User.query.filter_by(username=form.username_or_email.data).first()
+        user_by_email = User.query.filter_by(email=form.username_or_email.data.lower()).first()
+        user = user_by_username if user_by_username is not None else user_by_email
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')

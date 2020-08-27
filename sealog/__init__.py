@@ -43,7 +43,7 @@ def register_logger(app: Flask):
 
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s "
                                   "%(message)s")
-    if app.config['FLASK_CONFIG'] == 'Development':
+    if app.config['DEBUG']:
         file_handler = RotatingFileHandler(
             filename="logs/sealog.log",
             maxBytes=10 * 1024 * 1024,
