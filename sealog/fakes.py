@@ -11,7 +11,7 @@ from .utils import slugify
 fake = Faker()
 
 
-def users(count: int=10) -> None:
+def users(count: int=2) -> None:
     """Generates fake users."""
     for i in range(count):
         name = fake.name()
@@ -29,13 +29,13 @@ def users(count: int=10) -> None:
         click.echo(f"Generated {count} fake users.")
 
 
-def posts(count: int=10) -> None:
+def posts(count: int=2) -> None:
     """Generates fake posts."""
     for i in range(count):
         post = Post(
             title=fake.sentence(),
             date=fake.date_time_this_year().strftime("%Y-%m-%d"),
-            content=fake.text(1000),
+            content=fake.text(200),
             timestamp=fake.date_time_this_year()
         )
         post.author = User.query.get(rint(1, len(User.query.all())))
@@ -45,7 +45,7 @@ def posts(count: int=10) -> None:
         click.echo(f"Generated {count} fake posts.")
 
 
-def feedbacks(count: int=10) -> None:
+def feedbacks(count: int=2) -> None:
     """Generates fake feedback."""
     for i in range(count):
         feedback = Feedback(

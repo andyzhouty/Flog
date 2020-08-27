@@ -1,13 +1,9 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
 {% block page_content %}
-    <form method="POST" action="{{ url_for('admin.edit_post', id=id) }}" id="form" role="form">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.ckeditor.label }}<br>
-            {{ ckeditor.create(value=old_content) }}
-        </div>
-        {{ form.submit(class='btn btn-default btn-light') }}
-    </form>
+    <div class="container">
+        {{ render_form(form) }}
+    </div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}

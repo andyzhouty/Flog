@@ -5,6 +5,6 @@ from flask_ckeditor import CKEditorField
 
 
 class EditForm(FlaskForm):
-    ckeditor = CKEditorField("Content", validators=[DataRequired()])
+    content = CKEditorField("Content", validators=[DataRequired()])
     submit = SubmitField("Publish", validators=[DataRequired()])
 

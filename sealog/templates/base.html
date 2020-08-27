@@ -13,6 +13,11 @@
             {{ static_file('icon', 'favicon/favicon.ico')}}
             {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
         {% endblock styles %}
+        {% block scripts %}
+            {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
+            {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
+            {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
+        {% endblock scripts %}
     {% endblock head %}
 </head>
 <body>
@@ -86,11 +91,6 @@
         {% block share %}{% endblock %}
     </div>
 {% endblock %}
-{% block scripts %}
-    {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
-    {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
-    {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
-{% endblock scripts %}
 <footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px; margin-top: 100px">
     &copy; Copyright 2020 LSFD Class 202201
 </footer>

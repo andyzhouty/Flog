@@ -32,8 +32,6 @@ class Base:
     BOOTSTRAP_THEMES = {'default': 'Default', 'ubuntu': 'Ubuntu',
                        'lite': 'Lite', 'dark': 'Dark'}
 
-    CKEDITOR_SERVE_LOCAL = True
-
     POSTS_PER_PAGE = 8
 
     @classmethod
