@@ -16,7 +16,7 @@ Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.3
 Flask-Moment==0.10.0
-Flask-SSLify==0.1.5
+flask-sslify==0.1.5
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.3
 gunicorn==20.0.4

@@ -3,7 +3,7 @@ from flask.globals import current_app
 from flask_login import login_user, logout_user, login_required
 from flask_login.utils import current_user
 from . import auth_bp
-from .forms import LoginForm, RegisterationForm
+from .forms import DeleteAccountForm, LoginForm, RegisterationForm
 from ..models import User, db
 from ..emails import send_email
 
@@ -89,3 +89,16 @@ def resend_confirmation():
                'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email', 'info')
     return redirect(url_for('main.index'))
+
+
+@auth_bp.route('/delete-account/<int:id>')
+@login_required
+def delete_account(id):
+    form = DeleteAccountForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.password.data):
+            flash('Your account has been deleted', 'info')
+        else:
+            flash('Your password is invalid!')
+        return redirect(url_for('main.main'))
+    return render_template('auth/delete_account.html', form=form)

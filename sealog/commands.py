@@ -29,7 +29,7 @@ def register_commands(app: Flask, db): # noqa
             COVERAGE.save()
             print('Coverage Summary: ')
             COVERAGE.report()
-            basedir = os.path.abspath(os.path.abspath(__file__))
+            basedir = os.path.abspath(os.path.dirname(__file__))
             covdir = os.path.join(basedir, 'htmlcov')
             COVERAGE.html_report(directory=covdir)
             print(f'HTML Version: file://{covdir}/index.html')
@@ -47,9 +47,9 @@ def register_commands(app: Flask, db): # noqa
 
 
     @app.cli.command()
-    @click.option('--name')
-    @click.option('--email')
-    @click.option('--password')
+    @click.option('--name', default=os.getenv('ADMIN_NAME'), required=True)
+    @click.option('--email', default=os.getenv('ADMIN_EMAIL'), required=True)
+    @click.option('--password', default=os.getenv('ADMIN_PASSWORD'), required=True)
     @click.option('--role', required=True, prompt=True)
     def create_user(name, email, password, role):
         role = role.capitalize()
@@ -62,8 +62,8 @@ def register_commands(app: Flask, db): # noqa
             admin.role = Role.query.filter_by(name='Administrator').first()
             db.session.add(admin)
             db.session.commit()
-        elif role == 'User':
-            user = User(name=name, email=email, confirmed=True)
+        elif role == 'User' or role == 'Moderator':
+            user = User(username=name, name=name, email=email, confirmed=True)
             user.set_password(password)
             user.role = Role.query.filter_by(name=role).first()
             db.session.add(user)

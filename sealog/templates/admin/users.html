@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block styles %}
+    {{ super() }}
+    <style>
+        .role {
+            border-radius: 5px;
+            padding: 5px
+        }
+    </style>
+{% endblock styles %}
+{% block page_content %}
+    <ul class="list-group">
+    {% for user in pagination.items %}
+        <li class="list-group-item">
+            <img src="{{ user.gravatar() }}">
+            <a style="font-size: 2em" href="{{ url_for('user.profile', username=user.username) }}">{{ user.name }}</a>
+            <span class="float-right text-white">
+            {% if user.is_administrator() %}
+                <span class="bg-danger role">Admin</span>
+            {% elif user.can(Permission.MODERATE) %}
+                <span class="bg-warning role">Moderator</span>
+            {% else %}
+                <span class="bg-primary role">User</span>
+            {% endif %}
+            </span>
+        </li>
+    {% endfor %}
+    </ul>
+    {{ render_pagination(pagination) }}
+{% endblock page_content %}

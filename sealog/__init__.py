@@ -1,3 +1,4 @@
+from logging import log
 import os
 import logging
 from logging.handlers import RotatingFileHandler
@@ -98,5 +99,6 @@ def register_context(app: Flask) -> None:
         feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
         return dict(
             posts=posts,
-            feedbacks=feedbacks
+            feedbacks=feedbacks,
+            Permission=Permission
         )

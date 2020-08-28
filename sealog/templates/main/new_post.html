@@ -8,11 +8,8 @@
     {{ static_file('css', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css', local=False) }}
 {% endblock %}
 {% block page_content %}
-    <div class="container">
-        <h1 class="display-4">New Post</h1>
-        {{ render_form(form) }}
-    </div>
-
+    <h1 class="display-4">New Post</h1>
+    {{ render_form(form) }}
 {% endblock %}
 {% block scripts %}
     {{ super() }}

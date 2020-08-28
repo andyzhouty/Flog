@@ -38,8 +38,7 @@
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="{{ url_for('user.profile', username=current_user.username) }}" class="nav-link">
-                            <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="img-rounded" width="30px" height="30px"
-                            style="border-radius:50%">
+                            <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="rounded-circle">
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -50,8 +49,11 @@
                             <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item">Edit Profile</a>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Log out</a>
                             {% if not current_user.confirmed %}
-                            <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item">Resend Confirmation Email</a>
+                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item">Resend Confirmation Email</a>
                             {% endif %}
+                            <a href="{{ url_for('auth.delete_account', id=current_user.id) }}" class="dropdown-item bg-danger text-white">
+                                Delete Your Account
+                            </a>
                         </div>
                     </li>
                 {% else %}
@@ -86,13 +88,13 @@
     {% endfor %}
 {% endblock flashed_messages %}
 {% block content %}
-    <div class="content" style="font-family: 'Segoe UI', Arial, sans-serif;">
+    <div class="container" style="font-family: 'Segoe UI', Arial, sans-serif;">
         {% block page_content %}{% endblock %}
         {% block share %}{% endblock %}
     </div>
 {% endblock %}
 <footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px; margin-top: 100px">
-    &copy; Copyright 2020 LSFD Class 202201
+    &copy; Copyright 2020 Andy Zhou
 </footer>
 </body>
 </html>

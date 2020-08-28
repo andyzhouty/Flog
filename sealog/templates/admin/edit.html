@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% block page_content %}
-    <div class="container">
-        {{ render_form(form) }}
-    </div>
+    {{ render_form(form) }}
 {% endblock %}
 {% block scripts %}
     {{ super() }}

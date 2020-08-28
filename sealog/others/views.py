@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, current_app, abort, make_response, url_for, redirect
+from flask import current_app, abort, make_response, url_for, redirect
+from flask.globals import request
 from . import others_bp
 from ..utils import redirect_back
 

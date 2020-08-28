@@ -30,5 +30,10 @@ class RegisterationForm(FlaskForm):
 class LoginForm(FlaskForm):
     username_or_email = StringField('Username / Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember me')
+    remember_me = BooleanField('Remeber me')
     submit = SubmitField('Login')
+
+
+class DeleteAccountForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Delete Account')

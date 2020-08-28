@@ -1,6 +1,8 @@
 import unittest
 import os
 from faker import Faker
+from flask import escape
+from flask.globals import request
 from sealog import create_app, db
 from sealog.models import Post, Role, User
 from sealog.utils import slugify
@@ -49,7 +51,7 @@ class ClientTestCase(unittest.TestCase):
         }
         return {
             'response': self.client.post('/write/', data=data, follow_redirects=True),
-            'data': data,
+            'post': data,
             'text': text
         }
 
@@ -61,19 +63,21 @@ class ClientTestCase(unittest.TestCase):
         self.assertTrue(self.logout().status_code, 302)
 
     def test_create_article(self):
-        response = self.create_article()['response']
-        data = self.create_article()['data']
+        data = self.create_article()
+        response = data['response']
+        post = data['post']
+        text = data['text']
         self.assertTrue(response.status_code, 302)
         self.assertGreater(Post.query.count(), 0)
         response = self.client.get('/')
         response_data = response.get_data(as_text=True)
-        self.assertIn(data['title'], response_data)
+        self.assertIn(post['title'], response_data)
         # 测试striptags过滤器是否工作
-        self.assertNotIn(data['content'], response_data)
+        self.assertNotIn(post['content'], response_data)
 
     def test_post_slug(self):
-        data = self.create_article()['data']
-        slugified_title = slugify(data['title'])
+        post = self.create_article()['post']
+        slugified_title = slugify(post['title'])
         self.assertEqual(
             self.client.get(f'/post/{slugified_title}/').status_code, 200
         )
@@ -93,12 +97,11 @@ class ClientTestCase(unittest.TestCase):
 
     def test_admin_edit_article(self):
         self.login()
-        old_content = self.create_article()['text']
+        old_content = escape(self.create_article()['text'])
         data = {
-            'content': fake.text()
+            'content': 'new content'
         }
         response = self.client.post('/admin/posts/edit/1', data=data, follow_redirects=True)
         response_data = response.get_data(as_text=True)
-        # self.assertEqual(response.status_code, 302)
         self.assertNotIn(old_content, response_data)
         self.assertIn(data['content'], response_data)

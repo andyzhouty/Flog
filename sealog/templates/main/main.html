@@ -7,18 +7,16 @@
     {{ super() }}
 {% endblock %}
 {% block page_content %}
-    <div class="container">
-        <div class="page-header">
-            <h1 class="display-4">Welcome, {{ current_user.role }} {{ current_user.name }}</h1>
+    <div class="page-header">
+        <h1 class="display-4">Welcome, {{ current_user.role }} {{ current_user.name }}</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            {% include 'main/_posts.html' %}
         </div>
-        <div class="row">
-            <div class="col-md-8">
-                {% include 'main/_posts.html' %}
-            </div>
-            {% include 'main/_sidebar.html' %}
-        </div>
-        <div class="pagination">
-            {{ render_pagination(pagination) }}
-        </div>
+        {% include 'main/_sidebar.html' %}
+    </div>
+    <div class="pagination">
+        {{ render_pagination(pagination) }}
     </div>
 {% endblock %}

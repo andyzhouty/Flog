@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% block page_content %}
-    <div class="container">
-        <h1 class="display-4">Login</h1>
-        <p>
-            New user?
-            <a href="{{ url_for('auth.register') }}">
-                Click here to register</a>
-        </p>
-        {{ render_form(form, action=request.full_path) }}
-    </div>
+    <h1 class="display-4">Login</h1>
+    <p>
+        New user?
+        <a href="{{ url_for('auth.register') }}">
+            Click here to register</a>
+    </p>
+    {{ render_form(form, action=request.full_path) }}
 {% endblock page_content %}

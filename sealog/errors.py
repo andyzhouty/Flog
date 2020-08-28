@@ -9,6 +9,11 @@ def register_error_handlers(app):
         return render_template('errors/error.html',
                                error_message="400 Bad Request"), 400
 
+    @app.errorhandler(403)
+    def forbidden(e):
+        return render_template('errors/error.html',
+                               error_message="403 You do not have the permission to access this page"), 403
+
     @app.errorhandler(404)
     def page_not_found(e):
         # special easter egg :P

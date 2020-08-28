@@ -1,12 +1,13 @@
 # flake8: noqa
 import os
+from sys import path
 from flask.app import Flask
 from werkzeug.security import generate_password_hash
 
 
-def generate_sqlite_file(str: str):
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    return 'sqlite:///' + os.path.join(basedir, f'{str}.sqlite3')
+def generate_sqlite_file(filename: str):
+    basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    return 'sqlite:///' + os.path.join(basedir, f'{filename}.sqlite3')
 
 
 class Base:

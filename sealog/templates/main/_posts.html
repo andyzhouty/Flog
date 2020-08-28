@@ -2,25 +2,30 @@
 {% for post in posts %}
     <li class="list-group-item">
         <h3 class="text-primary">{{ post.title }}</h3>
-        <div>{{ post.content | striptags | truncate(200) }}
-        <small class="text-primary">
-            <a href="{{ url_for('main.full_post', slug=post.slug) }}">Read More</a>
-        </small>
-        {% if current_user.is_administrator() %}
-        <span class="float-right">
-        <a class="btn btn-primary" href="{{ url_for('admin.edit_post', id=post.id) }}">
-            EDIT
-        </a>
-        <form class="inline" method="POST" action="{{ url_for('admin.delete_post', id=post.id)}}"
-            style="display: inline !important">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
-                DELETE
-            </button>
-        </form>
-        </span>
+        <div>
+            {{ post.content | striptags | truncate(200) }}
+            <small class="text-primary">
+                <a href="{{ url_for('main.full_post', slug=post.slug) }}">Read More</a>
+            </small>
+            <span class="float-right">
+            {% if current_user.is_administrator() or post.author == current_user %}
+                <a class="btn btn-primary" href="{{ url_for('admin.edit_post', id=post.id) }}">
+                    EDIT
+                </a>
+            {% endif %}
+            {# 如果当前用户是协管员，并且文章作者没有协管员权限时，显示删除按钮 #}
+            {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
+                or current_user.is_administrator() %}
+                <form class="inline" method="POST" action="{{ url_for('admin.delete_post', id=post.id)}}"
+                    style="display: inline !important">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                        DELETE
+                    </button>
+                </form>
+            {% endif %}
+            </span>
         </div>
     </li>
-    {% endif %}
 {% endfor %}
 </ul>
