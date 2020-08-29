@@ -16,6 +16,8 @@ def before_request():
 
 @auth_bp.route('/register/', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.main'))
     form = RegisterationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data.lower(),
@@ -91,12 +93,13 @@ def resend_confirmation():
     return redirect(url_for('main.index'))
 
 
-@auth_bp.route('/delete-account/<int:id>')
+@auth_bp.route('/delete-account/')
 @login_required
-def delete_account(id):
+def delete_account():
     form = DeleteAccountForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.password.data):
+            current_user.delete()
             flash('Your account has been deleted', 'info')
         else:
             flash('Your password is invalid!')

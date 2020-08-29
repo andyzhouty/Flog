@@ -40,6 +40,7 @@ def register_config(app: Flask, config_name: str):
 
 
 def register_logger(app: Flask):
+
     app.logger.setLevel(logging.INFO)
 
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s "
@@ -100,5 +101,6 @@ def register_context(app: Flask) -> None:
         return dict(
             posts=posts,
             feedbacks=feedbacks,
-            Permission=Permission
+            Permission=Permission,
+            current_app=app
         )

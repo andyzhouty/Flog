@@ -17,6 +17,14 @@
             {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
             {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
             {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
+            {% if current_app.config['FLASK_CONFIG'] == 'production' %}
+                <script>
+                    $(document).ready(function (){
+                    if (window.navigator._selenium || window.navigator.webdriver){
+                        document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
+                    }})
+                </script>
+            {% endif %}
         {% endblock scripts %}
     {% endblock head %}
 </head>
@@ -42,14 +50,14 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="account">
                             Account
                         </a>
                         <div class="dropdown-menu">
-                            <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item">Edit Profile</a>
-                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Log out</a>
+                            <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item" id="edit-profile">Edit Profile</a>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item" id="logout">Log out</a>
                             {% if not current_user.confirmed %}
-                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item">Resend Confirmation Email</a>
+                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">Resend Confirmation Email</a>
                             {% endif %}
                             <a href="{{ url_for('auth.delete_account', id=current_user.id) }}" class="dropdown-item bg-danger text-white">
                                 Delete Your Account

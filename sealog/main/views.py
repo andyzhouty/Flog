@@ -7,6 +7,13 @@ from .forms import PostForm, EditProfileForm
 from . import main_bp
 
 
+@main_bp.before_app_request
+def before_app_request():
+    ua = request.user_agent.string
+    if 'spider' in ua or 'bot' in ua or 'python' in ua:
+        return 'F**k you, web crawler!'
+
+
 @main_bp.route('/')
 def main():
     if not current_user.is_authenticated:

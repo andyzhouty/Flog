@@ -1,15 +1,9 @@
 import logging
 import os
-import threading
-from sealog.utils import slugify
 import unittest
 from selenium import webdriver
-from sealog import create_app
-from sealog.extensions import db
-from sealog.models import Role, User
-from sealog import fakes as fake
 
-class SeleniumTestCase(unittest.TestCase):
+class UITestCase(unittest.TestCase):
 
     def setUp(self) -> None:
         self.client = None
@@ -21,7 +15,6 @@ class SeleniumTestCase(unittest.TestCase):
 
         # 只有启动无界面浏览器后才运行这些测试
         if self.client:
-            # 创建应用
             self.url_prefix = 'http://localhost:5000'
             logging.disable(logging.CRITICAL)
 
@@ -29,6 +22,34 @@ class SeleniumTestCase(unittest.TestCase):
         if self.client:
             self.client.quit()
 
-    def test_home_page(self):
+    def register(self, name, email, password) -> None:
+        self.client.get(self.url_prefix + '/auth/register/')
+        self.client.find_element_by_name('username').send_keys(name)
+        self.client.find_element_by_name('name').send_keys(name)
+        self.client.find_element_by_name('email').send_keys(email)
+        self.client.find_element_by_name('password').send_keys(password)
+        self.client.find_element_by_name('password_again').send_keys(password)
+        self.client.find_element_by_name('submit').click()
+
+    def login(self, email, password) -> None:
+        self.client.get(self.url_prefix + '/auth/login/')
+        self.client.find_element_by_name('username_or_email').send_keys(email)
+        self.client.find_element_by_name('password').send_keys(password)
+        self.client.find_element_by_name('submit').click()
+
+    def test_ui_home_page(self):
         self.client.get(self.url_prefix)
         self.assertIn('Join Now!', self.client.page_source)
+        self.client.find_element_by_link_text('Join Now!').click()
+        self.assertEqual(self.client.current_url, self.url_prefix + '/auth/login/')
+
+    def test_ui_admin_login_logout(self):
+        name = os.getenv('ADMIN_NAME')
+        email = os.getenv('ADMIN_EMAIL')
+        password = os.getenv('ADMIN_PASSWORD')
+        self.login(email, password)
+        self.client.get(self.url_prefix)
+        self.assertIn(f"Administrator {name}", self.client.page_source)
+        # print(self.client.page_source)
+        self.client.find_element_by_id('account').click()
+        self.client.find_element_by_id('logout').click()
