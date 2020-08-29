@@ -9,14 +9,14 @@
             </small>
             <span class="float-right">
             {% if current_user.is_administrator() or post.author == current_user %}
-                <a class="btn btn-primary" href="{{ url_for('admin.edit_post', id=post.id) }}">
+                <a class="btn btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
                     EDIT
                 </a>
             {% endif %}
-            {# 如果当前用户是协管员，并且文章作者没有协管员权限时，显示删除按钮 #}
+            {# 如果当前用户是协管员，并且文章作者没有协管员权限时，抑或当前用户是该文章作者时，显示删除按钮 #}
             {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
-                or current_user.is_administrator() %}
-                <form class="inline" method="POST" action="{{ url_for('admin.delete_post', id=post.id)}}"
+                or current_user.is_administrator() or post.author == current_user %}
+                <form class="inline" method="POST" action="{{ url_for('main.delete_post', id=post.id)}}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-danger" onclick="return confirm('Are you sure?');">

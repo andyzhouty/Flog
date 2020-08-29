@@ -5,7 +5,7 @@
 import hashlib
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
+from flask import current_app, url_for
 from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -41,6 +41,10 @@ class Post(db.Model):
         if self in db.session:
             db.session.delete(self)
             db.session.commit()
+
+    def url(self):
+        if self.slug:
+            return url_for('main.full_post', slug=self.slug, _external=True)
 
 
 class Feedback(db.Model):

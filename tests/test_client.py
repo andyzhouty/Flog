@@ -99,9 +99,10 @@ class ClientTestCase(unittest.TestCase):
         self.login()
         old_content = escape(self.create_article()['text'])
         data = {
+            'title': 'new title',
             'content': 'new content'
         }
-        response = self.client.post('/admin/posts/edit/1', data=data, follow_redirects=True)
+        response = self.client.post('/posts/edit/1', data=data, follow_redirects=True)
         response_data = response.get_data(as_text=True)
         self.assertNotIn(old_content, response_data)
         self.assertIn(data['content'], response_data)

@@ -16,13 +16,16 @@
             <img src="{{ user.gravatar() }}">
             <a style="font-size: 2em" href="{{ url_for('user.profile', username=user.username) }}">{{ user.name }}</a>
             <span class="float-right text-white">
-            {% if user.is_administrator() %}
-                <span class="bg-danger role">Admin</span>
-            {% elif user.can(Permission.MODERATE) %}
-                <span class="bg-warning role">Moderator</span>
-            {% else %}
-                <span class="bg-primary role">User</span>
-            {% endif %}
+                {% if user.is_administrator() %}
+                    <span class="bg-danger role">Admin</span>
+                {% elif user.can(Permission.MODERATE) %}
+                    <span class="bg-warning role">Moderator</span>
+                {% else %}
+                    <span class="bg-primary role">User</span>
+                {% endif %}<br><br>
+                <a class="btn btn-outline-danger" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                    Edit Profile
+                </a>
             </span>
         </li>
     {% endfor %}

@@ -1,9 +1,8 @@
-from flask import render_template, request, redirect, url_for, current_app, flash
+from flask import render_template, request, redirect, url_for, current_app, flash, abort
 from flask_login import current_user
 from flask_login.utils import login_required
-from wtforms.validators import url
 from ..models import db, Post
-from .forms import PostForm, EditProfileForm
+from .forms import PostForm, EditProfileForm, EditForm
 from . import main_bp
 
 
@@ -18,7 +17,7 @@ def before_app_request():
 def main():
     if not current_user.is_authenticated:
         return render_template('main/not_authorized.html')
-    page = request.args.get('page', 1 ,type=int)
+    page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
     )
@@ -70,3 +69,50 @@ def edit_profile():
         return render_template('main/edit_profile.html', form=form)
     flash("Your email has not been confirmed yet!", "warning")
     return redirect(url_for('main.main'))
+
+
+@main_bp.route('/manage-post')
+@login_required
+def manage_posts():
+    page = request.args.get('page', 1, int)
+    pagination = (Post.query.filter_by(author=current_user)
+                            .order_by(Post.timestamp.desc())
+                            .paginate(
+                                page,
+                                per_page=current_app.config['POSTS_PER_PAGE'],
+                                error_out=False
+                            ))
+    return render_template('main/personal_posts.html', pagination=pagination)
+
+
+@main_bp.route('/posts/delete/<int:id>/', methods=['POST'])
+@login_required
+def delete_post(id):
+    post = Post.query.get(id)
+    if not (current_user.is_administrator() or current_user == post.author):
+        abort(403)
+    post.delete()
+    flash(f"Post id {id} deleted", "success")
+    current_app.logger.info(f"{str(post)} deleted.")
+    return redirect(url_for('main.main'))
+
+
+@main_bp.route('/posts/edit/<int:id>', methods=['POST', 'GET'])
+@login_required
+def edit_post(id):
+    post2edit = Post.query.get(id)
+    if not (current_user.is_administrator() or current_user == post2edit.author):
+        abort(403)
+    form = EditForm()
+    if form.validate_on_submit():
+        editted_post = Post.query.get(id)
+        editted_post.title = form.title.data
+        editted_post.content = form.content.data
+        db.session.add(editted_post)
+        db.session.commit()
+        flash("Edit Succeeded!", "success")
+        return redirect(url_for('main.main'))
+    if not current_app.config['TESTING']:
+        form.title.data = post2edit.title
+        form.content.data = post2edit.content
+    return render_template("main/edit_post.html", id=id, form=form)

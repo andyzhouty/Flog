@@ -5,6 +5,19 @@
             <a class="list-group-item" href="{{ url_for('main.write') }}">
                 Write a post
             </a>
+            <a class="list-group-item" href="{{ url_for('main.manage_posts') }}">
+                Manage your posts
+            </a>
         </ul>
     </div>
+    {% if current_user.is_administrator() %}
+    <div class="card mb-3">
+        <div class="card-header">Admin Actions</div>
+        <ul class="list-group list-group-flush">
+            <a class="list-group-item" href="{{ url_for('admin.manage_users') }}">
+                Manage Users
+            </a>
+        </ul>
+    </div>
+    {% endif %}
 </div>

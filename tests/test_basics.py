@@ -1,8 +1,8 @@
-from logging import log
 import unittest
 import logging
 from flask import current_app
 from sealog import create_app, db
+from sealog.utils import slugify
 
 
 class BasicsTestCase(unittest.TestCase):
@@ -23,3 +23,7 @@ class BasicsTestCase(unittest.TestCase):
 
     def test_app_is_testing(self):
         self.assertTrue(current_app.config['TESTING'])
+
+    def test_slugify(self):
+        string = "Andy Zhou"
+        self.assertEqual(slugify(string), 'andy-zhou')

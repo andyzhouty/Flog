@@ -4,7 +4,6 @@ import unittest
 from selenium import webdriver
 
 class UITestCase(unittest.TestCase):
-
     def setUp(self) -> None:
         self.client = None
         try:
@@ -17,6 +16,13 @@ class UITestCase(unittest.TestCase):
         if self.client:
             self.url_prefix = 'http://localhost:5000'
             logging.disable(logging.CRITICAL)
+        else:
+            self.skipTest('Web browser not available')
+
+        try:
+            self.client.get(self.url_prefix)
+        except:
+            self.skipTest('App not running')
 
     def tearDown(self) -> None:
         if self.client:
@@ -31,7 +37,7 @@ class UITestCase(unittest.TestCase):
         self.client.find_element_by_name('password_again').send_keys(password)
         self.client.find_element_by_name('submit').click()
 
-    def login(self, email, password) -> None:
+    def login(self, email=os.getenv('ADMIN_EMAIL'), password=os.getenv('ADMIN_PASSWORD')) -> None:
         self.client.get(self.url_prefix + '/auth/login/')
         self.client.find_element_by_name('username_or_email').send_keys(email)
         self.client.find_element_by_name('password').send_keys(password)
@@ -45,11 +51,8 @@ class UITestCase(unittest.TestCase):
 
     def test_ui_admin_login_logout(self):
         name = os.getenv('ADMIN_NAME')
-        email = os.getenv('ADMIN_EMAIL')
-        password = os.getenv('ADMIN_PASSWORD')
-        self.login(email, password)
+        self.login()
         self.client.get(self.url_prefix)
         self.assertIn(f"Administrator {name}", self.client.page_source)
-        # print(self.client.page_source)
         self.client.find_element_by_id('account').click()
         self.client.find_element_by_id('logout').click()

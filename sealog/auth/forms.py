@@ -11,7 +11,7 @@ class RegisterationForm(FlaskForm):
         Regexp(r'^[A-Za-z][A-Za-z0-0_\-.]*$', 0,
                'Usernames must have only letters, numbers, dots, underscores or dashes')
     ])
-    name = StringField('Name', validators=[DataRequired(), Length(2, 64)])
+    name = StringField('Real Name', validators=[DataRequired(), Length(2, 64)])
     email = StringField('Email', validators=[DataRequired(), Length(2, 64), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_again = PasswordField(
