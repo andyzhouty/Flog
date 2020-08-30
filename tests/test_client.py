@@ -30,10 +30,10 @@ class ClientTestCase(unittest.TestCase):
         db.session.remove()
         self.app_context.pop()
 
-    def login(self):
+    def login(self, email=os.getenv('ADMIN_EMAIL'), password='password'):
         login_data = {
-            'username_or_email': self.admin.email,
-            'password': 'password',
+            'username_or_email': email,
+            'password': password,
             'remember_me': True
         }
         return self.client.post('/auth/login', data=login_data, follow_redirects=True)
@@ -83,7 +83,12 @@ class ClientTestCase(unittest.TestCase):
         )
 
     def test_edit_profile(self):
-        self.login()
+        user = User(name='abcd', username='abcd', email='test@example.com', confirmed=True)
+        user.role = Role.query.filter_by(name='User').first()
+        user.set_password('123456')
+        db.session.add(user)
+        db.session.commit()
+        self.login('abcd', '123456')
         data = {
             'name': fake.name(),
             'location': fake.address(),
@@ -91,9 +96,10 @@ class ClientTestCase(unittest.TestCase):
         }
         response = self.client.post('/edit-profile', data=data, follow_redirects=True)
         self.assertTrue(response.status_code, 302)
-        self.assertEqual(self.admin.name, data['name'])
-        self.assertEqual(self.admin.location, data['location'])
-        self.assertEqual(self.admin.about_me, data['about_me'])
+        user = User.query.filter_by(username='abcd').first()
+        self.assertEqual(user.name, data['name'])
+        self.assertEqual(user.location, data['location'])
+        self.assertEqual(user.about_me, data['about_me'])
 
     def test_admin_edit_article(self):
         self.login()
@@ -138,10 +144,15 @@ class ClientTestCase(unittest.TestCase):
         self.assertIn(data['body'], response_data)
 
     def test_change_theme(self):
-        self.client.get('/change-theme/ubuntu', follow_redirects=True)
+        self.client.get('/change-theme/lite', follow_redirects=True)
         cookie = next(
             (cookie for cookie in self.client.cookie_jar if cookie.name == "theme"),
             None
         )
         self.assertIsNotNone(cookie)
-        self.assertEqual(cookie.value, 'ubuntu')
+        self.assertEqual(cookie.value, 'lite')
+
+    def test_delete_account(self):
+        self.login()
+        self.client.post('/auth/delete-account/', data={'password': 'password'}, follow_redirects=True)
+        self.assertEqual(User.query.count(), 0)

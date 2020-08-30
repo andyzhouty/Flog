@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'macros.html' import role_label_of %}
+{% from 'macros.html' import role_label_of with context %}
 {% block title %}
     SeaLog - {{ user.username }}
 {% endblock title %}
