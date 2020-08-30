@@ -52,7 +52,7 @@ def posts(count: int=2) -> None:
             content=fake.text(randint(100, 300)),
             timestamp=fake.date_time_this_year()
         )
-        post.author = User.query.get(randint(1, len(User.query.all())))
+        post.author = User.query.get(randint(1, User.query.count()))
         db.session.add(post)
     db.session.commit()
 
@@ -61,7 +61,7 @@ def feedbacks(count: int=2) -> None:
     """生成虚拟反馈"""
     for i in range(count):
         feedback = Feedback(
-            author=User.g,
+            author=User.query.get(randint(0, User.query.count())),
             body=fake.sentence(),
             timestamp=fake.date_time_this_year()
         )

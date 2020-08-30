@@ -10,3 +10,15 @@
         <link rel="icon" href="{{ filename_or_url }}">
     {%- endif %}
 {% endmacro %}
+
+{% macro role_label_of(user) %}
+    <span class="text-white">
+    {% if user.is_administrator() -%}
+        <span class="bg-danger" style="border-radius: 5px; padding: 5px;">Admin</span>
+    {% elif user.can(Permission.MODERATE) -%}
+        <span class="bg-warning" style="border-radius: 5px; padding: 5px;">Moderator</span>
+    {% else -%}
+        <span class="bg-primary" style="border-radius: 5px; padding: 5px;">User</span>
+    {%- endif %}
+    </span>
+{% endmacro %}

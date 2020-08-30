@@ -33,7 +33,7 @@ def register():
                 flash("A confirmation email has been sent to you by email! You can now login!", "info")
                 return redirect(url_for('auth.login'))
             else:
-                flash('You can now login!')
+                flash('You can now login!', "success")
                 return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.delete(user)
@@ -93,7 +93,7 @@ def resend_confirmation():
     return redirect(url_for('main.index'))
 
 
-@auth_bp.route('/delete-account/')
+@auth_bp.route('/delete-account/', methods=['GET', 'POST'])
 @login_required
 def delete_account():
     form = DeleteAccountForm()
@@ -102,6 +102,6 @@ def delete_account():
             current_user.delete()
             flash('Your account has been deleted', 'info')
         else:
-            flash('Your password is invalid!')
+            flash('Your password is invalid!', 'warning')
         return redirect(url_for('main.main'))
     return render_template('auth/delete_account.html', form=form)

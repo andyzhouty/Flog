@@ -53,8 +53,8 @@ def edit_user_profile(id):
         user.about_me = form.about_me.data
         db.session.add(user)
         db.session.commit()
-        flash(f'{user.username}\'s profile has been updated.')
-        return redirect(url_for('user.profile', username=user.username))
+        flash(f'{user.username}\'s profile has been updated.', 'info')
+        return redirect(url_for('main.user_profile', username=user.username))
     form.email.data = user.email
     form.username.data = user.username
     form.confirmed.data = user.confirmed

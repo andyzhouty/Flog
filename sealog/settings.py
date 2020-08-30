@@ -30,8 +30,7 @@ class Base:
     ADMIN_EMAIL_LIST = [ADMIN_EMAIL]
 
     # ('theme name': 'display name')
-    BOOTSTRAP_THEMES = {'default': 'Default', 'ubuntu': 'Ubuntu',
-                       'lite': 'Lite', 'dark': 'Dark'}
+    BOOTSTRAP_THEMES = {'default': 'Default', 'lite': 'Lite', 'dark': 'Dark'}
 
     POSTS_PER_PAGE = 8
 

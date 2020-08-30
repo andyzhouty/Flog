@@ -46,7 +46,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a href="{{ url_for('user.profile', username=current_user.username) }}" class="nav-link">
+                        <a href="{{ url_for('main.user_profile', username=current_user.username) }}" class="nav-link">
                             <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="rounded-circle">
                         </a>
                     </li>
@@ -60,7 +60,7 @@
                             {% if not current_user.confirmed %}
                                 <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">Resend Confirmation Email</a>
                             {% endif %}
-                            <a href="{{ url_for('auth.delete_account', id=current_user.id) }}" class="dropdown-item bg-danger text-white">
+                            <a href="{{ url_for('auth.delete_account') }}" class="dropdown-item bg-danger text-white">
                                 Delete Your Account
                             </a>
                         </div>

@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, current_app, flash, abort
 from flask_login import current_user
 from flask_login.utils import login_required
-from ..models import db, Post
+from ..models import db, Post, User
 from .forms import PostForm, EditProfileForm, EditForm
 from . import main_bp
 
@@ -53,6 +53,8 @@ def full_post(slug):
 @main_bp.route('/edit-profile/', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    if current_user.is_administrator():
+        return redirect(url_for('admin.edit_user_profile', id=current_user.id))
     if current_user.confirmed:
         form = EditProfileForm()
         if form.validate_on_submit():
@@ -116,3 +118,9 @@ def edit_post(id):
         form.title.data = post2edit.title
         form.content.data = post2edit.content
     return render_template("main/edit_post.html", id=id, form=form)
+
+
+@main_bp.route('/user/<username>/')
+def user_profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('main/user_profile.html', user=user)

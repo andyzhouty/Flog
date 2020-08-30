@@ -16,7 +16,6 @@ from .feedback import feedback_bp
 from .admin import admin_bp
 from .auth import auth_bp
 from .main import main_bp
-from .user import user_bp
 
 
 def create_app(config_name=None) -> Flask:
@@ -81,7 +80,6 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
-    app.register_blueprint(user_bp, url_prefix="/user")
 
 
 def register_context(app: Flask) -> None:
