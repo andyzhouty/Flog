@@ -56,3 +56,8 @@ class UITestCase(unittest.TestCase):
         self.assertIn(f"Administrator {name}", self.client.page_source)
         self.client.find_element_by_id('account').click()
         self.client.find_element_by_id('logout').click()
+
+    def test_ui_change_theme(self):
+        self.client.find_element_by_link_text('Theme').click()
+        self.client.find_element_by_link_text('Ubuntu').click()
+        self.assertEqual(self.client.get_cookie('theme')['value'], 'ubuntu')

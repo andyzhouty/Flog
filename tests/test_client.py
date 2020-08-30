@@ -1,9 +1,9 @@
+from random import randint
 import unittest
 import os
 from faker import Faker
 from flask import escape
-from flask.globals import request
-from sealog import create_app, db
+from sealog import create_app, db, fakes
 from sealog.models import Post, Role, User
 from sealog.utils import slugify
 
@@ -106,3 +106,42 @@ class ClientTestCase(unittest.TestCase):
         response_data = response.get_data(as_text=True)
         self.assertNotIn(old_content, response_data)
         self.assertIn(data['content'], response_data)
+
+    def test_admin_edit_user_profile(self):
+        self.login()
+        fakes.users(10)
+        response = self.client.get('/admin/users/')
+        self.assertEqual(response.status_code, 200)
+        user_id = randint(2, 11)
+        data = {
+            'email': fakes.fake.email(),
+            'username': slugify(fakes.fake.name()),
+            'confirmed': bool(randint(0, 1)),
+            'role': 1,
+            'name': fakes.fake.name(),
+            'location': fakes.fake.address(),
+            'about_me': fakes.fake.text()
+        }
+        response = self.client.post(f'/admin/users/{user_id}/edit-profile',
+                                    data=data, follow_redirects=True)
+        response_data = response.get_data(as_text=True)
+        self.assertIn(data['email'], response_data)
+        self.assertIn(data['username'], response_data)
+        self.assertIn(data['about_me'], response_data)
+        self.assertIn(data['location'], response_data)
+
+    def test_send_feedback(self):
+        self.login()
+        data = {'body': fake.text(),}
+        response = self.client.post('/feedback/', data=data, follow_redirects=True)
+        response_data = response.get_data(as_text=True)
+        self.assertIn(data['body'], response_data)
+
+    def test_change_theme(self):
+        self.client.get('/change-theme/ubuntu', follow_redirects=True)
+        cookie = next(
+            (cookie for cookie in self.client.cookie_jar if cookie.name == "theme"),
+            None
+        )
+        self.assertIsNotNone(cookie)
+        self.assertEqual(cookie.value, 'ubuntu')

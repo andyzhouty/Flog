@@ -25,9 +25,10 @@ Feedback
     </h5>
     <div class="list-group">
         {% for feedback in feedback %}
+            {% if feedback.author == current_user %}
             <a class="list-group-item list-group-item-action flex-column">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1 text-success"> {{ feedback.author }}
+                    <h5 class="mb-1 text-success">
                         <small class="text-muted"> #{{ loop.revindex }} </small>
                     </h5>
                     <small data-toggle="tooltip" data-placement="top" data-delay="500"
@@ -37,6 +38,7 @@ Feedback
                 </div>
                 <p class="mb-1"> {{ feedback.body }}</p>
             </a>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock page_content %}

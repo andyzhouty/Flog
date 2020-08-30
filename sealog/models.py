@@ -51,7 +51,8 @@ class Feedback(db.Model):
     __tablename__ = 'feedback'
     id = db.Column(db.Integer(), primary_key=True)
     body = db.Column(db.String(200))
-    author = db.Column(db.String(20))
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author = db.relationship('User', back_populates='feedbacks')
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     def __repr__(self):
@@ -134,6 +135,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', back_populates='author')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     role = db.relationship('Role', back_populates='users')
+    feedbacks = db.relationship('Feedback', back_populates='author')
     avatar_hash = db.Column(db.String(32))
 
     name = db.Column(db.String(64))

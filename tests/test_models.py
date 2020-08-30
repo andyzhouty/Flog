@@ -13,7 +13,6 @@ class ModelsTestCase(unittest.TestCase):
         db.create_all()
         fakes.users()
         fakes.posts()
-        fakes.feedbacks()
 
     def tearDown(self) -> None:
         db.session.remove()
@@ -22,7 +21,6 @@ class ModelsTestCase(unittest.TestCase):
 
     def test_posts_and_feedbacks_exists(self):
         self.assertGreater(len(Post.query.all()), 0)
-        self.assertGreater(len(Feedback.query.all()), 0)
 
     def test_password_setter(self):
         u = User()

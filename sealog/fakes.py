@@ -61,7 +61,7 @@ def feedbacks(count: int=2) -> None:
     """生成虚拟反馈"""
     for i in range(count):
         feedback = Feedback(
-            author=fake.name(),
+            author=User.g,
             body=fake.sentence(),
             timestamp=fake.date_time_this_year()
         )
