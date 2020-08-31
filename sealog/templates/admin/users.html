@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import role_label_of with context %}
+{% from 'macros.html' import role_label_of, static_file with context %}
 {% block styles %}
     {{ super() }}
+    {{ static_file('css', 'https://cdn.staticfile.org/semantic-ui/2.4.1/components/icon.min.css', local=False) }}
 {% endblock styles %}
 {% block page_content %}
+    <div class="row">
+    <div class="col-lg-8">
     <ul class="list-group">
     {% for user in pagination.items %}
         <li class="list-group-item">
@@ -12,12 +15,21 @@
             <a style="font-size: 2em" href="{{ url_for('main.user_profile', username=user.username) }}">{{ user.name }}</a>
             <span class="float-right text-white">
                 {{ role_label_of(user) }}<br><br>
-                <a class="btn btn-outline-danger" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                <a class="btn btn-outline-warning" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
                     Edit Profile
                 </a>
+                <form class="inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
+                    style="display: inline !important">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
+                        DELETE ACCOUNT
+                    </button>
+                </form>
             </span>
         </li>
     {% endfor %}
     </ul>
+    </div>
+    {% include 'main/_sidebar.html' %}
     {{ render_pagination(pagination) }}
 {% endblock page_content %}

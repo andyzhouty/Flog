@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
-from flask import render_template, request, flash, url_for, current_app
+from flask import render_template, request, flash, url_for, current_app, make_response
 from werkzeug.utils import redirect
 from ..models import db, Feedback, User, Role
 from ..decorators import admin_required
+from ..utils import redirect_back
 from .forms import EditProfileAdminForm
 from . import admin_bp
 
@@ -63,3 +64,10 @@ def edit_user_profile(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('admin/edit_user_profile.html', form=form, user=user)
+
+@admin_bp.route('/users/delete/<int:id>', methods=['POST'])
+@admin_required
+def delete_user_account(id):
+    User.query.get(id).delete()
+    flash('User Deleted', 'info')
+    return make_response(redirect_back())

@@ -14,16 +14,29 @@ from .extensions import login_manager
 from .utils import slugify
 
 
+class Collect(db.Model):
+    collector_id = db.Column(db.Integer(), db.ForeignKey('user.id'), primary_key=True)
+    collected_id = db.Column(db.Integer(), db.ForeignKey('post.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    collector = db.relationship('User', back_populates='collections', lazy='joined')
+    collected = db.relationship('Post', back_populates='collectors', lazy='joined')
+
+
 class Post(db.Model):
     """
     A model for posts
     """
-    __tablename__ = 'posts'
     # initialize columns
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(64), index=True)
     author = db.relationship('User', back_populates='posts')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    collectors = db.relationship(
+        'Collect',
+        back_populates='collected',
+        cascade='all'
+    )
     slug = db.Column(db.String(128))
     date = db.Column(db.String(64))
     content = db.Column(db.Text())
@@ -45,6 +58,12 @@ class Post(db.Model):
     def url(self):
         if self.slug:
             return url_for('main.full_post', slug=self.slug, _external=True)
+
+    def update_slug(self):
+        if self.title:
+            self.slug = slugify(self.title)
+            db.session.add(self)
+            db.session.commit()
 
 
 class Feedback(db.Model):
@@ -143,6 +162,12 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    
+    collections = db.relationship(
+        'Collect',
+        back_populates='collector',
+        cascade='all'
+    )
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -200,6 +225,24 @@ class User(db.Model, UserMixin):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def collect(self, post):
+        if not self.is_collecting(post):
+            collect = Collect(collector=self, collected=post)
+            db.session.add(collect)
+            db.session.commit()
+
+    def uncollect(self, post):
+        collect = Collect.query.with_parent(self).filter_by(collected_id=post.id).first()
+        if collect:
+            db.session.delete(collect)
+            db.session.commit()
+
+    def is_collecting(self, post):
+        return (
+            Collect.query.with_parent(self).filter_by(collected_id=post.id).first()
+        ) is not None
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm): return False
