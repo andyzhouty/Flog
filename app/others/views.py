@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import current_app, abort, make_response, url_for, redirect
 from flask.globals import request
+from flask.templating import render_template
 from . import others_bp
 from ..utils import redirect_back
 
@@ -22,3 +23,7 @@ def register():
 @others_bp.route('/login/')
 def login():
     return redirect(url_for('auth.login'))
+
+@others_bp.route('/about-us')
+def about_us():
+    return render_template('others/about_us.html')

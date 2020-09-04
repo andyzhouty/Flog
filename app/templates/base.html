@@ -10,7 +10,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% endblock metas %}
         {% block styles %}
-            {{ static_file('icon', 'favicon/favicon.ico')}}
+            {{ static_file('icon', 'favicon/favicon.svg')}}
             {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
         {% endblock styles %}
         {% block scripts %}
