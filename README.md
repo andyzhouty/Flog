@@ -1,4 +1,4 @@
-# SeaLog
+# Flog
 
 The blog website built for [https://ls202201.pythonanywhere.com](LSFD202201 Class Website).
 

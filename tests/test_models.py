@@ -1,7 +1,7 @@
 import unittest
 import logging
-from sealog import create_app, db, fakes
-from sealog.models import Post, Feedback, User
+from app import create_app, db, fakes
+from app.models import Post, Feedback, User
 
 
 class ModelsTestCase(unittest.TestCase):

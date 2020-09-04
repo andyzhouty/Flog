@@ -1,8 +1,8 @@
 import unittest
 import logging
 from flask import current_app
-from sealog import create_app, db
-from sealog.utils import slugify
+from app import create_app, db
+from app.utils import slugify
 
 
 class BasicsTestCase(unittest.TestCase):

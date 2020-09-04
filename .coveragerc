@@ -1,5 +1,5 @@
 [run]
-source = sealog
+source = app
 branch = True
 omit =
     */test_*.py

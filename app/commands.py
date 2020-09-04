@@ -9,7 +9,7 @@ from .models import Permission, User, Role
 COVERAGE = None
 if os.getenv('FLASK_COVERAGE', False):
     import coverage
-    COVERAGE = coverage.coverage(branch=True, source='sealog')
+    COVERAGE = coverage.coverage(branch=True, source='flog')
     COVERAGE.start()
 
 

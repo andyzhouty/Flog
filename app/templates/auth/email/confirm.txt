@@ -1,6 +1,6 @@
 Hello, {{ user.username }}
 
-Welcome to Sealog!
+Welcome to Flog!
 
 To confirm your account please click on the following link:
 

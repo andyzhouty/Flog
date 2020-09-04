@@ -3,9 +3,9 @@ import unittest
 import os
 from faker import Faker
 from flask import escape
-from sealog import create_app, db, fakes
-from sealog.models import Post, Role, User
-from sealog.utils import slugify
+from app import create_app, db, fakes
+from app.models import Post, Role, User
+from app.utils import slugify
 
 fake = Faker()
 
