@@ -21,7 +21,7 @@ from .main import main_bp
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
-    app = Flask('flog')
+    app = Flask('app')
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
