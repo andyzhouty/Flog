@@ -23,12 +23,24 @@ class Collect(db.Model):
     collected = db.relationship('Post', back_populates='collectors', lazy='joined')
 
 
+class Follow(db.Model):
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+                            primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+                            primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    follower = db.relationship('User', foreign_keys=[follower_id],
+                               back_populates='following', lazy='joined')
+    followed = db.relationship('User', foreign_keys=[followed_id],
+                               back_populates='followers', lazy='joined')
+
+
 class Post(db.Model):
     """
     A model for posts
     """
     # initialize columns
-    id = db.Column(db.Integer(), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), index=True)
     author = db.relationship('User', back_populates='posts')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -37,6 +49,7 @@ class Post(db.Model):
         back_populates='collected',
         cascade='all'
     )
+    comments = db.relationship('Comment', back_populates='post')
     slug = db.Column(db.String(128))
     date = db.Column(db.String(64))
     content = db.Column(db.Text())
@@ -46,6 +59,7 @@ class Post(db.Model):
         super(Post, self).__init__(**kwargs)
         if self.title:
             self.slug = slugify(self.title)
+
 
     def __repr__(self) -> str:
         return f'<Post {self.title}>'
@@ -66,8 +80,23 @@ class Post(db.Model):
             db.session.commit()
 
 
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    flag = db.Column(db.Integer, default=0)
+
+    replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+
+    post = db.relationship('Post', back_populates='comments')
+    author = db.relationship('User', back_populates='comments')
+    replies = db.relationship('Comment', back_populates='replied', cascade='all')
+    replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
+
+
 class Feedback(db.Model):
-    __tablename__ = 'feedback'
     id = db.Column(db.Integer(), primary_key=True)
     body = db.Column(db.String(200))
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -80,6 +109,7 @@ class Feedback(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
 
 class Permission:
     FOLLOW = 1
@@ -169,6 +199,13 @@ class User(db.Model, UserMixin):
         cascade='all'
     )
 
+    following = db.relationship('Follow', foreign_keys=[Follow.follower_id],
+                                back_populates='follower', lazy='dynamic', cascade='all')
+    followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
+                                back_populates='followed', lazy='dynamic', cascade='all')
+
+    comments = db.relationship('Comment', back_populates='author')
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -178,6 +215,7 @@ class User(db.Model, UserMixin):
                 self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = self.gravatar_hash()
+        self.follow(self)
 
     def __repr__(self):
         return f"<User '{self.username}'>"
@@ -242,6 +280,24 @@ class User(db.Model, UserMixin):
         return (
             Collect.query.with_parent(self).filter_by(collected_id=post.id).first()
         ) is not None
+
+    def follow(self, user):
+        if not self.is_following(user):
+            follow = Follow(follower=self, followed=user)
+            db.session.add(follow)
+            db.session.commit()
+
+    def unfollow(self, user):
+        follow = self.following.filter_by(followed_id=user.id).first()
+        if follow:
+            db.session.delete(follow)
+            db.session.commit()
+
+    def is_following(self, user):
+        return self.following.filter_by(followed_id=user.id).first() is not None
+
+    def is_followed_by(self, user):
+        return self.following.filter_by(follower_id=user.id).first() is not None
 
 
 class AnonymousUser(AnonymousUserMixin):

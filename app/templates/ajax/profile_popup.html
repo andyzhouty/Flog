@@ -1,0 +1,9 @@
+<div class="popup-card">
+    <img class="img-circle img-fluid popup-avatar" src="{{ user.gravatar() }}">
+    <div class="popup-profile">
+        <h6>{{ user.name }}</h6>
+        <p class="text-muted">{{ user.username }}</p>
+    </div>
+    <a href="{{ url_for('user.user_profile', username=user.username) }}"
+       class="btn btn-light btn-sm">Homepage</a>
+</div>

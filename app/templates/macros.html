@@ -14,11 +14,80 @@
 {% macro role_label_of(user) %}
     <span class="text-white">
     {% if user.is_administrator() -%}
-        <span class="bg-danger" style="border-radius: 5px; padding: 5px;">Admin</span>
+        <span class="badge badge-danger">Admin</span>
     {% elif user.can(Permission.MODERATE) -%}
-        <span class="bg-warning" style="border-radius: 5px; padding: 5px;">Moderator</span>
+        <span class="badge badge-warning">Moderator</span>
     {% else -%}
-        <span class="bg-primary" style="border-radius: 5px; padding: 5px;">User</span>
+        <span class="badge badge-primary">User</span>
     {%- endif %}
     </span>
+{% endmacro %}
+
+{% macro follow_area(user) %}
+    {% if current_user.is_authenticated -%}
+        {% if user != current_user %}
+            {% if current_user.is_following(user) %}
+                <form class="form-inline" method="POST"
+                      action="{{ url_for('user.unfollow', username=user.username) }}"
+                      next="{{ request.full_path }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-dark btn-sm">Unfollow</button>
+                    {% if current_user.is_followed_by(user) %}
+                        <p class="badge badge-light">Follow each other</p>
+                    {% endif %}
+                </form>
+            {% else %}
+                <form class="form-inline" method="POST"
+                      action="{{ url_for('user.follow', username=user.username) }}"
+                      next="{{ request.full_path }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+                    {% if current_user.is_followed_by(user) %}
+                        <p class="badge badge-light">Follows you</p>
+                    {% endif %}
+                </form>
+            {% endif %}
+       {% endif %}
+    {%- endif %}
+{% endmacro %}
+
+{% macro post_actions(post, can_edit=True, can_delete=True, can_collect=True) %}
+    {% if current_user.is_authenticated %}
+        <div>
+            {% if can_collect and post.author != current_user %}
+                {% if not current_user.is_collecting(post) %}
+                <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
+                    <i class="fa fa-heart"></i>
+                    Collect
+                </a>
+                {% else %}
+                    <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
+                        <i class="fa fa-ban"></i>
+                        Uncollect
+                    </a>
+                {% endif %}
+            {% endif %}
+            {% if current_user.is_administrator() or post.author == current_user
+                  and can_edit %}
+                <a class="btn btn-sm btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
+                    <i class="fa fa-edit"></i>
+                    EDIT
+                </a>
+            {% endif %}
+            {# 如果当前用户是协管员，并且文章作者没有协管员权限时，抑或当前用户是该文章作者时，显示删除按钮 #}
+            {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
+                or current_user.is_administrator() or post.author == current_user
+                and can_edit %}
+                <form class="inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}"
+                    style="display: inline !important">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
+                        <i class="fa fa-trash"></i>   
+                        DELETE
+                        </button>
+                    </form>
+            {% endif %}
+        </div>
+    {% endif %}
+
 {% endmacro %}

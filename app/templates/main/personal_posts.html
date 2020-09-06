@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'macros.html' import post_actions with context %}
 {% block page_content %}
     <div class="row">
     <div class="col-lg-8">
         <ul class="list-group">
-        {% if pagination.items | length > 0%}
+        {% if pagination.items | length > 0 %}
             {% for post in pagination.items %}
                 <li class="list-group-item">
                     <a href="{{ post.url() }}">{{ post.title }}</a>
@@ -12,23 +13,14 @@
                         {{ post.content | striptags | truncate(200) }}
                     </p>
                     <span class="float-right">
-                        <a class="btn btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
-                            EDIT
-                        </a>
-                        <form class="inline" method="POST" action="{{ url_for('main.delete_post', id=post.id)}}"
-                            style="display: inline !important">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
-                                DELETE
-                            </button>
-                        </form>
+                        {{ post_actions(post) }}
                     </span>
             {% endfor %}
-            {{ render_pagination(pagination) }}
         {% else %}
             <p class="display-4">Nothing Here</p>
         {% endif %}
         </ul>
+        {{ render_pagination(pagination) }}
     </div>
     {% include 'main/_sidebar.html' %}
     </div>

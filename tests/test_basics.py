@@ -10,6 +10,7 @@ class BasicsTestCase(unittest.TestCase):
         logging.disable(logging.CRITICAL)
         self.app = create_app('testing')
         self.app_context = self.app.app_context()
+        self.client = self.app.test_client()
         self.app_context.push()
         db.create_all()
 
@@ -27,3 +28,8 @@ class BasicsTestCase(unittest.TestCase):
     def test_slugify(self):
         string = "Andy Zhou"
         self.assertEqual(slugify(string), 'andy-zhou')
+
+    def test_about_us(self):
+        response = self.client.get('/about-us')
+        self.assertEqual(response.status_code, 200)
+

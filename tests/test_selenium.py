@@ -59,5 +59,6 @@ class UITestCase(unittest.TestCase):
 
     def test_ui_change_theme(self):
         self.client.find_element_by_link_text('Theme').click()
-        self.client.find_element_by_link_text('Ubuntu').click()
-        self.assertEqual(self.client.get_cookie('theme')['value'], 'ubuntu')
+        self.client.find_element_by_link_text('Lite').click()
+        self.assertEqual(self.client.get_cookie('theme')['value'], 'lite')
+

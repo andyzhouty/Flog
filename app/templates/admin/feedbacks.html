@@ -7,7 +7,7 @@
             <li class="list-group-item">
                 <h4>{{ feedback.title }}</h4>
                     ——{{ feedback.author }}
-                    <form class="inline" method="POST"
+                    <form class="form-inline" method="POST"
                         action="{{ url_for('admin.delete_feedback', id=feedback.id)}}"
                         style="float: right">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

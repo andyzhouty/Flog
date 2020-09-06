@@ -12,20 +12,8 @@
         {% block styles %}
             {{ static_file('icon', 'favicon/favicon.svg')}}
             {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
+            {{ static_file('css', 'https://cdn.staticfile.org/font-awesome/5.9.0/css/all.min.css', local=False) }}
         {% endblock styles %}
-        {% block scripts %}
-            {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
-            {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
-            {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
-            {% if current_app.config['FLASK_CONFIG'] == 'production' %}
-                <script>
-                    $(document).ready(function (){
-                    if (window.navigator._selenium || window.navigator.webdriver){
-                        document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
-                    }})
-                </script>
-            {% endif %}
-        {% endblock scripts %}
     {% endblock head %}
 </head>
 <body>
@@ -41,12 +29,13 @@
             <ul class="navbar-nav mr-auto">
                 {{ render_nav_item('main.main', 'Main') }}
                 {{ render_nav_item('feedback.feedback', 'Feedback') }}
+		{{ render_nav_item('others.about_us', 'About Us') }}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a href="{{ url_for('main.user_profile', username=current_user.username) }}" class="nav-link">
+                        <a href="{{ url_for('user.user_profile', username=current_user.username) }}" class="nav-link">
                             <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="rounded-circle">
                         </a>
                     </li>
@@ -55,7 +44,7 @@
                             Account
                         </a>
                         <div class="dropdown-menu">
-                            <a href="{{ url_for('main.edit_profile') }}" class="dropdown-item" id="edit-profile">Edit Profile</a>
+                            <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item" id="edit-profile">Edit Profile</a>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-item" id="logout">Log out</a>
                             {% if not current_user.confirmed %}
                                 <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">Resend Confirmation Email</a>
@@ -90,14 +79,21 @@
 {% endblock navbar %}
 {% block flashed_messages %}
     {% for message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ message[0] }}" class="close">
+        {% if message[0] != 'message' and message[0] %}
+            {% set category = message[0] %}
+        {% else %}
+            {% set category = 'info' %}
+        {% endif %}
+        {% set message_content = message[1] %}
+        <div class="alert alert-{{ category }}" class="close">
             <button type="button" class="close" data-dismiss="alert">&times;
             </button>
-            {{ message[1] }}
+            {{ message_content }}
         </div>
     {% endfor %}
 {% endblock flashed_messages %}
 {% block content %}
+    <div id="toast"></div>
     <div class="container" style="font-family: 'Segoe UI', Arial, sans-serif;">
         {% block page_content %}{% endblock %}
         {% block share %}{% endblock %}
@@ -106,5 +102,18 @@
 <footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px; margin-top: 100px">
     &copy; Copyright 2020 Andy Zhou
 </footer>
+{% block scripts %}
+    {{ static_file('js', 'https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js', local=False) }}
+    {{ static_file('js', 'https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js', local=False) }}
+    {{ static_file('js', 'https://cdn.staticfile.org/twitter-bootstrap/4.5.2/js/bootstrap.min.js', local=False) }}
+    {% if current_app.config['FLASK_CONFIG'] == 'production' %}
+        <script>
+            $(document).ready(function (){
+            if (window.navigator._selenium || window.navigator.webdriver){
+                document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
+            }})
+        </script>
+    {% endif %}
+{% endblock scripts %}
 </body>
 </html>

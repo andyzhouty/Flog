@@ -1,28 +1,31 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import role_label_of, static_file with context %}
-{% block styles %}
+{% block scripts %}
     {{ super() }}
-    {{ static_file('css', 'https://cdn.staticfile.org/semantic-ui/2.4.1/components/icon.min.css', local=False) }}
-{% endblock styles %}
+    {{ static_file('js', 'js/script.js') }}
+{% endblock scripts %}
 {% block page_content %}
     <div class="row">
     <div class="col-lg-8">
     <ul class="list-group">
     {% for user in pagination.items %}
         <li class="list-group-item">
-            <img src="{{ user.gravatar() }}">
-            <a style="font-size: 2em" href="{{ url_for('main.user_profile', username=user.username) }}">{{ user.name }}</a>
-            <span class="float-right text-white">
-                {{ role_label_of(user) }}<br><br>
-                <a class="btn btn-outline-warning" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+            <a href="{{ url_for('user.user_profile', username=user.username) }}">
+                <img src="{{ user.gravatar() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
+            <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
+            {{ role_label_of(user) }}<br><br>
+            <span class="text-white">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                    <i class="fa fa-edit"></i>
                     Edit Profile
                 </a>
-                <form class="inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
+                <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
-                        DELETE ACCOUNT
+                        <i class="fa fa-trash"></i>
+                        DELETE
                     </button>
                 </form>
             </span>
