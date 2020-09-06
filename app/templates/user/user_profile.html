@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import role_label_of, follow_area, with context %}
+{% block title %}
+    Flog - {{ user.username }}
+{% endblock title %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment(local_js="https://cdn.staticfile.org/moment.js/2.9.0/moment-with-locales.min.js") }}
+    {{ moment.locale() }}
+{% endblock scripts %}
+{% block page_content %}
+<div class="row container">
+    <div class="col-lg-2">
+        <img class="img-fluid" src="{{ user.gravatar() }}" width="200px" height="200px">
+    </div>
+    <div class="col-lg-10">
+        <h1>{{ user.username }}</h1>{{ role_label_of(user) }}
+        {% if user.name or user.location %}
+        <p>
+            {% if user.name %}{{ user.name }}{% endif %}
+            {% if user.location %}
+                from <a href="http://bing.com/maps/?q={{ user.location }}">
+                    {{ user.location }}
+                </a>
+            {% endif %}
+        </p>
+        {% endif %}
+
+        {% if current_user.is_administrator() %}
+            <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+            {% if not user.confirmed %}<p>This email hasn't been confirmed yet.</p>{% endif %}
+        {% endif %}
+        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+
+        <p>
+            {% if user.member_since %}
+            Member since {{ moment(user.member_since).format('L') }}
+            {% endif %}
+            {% if user.last_seen %}
+            Last seen {{ moment(user.last_seen).fromNow() }}
+            {% endif %}
+        </p>
+        {{ follow_area(user) }}
+        {% if user == current_user and not current_user.is_administrator() %}
+            <a class="btn btn-outline-primary" href="{{ url_for('main.edit_profile') }}">
+                Edit Profile
+            </a>
+        {% elif current_user.is_administrator() %}
+            <a class="btn btn-outline-danger" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                Edit Profile [Admin]
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock page_content %}
