@@ -23,7 +23,7 @@ function show_profile_popover(e) {
                 })
             },
             error: function (error) {
-                toast('Server Error, please try again later.');
+                toastr.error('Server Error, please try again later.');
             }
         })
     }, 500);
@@ -41,14 +41,6 @@ function hide_profile_popover(e) {
             }
         }, 200)
     }
-}
-function toast(body) {
-    clearTimeout(flash);
-    var $toast = $('#toast');
-    $toast.text(body).fadeIn();
-    flash = setTimeout(function () {
-       $toast.fadeOut();
-    }, 3000);
 }
 
 $('.profile-popover').hover(

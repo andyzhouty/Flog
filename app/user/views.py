@@ -1,4 +1,5 @@
-from flask import render_template, redirect, make_response, url_for, flash
+from flask import render_template, redirect, make_response, url_for, flash, request
+from flask.globals import current_app
 from flask_login import current_user, login_required
 from . import user_bp
 from .forms import EditProfileForm
@@ -59,4 +60,14 @@ def unfollow(username):
 def user_profile(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user/user_profile.html', user=user)
+
+
+@user_bp.route('/<username>/followers')
+def show_followers(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followers.paginate(
+        page, per_page=current_app.config['USERS_PER_PAGE']
+    )
+    return render_template('user/followers.html', pagination=pagination, user=user)
 

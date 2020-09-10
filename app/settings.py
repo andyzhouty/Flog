@@ -33,6 +33,7 @@ class Base:
     BOOTSTRAP_THEMES = {'default': 'Default', 'lite': 'Lite', 'dark': 'Dark'}
 
     POSTS_PER_PAGE = 8
+    USERS_PER_PAGE = 10
 
     @classmethod
     def init_app(cls, app):

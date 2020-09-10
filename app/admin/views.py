@@ -35,7 +35,7 @@ def delete_feedback(id):
 def manage_users():
     page = request.args.get('page', default=1, type=int)
     pagination = User.query.order_by(User.id.desc()).paginate(
-        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
+        page, per_page=current_app.config['USERS_PER_PAGE'], error_out=False
     )
     return render_template("admin/users.html", pagination=pagination)
 

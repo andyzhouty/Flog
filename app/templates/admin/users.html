@@ -11,8 +11,8 @@
     <ul class="list-group">
     {% for user in pagination.items %}
         <li class="list-group-item">
-            <a href="{{ url_for('user.user_profile', username=user.username) }}">
-                <img src="{{ user.gravatar() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
+            <a href="{{ url_for('user.user_profile', username=user.username) }}"  class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
+                <img src="{{ user.gravatar() }}"></a>
             <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
             {{ role_label_of(user) }}<br><br>
             <span class="text-white">

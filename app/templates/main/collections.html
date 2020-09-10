@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'macros.html' import post_actions %}
+{% from 'macros.html' import post_actions with context %}
 {% block page_content %}
     <ul class="list-group">
         {% for post in posts %}

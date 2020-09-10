@@ -51,7 +51,7 @@
     {%- endif %}
 {% endmacro %}
 
-{% macro post_actions(post, can_edit=True, can_delete=True, can_collect=True) %}
+{% macro post_actions(post, can_edit=True, can_delete=True, can_collect=True, show_collectors=None, collectors=0) %}
     {% if current_user.is_authenticated %}
         <div>
             {% if can_collect and post.author != current_user %}
@@ -87,7 +87,35 @@
                         </button>
                     </form>
             {% endif %}
+            {% if show_collectors %}
+                <i class="fa fa-star"></i>
+                Collected by {{ post.collectors | length }} person / people
+            {% endif %}
         </div>
     {% endif %}
-
+{% endmacro %}
+{% macro user_card(user) %}
+    <li class="list-group-item">
+    <a href="{{ url_for('user.user_profile', username=user.username) }}">
+        <img src="{{ user.gravatar() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
+    <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
+    {{ role_label_of(user) }}
+    {% if current_user.is_administrator() %}
+    <br><br>
+    <span class="text-white">
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+            <i class="fa fa-edit"></i>
+            Edit Profile
+        </a>
+        <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
+            style="display: inline !important">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
+                <i class="fa fa-trash"></i>
+                DELETE
+            </button>
+        </form>
+    </span>
+    {% endif %}
+    </li>
 {% endmacro %}

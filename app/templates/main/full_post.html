@@ -12,7 +12,7 @@
                 </small>
             </div><br>
             {{ post.content | safe }}
-            {{ post_actions(post) }}
+            {{ post_actions(post, show_collectors=True) }}
         </div>
         {% include 'main/_sidebar.html' %}
     </div>

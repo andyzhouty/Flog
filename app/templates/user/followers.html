@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import user_card with context %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block page_content %}
+    <ul class="list-group">
+        {% if pagination.items | length > 1 %}
+        {% for follow in pagination.items %}
+            {% if follow.follower != user %}
+                {{ user_card(follow.follower) }}
+            {% endif %}
+        {% endfor %}
+        {% else %}
+            <div class="tip">
+                <h3>User {{ user.username }} has no followers</h3>
+            </div>
+        {% endif %}
+    </ul>
+    {% if pagination.items | length != 1 %}
+        {{ render_pagination(pagination) }}
+    {% endif %}
+{% endblock page_content %}

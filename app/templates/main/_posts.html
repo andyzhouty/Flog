@@ -2,7 +2,9 @@
 {% for post in posts %}
     <li class="list-group-item">
         <h3 class="text-primary">{{ post.title }}</h3>
-        <h4 class="text-muted">{{ post.author.name }}</h4>
+        <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}" class="text-muted profile-popover"
+            data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}"
+        >{{ post.author.name }}</a></h4>
         <div>
             {{ post.content | striptags | truncate(200) }}
             <small class="text-primary">
