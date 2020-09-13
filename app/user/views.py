@@ -70,4 +70,3 @@ def show_followers(username):
         page, per_page=current_app.config['USERS_PER_PAGE']
     )
     return render_template('user/followers.html', pagination=pagination, user=user)
-

@@ -1,6 +1,6 @@
 from flask import (
-    render_template, request, redirect, url_for, current_app, flash, abort,
-    make_response
+    render_template, redirect, url_for, flash, abort, make_response,
+    request, current_app
 )
 from flask_login import current_user
 from flask_login.utils import login_required
@@ -14,7 +14,8 @@ from . import main_bp
 def before_app_request():
     ua = request.user_agent.string
     if 'spider' in ua or 'bot' in ua or 'python' in ua:
-        return 'F**k you, web crawler!'
+        return 'F**k you, spider!'
+
 
 @main_bp.route('/')
 def main():
@@ -28,8 +29,7 @@ def main():
     return render_template('main/main.html', pagination=pagination, posts=posts)
 
 
-
-############################文章部分#################################
+####################### Post Part ##################################
 @main_bp.route('/write/', endpoint='write', methods=['GET', 'POST'])
 @login_required
 def create_post():
@@ -59,7 +59,8 @@ def full_post(slug):
 @login_required
 def manage_posts():
     page = request.args.get('page', 1, int)
-    pagination = (Post.query.filter_by(author=current_user)
+    pagination = (
+        Post.query.filter_by(author=current_user)
                             .order_by(Post.timestamp.desc())
                             .paginate(
                                 page,

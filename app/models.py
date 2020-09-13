@@ -74,6 +74,7 @@ class Post(db.Model):
             return url_for('main.full_post', slug=self.slug, _external=True)
 
     def update_slug(self):
+        """Updates the slug when the title is changed."""
         if self.title:
             self.slug = slugify(self.title)
             db.session.add(self)
@@ -298,6 +299,9 @@ class User(db.Model, UserMixin):
 
     def is_followed_by(self, user):
         return self.following.filter_by(follower_id=user.id).first() is not None
+
+    def profile_url(self):
+        return url_for('user.user_profile', username=self.username)
 
 
 class AnonymousUser(AnonymousUserMixin):

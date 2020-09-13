@@ -1,6 +1,4 @@
-"""
-生成虚拟数据
-"""
+from app import admin
 from random import randint
 from faker import Faker
 from flask import current_app
@@ -12,7 +10,7 @@ fake = Faker()
 
 
 def users(count: int=2) -> None:
-    """生成虚拟用户"""
+    """Generates fake users"""
     for i in range(count):
         name = fake.name()
         user = User(
@@ -28,7 +26,7 @@ def users(count: int=2) -> None:
 
 
 def moderators(count: int=1) -> None:
-    """生成虚拟协管员"""
+    """Generates fake moderators"""
     for i in range(count):
         name = fake.name()
         moderator = User(
@@ -44,7 +42,7 @@ def moderators(count: int=1) -> None:
 
 
 def posts(count: int=2) -> None:
-    """生成虚拟文章"""
+    """Generates fake posts"""
     for i in range(count):
         post = Post(
             title=fake.sentence(),
@@ -58,7 +56,7 @@ def posts(count: int=2) -> None:
 
 
 def feedbacks(count: int=2) -> None:
-    """生成虚拟反馈"""
+    """Generates fake feedbacks"""
     for i in range(count):
         feedback = Feedback(
             author=User.query.get(randint(0, User.query.count())),
@@ -67,3 +65,13 @@ def feedbacks(count: int=2) -> None:
         )
         db.session.add(feedback)
     db.session.commit()
+
+
+def follows(count: int=20) -> None:
+    """Generates fake follow relationships"""
+    admin_role = Role.query.filter_by(name='Administrator').first()
+    admin = User.query.filter_by(role=admin_role).first()
+    for i in range(count):
+        another = User.query.get(randint(1, User.query.count()))
+        if another.role != admin_role:
+            another.follow(admin)

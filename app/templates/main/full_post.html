@@ -8,7 +8,11 @@
                     {{ post.title }}
                 </h1>
                 <small>
-                    Date: {{ post.date }}
+                    Date: {{ post.date }}<br>
+                    Author:
+                    <a href="{{ post.author.profile_url() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+                        {{ post.author.name }}
+                    </a>
                 </small>
             </div><br>
             {{ post.content | safe }}

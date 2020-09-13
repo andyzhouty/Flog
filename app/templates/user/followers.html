@@ -11,7 +11,11 @@
         {% endfor %}
         {% else %}
             <div class="tip">
-                <h3>User {{ user.username }} has no followers</h3>
+                {% if user == current_user %}
+                    <h3>You have no followers</h3>
+                {% else %}
+                    <h3>User {{ user.name }} has no followers</h3>
+                {% endif %}
             </div>
         {% endif %}
     </ul>

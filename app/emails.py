@@ -17,4 +17,4 @@ def send_email(recipients: list,
     )
     msg.body = render_template(template + ".txt", **kwargs)
     msg.html = render_template(template + ".html", **kwargs)
-    mail.send(msg)  # No threading because it is unnecessary
+    mail.send(msg)  # No threading due to some strange problems

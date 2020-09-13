@@ -57,7 +57,7 @@
             {% if can_collect and post.author != current_user %}
                 {% if not current_user.is_collecting(post) %}
                 <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
-                    <i class="fa fa-heart"></i>
+                    <i class="fa fa-star"></i>
                     Collect
                 </a>
                 {% else %}
@@ -74,10 +74,10 @@
                     EDIT
                 </a>
             {% endif %}
-            {# 如果当前用户是协管员，并且文章作者没有协管员权限时，抑或当前用户是该文章作者时，显示删除按钮 #}
             {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
-                or current_user.is_administrator() or post.author == current_user
-                and can_edit %}
+                or current_user.is_administrator()
+                or post.author == current_user
+                and can_delete %}
                 <form class="inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -88,8 +88,16 @@
                     </form>
             {% endif %}
             {% if show_collectors %}
+                <br><br>
+                {% set collectors = post.collectors | length %}
+                <p class="text-muted">
                 <i class="fa fa-star"></i>
-                Collected by {{ post.collectors | length }} person / people
+                {% if collectors == 1 %}
+                    Collected by {{ collectors }} person
+                {% else %}
+                    Collected by {{ collectors }} people
+                {% endif %}
+                </p>
             {% endif %}
         </div>
     {% endif %}

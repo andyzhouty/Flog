@@ -1,7 +1,7 @@
 import unittest
 import logging
 from app import create_app, db, fakes
-from app.models import Post, Feedback, User
+from app.models import Post, User, Role
 
 
 class ModelsTestCase(unittest.TestCase):
@@ -11,8 +11,9 @@ class ModelsTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        fakes.users()
-        fakes.posts()
+        Role.insert_roles()
+        fakes.users(10)
+        fakes.posts(10)
 
     def tearDown(self) -> None:
         db.session.remove()

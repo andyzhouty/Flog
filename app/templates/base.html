@@ -30,13 +30,13 @@
             <ul class="navbar-nav mr-auto">
                 {{ render_nav_item('main.main', 'Main') }}
                 {{ render_nav_item('feedback.feedback', 'Feedback') }}
-		{{ render_nav_item('others.about_us', 'About Us') }}
+                {{ render_nav_item('others.about_us', 'About Us') }}
             </ul>
-
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a href="{{ url_for('user.user_profile', username=current_user.username) }}" class="nav-link">
+                            {# Display user identicon as a circle here #}
                             <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="rounded-circle">
                         </a>
                     </li>
@@ -48,9 +48,11 @@
                             <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item" id="edit-profile">Edit Profile</a>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-item" id="logout">Log out</a>
                             {% if not current_user.confirmed %}
-                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">Resend Confirmation Email</a>
+                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">
+                                    Resend Confirmation Email
+                                </a>
                             {% endif %}
-                            <a href="{{ url_for('auth.delete_account') }}" class="dropdown-item bg-danger text-white">
+                            <a href="{{ url_for('auth.delete_account') }}" class="dropdown-item text-white">
                                 Delete Your Account
                             </a>
                         </div>
@@ -60,7 +62,6 @@
                         <a href="{{ url_for('auth.login') }}" class="nav-link">Log in / Register</a>
                     </li>
                 {% endif %}
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Theme
@@ -95,9 +96,8 @@
 {% endblock flashed_messages %}
 {% block content %}
     <div id="toast"></div>
-    <div class="container" style="font-family: 'Segoe UI', Arial, sans-serif;">
+    <div class="container">
         {% block page_content %}{% endblock %}
-        {% block share %}{% endblock %}
     </div>
 {% endblock %}
 <footer class="footer" style="margin-left: 10px; width: 100%; padding: 20px; margin-top: 100px">
