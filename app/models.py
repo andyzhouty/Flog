@@ -297,9 +297,6 @@ class User(db.Model, UserMixin):
     def is_following(self, user):
         return self.following.filter_by(followed_id=user.id).first() is not None
 
-    def is_followed_by(self, user):
-        return self.following.filter_by(follower_id=user.id).first() is not None
-
     def profile_url(self):
         return url_for('user.user_profile', username=self.username)
 

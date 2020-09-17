@@ -45,3 +45,15 @@ class ModelsTestCase(unittest.TestCase):
         u = User(email='test@example.com')
         token = u.generate_confirmation_token()
         self.assertTrue(u.confirm(token))
+
+    def test_collect(self):
+        user = User.query.get(1)
+        post = Post.query.get(1)
+        user.collect(post)
+        self.assertTrue(user.is_collecting(post))
+
+    def test_follow(self):
+        user1 = User.query.get(1)
+        user2 = User.query.get(2)
+        user1.follow(user2)
+        self.assertTrue(user1.is_following(user2))

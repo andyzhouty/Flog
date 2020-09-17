@@ -32,7 +32,7 @@
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-dark btn-sm">Unfollow</button>
-                    {% if current_user.is_followed_by(user) %}
+                    {% if user.is_following(user) %}
                         <p class="badge badge-light">Follow each other</p>
                     {% endif %}
                 </form>
@@ -42,7 +42,7 @@
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-primary btn-sm">Follow</button>
-                    {% if current_user.is_followed_by(user) %}
+                    {% if user.is_following(current_user) %}
                         <p class="badge badge-light">Follows you</p>
                     {% endif %}
                 </form>
