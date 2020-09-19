@@ -8,7 +8,7 @@ from ..models import User
 class RegisterationForm(FlaskForm):
     username = StringField(
         'Username', validators=[DataRequired(), Length(1, 32),
-        Regexp(r'^[A-Za-z][A-Za-z0-0_\-.]*$', 0,
+        Regexp(r'^[A-Za-z][A-Za-z0-9_\-.]*$', 0,
                'Usernames must have only letters, numbers, dots, underscores or dashes')
     ])
     name = StringField('Real Name', validators=[DataRequired(), Length(2, 64)])

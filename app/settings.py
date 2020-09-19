@@ -26,8 +26,10 @@ class Base:
     MAIL_PASSWORD = os.getenv("FLOG_EMAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER")
 
-    ADMIN_EMAIL = os.getenv('ADMIN_EMAIL')
+    ADMIN_NAME = os.getenv('FLOG_ADMIN_NAME')
+    ADMIN_EMAIL = MAIL_USERNAME
     ADMIN_EMAIL_LIST = [ADMIN_EMAIL]
+    ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD')
 
     # ('theme name': 'display name')
     BOOTSTRAP_THEMES = {'default': 'Default', 'lite': 'Lite', 'dark': 'Dark'}

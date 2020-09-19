@@ -1,6 +1,6 @@
 from random import randint
 import unittest
-import os
+import time
 from faker import Faker
 from flask import escape
 from app import create_app, db, fakes
@@ -19,7 +19,7 @@ class ClientTestCase(unittest.TestCase):
         db.create_all()
         Role.insert_roles()
         self.admin = User(name='test', username='test',
-                          email=os.getenv('ADMIN_EMAIL'), confirmed=True)
+                          email='test@example.com', confirmed=True)
         self.admin.set_password('password')
         self.admin.role = Role.query.filter_by(name='Administrator').first()
         db.session.add(self.admin)
@@ -30,16 +30,29 @@ class ClientTestCase(unittest.TestCase):
         db.session.remove()
         self.app_context.pop()
 
-    def login(self, email=os.getenv('ADMIN_EMAIL'), password='password'):
+    def login(self, email='test@example.com', password='password'):
         login_data = {
             'username_or_email': email,
             'password': password,
             'remember_me': True
         }
-        return self.client.post('/auth/login', data=login_data, follow_redirects=True)
+        return self.client.post('/auth/login/', data=login_data, follow_redirects=True)
 
     def logout(self):
-        return self.client.get('/auth/logout', follow_redirects=True)
+        return self.client.get('/auth/logout/', follow_redirects=True)
+
+    def register(self):
+        register_data = {
+            'email': 'test2@example.com',
+            'name': 'Test3',
+            'username': 'test3',
+            'password': 'abcd1234',
+            'password_again': 'abcd1234'
+        }
+        return {
+            'data': register_data,
+            'response': self.client.post('/auth/register/', data=register_data, follow_redirects=True)
+        }
 
     def create_article(self):
         self.login()
@@ -60,19 +73,34 @@ class ClientTestCase(unittest.TestCase):
         response_data = response.get_data(as_text=True)
         self.assertTrue(response.status_code, 302)
         self.assertIn('Welcome, Administrator test', response_data)
-        self.assertTrue(self.logout().status_code, 302)
+        response = self.logout()
+        self.assertIn('You have been logged out', response.get_data(as_text=True))
+
+    def test_fail_login(self):
+        fail_login_res = self.login(password='wrongpassword')
+        res_data = fail_login_res.get_data(as_text=True)
+        self.assertIn('Invalid username or password!', res_data)
+
+    def test_register_login_and_confirm(self):
+        self.client.get('/auth/register/')
+        reg = self.register()
+        login_response = self.login(
+            email=reg['data']['email'], password=reg['data']['password'])
+        self.assertIn(reg['data']['name'], login_response.get_data(as_text=True))
+        user = User.query.filter_by(email=reg['data']['email']).first()
+        self.client.get(f'/auth/confirm/{user.generate_confirmation_token()}/', follow_redirects=True)
+        self.assertTrue(user.confirmed)
 
     def test_create_article(self):
         data = self.create_article()
         response = data['response']
         post = data['post']
-        text = data['text']
         self.assertTrue(response.status_code, 302)
         self.assertGreater(Post.query.count(), 0)
         response = self.client.get('/')
         response_data = response.get_data(as_text=True)
         self.assertIn(post['title'], response_data)
-        # 测试striptags过滤器是否工作
+        # test if filter 'striptag' work
         self.assertNotIn(post['content'], response_data)
 
     def test_post_slug(self):

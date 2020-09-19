@@ -38,7 +38,7 @@ def register():
         except Exception as e:
             db.session.delete(user)
             db.session.commit()
-            print(e)
+            current_app.logger.error(e)
             abort(500)
     return render_template('auth/register.html', form=form)
 
@@ -62,7 +62,7 @@ def login():
     return render_template('auth/login.html', form=form)
 
 
-@auth_bp.route('/logout')
+@auth_bp.route('/logout/')
 @login_required
 def logout():
     logout_user()
@@ -70,7 +70,7 @@ def logout():
     return redirect(url_for('main.main'))
 
 
-@auth_bp.route('/confirm/<token>')
+@auth_bp.route('/confirm/<token>/')
 @login_required
 def confirm(token):
     if current_user.confirmed:
