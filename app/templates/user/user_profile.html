@@ -28,7 +28,7 @@
 
         {% if current_user.is_administrator() %}
             <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
-            {% if not user.confirmed %}<p>This email hasn't been confirmed yet.</p>{% endif %}
+            {% if not user.confirmed -%}<p>This email hasn't been confirmed yet.</p>{%- endif %}
         {% endif %}
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
 
@@ -42,7 +42,9 @@
         </p>
         {{ follow_area(user) }}
         <p>
-            This user has {{ user.followers.count() - 1 }} follower(s).
+            {% if user != current_user %}This user has
+            {% else %}You have
+            {% endif %}{{ user.followers.count() - 1 }} follower(s).
         </p>
         {% if user == current_user and not current_user.is_administrator() %}
             <a class="btn btn-outline-primary" href="{{ url_for('main.edit_profile') }}">

@@ -1,4 +1,7 @@
-# Flog
+# <img src="app/static/favicon/favicon.svg" width="50px"> Flog
+Icons made by
+[Freepik]("https://www.flaticon.com/authors/freepik") from
+[www.flaticon.com](www.flaticon.com)
 
 The blog website created during learning flask.  
 在Flask学习期间创建的博客网站。
@@ -6,7 +9,6 @@ The blog website created during learning flask.
 ## Contributors 维护者
 
 [Andy Zhou on Github](https://github.com/z-t-y "ZTY")
-[Andy Zhou]
 
 ## Special Thanks To 致谢
 
@@ -31,7 +33,7 @@ Without these projects, the website cannot be developed.
 At the same time, thanks to [GreyLi](https://greyli.com), it was his _Python Web Development with Flask_
 that took me into the wonderful world of Flask.
 
-没有这些功能完备且维护良好的项目，这个网站无法成为现在的样子。同时，感谢李辉，是他的《Flask Web开发》带我走进了Flask的美好世界
+没有这些功能完备且维护良好的项目，这个网站无法成为现在的样子。同时，感谢李辉，是他的《Flask Web开发》带我走进了Flask的美好世界。
 
 ## Functions 功能
 
@@ -45,3 +47,13 @@ that took me into the wonderful world of Flask.
   撰写文章
 - Comment (Planned, only completed the database model )  
   评论文章 (计划中, 仅完成了数据库模型)
+- Several Tools 小工具 (计划中)
+  1. Solving Equations 解方程
+  2. Factoring 因式分解
+
+## Q & A 问答
+
+1. Q: Why 'Flog'?  
+A: 'Flog' is a combination of 'Flask' and 'Blog'. The word sounds (and looks) like 'frog'. So I use a frog as its icon.  
+问：为什么这个项目名为'Flog'?  
+答：'Flog'是Flask和Blog这两个词的组合，这个词听起来（以及看起来）像'frog'，所以我用了一只青蛙作为网站的图标。
