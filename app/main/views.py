@@ -4,7 +4,7 @@ from flask import (
 )
 from flask_login import current_user
 from flask_login.utils import login_required
-from ..models import db, Post
+from ..models import db, Post, Comment
 from ..utils import redirect_back
 from .forms import PostForm, EditForm
 from . import main_bp
@@ -52,7 +52,14 @@ def create_post():
 @login_required
 def full_post(slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
-    return render_template('main/full_post.html', post=post)
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['COMMENTS_PER_PAGE']
+    pagination = (Comment.query.with_parent(post)
+                               .order_by(Comment.timestamp.asc())
+                               .paginate(page, per_page))
+    comments = pagination.items
+    return render_template('main/full_post.html', post=post, pagination=pagination,
+                           comments=comments)
 
 
 @main_bp.route('/manage-post')

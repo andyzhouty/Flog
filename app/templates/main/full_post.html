@@ -17,6 +17,18 @@
             </div><br>
             {{ post.content | safe }}
             {{ post_actions(post, show_collectors=True) }}
+            <div class="comments" id="comments">
+                {% if comments|length > 0 %}
+                <h3>{{ comments|length }} Comment(s)
+                <small>
+                <a href="{{ url_for('.full_post', slug=post.slug, page=pagination.pages or 1) }}#comments">
+                latest</a>
+                </small>
+                </h3>
+                {% else %}
+                No comments yet.
+                {% endif %}
+            </div>
         </div>
         {% include 'main/_sidebar.html' %}
     </div>
