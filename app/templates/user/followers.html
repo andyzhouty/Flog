@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% from 'macros.html' import user_card with context %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}
+    {% if user == current_user %} Your
+    {% else %} His or her
+    {% endif %} followers
+{% endblock %}
 {% block page_content %}
     <ul class="list-group">
         {% if pagination.items | length > 1 %}

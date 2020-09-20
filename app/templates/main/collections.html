@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'macros.html' import post_actions with context %}
+{% block title %}Your collections{% endblock %}
 {% block page_content %}
     <ul class="list-group">
         {% if posts | length > 0%}

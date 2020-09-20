@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import post_actions with context %}
-{% block title %}
-    Main
-{% endblock %}
+{% block title %}Main Page{% endblock %}
 {% block page_content %}
     {% if current_user.is_authenticated %}
     <div class="page-header">

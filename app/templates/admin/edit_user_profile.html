@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
+{% block title %} Admin Edit Profile {% endblock %}
 {% block page_content %}
     <h1 class="display-3">Edit {{ user.username }}'s Profile</h1>
     {{ render_form(form) }}

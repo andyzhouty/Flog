@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'macros.html' import post_actions with context %}
+{% block title %} Post - {{ post.title }} {% endblock %}
 {% block page_content %}
     <div class="row">
         <div class="col-lg-8" style="font-size: large">
@@ -20,10 +21,11 @@
             <div class="comments" id="comments">
                 {% if comments|length > 0 %}
                 <h3>{{ comments|length }} Comment(s)
-                <small>
-                <a href="{{ url_for('.full_post', slug=post.slug, page=pagination.pages or 1) }}#comments">
-                latest</a>
-                </small>
+                    <small>
+                        <a href="{{ url_for('.full_post', slug=post.slug, page=pagination.pages or 1) }}#comments">
+                            latest
+                        </a>
+                    </small>
                 </h3>
                 {% else %}
                 No comments yet.

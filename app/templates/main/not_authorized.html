@@ -1,15 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}
-    Main
-{% endblock %}
-{% block styles %}
-    {{ super() }}
-{% endblock %}
 {% block page_content %}
     <h1 class="display-3">Flog</h1>
     <h1 class="text-muted">A blog website built for convenience.</a>
     </h1>
     <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Join Now!</a>
     or <a href="{{ url_for('main.main', force=True) }}" class="btn btn-primary">
-    View Posts</a>
+    View Posts Directly</a>
 {% endblock %}

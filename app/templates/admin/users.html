@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import role_label_of, static_file with context %}
+{% block title %} Manage users {% endblock %}
 {% block scripts %}
     {{ super() }}
     {{ static_file('js', 'js/script.js') }}

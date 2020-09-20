@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %}
-    Create Post
-{% endblock %}
+{% block title %}Create Post{% endblock %}
 {% block styles %}
     {{ super() }}
     {{ static_file('css', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css', local=False) }}

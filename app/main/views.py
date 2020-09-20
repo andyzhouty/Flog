@@ -14,7 +14,7 @@ from . import main_bp
 def before_app_request():
     ua = request.user_agent.string
     if 'spider' in ua or 'bot' in ua or 'python' in ua:
-        return 'F**k you, spider!'
+        return 'F**k you, spider!' # anti-webcrawler :P
 
 
 @main_bp.route('/')
@@ -35,6 +35,7 @@ def main():
 def create_post():
     form = PostForm()
     if form.validate_on_submit():
+        # Add a post to the database.
         post = Post(
             title=form.title.data,
             date=form.date.data,
@@ -44,7 +45,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
         flash('Your post has been added', "success")
-        return redirect(url_for('main.main'))
+        return make_response(redirect_back())
     return render_template('main/new_post.html', form=form)
 
 
@@ -65,7 +66,7 @@ def full_post(slug):
 @main_bp.route('/manage-post')
 @login_required
 def manage_posts():
-    page = request.args.get('page', 1, int)
+    page = request.args.get('page', 1, type=int)
     pagination = (
         Post.query.filter_by(author=current_user)
                             .order_by(Post.timestamp.desc())
@@ -105,9 +106,6 @@ def edit_post(id):
         db.session.commit()
         flash("Edit Succeeded!", "success")
         return redirect(url_for('main.main'))
-    if not current_app.config['TESTING']:
-        form.title.data = post2edit.title
-        form.content.data = post2edit.content
     return render_template("main/edit_post.html", id=id, form=form)
 
 
@@ -116,7 +114,6 @@ def edit_post(id):
 def collect_post(id):
     post = Post.query.get(id)
     current_user.collect(post)
-    print(current_user.collections)
     flash('Post collected.', 'success')
     return make_response(redirect_back())
 
@@ -133,6 +130,6 @@ def uncollect_post(id):
 @main_bp.route('/collected-posts/')
 @login_required
 def collected_posts():
-    print(current_user.collections)
+    # Get current user's collection
     posts = [post for post in Post.query.all() if current_user.is_collecting(post)]
     return render_template('main/collections.html', posts=posts)
