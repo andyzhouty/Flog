@@ -47,9 +47,6 @@ that took me into the wonderful world of Flask.
   撰写文章
 - Comment (Planned, only completed the database model )  
   评论文章 (计划中, 仅完成了数据库模型)
-- Several Tools 小工具 (计划中)
-  1. Solving Equations 解方程
-  2. Factoring 因式分解
 
 ## Q & A 问答
 
@@ -57,3 +54,8 @@ that took me into the wonderful world of Flask.
 A: 'Flog' is a combination of 'Flask' and 'Blog'. The word sounds (and looks) like 'frog'. So I use a frog as its icon.  
 问：为什么这个项目名为'Flog'?  
 答：'Flog'是Flask和Blog这两个词的组合，这个词听起来（以及看起来）像'frog'，所以我用了一只青蛙作为网站的图标。
+
+## Other Information 其他信息
+
+The website cannot be updated on time because I'm a student in LSFD Middle School now. There is much homework.
+这个网站不能及时更新因为我是一名兰生复旦中学的学生（作业有点多）。
