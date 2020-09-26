@@ -37,8 +37,8 @@ that took me into the wonderful world of Flask.
 
 ## Functions 功能
 
-- Login / Register / Logout / Delete Account  
- 登录、注册、登出、注销账户
+- Login / Register (requires email verification) / Logout / Delete Account
+ 登录、注册(需要邮箱验证)、登出、注销账户
 - Collect  
   收藏文章
 - Follow  
