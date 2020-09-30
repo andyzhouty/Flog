@@ -12,7 +12,7 @@ class RegisterationForm(FlaskForm):
                'Usernames must have only letters, numbers, dots, underscores or dashes')
     ])
     name = StringField('Real Name', validators=[DataRequired(), Length(2, 64)])
-    email = StringField('Email', validators=[DataRequired(), Length(2, 64), Email()])
+    email = StringField('Email (Requires Verification)', validators=[DataRequired(), Length(2, 64), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_again = PasswordField(
         'Password (Again)', validators=[

@@ -3,7 +3,7 @@ from random import randint
 from faker import Faker
 from flask import current_app
 import click
-from .models import db, Post, Feedback, User, Role
+from .models import db, Post, Feedback, User, Role, Comment
 from .utils import slugify
 
 fake = Faker()
@@ -52,6 +52,18 @@ def posts(count: int=2) -> None:
         )
         post.author = User.query.get(randint(1, User.query.count()))
         db.session.add(post)
+    db.session.commit()
+
+
+def comments(count: int=2) -> None:
+    """Generates fake comments for posts."""
+    for i in range(count):
+        comment = Comment(
+            author=User.query.get(randint(0, User.query.count())),
+            post=Post.query.get(randint(0, User.query.count())),
+            body=fake.text()
+        )
+        db.session.add(comment)
     db.session.commit()
 
 

@@ -34,13 +34,15 @@ def register_commands(app: Flask, db):
     @click.option('--posts', default=20, help='Generates fake posts')
     @click.option('--feedbacks', default=20, help='Generates fake feedbacks')
     @click.option('--follows', default=20, help='Generates fake follows')
-    def forge(users, posts, feedbacks, follows):
+    @click.option('--comments', default=20, help='Generates fake comments')
+    def forge(users, posts, feedbacks, follows, comments):
         """Generates fake data"""
         from . import fakes as fake
         from .models import Role
         Role.insert_roles()
         fake.users(users)
         fake.posts(posts)
+        fake.comments(comments)
         fake.feedbacks(feedbacks)
         fake.follows(follows)
 

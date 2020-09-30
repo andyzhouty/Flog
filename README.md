@@ -45,8 +45,10 @@ that took me into the wonderful world of Flask.
   关注用户
 - Write  
   撰写文章
-- Comment (Planned, only completed the database model )  
-  评论文章 (计划中, 仅完成了数据库模型)
+- Comment  
+  评论文章
+- Notifications(Planned)
+  消息中心(计划中)
 
 ## Q & A 问答
 

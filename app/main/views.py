@@ -6,7 +6,7 @@ from flask_login import current_user
 from flask_login.utils import login_required
 from ..models import db, Post, Comment
 from ..utils import redirect_back
-from .forms import PostForm, EditForm
+from .forms import PostForm, EditForm, CommentForm
 from . import main_bp
 
 
@@ -49,7 +49,7 @@ def create_post():
     return render_template('main/new_post.html', form=form)
 
 
-@main_bp.route('/post/<slug>/')
+@main_bp.route('/post/<slug>/', methods=['GET', 'POST'])
 @login_required
 def full_post(slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
@@ -59,9 +59,31 @@ def full_post(slug):
                                .order_by(Comment.timestamp.asc())
                                .paginate(page, per_page))
     comments = pagination.items
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(
+            author=current_user,
+            post=post,
+            body=form.body.data,
+        )
+        replied_id = request.args.get('reply')
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            comment.replied = replied_comment
+        db.session.add(comment)
+        db.session.commit()
+        flash('Comment published!', 'success')
+        return make_response(redirect_back())
     return render_template('main/full_post.html', post=post, pagination=pagination,
-                           comments=comments)
+                           comments=comments, form=form)
 
+
+@main_bp.route('/reply/comment/<int:comment_id>')
+@login_required
+def reply_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    return redirect(url_for('main.full_post', slug=comment.post.slug, reply=comment_id,
+                            author=comment.author) + '#comment-form')
 
 @main_bp.route('/manage-post')
 @login_required

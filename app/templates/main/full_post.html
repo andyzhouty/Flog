@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'macros.html' import post_actions with context %}
+{% from 'bootstrap/form.html' import render_form %}
 {% block title %} Post - {{ post.title }} {% endblock %}
 {% block page_content %}
     <div class="row">
@@ -27,6 +28,51 @@
                         </a>
                     </small>
                 </h3>
+                {{ render_form(form) }}
+                <ul class="list-group">
+                    {% for comment in comments %}
+                        <li class="list-group-item list-group-item-action flex-column">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">
+                                    <a href="{{ comment.author.profile_url() }}" target="_blank">
+                                        {{ comment.author.name }}
+                                    </a>
+                                </h5>
+                                {% if comment.author.is_administrator() %}
+                                    <span class="badge badge-danger">Admin</span>
+                                {% endif %}
+                                {% if comment.author == post.author %}
+                                    <span class="badge badge-primary">Author</span>
+                                {% endif %}
+                                <small data-toggle="tooltip" data-placement="top" data-delag="500"
+                                    data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+                                    {{ moment(comment.timestamp).fromNow() }}
+                                </small>
+                            </div>
+                            {% if comment.replied %}
+                                <p class="alert alert-dark reply-body">
+                                    {{ comment.replied.author.name }}:<br>
+                                    {{ comment.replied.body }}
+                                </p>
+                            {% endif %}
+                            <p class="mb-1">{{ comment.body }}</p>
+                            <div class="float-right">
+                                <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id) }}">
+                                    Reply
+                                </a>
+                            <div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if request.args.get('reply') %}
+                        <div class="alert alert-dark" id="reply-comment-form">
+                            Reply to <b>{{ request.args.get('author') }}</b>:
+                            <a class="float-right" href="{{ post.url() }}">
+                                Cancel
+                            </a>
+                            {{ render_form(form) }}
+                        </div>
+                    {% endif %}
                 {% else %}
                 No comments yet.
                 {% endif %}
