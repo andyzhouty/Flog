@@ -96,6 +96,11 @@ class Comment(db.Model):
     replies = db.relationship('Comment', back_populates='replied', cascade='all')
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
 
+    def delete(self):
+        """Delete comment"""
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Feedback(db.Model):
     id = db.Column(db.Integer(), primary_key=True)

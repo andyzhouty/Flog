@@ -85,6 +85,15 @@ def reply_comment(comment_id):
     return redirect(url_for('main.full_post', slug=comment.post.slug, reply=comment_id,
                             author=comment.author) + '#comment-form')
 
+
+@main_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    comment.delete()
+    return make_response(redirect_back())
+
+
 @main_bp.route('/manage-post')
 @login_required
 def manage_posts():
