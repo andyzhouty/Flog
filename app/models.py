@@ -103,7 +103,7 @@ class Comment(db.Model):
 
 
 class Feedback(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(200))
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship('User', back_populates='feedbacks')
@@ -115,6 +115,16 @@ class Feedback(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.Text)
+    is_read = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+    receiver_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    receiver = db.relationship('User', back_populates='notifications')
 
 
 class Permission:
@@ -211,6 +221,8 @@ class User(db.Model, UserMixin):
                                 back_populates='followed', lazy='dynamic', cascade='all')
 
     comments = db.relationship('Comment', back_populates='author')
+    notifications = db.relationship('Notification', back_populates='receiver', cascade='all')
+
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

@@ -125,3 +125,6 @@ dmypy.json
 *.db
 *.sqlite
 *.sqlite3
+
+# Automatic scripts
+push_and_deploy.sh
