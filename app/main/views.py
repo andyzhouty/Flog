@@ -83,7 +83,7 @@ def full_post(slug):
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     return redirect(url_for('main.full_post', slug=comment.post.slug, reply=comment_id,
-                            author=comment.author) + '#comment-form')
+                            author=comment.author.name) + '#comment-form')
 
 
 @main_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])

@@ -20,7 +20,6 @@
             {{ post.content | safe }}
             {{ post_actions(post, show_collectors=True) }}
             <div class="comments" id="comments">
-                {% if comments|length > 0 %}
                 <h3>{{ comments|length }} Comment(s)
                     <small>
                         <a href="{{ url_for('.full_post', slug=post.slug, page=pagination.pages or 1) }}#comments">
@@ -29,6 +28,7 @@
                     </small>
                 </h3>
                 {{ render_form(form) }}
+                {% if comments %}
                 <ul class="list-group">
                     {% for comment in comments %}
                         <li class="list-group-item list-group-item-action flex-column">
