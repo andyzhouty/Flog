@@ -46,6 +46,8 @@ def register_commands(app: Flask, db):
         fake.feedbacks(feedbacks)
         fake.follows(follows)
 
+    @app.cli.command()
+    @click.option('--drop/--no-drop', help='Drop database or not')
     def init_db(drop: bool=False) -> None:
         """Initialize database on a new machine."""
         if drop:
@@ -64,7 +66,7 @@ def register_commands(app: Flask, db):
         except:
             # I forgot to run `flask db migrate` at the beginning of the project,
             # so I have to init the database like this.
-            init_db()
+            db.create_all()
             stamp()
         # insert roles
         Role.insert_roles()

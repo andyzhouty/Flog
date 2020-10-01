@@ -84,6 +84,9 @@ def follows(count: int=20) -> None:
     admin_role = Role.query.filter_by(name='Administrator').first()
     admin = User.query.filter_by(role=admin_role).first()
     for i in range(count):
-        another = User.query.get(randint(1, User.query.count()))
-        if another.role != admin_role:
-            another.follow(admin)
+        user1 = User.query.get(randint(1, User.query.count()))
+        user2 = User.query.get(randint(1, User.query.count()))
+        if user1.role != admin_role and admin:
+            user1.follow(admin)
+        elif not admin and user1 != user2:
+            user1.follow(user2)
