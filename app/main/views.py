@@ -1,10 +1,12 @@
+from app import notifications
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app
 )
 from flask_login import current_user
 from flask_login.utils import login_required
-from ..models import db, Post, Comment
+from flask_migrate import current
+from ..models import Notification, db, Post, Comment
 from ..utils import redirect_back
 from .forms import PostForm, EditForm, CommentForm
 from . import main_bp
@@ -164,3 +166,30 @@ def collected_posts():
     # Get current user's collection
     posts = [post for post in Post.query.all() if current_user.is_collecting(post)]
     return render_template('main/collections.html', posts=posts)
+
+
+@main_bp.route('/notifications/')
+@login_required
+def show_notifications():
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['NOTIFICATIONS_PER_PAGE']
+    notifications = Notification.query.with_parent(current_user)
+    filter_rule = request.args.get('filter')
+    if filter_rule == 'unread':
+        notifications = notifications.filter_by(is_read=False)
+
+    pagination = (notifications.order_by(Notification.timestamp.desc())
+                               .paginate(page, per_page))
+    notifications = pagination.items
+    return render_template('main/notifications.html', pagination=pagination,
+                           notifications=notifications)
+
+
+@main_bp.route('/mark_notification_as_read/<int:id>', methods=['POST'])
+@login_required
+def mark_notification_as_read(id):
+    notification = Notification.query.get_or_404(id)
+    notification.is_read = True
+    db.session.add(notification)
+    db.session.commit()
+    return make_response(redirect_back())

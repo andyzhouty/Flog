@@ -12,7 +12,7 @@
         {% block styles %}
             {{ static_file('icon', 'favicon/favicon.svg')}}
             {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
-            {{ static_file('css', 'https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.0/css/all.min.css', local=False) }}
+            {{ static_file('css', 'https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
             {{ static_file('css', 'https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
         {% endblock styles %}
     {% endblock head %}
@@ -56,6 +56,14 @@
                                 Delete Your Account
                             </a>
                         </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.show_notifications', filter='unread') }}" class="nav-link">
+                            <span class="fa fa-bell"></span>
+                            {% if notification_count != 0 %}
+                                <span class="badge">{{ notification_count }}</span>
+                            {% endif %}
+                        </a>
                     </li>
                 {% else %}
                     <li class="nav-item">

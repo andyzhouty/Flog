@@ -3,7 +3,7 @@ from random import randint
 from faker import Faker
 from flask import current_app
 import click
-from .models import db, Post, Feedback, User, Role, Comment
+from .models import Notification, db, Post, Feedback, User, Role, Comment
 from .utils import slugify
 
 fake = Faker()
@@ -66,6 +66,18 @@ def comments(count: int=2) -> None:
         db.session.add(comment)
     db.session.commit()
 
+
+def notifications(count: int=2) -> None:
+    admin_role = Role.query.filter_by(name='Administrator').first()
+    admin = User.query.filter_by(role=admin_role).first()
+    for i in range(count):
+        notification = Notification(
+            is_read=False,
+            message=fake.sentence(),
+            receiver=admin
+        )
+        db.session.add(notification)
+    db.session.commit()
 
 def feedbacks(count: int=2) -> None:
     """Generates fake feedbacks"""

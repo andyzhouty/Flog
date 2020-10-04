@@ -4,10 +4,11 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask.logging import default_handler
+from flask_login import current_user
 from .extensions import (
     bootstrap, ckeditor, share, db, csrf, migrate, mail, moment, login_manager
 )
-from .models import Post, Feedback, Role, Permission, User
+from .models import Post, Feedback, Role, Permission, User, Notification
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
@@ -98,9 +99,14 @@ def register_context(app: Flask) -> None:
     def make_template_context():
         posts = Post.query.order_by(Post.timestamp.desc()).all()
         feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
+        if current_user.is_authenticated:
+            notification_count = Notification.query.with_parent(current_user).filter_by(is_read=False).count()
+        else:
+            notification_count = None
         return dict(
             posts=posts,
             feedbacks=feedbacks,
             Permission=Permission,
-            current_app=app
+            current_app=app,
+            notification_count=notification_count
         )

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <div class="nav nav-pills" role="tablist">
+        <a class="nav-item nav-link {% if request.args.get('filter') != 'unread' %}active{% endif %}"
+           href="{{ url_for('main.show_notifications', filter='all') }}">
+            All
+        </a>
+        <a class="nav-item nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
+            href="{{ url_for('.show_notifications', filter='unread') }}">
+            Unread
+        </a>
+    </div>
+    <ul class="list-group">
+        {% for notification in notifications %}
+            <li class="list-group-item">
+                {{ notification.message | safe }}
+                {% if not notification.is_read %}
+                    <form method="POST" action="{{ url_for('.mark_notification_as_read', id=notification.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="submit" class="fa fa-square-o" value="Mark this notification as read">
+                    </form>
+                {% else %}
+                    <span class="fa fa-check-square-o"></span>
+                    <span class="text-success">You have read this notification!</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

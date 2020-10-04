@@ -37,6 +37,7 @@ class Base:
     POSTS_PER_PAGE = 8
     USERS_PER_PAGE = 10
     COMMENTS_PER_PAGE = 10
+    NOTIFICATIONS_PER_PAGE = 10
 
     @classmethod
     def init_app(cls, app):
