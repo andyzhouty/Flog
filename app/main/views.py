@@ -3,11 +3,10 @@ from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app
 )
-from flask_login import current_user
-from flask_login.utils import login_required
-from flask_migrate import current
+from flask_login import current_user, login_required
 from ..models import Notification, db, Post, Comment
 from ..utils import redirect_back
+from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
 from . import main_bp
 
@@ -74,6 +73,7 @@ def full_post(slug):
             comment.replied = replied_comment
         db.session.add(comment)
         db.session.commit()
+        push_comment_notification(comment=comment, receiver=post.author)
         flash('Comment published!', 'success')
         return make_response(redirect_back())
     return render_template('main/full_post.html', post=post, pagination=pagination,
@@ -147,6 +147,7 @@ def edit_post(id):
 def collect_post(id):
     post = Post.query.get(id)
     current_user.collect(post)
+    push_collect_notification(collector=current_user, post=post, receiver=post.author)
     flash('Post collected.', 'success')
     return make_response(redirect_back())
 
@@ -185,11 +186,24 @@ def show_notifications():
                            notifications=notifications)
 
 
-@main_bp.route('/mark_notification_as_read/<int:id>', methods=['POST'])
+@main_bp.route('/notification/read/<int:id>/', methods=['POST'])
 @login_required
 def mark_notification_as_read(id):
     notification = Notification.query.get_or_404(id)
+    if notification.receiver != current_user:
+        abort(403)
     notification.is_read = True
     db.session.add(notification)
     db.session.commit()
+    return make_response(redirect_back())
+
+
+@main_bp.route('/notification/read/all/', methods=['POST'])
+@login_required
+def mark_all_notifications_as_read():
+    for notification in current_user.notifications:
+        notification.is_read = True
+        db.session.add(notification)
+    db.session.commit()
+    flash('All notifications are read.', 'succuss')
     return make_response(redirect_back())

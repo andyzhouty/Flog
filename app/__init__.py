@@ -69,6 +69,7 @@ def register_extensions(app: Flask) -> None:
     mail.init_app(app)
     moment.init_app(app)
     login_manager.login_view = 'auth.login'
+    login_manager.login_message = u'Please log in to access this page'
     login_manager.init_app(app)
     if app.config['SSL_REDIRECT']:
         from flask_sslify import SSLify

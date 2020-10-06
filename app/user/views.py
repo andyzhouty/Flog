@@ -1,11 +1,11 @@
-from flask import render_template, redirect, make_response, url_for, flash, request
-from flask.globals import current_app
+from flask import render_template, redirect, make_response, url_for, flash, request, current_app
 from flask_login import current_user, login_required
 from . import user_bp
 from .forms import EditProfileForm
 from ..models import db, User, Permission
 from ..decorators import permission_required
 from ..utils import redirect_back
+from ..notifications import push_follow_notification
 
 
 @user_bp.route('/edit-profile/', methods=['GET', 'POST'])
@@ -40,6 +40,7 @@ def follow(username):
         flash('Already followed.', 'info')
         return make_response(redirect_back())
     current_user.follow(user)
+    push_follow_notification(follower=current_user, receiver=user)
     flash('User followed', 'success')
     return make_response(redirect_back())
 

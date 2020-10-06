@@ -1,7 +1,7 @@
 # flake8: noqa
 import os
 from sys import path
-from flask.app import Flask
+from flask import Flask
 from werkzeug.security import generate_password_hash
 
 
@@ -78,7 +78,7 @@ class Development(Base):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DEV', generate_sqlite_file('data-dev'))
     DEBUG = True
     MAIL_SUPPRESS_SEND = False
-    ADMIN_EMAIL_LIST = [os.getenv("ADMIN_TWO_EMAIL")]
+    ADMIN_EMAIL_LIST = [os.getenv("ADMIN_EMAIL")]
 
 
 class Test(Base):
@@ -86,7 +86,7 @@ class Test(Base):
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER")
-    ADMIN_EMAIL_LIST = [os.getenv("ADMIN_TWO_EMAIL")]
+    ADMIN_EMAIL_LIST = [os.getenv("ADMIN_EMAIL")]
 
 
 class Heroku(Production):

@@ -60,9 +60,10 @@
                     <li class="nav-item">
                         <a href="{{ url_for('main.show_notifications', filter='unread') }}" class="nav-link">
                             <span class="fa fa-bell"></span>
-                            {% if notification_count != 0 %}
-                                <span class="badge">{{ notification_count }}</span>
-                            {% endif %}
+                            <span id="notification-badge" class="badge badge-notification badge-danger" data-href="{{ url_for('ajax.notification_count') }}"
+                            style="{% if notification_count == 0 %}display: none{% endif %}">
+                                {{ notification_count }}
+                            </span>
                         </a>
                     </li>
                 {% else %}
@@ -125,6 +126,16 @@
             }})
         </script>
     {% endif %}
+    <script>
+        {% if current_user.is_authenticated %}
+            var is_authenticated = true;
+        {% else %}
+            var is_authenticated = false;
+        {% endif %}
+        if(is_authenticated) {
+            setInterval(update_notifications_count, 30000);
+        }
+    </script>
 {% endblock scripts %}
 </body>
 </html>

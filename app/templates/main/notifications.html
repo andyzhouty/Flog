@@ -6,9 +6,13 @@
             All
         </a>
         <a class="nav-item nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
-            href="{{ url_for('.show_notifications', filter='unread') }}">
+            href="{{ url_for('.show_notifications', filter='unread') }}" style="margin-right: 50px">
             Unread
         </a>
+        <form method="POST" action="{{ url_for('.mark_all_notifications_as_read') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="submit" class="btn btn-sm btn-light" value="Mark all notifications as read">
+        </form>
     </div>
     <ul class="list-group">
         {% for notification in notifications %}
@@ -20,8 +24,7 @@
                         <input type="submit" class="fa fa-square-o" value="Mark this notification as read">
                     </form>
                 {% else %}
-                    <span class="fa fa-check-square-o"></span>
-                    <span class="text-success">You have read this notification!</span>
+                    <span class="fa fa-check-square-o text-success"></span>
                 {% endif %}
             </li>
         {% endfor %}

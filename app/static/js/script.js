@@ -42,7 +42,17 @@ function hide_profile_popover(e) {
         }, 200)
     }
 }
-
+function update_notifications_count() {
+    var $el = $('#notification-badge')
+    $.get($el.data('href'), function(data) {
+        if (data.count == 0) {
+            $('#notification-badge').hide()
+        } else {
+            $el.show()
+            $el.text(data.count)
+        }
+    })
+}
 $('.profile-popover').hover(
     show_profile_popover.bind(this),
     hide_profile_popover.bind(this)
