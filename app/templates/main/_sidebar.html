@@ -4,28 +4,28 @@
             <div class="card-header">Quick Actions</div>
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('main.write') }}">
-                    Write a post
+                    {{ _('Write a post') }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('main.manage_posts') }}">
-                    Manage your posts
+                    {{ _('Manage your posts') }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('main.collected_posts') }}">
-                    Show your collections
+                    {{ _('Show your collections') }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('user.show_followers', username=current_user.username) }}">
-                    Show your followers
+                    {{ _('Show your followers') }}
                 </a>
             </ul>
         </div>
         {% if current_user.is_administrator() %}
         <div class="card mb-3">
-            <div class="card-header">Admin Actions</div>
+            <div class="card-header">{{ _('Admin Actions') }}</div>
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('admin.manage_users') }}">
-                    Manage Users
+                    {{ _('Manage Users') }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('main.main') }}">
-                    Manage Posts
+                    {{ _('Manage Posts') }}
                 </a>
             </ul>
         </div>

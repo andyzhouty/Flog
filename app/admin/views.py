@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import render_template, request, flash, url_for, current_app, make_response
 from werkzeug.utils import redirect
+from flask_babel import _
 from ..models import db, Feedback, User, Role
 from ..decorators import admin_required
 from ..utils import redirect_back
@@ -25,7 +26,7 @@ def manage_feedback():
 def delete_feedback(id):
     feedback = Feedback.query.get(id)
     feedback.delete()
-    flash(f"{str(feedback)} deleted.", "success")
+    flash(_(f"{str(feedback)} deleted."),  "success")
     current_app.logger.info(f"Feedback id {id} deleted.")
     return redirect(url_for('admin.manage_feedback'))
 
@@ -54,7 +55,7 @@ def edit_user_profile(id):
         user.about_me = form.about_me.data
         db.session.add(user)
         db.session.commit()
-        flash(f'{user.username}\'s profile has been updated.', 'info')
+        flash(_(f'{user.username}\'s profile has been updated.'),  'info')
         return redirect(url_for('user.user_profile', username=user.username))
     form.email.data = user.email
     form.username.data = user.username
@@ -69,5 +70,5 @@ def edit_user_profile(id):
 @admin_required
 def delete_user_account(id):
     User.query.get(id).delete()
-    flash('User Deleted', 'info')
+    flash(_('User Deleted'),  'info')
     return make_response(redirect_back())

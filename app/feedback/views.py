@@ -1,6 +1,7 @@
 from flask import flash, render_template, current_app
 from flask_login import login_required
 from flask_login.utils import current_user
+from flask_babel import _
 from ..emails import send_email
 from ..models import Feedback, db
 from .forms import FeedbackForm
@@ -23,5 +24,5 @@ def feedback():
             template="feedback/feedback_notification",
             **dict(author=current_user.username, content=body)
         )
-        flash('Your feedback has been sent to the admins!', "success")
+        flash(_('Your feedback has been sent to the admins!'),  "success")
     return render_template('feedback/feedback.html', form=form)

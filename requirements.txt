@@ -10,6 +10,7 @@ cryptography==3.0
 docopt==0.6.2
 Email-Validator==1.1.1
 Flask==1.1.2
+Flask_Babel==2.0.0
 Flask-Share==0.1.1
 Flask-CKEditor==0.4.4.1
 Flask-Login==0.5.0

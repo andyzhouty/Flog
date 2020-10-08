@@ -205,7 +205,7 @@ class User(db.Model, UserMixin):
 
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
-    about_me = db.Column(db.Text())
+    about_me = db.Column(db.Text)
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     
@@ -214,6 +214,7 @@ class User(db.Model, UserMixin):
         back_populates='collector',
         cascade='all'
     )
+    locale = db.Column(db.String(16))
 
     following = db.relationship('Follow', foreign_keys=[Follow.follower_id],
                                 back_populates='follower', lazy='dynamic', cascade='all')

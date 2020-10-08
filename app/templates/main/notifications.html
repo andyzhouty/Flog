@@ -2,14 +2,14 @@
 {% block page_content %}
     <div class="nav nav-pills" role="tablist">
         <a class="nav-item nav-link {% if request.args.get('filter') != 'unread' %}active{% endif %}"
-           href="{{ url_for('main.show_notifications', filter='all') }}">
+           href="{{ url_for('notification.show', filter='all') }}">
             All
         </a>
         <a class="nav-item nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
-            href="{{ url_for('.show_notifications', filter='unread') }}" style="margin-right: 50px">
+            href="{{ url_for('notification.show', filter='unread') }}" style="margin-right: 50px">
             Unread
         </a>
-        <form method="POST" action="{{ url_for('.mark_all_notifications_as_read') }}">
+        <form method="POST" action="{{ url_for('notification.read_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="submit" class="btn btn-sm btn-light" value="Mark all notifications as read">
         </form>
@@ -19,7 +19,7 @@
             <li class="list-group-item">
                 {{ notification.message | safe }}
                 {% if not notification.is_read %}
-                    <form method="POST" action="{{ url_for('.mark_notification_as_read', id=notification.id) }}">
+                    <form method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="submit" class="fa fa-square-o" value="Mark this notification as read">
                     </form>

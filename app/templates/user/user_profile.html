@@ -6,7 +6,7 @@
 {% block scripts %}
     {{ super() }}
     {{ moment.include_moment(local_js="https://cdn.staticfile.org/moment.js/2.9.0/moment-with-locales.min.js") }}
-    {{ moment.locale() }}
+    {{ moment.locale(auto_detect=True) }}
 {% endblock scripts %}
 {% block page_content %}
 <div class="row container">
@@ -19,7 +19,7 @@
         <p>
             {% if user.name %}{{ user.name }}{% endif %}
             {% if user.location %}
-                from <a href="http://bing.com/maps/?q={{ user.location }}">
+                {{ _('from') }} <a href="http://bing.com/maps/?q={{ user.location }}">
                     {{ user.location }}
                 </a>
             {% endif %}
@@ -28,31 +28,31 @@
 
         {% if current_user.is_administrator() %}
             <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
-            {% if not user.confirmed -%}<p>This email hasn't been confirmed yet.</p>{%- endif %}
+            {% if not user.confirmed -%}<p>{{ _("This email hasn't been confirmed yet.") }}</p>{%- endif %}
         {% endif %}
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
 
         <p>
             {% if user.member_since %}
-            Member since {{ moment(user.member_since).format('L') }}
+            {{ _('Member since') }} {{ moment(user.member_since).format('L') }}
             {% endif %}
             {% if user.last_seen %}
-            Last seen {{ moment(user.last_seen).fromNow() }}
+            {{ _('Last seen')　}} {{ moment(user.last_seen).fromNow() }}
             {% endif %}
         </p>
         {{ follow_area(user) }}
         <p>
-            {% if user != current_user %}This user has
-            {% else %}You have
-            {% endif %}{{ user.followers.count() - 1 }} follower(s).
+            {% if user != current_user %} {{ _('This user has') }}
+            {% else %}{{ _('You have') }}
+            {% endif %}{{ user.followers.count() - 1 }} {{ ngettext('%(num)s follower', '%(num)s followers', num=user.followers.count()-1) }}
         </p>
         {% if user == current_user and not current_user.is_administrator() %}
             <a class="btn btn-outline-primary" href="{{ url_for('main.edit_profile') }}">
-                Edit Profile
+                {{ _('Edit Profile') }}
             </a>
         {% elif current_user.is_administrator() %}
             <a class="btn btn-outline-danger" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
-                Edit Profile [Admin]
+                {{ _('Edit Profile [Admin]') }}
             </a>
         {% endif %}
     </div>

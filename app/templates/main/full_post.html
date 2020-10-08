@@ -10,8 +10,8 @@
                     {{ post.title }}
                 </h1>
                 <small>
-                    Date: {{ post.date }}<br>
-                    Author:
+                    {{ _('Date:') }} {{ post.date }}<br>
+                    {{ _('Author:') }}
                     <a href="{{ post.author.profile_url() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
                         {{ post.author.name }}
                     </a>
@@ -20,10 +20,10 @@
             {{ post.content | safe }}
             {{ post_actions(post, show_collectors=True) }}
             <div class="comments" id="comments">
-                <h3>{{ comments|length }} Comment(s)
+                <h3>{{ comments|length }} {{ ngettext('Comment', 'Comments', num=comments|length) }}
                     <small>
                         <a href="{{ url_for('.full_post', slug=post.slug, page=pagination.pages or 1) }}#comments">
-                            latest
+                            {{ _('latest') }}
                         </a>
                     </small>
                 </h3>
@@ -39,10 +39,10 @@
                                     </a>
                                 </h5>
                                 {% if comment.author.is_administrator() %}
-                                    <span class="badge badge-danger">Admin</span>
+                                    <span class="badge badge-danger">{{ _('Admin') }}</span>
                                 {% endif %}
                                 {% if comment.author == post.author %}
-                                    <span class="badge badge-primary">Author</span>
+                                    <span class="badge badge-primary">{{ _('Author') }}</span>
                                 {% endif %}
                                 <small data-toggle="tooltip" data-placement="top" data-delag="500"
                                     data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
@@ -62,12 +62,12 @@
                                         style="display: inline !important">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
-                                            DELETE
+                                            {{ _('DELETE') }}
                                         </button>
                                     </form>
                                 {% endif %}
                                 <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id) }}">
-                                    Reply
+                                    {{ _('Reply') }}
                                 </a>
                             <div>
                         </li>

@@ -6,18 +6,20 @@ from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
-    bootstrap, ckeditor, share, db, csrf, migrate, mail, moment, login_manager
+    babel, bootstrap, ckeditor, csrf, db, login_manager, mail, migrate, moment, share,
 )
 from .models import Post, Feedback, Role, Permission, User, Notification
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
-from .others import others_bp
-from .feedback import feedback_bp
 from .admin import admin_bp
-from .auth import auth_bp
 from .ajax import ajax_bp
+from .auth import auth_bp
+from .feedback import feedback_bp
+from .language import language_bp
 from .main import main_bp
+from .notification import notification_bp
+from .others import others_bp
 from .user import user_bp
 
 
@@ -60,17 +62,19 @@ def register_logger(app: Flask):
 
 
 def register_extensions(app: Flask) -> None:
+    babel.init_app(app)
     bootstrap.init_app(app)
-    share.init_app(app)
-    db.init_app(app)
-    csrf.init_app(app)
     ckeditor.init_app(app)
-    migrate.init_app(app, db)
-    mail.init_app(app)
-    moment.init_app(app)
+    csrf.init_app(app)
+    db.init_app(app)
     login_manager.login_view = 'auth.login'
     login_manager.login_message = u'Please log in to access this page'
     login_manager.init_app(app)
+    mail.init_app(app)
+    migrate.init_app(app, db)
+    moment.init_app(app)
+    share.init_app(app)
+
     if app.config['SSL_REDIRECT']:
         from flask_sslify import SSLify
         sslify = SSLify(app)
@@ -81,9 +85,11 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(others_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(ajax_bp, url_prefix="/ajax")
-    app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
+    app.register_blueprint(language_bp, url_prefix="/language")
+    app.register_blueprint(notification_bp, url_prefix="/notification")
 
 
 def register_context(app: Flask) -> None:

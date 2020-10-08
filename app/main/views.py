@@ -1,10 +1,10 @@
-from app import notifications
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app
 )
+from flask_babel import _
 from flask_login import current_user, login_required
-from ..models import Notification, db, Post, Comment
+from ..models import db, Post, Comment
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
@@ -45,7 +45,7 @@ def create_post():
         post.author = current_user
         db.session.add(post)
         db.session.commit()
-        flash('Your post has been added', "success")
+        flash(_('Your post has been added'),  "success")
         return make_response(redirect_back())
     return render_template('main/new_post.html', form=form)
 
@@ -74,7 +74,7 @@ def full_post(slug):
         db.session.add(comment)
         db.session.commit()
         push_comment_notification(comment=comment, receiver=post.author)
-        flash('Comment published!', 'success')
+        flash(_('Comment published!'),  'success')
         return make_response(redirect_back())
     return render_template('main/full_post.html', post=post, pagination=pagination,
                            comments=comments, form=form)
@@ -118,7 +118,7 @@ def delete_post(id):
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     post.delete()
-    flash(f"Post id {id} deleted", "success")
+    flash(_(f"Post id {id} deleted"),  "success")
     current_app.logger.info(f"{str(post)} deleted.")
     return redirect(url_for('main.main'))
 
@@ -137,7 +137,7 @@ def edit_post(id):
         editted_post.update_slug()
         db.session.add(editted_post)
         db.session.commit()
-        flash("Edit Succeeded!", "success")
+        flash(_("Edit Succeeded!"),  "success")
         return redirect(url_for('main.main'))
     return render_template("main/edit_post.html", id=id, form=form)
 
@@ -148,7 +148,7 @@ def collect_post(id):
     post = Post.query.get(id)
     current_user.collect(post)
     push_collect_notification(collector=current_user, post=post, receiver=post.author)
-    flash('Post collected.', 'success')
+    flash(_('Post collected.'),  'success')
     return make_response(redirect_back())
 
 
@@ -157,7 +157,7 @@ def collect_post(id):
 def uncollect_post(id):
     post = Post.query.get(id)
     current_user.uncollect(post)
-    flash('Post uncollected.', 'info')
+    flash(_('Post uncollected.'),  'info')
     return make_response(redirect_back())
 
 
@@ -168,42 +168,3 @@ def collected_posts():
     posts = [post for post in Post.query.all() if current_user.is_collecting(post)]
     return render_template('main/collections.html', posts=posts)
 
-
-@main_bp.route('/notifications/')
-@login_required
-def show_notifications():
-    page = request.args.get('page', 1, type=int)
-    per_page = current_app.config['NOTIFICATIONS_PER_PAGE']
-    notifications = Notification.query.with_parent(current_user)
-    filter_rule = request.args.get('filter')
-    if filter_rule == 'unread':
-        notifications = notifications.filter_by(is_read=False)
-
-    pagination = (notifications.order_by(Notification.timestamp.desc())
-                               .paginate(page, per_page))
-    notifications = pagination.items
-    return render_template('main/notifications.html', pagination=pagination,
-                           notifications=notifications)
-
-
-@main_bp.route('/notification/read/<int:id>/', methods=['POST'])
-@login_required
-def mark_notification_as_read(id):
-    notification = Notification.query.get_or_404(id)
-    if notification.receiver != current_user:
-        abort(403)
-    notification.is_read = True
-    db.session.add(notification)
-    db.session.commit()
-    return make_response(redirect_back())
-
-
-@main_bp.route('/notification/read/all/', methods=['POST'])
-@login_required
-def mark_all_notifications_as_read():
-    for notification in current_user.notifications:
-        notification.is_read = True
-        db.session.add(notification)
-    db.session.commit()
-    flash('All notifications are read.', 'succuss')
-    return make_response(redirect_back())

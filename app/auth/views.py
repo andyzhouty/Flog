@@ -1,7 +1,7 @@
 from flask import url_for, flash, redirect, request, render_template, abort
 from flask.globals import current_app
-from flask_login import login_user, logout_user, login_required
-from flask_login.utils import current_user
+from flask_login import login_user, logout_user, login_required, current_user
+from flask_babel import _
 from . import auth_bp
 from .forms import DeleteAccountForm, LoginForm, RegisterationForm
 from ..models import User, db
@@ -30,10 +30,10 @@ def register():
             if not current_app.config['TESTING']:
                 token = user.generate_confirmation_token()
                 send_email([user.email], 'Confirm your account', 'auth/email/confirm', user=user, token=token)
-                flash("A confirmation email has been sent to you by email! You can now login!", "info")
+                flash(_("A confirmation email has been sent to you by email! You can now login!"),  "info")
                 return redirect(url_for('auth.login'))
             else:
-                flash('You can now login!', "success")
+                flash(_('You can now login!'),  "success")
                 return redirect(url_for('auth.login'))
         except Exception as e:
             db.session.delete(user)
@@ -58,7 +58,7 @@ def login():
             if next is None or next.startswith('/'):
                 next = url_for('main.main')
             return redirect(next)
-        flash('Invalid username or password!', "danger")
+        flash(_('Invalid username or password!'),  "danger")
     return render_template('auth/login.html', form=form)
 
 
@@ -66,7 +66,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', "info")
+    flash(_('You have been logged out.'),  "info")
     return redirect(url_for('main.main'))
 
 
@@ -77,9 +77,9 @@ def confirm(token):
         return redirect(url_for('main.main'))
     if current_user.confirm(token):
         db.session.commit()
-        flash('You have confirmed your account. Thanks !', "success")
+        flash(_('You have confirmed your account. Thanks !'),  "success")
     else:
-        flash('The confirmation link is invalid or has expired', "warning")
+        flash(_('The confirmation link is invalid or has expired'),  "warning")
     return redirect(url_for('main.main'))
 
 
@@ -89,7 +89,7 @@ def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_email([current_user.email], 'Confirm Your Account',
                'auth/email/confirm', user=current_user, token=token)
-    flash('A new confirmation email has been sent to you by email', 'info')
+    flash(_('A new confirmation email has been sent to you by email'),  'info')
     return redirect(url_for('main.main'))
 
 
@@ -100,8 +100,8 @@ def delete_account():
     if form.validate_on_submit():
         if current_user.verify_password(form.password.data):
             current_user.delete()
-            flash('Your account has been deleted', 'info')
+            flash(_('Your account has been deleted'),  'info')
         else:
-            flash('Your password is invalid!', 'warning')
+            flash(_('Your password is invalid!'),  'warning')
         return redirect(url_for('main.main'))
     return render_template('auth/delete_account.html', form=form)

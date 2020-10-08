@@ -39,6 +39,8 @@ class Base:
     COMMENTS_PER_PAGE = 10
     NOTIFICATIONS_PER_PAGE = 10
 
+    LOCALES = ['en_US', 'zh_Hans_CN']
+
     @classmethod
     def init_app(cls, app):
         pass

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% from 'macros.html' import post_actions with context %}
-{% block title %}Your collections{% endblock %}
+{% block title %}{{ _('Your collections') }}{% endblock %}
 {% block page_content %}
     <ul class="list-group">
         {% if posts | length > 0%}
@@ -10,14 +10,14 @@
                 <div>
                     {{ post.content | striptags | truncate(200) }}
                     <small class="text-primary">
-                        <a href="{{ url_for('main.full_post', slug=post.slug) }}">Read More</a>
+                        <a href="{{ url_for('main.full_post', slug=post.slug) }}">{{ _('Read More') }}</a>
                     </small>
                 </div>
                 {{ post_actions(post) }}
             </li>
             {% endfor %}
         {% else %}
-            You don't have any collections
+            {{ _("You don't have any collections") }}
         {% endif %}
     </ul>
 {% endblock page_content %}

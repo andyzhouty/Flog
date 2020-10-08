@@ -14,11 +14,11 @@
 {% macro role_label_of(user) %}
     <span class="text-white">
     {% if user.is_administrator() -%}
-        <span class="badge badge-danger">Admin</span>
+        <span class="badge badge-danger">{{ _('Admin') }}</span>
     {% elif user.can(Permission.MODERATE) -%}
-        <span class="badge badge-warning">Moderator</span>
+        <span class="badge badge-warning">{{ _('Moderator') }}</span>
     {% else -%}
-        <span class="badge badge-primary">User</span>
+        <span class="badge badge-primary">{{ _('User') }}</span>
     {%- endif %}
     </span>
 {% endmacro %}
@@ -31,9 +31,9 @@
                       action="{{ url_for('user.unfollow', username=user.username) }}"
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-dark btn-sm">Unfollow</button>
+                    <button type="submit" class="btn btn-dark btn-sm">{{ _('Unfollow') }}</button>
                     {% if user.is_following(user) %}
-                        <p class="badge badge-light">Follow each other</p>
+                        <p class="badge badge-light">{{ _('Follow each other') }}</p>
                     {% endif %}
                 </form>
             {% else %}
@@ -41,9 +41,9 @@
                       action="{{ url_for('user.follow', username=user.username) }}"
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-primary btn-sm">Follow</button>
+                    <button type="submit" class="btn btn-primary btn-sm">{{ _('Follow') }}</button>
                     {% if user.is_following(current_user) %}
-                        <p class="badge badge-light">Follows you</p>
+                        <p class="badge badge-light">{{ _('Follows you') }}</p>
                     {% endif %}
                 </form>
             {% endif %}
@@ -58,12 +58,12 @@
                 {% if not current_user.is_collecting(post) %}
                 <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
                     <i class="fa fa-star"></i>
-                    Collect
+                    {{ _('Collect') }}
                 </a>
                 {% else %}
                     <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
                         <i class="fa fa-ban"></i>
-                        Uncollect
+                        {{ _('Uncollect') }}
                     </a>
                 {% endif %}
             {% endif %}
@@ -71,7 +71,7 @@
                   and can_edit %}
                 <a class="btn btn-sm btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
                     <i class="fa fa-edit"></i>
-                    EDIT
+                    {{ _('EDIT') }}
                 </a>
             {% endif %}
             {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
@@ -83,7 +83,7 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
                         <i class="fa fa-trash"></i>   
-                        DELETE
+                        {{ _('DELETE') }}
                     </button>
                 </form>
             {% endif %}
@@ -93,9 +93,9 @@
                 <p class="text-muted">
                 <i class="fa fa-star"></i>
                 {% if collectors == 1 %}
-                    Collected by {{ collectors }} person
+                    {{ _('Collected by 1 person') }}
                 {% else %}
-                    Collected by {{ collectors }} people
+                    {{ _('Collected by %d people' % collectors) }}
                 {% endif %}
                 </p>
             {% endif %}
@@ -113,14 +113,14 @@
     <span class="text-white">
         <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
             <i class="fa fa-edit"></i>
-            Edit Profile
+            {{ _('Edit Profile') }}
         </a>
         <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
             style="display: inline !important">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
                 <i class="fa fa-trash"></i>
-                DELETE
+                {{ _('DELETE') }}
             </button>
         </form>
     </span>

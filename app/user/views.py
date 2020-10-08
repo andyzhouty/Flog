@@ -1,5 +1,6 @@
 from flask import render_template, redirect, make_response, url_for, flash, request, current_app
 from flask_login import current_user, login_required
+from flask_babel import _
 from . import user_bp
 from .forms import EditProfileForm
 from ..models import db, User, Permission
@@ -21,13 +22,13 @@ def edit_profile():
             current_user.about_me = form.about_me.data
             db.session.add(current_user._get_current_object())
             db.session.commit()
-            flash('Your profile has been updated!', "success")
+            flash(_('Your profile has been updated!'),  "success")
             return redirect(url_for('main.main'))
         form.name.data = current_user.name
         form.location.data = current_user.location
         form.about_me.data = current_user.about_me
         return render_template('user/edit_profile.html', form=form)
-    flash("Your email has not been confirmed yet!", "warning")
+    flash(_("Your email has not been confirmed yet!"),  "warning")
     return redirect(url_for('main.main'))
 
 
@@ -37,11 +38,11 @@ def edit_profile():
 def follow(username):
     user = User.query.filter_by(username=username).first_or_404()
     if current_user.is_following(user):
-        flash('Already followed.', 'info')
+        flash(_('Already followed.'),  'info')
         return make_response(redirect_back())
     current_user.follow(user)
     push_follow_notification(follower=current_user, receiver=user)
-    flash('User followed', 'success')
+    flash(_('User followed'),  'success')
     return make_response(redirect_back())
 
 
@@ -50,10 +51,10 @@ def follow(username):
 def unfollow(username):
     user = User.query.filter_by(username=username).first()
     if not current_user.is_following(user):
-        flash('Not following yet.', 'info')
+        flash(_('Not following yet.'),  'info')
         return make_response(redirect_back())
     current_user.unfollow(user)
-    flash('User unfollowed.', 'info')
+    flash(_('User unfollowed.'),  'info')
     return make_response(redirect_back())
 
 
