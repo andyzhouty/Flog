@@ -1,3 +1,4 @@
+import os
 import click
 from flask import Flask
 
@@ -75,3 +76,35 @@ def register_commands(app: Flask, db):
         # add self-follows
         for user in User.query.all():
             user.follow(user)
+
+
+    @app.cli.group()
+    def translate():
+        """Translation and localization commands."""
+        pass
+
+    @translate.command()
+    @click.argument('locale')
+    def init(locale):
+        """Initialize a new language."""
+        if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
+            raise RuntimeError('Error: Extracting the config file failed.')
+        if os.system(
+            'pybabel init -i messages.pot -d app/translations -l ' + locale):
+            raise RuntimeError(f'Error: Initing the new language {locale} failed.')
+        os.remove('messages.pot')
+
+    @translate.command()
+    def update():
+        """Update all languages."""
+        if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
+            raise RuntimeError('Error: Extracting the config file failed.')
+        if os.system('pybabel update -i messages.pot -d app/translations'):
+            raise RuntimeError('Error: Updating the .po file failed.')
+        os.remove('messages.pot')
+
+    @translate.command()
+    def compile():
+        """Compile all languages to .mo file."""
+        if os.system('pybabel compile -d app/translations'):
+            raise RuntimeError('Error: Compiling failed.')

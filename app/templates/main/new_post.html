@@ -1,25 +1,53 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %}Create Post{% endblock %}
+{% set locale = 'en_US' if not current_user.locale else current_user.locale %}
+{% block title %}{{ _('Create Post') }}{% endblock %}
 {% block styles %}
     {{ super() }}
     {{ static_file('css', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css', local=False) }}
 {% endblock %}
 {% block page_content %}
-    <h1 class="display-4">New Post</h1>
+    <h1 class="display-4">{{ _('New Post') }}</h1>
     {{ render_form(form) }}
 {% endblock %}
 {% block scripts %}
     {{ super() }}
     {{ ckeditor.load() }}
     {{ static_file('js', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', local=False)}}
+    {{ static_file('js', 'js/datepicker-zh-CN.js') }}
     <script>
+        function getCookie(cookie_name)
+        {
+            var name = cookie_name + "=";
+            var cookies = document.cookie.split(';');
+            for(let i = 0; i < cookies.length; i++) 
+            {
+                let c = cookies[i].trim();
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function convertLocaleFormat(locale) {
+            if (locale == 'zh_Hans_CN') {
+                return 'zh-CN';
+            } else {
+                return 'en-US';
+            }
+        }
         $(document).ready(function () {
+            var lang;
+            if (getCookie('locale') != '') {
+                lang = convertLocaleFormat(getCookie('locale'));
+            } else {
+                lang = convertLocaleFormat("{{ locale }}");
+            }
             $('#date').datepicker({
                 format: 'yyyy-mm-dd',
-                language: 'en-US',
                 todayHighlight: 1
             });
+            $.datepicker.regional(lang);
         });
     </script>
 {% endblock scripts %}

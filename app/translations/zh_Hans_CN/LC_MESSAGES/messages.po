@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-10-08 14:17+0800\n"
+"POT-Creation-Date: 2020-10-09 18:55+0800\n"
 "PO-Revision-Date: 2020-10-08 19:33+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -17,6 +17,102 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
+
+#: app/admin/views.py:30
+#, python-format
+msgid "%s deleted."
+msgstr "%s"
+
+#: app/admin/views.py:59
+#, python-format
+msgid "%s's profile has been updated."
+msgstr ""
+
+#: app/admin/views.py:74
+msgid "User Deleted"
+msgstr ""
+
+#: app/auth/views.py:33
+msgid "A confirmation email has been sent to you by email! You can now login!"
+msgstr ""
+
+#: app/auth/views.py:36
+msgid "You can now login!"
+msgstr ""
+
+#: app/auth/views.py:61
+msgid "Invalid username or password!"
+msgstr ""
+
+#: app/auth/views.py:69
+msgid "You have been logged out."
+msgstr ""
+
+#: app/auth/views.py:80
+msgid "You have confirmed your account. Thanks !"
+msgstr ""
+
+#: app/auth/views.py:82
+msgid "The confirmation link is invalid or has expired"
+msgstr ""
+
+#: app/auth/views.py:92
+msgid "A new confirmation email has been sent to you by email"
+msgstr ""
+
+#: app/auth/views.py:103
+msgid "Your account has been deleted"
+msgstr ""
+
+#: app/auth/views.py:105
+msgid "Your password is invalid!"
+msgstr ""
+
+#: app/feedback/views.py:27
+msgid "Your feedback has been sent to the admins!"
+msgstr ""
+
+#: app/main/views.py:48
+msgid "Your post has been added"
+msgstr ""
+
+#: app/main/views.py:77
+msgid "Comment published!"
+msgstr ""
+
+#: app/main/views.py:121
+#, python-format
+msgid "Post id %d deleted"
+msgstr "Id为%d的文章已被删除"
+
+#: app/main/views.py:141
+msgid "Edit Succeeded!"
+msgstr "编辑成功"
+
+#: app/main/views.py:152
+msgid "Post collected."
+msgstr "文章已收藏"
+
+#: app/main/views.py:161
+msgid "Post uncollected."
+msgstr "文章已取消收藏"
+
+#: app/notification/views.py:43
+msgid "All notifications are read."
+msgstr "所有消息都被读过了"
+
+#: app/templates/base.html:31
+msgid "Main"
+msgstr ""
+
+#: app/templates/base.html:32 app/templates/feedback/feedback.html:9
+#: app/templates/feedback/feedback.html:13
+msgid "Feedback"
+msgstr ""
+
+#: app/templates/base.html:33
+msgid "About Us"
+msgstr ""
 
 #: app/templates/base.html:45
 msgid "Account"
@@ -97,6 +193,36 @@ msgstr "被1个人收藏"
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
+#: app/templates/feedback/feedback.html:19
+msgid "feedback"
+msgid_plural "feedbacks"
+msgstr[0] ""
+
+#: app/templates/feedback/feedback_notification.html:2
+#: app/templates/feedback/feedback_notification.txt:1
+msgid "Hello, Admin!"
+msgstr "管理员，你好"
+
+#: app/templates/feedback/feedback_notification.html:3
+#: app/templates/feedback/feedback_notification.txt:2
+msgid "A new feedback was added just now!"
+msgstr "一个新的反馈已经由用户发出"
+
+#: app/templates/feedback/feedback_notification.html:4
+#: app/templates/feedback/feedback_notification.txt:3
+msgid "Feedbacker"
+msgstr "反馈者"
+
+#: app/templates/feedback/feedback_notification.html:5
+#: app/templates/feedback/feedback_notification.txt:4
+msgid "Feedback Content"
+msgstr "反馈内容"
+
+#: app/templates/feedback/feedback_notification.html:12
+#: app/templates/feedback/feedback_notification.txt:5
+msgid "If it is a junk one, please delete it immediately!"
+msgstr "如果这是一则垃圾信息，请马上删除它!"
+
 #: app/templates/main/_post_actions.html:17
 msgid "EDIT [ADMIN]"
 msgstr "以管理员身份编辑账户信息"
@@ -107,7 +233,7 @@ msgstr "[管理员]删除文章"
 
 #: app/templates/main/_sidebar.html:7
 msgid "Write a post"
-msgstr "撰写"
+msgstr "撰写一篇新的文章"
 
 #: app/templates/main/_sidebar.html:10
 msgid "Manage your posts"
@@ -172,55 +298,82 @@ msgstr "作者"
 
 #: app/templates/main/full_post.html:70
 msgid "Reply"
-msgstr ""
+msgstr "回复"
 
 #: app/templates/user/followers.html:5
 msgid "Your"
-msgstr ""
+msgstr "你的"
 
 #: app/templates/user/followers.html:6
 msgid "His or her"
-msgstr ""
+msgstr "Ta的"
 
 #: app/templates/user/followers.html:7
 msgid "followers"
-msgstr ""
+msgstr "关注者"
 
 #: app/templates/user/followers.html:20
 msgid "You have no followers"
-msgstr ""
+msgstr "你没有关注者:("
 
 #: app/templates/user/user_profile.html:22
 msgid "from"
-msgstr ""
+msgstr "住址"
 
 #: app/templates/user/user_profile.html:31
 msgid "This email hasn't been confirmed yet."
-msgstr ""
+msgstr "这个用户的邮箱没有被验证过"
 
 #: app/templates/user/user_profile.html:37
 msgid "Member since"
-msgstr ""
+msgstr "Flog龄"
 
 #: app/templates/user/user_profile.html:40
 msgid "Last seen"
-msgstr ""
+msgstr "上次登录于"
 
 #: app/templates/user/user_profile.html:45
 msgid "This user has"
-msgstr ""
+msgstr "这个用户有"
 
 #: app/templates/user/user_profile.html:46
 msgid "You have"
-msgstr ""
+msgstr "你有"
 
 #: app/templates/user/user_profile.html:47
 #, python-format
 msgid "%(num)s follower"
 msgid_plural "%(num)s followers"
-msgstr[0] ""
+msgstr[0] "%(num)s个关注者"
 
 #: app/templates/user/user_profile.html:55
 msgid "Edit Profile [Admin]"
-msgstr ""
+msgstr "[管理员]编辑Ta的信息"
+
+#: app/user/views.py:25
+msgid "Your profile has been updated!"
+msgstr "你的个人信息已经被更新了！"
+
+#: app/user/views.py:31
+msgid "Your email has not been confirmed yet!"
+msgstr "你的邮箱还没有被验证呢！"
+
+#: app/user/views.py:41
+msgid "Already followed."
+msgstr "你已经关注了该用户"
+
+#: app/user/views.py:45
+msgid "User followed"
+msgstr "你关注了该用户"
+
+#: app/user/views.py:54
+msgid "Not following yet."
+msgstr "你还没有关注该用户"
+
+#: app/user/views.py:57
+msgid "User unfollowed."
+msgstr "你取消关注了这个用户"
+
+#~ msgid "Feedback Content:"
+#~ msgstr ""
 

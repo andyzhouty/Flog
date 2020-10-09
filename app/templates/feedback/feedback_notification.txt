@@ -1,5 +1,5 @@
-Hello, Admin!
-A new feedback was added just now!
-Feedbacker: {{ author }}
-Feedback Content: {{ content[:50] }}...
-If it is a junk one, please delete it immediately!
+{{ _('Hello, Admin!') }}
+{{ _('A new feedback was added just now!') }}
+{{ _('Feedbacker') }}: {{ author }}
+{{ _('Feedback Content') }}: {{ content[:50] }}...
+{{ _('If it is a junk one, please delete it immediately!') }}

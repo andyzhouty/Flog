@@ -118,8 +118,9 @@ def delete_post(id):
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     post.delete()
-    flash(_(f"Post id {id} deleted"),  "success")
-    current_app.logger.info(f"{str(post)} deleted.")
+    flash(_("Post id %d deleted" % id),  "success")
+    post_str = str(post)
+    current_app.logger.info(f"{post_str} deleted.")
     return redirect(url_for('main.main'))
 
 

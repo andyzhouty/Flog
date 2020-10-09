@@ -26,7 +26,8 @@ def manage_feedback():
 def delete_feedback(id):
     feedback = Feedback.query.get(id)
     feedback.delete()
-    flash(_(f"{str(feedback)} deleted."),  "success")
+    feedback_str = str(feedback)
+    flash(_("%s deleted." % feedback_str),  "success")
     current_app.logger.info(f"Feedback id {id} deleted.")
     return redirect(url_for('admin.manage_feedback'))
 
@@ -55,7 +56,7 @@ def edit_user_profile(id):
         user.about_me = form.about_me.data
         db.session.add(user)
         db.session.commit()
-        flash(_(f'{user.username}\'s profile has been updated.'),  'info')
+        flash(_('%s\'s profile has been updated.' % user.username),  'info')
         return redirect(url_for('user.user_profile', username=user.username))
     form.email.data = user.email
     form.username.data = user.username

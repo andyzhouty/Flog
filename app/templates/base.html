@@ -28,9 +28,9 @@
         </button>
         <div class="collapse navbar-collapse" id="collapse">
             <ul class="navbar-nav mr-auto">
-                {{ render_nav_item('main.main', 'Main') }}
-                {{ render_nav_item('feedback.feedback', 'Feedback') }}
-                {{ render_nav_item('others.about_us', 'About Us') }}
+                {{ render_nav_item('main.main', _('Main')) }}
+                {{ render_nav_item('feedback.feedback', _('Feedback')) }}
+                {{ render_nav_item('others.about_us', _('About Us')) }}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}

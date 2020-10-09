@@ -3,11 +3,11 @@
     <div class="nav nav-pills" role="tablist">
         <a class="nav-item nav-link {% if request.args.get('filter') != 'unread' %}active{% endif %}"
            href="{{ url_for('notification.show', filter='all') }}">
-            All
+            {{ _('All') }}
         </a>
         <a class="nav-item nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
             href="{{ url_for('notification.show', filter='unread') }}" style="margin-right: 50px">
-            Unread
+            {{ _('Unread') }}
         </a>
         <form method="POST" action="{{ url_for('notification.read_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
