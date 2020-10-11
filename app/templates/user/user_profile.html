@@ -44,7 +44,7 @@
         <p>
             {% if user != current_user %} {{ _('This user has') }}
             {% else %}{{ _('You have') }}
-            {% endif %}{{ user.followers.count() - 1 }} {{ ngettext('%(num)s follower', '%(num)s followers', num=user.followers.count()-1) }}
+            {% endif %}{{ ngettext('%(num)s follower', '%(num)s followers', __num=user.followers.count()-1) }}
         </p>
         {% if user == current_user and not current_user.is_administrator() %}
             <a class="btn btn-outline-primary" href="{{ url_for('main.edit_profile') }}">

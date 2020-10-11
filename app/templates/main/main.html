@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import post_actions with context %}
-{% block title %}Main Page{% endblock %}
+{% from 'macros.html' import post_actions, role_of with context %}
+{% block title %}{{ _('Main') }}{% endblock %}
 {% block page_content %}
     {% if current_user.is_authenticated %}
     <div class="page-header">
-        <h1 class="display-4">Welcome, {{ current_user.role }} {{ current_user.name }}</h1>
+        <h1 class="display-4">{{ _('Welcome,') }} {{ role_of(current_user) }} {{ current_user.name }}</h1>
     </div>
     {% endif %}
     <div class="row">
@@ -22,7 +22,7 @@
                     <div>
                         {{ post.content | striptags | truncate(200) }}
                         <small class="text-primary">
-                            <a href="{{ url_for('main.full_post', slug=post.slug) }}">Read More</a>
+                            <a href="{{ url_for('main.full_post', slug=post.slug) }}">{{ _('Read More') }}</a>
                         </small>
                         {{ post_actions(post) }}
                     </div>

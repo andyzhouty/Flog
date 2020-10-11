@@ -1,11 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import role_label_of, static_file with context %}
-{% block title %} Manage users {% endblock %}
-{% block scripts %}
-    {{ super() }}
-    {{ static_file('js', 'js/script.js') }}
-{% endblock scripts %}
+{% block title %}{{ _('Manage users') }} {% endblock %}
 {% block page_content %}
     <div class="row">
     <div class="col-lg-8">
@@ -19,14 +15,14 @@
             <span class="text-white">
                 <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
                     <i class="fa fa-edit"></i>
-                    Edit Profile
+                    {{ _('Edit Profile') }}
                 </a>
                 <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
+                    <button class="btn btn-sm btn-outline-danger" onclick="{{ _('return confirm(\'Are you sure?\');') }}">
                         <i class="fa fa-trash"></i>
-                        DELETE
+                        {{ _('DELETE') }}
                     </button>
                 </form>
             </span>

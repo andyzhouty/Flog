@@ -45,8 +45,8 @@
                             {{ _('Account') }}
                         </a>
                         <div class="dropdown-menu">
-                            <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item" id="edit-profile">Edit Profile</a>
-                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item" id="logout">Log out</a>
+                            <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item" id="edit-profile">{{ _('Edit Profile') }}</a>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item" id="logout">{{ _('Log out') }}</a>
                             {% if not current_user.confirmed %}
                                 <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">
                                     {{ _('Resend Confirmation Email') }}
@@ -90,10 +90,10 @@
                         {{ _('Language') }}
                     </a>
                     <div class="dropdown-menu">
-                        {% for language in config.LOCALES %}
+                        {% for language, display_name in config.LOCALES.items() %}
                             <a class="dropdown-item"
                                href="{{ url_for('language.set_locale', locale=language) }}">
-                               {{ _(language) }}
+                               {{ display_name }}
                             </a>
                         {% endfor %}
                     </div>

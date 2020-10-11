@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %} Flog - register {% endblock %}
+{% block title %} Flog - {{ _('Register') }} {% endblock %}
 {% block page_content %}
-    <h1 class="display-4">Register</h1>
+    <h1 class="display-4">{{ _('Register') }}</h1>
     {{ render_form(form) }}
 {% endblock page_content %}

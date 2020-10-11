@@ -4,7 +4,7 @@
 {% block title %}{{ _('Create Post') }}{% endblock %}
 {% block styles %}
     {{ super() }}
-    {{ static_file('css', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css', local=False) }}
+    {{ static_file('css', 'https://cdn.jsdelivr.net/npm/jquery-ui-dist@1.12.1/jquery-ui.min.css', local=False)}}
 {% endblock %}
 {% block page_content %}
     <h1 class="display-4">{{ _('New Post') }}</h1>
@@ -13,7 +13,7 @@
 {% block scripts %}
     {{ super() }}
     {{ ckeditor.load() }}
-    {{ static_file('js', 'https://cdn.staticfile.org/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js', local=False)}}
+    {{ static_file('js', 'https://cdn.jsdelivr.net/npm/jquery-ui-dist@1.12.1/jquery-ui.min.js', local=False)}}
     {{ static_file('js', 'js/datepicker-zh-CN.js') }}
     <script>
         function getCookie(cookie_name)

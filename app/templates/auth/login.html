@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %} Flog - login {% endblock %}
+{% block title %} Flog - {{ _('Login') }} {% endblock %}
 {% block page_content %}
-    <h1 class="display-4">Login</h1>
+    <h1 class="display-4">{{ _('Login') }}</h1>
     <p>
-        New user?
+        {{ _('New user?') }}
         <a href="{{ url_for('auth.register') }}">
-            Click here to register</a>
+            {{ _('Click here to register') }}</a>
     </p>
     {{ render_form(form, action=request.full_path) }}
 {% endblock page_content %}

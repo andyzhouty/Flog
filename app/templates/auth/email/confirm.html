@@ -1,13 +1,13 @@
 <div>
-    <p>Hello, <strong>{{ user.username }}</strong><br>
-    Welcome to Flog!</p>
-    <p>To confirm your account please click on the button or the link given:</p>
+    <p>{{ _('Hello,') }} <strong>{{ user.username }}</strong><br>
+    {{ _('Welcome to Flog!') }}</p>
+    <p>{{ _('To confirm your account please click on the button or the link given') }}:</p>
     <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">
     <button style="width:200px; height:100px; background: blue; color: white; border-radius: 7px; font-size: 1.5em; font-family: 'Segoe UI', Arial, sans-serif">
-        Confirm your account
+        {{ _('Confirm your account') }}
     </button>
     </a>
-    <p>If the button doesn't work well, then copy this link to your browser:<br>
+    <p>{{ _("If the button doesn't work well, then copy this link to your browser") }}:<br>
     {{ url_for('auth.confirm', token=token, _external=True) }}
     </p>
 </div>

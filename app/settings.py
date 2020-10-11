@@ -1,7 +1,7 @@
 # flake8: noqa
 import os
-from sys import path
 from flask import Flask
+from flask_babel import lazy_gettext as _l
 from werkzeug.security import generate_password_hash
 
 
@@ -32,14 +32,17 @@ class Base:
     ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD')
 
     # ('theme name': 'display name')
-    BOOTSTRAP_THEMES = {'default': 'Default', 'lite': 'Lite', 'dark': 'Dark'}
+    BOOTSTRAP_THEMES = {'default': _l('Default'), 'lite': _l('Lite'), 'dark': _l('Dark')}
 
     POSTS_PER_PAGE = 8
     USERS_PER_PAGE = 10
     COMMENTS_PER_PAGE = 10
     NOTIFICATIONS_PER_PAGE = 10
 
-    LOCALES = ['en_US', 'zh_Hans_CN']
+    LOCALES = {
+        'en_US': 'English(US)',
+        'zh_Hans_CN': '简体中文'
+    }
 
     @classmethod
     def init_app(cls, app):

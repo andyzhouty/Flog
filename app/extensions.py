@@ -37,4 +37,4 @@ def get_locale():
     locale = request.cookies.get('locale')
     if locale is not None:
         return locale
-    return request.accept_languages.best_match(current_app.config['LOCALES'])
+    return request.accept_languages.best_match(current_app.config['LOCALES'].keys())

@@ -11,6 +11,16 @@
     {%- endif %}
 {% endmacro %}
 
+{% macro role_of(user) %}
+    {% if user.is_administrator() -%}
+        {{ _('Administrator') }}
+    {% elif user.can(Permission.MODERATE) -%}
+        {{ _('Moderator') }}
+    {% else -%}
+        {{ _('User') }}
+    {%- endif %}
+{% endmacro %}
+
 {% macro role_label_of(user) %}
     <span class="text-white">
     {% if user.is_administrator() -%}

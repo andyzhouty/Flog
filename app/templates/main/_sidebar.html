@@ -1,7 +1,7 @@
 <div class="col-md-4 sidebar">
     {% if current_user.is_authenticated %}
         <div class="card mb-3">
-            <div class="card-header">Quick Actions</div>
+            <div class="card-header">{{ _('Quick Actions') }}</div>
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('main.write') }}">
                     {{ _('Write a post') }}

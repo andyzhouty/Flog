@@ -1,9 +1,9 @@
-Hello, {{ user.username }}
+{{ _('Hello') }}, {{ user.username }}
 
-Welcome to Flog!
+{{ _('Welcome to Flog!') }}
 
-To confirm your account please click on the following link:
+{{ _('To confirm your account please copy the following link to your browser') }}:
 
 {{ url_for('auth.confirm', token=token, _external=True) }}
 
-Note: Replies to this email will be ignored. :)
+P.S. {{ _('Replies to this email will be ignored. :)') }}
