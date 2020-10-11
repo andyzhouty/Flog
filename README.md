@@ -52,10 +52,6 @@ that took me into the wonderful world of Flask.
 - Two languages support (zh_CN and en_US)  
   双语言支持 (简体中文和美式英语)
 
-Currently, I am busy with the translation work of the project (translating from en_US to zh_CN).  
-Will update the heroku page when the whole translation is competed.
-目前，我正在把整个用英文写成的网站翻译为简体中文，当全部翻译工作完成时才会正式部署到heroku服务器上、
-
 ## Q & A 问答
 
 1. Q: Why 'Flog'?  
