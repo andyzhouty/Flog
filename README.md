@@ -52,6 +52,16 @@ that took me into the wonderful world of Flask.
 - Two languages support (zh_CN and en_US)  
   双语言支持 (简体中文和美式英语)
 
+## Prospect 展望
+
+- Chatting Room 聊天室
+- Web API
+  - Flog CLI  
+    Flog命令行客户端
+  - Linux and Windows application for Flog.  
+    Linux和Windows的Flog客户端
+  - Flog
+
 ## Q & A 问答
 
 1. Q: Why 'Flog'?  
