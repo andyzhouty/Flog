@@ -42,7 +42,7 @@
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-dark btn-sm">{{ _('Unfollow') }}</button>
-                    {% if user.is_following(user) %}
+                    {% if user.is_following(current_user) and current_user.is_following(user) %}
                         <p class="badge badge-light">{{ _('Follow each other') }}</p>
                     {% endif %}
                 </form>
