@@ -1,4 +1,5 @@
 from flask import request, current_app, render_template, make_response, flash, abort
+from flask_babel import _
 from flask_login import login_required, current_user
 from ..models import db, Notification
 from ..utils import redirect_back
