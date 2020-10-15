@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-10-11 14:27+0800\n"
+"POT-Creation-Date: 2020-10-15 19:50+0800\n"
 "PO-Revision-Date: 2020-10-08 19:33+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -265,7 +265,7 @@ msgstr "文章已收藏"
 msgid "Post uncollected."
 msgstr "文章已取消收藏"
 
-#: app/notification/views.py:43
+#: app/notification/views.py:44
 msgid "All notifications are read."
 msgstr "所有消息都被读过了"
 
