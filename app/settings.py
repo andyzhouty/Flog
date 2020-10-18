@@ -82,7 +82,7 @@ class Production(Base):
 
 class Development(Base):
     FLASK_CONFIG = 'development'
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DEV', generate_sqlite_file('data-dev'))
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DEV', generate_sqlite_filename('data-dev'))
     DEBUG = True
     MAIL_SUPPRESS_SEND = False
 

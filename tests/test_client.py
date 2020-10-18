@@ -75,7 +75,7 @@ class ClientTestCase(unittest.TestCase):
         response = self.login()
         response_data = response.get_data(as_text=True)
         self.assertTrue(response.status_code, 302)
-        self.assertIn('Welcome, Administrator test', response_data)
+        self.assertIn('Welcome, Administrator\n test', response_data)
         response = self.logout()
         self.assertIn('You have been logged out', response.get_data(as_text=True))
 
