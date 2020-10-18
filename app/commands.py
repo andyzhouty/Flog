@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import os
 import click
 from flask import Flask

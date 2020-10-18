@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField

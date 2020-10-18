@@ -1,6 +1,6 @@
 """
-@author: andy zhou
-Copyright(c) all rights reserved 2020
+MIT License
+Copyright (c) 2020 Andy Zhou
 """
 from flask_mail import Message
 from flask import render_template

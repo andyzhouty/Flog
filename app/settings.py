@@ -1,11 +1,13 @@
-# flake8: noqa
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import os
 from flask import Flask
 from flask_babel import lazy_gettext as _l
-from werkzeug.security import generate_password_hash
 
 
-def generate_sqlite_file(filename: str):
+def generate_sqlite_filename(filename: str):
     basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     return 'sqlite:///' + os.path.join(basedir, f'{filename}.sqlite3')
 
@@ -15,21 +17,21 @@ class Base:
     TESTING = False
     SSL_REDIRECT = False
 
-    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'hard-to-guess')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    MAIL_SERVER = os.getenv("MAIL_SERVER")
+    MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = 587
     MAIL_USE_TLS = True
-    MAIL_USERNAME = os.getenv("FLOG_EMAIL")
-    MAIL_PASSWORD = os.getenv("FLOG_EMAIL_PASSWORD")
-    MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER")
+    MAIL_USERNAME = os.getenv("FLOG_EMAIL", "flog_admin@example.com")
+    MAIL_PASSWORD = os.getenv("FLOG_EMAIL_PASSWORD", "flog_email_password")
+    MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER", "flog <flog_admin@example.com")
 
-    ADMIN_NAME = os.getenv('FLOG_ADMIN_NAME')
+    ADMIN_NAME = os.getenv('FLOG_ADMIN_NAME', 'admin')
     ADMIN_EMAIL = MAIL_USERNAME
     ADMIN_EMAIL_LIST = [ADMIN_EMAIL]
-    ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD')
+    ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD', 'flog_admin_password')
 
     # ('theme name': 'display name')
     BOOTSTRAP_THEMES = {'default': _l('Default'), 'lite': _l('Lite'), 'dark': _l('Dark')}
@@ -52,7 +54,7 @@ class Base:
 class Production(Base):
     FLASK_CONFIG = 'production'
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL", generate_sqlite_file('data'))
+        "DATABASE_URL", generate_sqlite_filename('data'))
 
     @classmethod
     def init_app(cls, app):
@@ -83,15 +85,12 @@ class Development(Base):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_DEV', generate_sqlite_file('data-dev'))
     DEBUG = True
     MAIL_SUPPRESS_SEND = False
-    ADMIN_EMAIL_LIST = [os.getenv("ADMIN_EMAIL")]
 
 
 class Test(Base):
     TESTING = True
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER")
-    ADMIN_EMAIL_LIST = [os.getenv("ADMIN_EMAIL")]
 
 
 class Heroku(Production):

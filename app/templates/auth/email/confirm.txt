@@ -1,3 +1,7 @@
+{#
+Copyright (c) 2020 Andy Zhou
+MIT License
+#}
 {{ _('Hello') }}, {{ user.username }}
 
 {{ _('Welcome to Flog!') }}

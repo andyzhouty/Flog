@@ -1,4 +1,7 @@
-# -*- coding:utf-8 -*-
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import render_template, request, flash, url_for, current_app, make_response
 from werkzeug.utils import redirect
 from flask_babel import _

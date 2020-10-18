@@ -1,3 +1,8 @@
+
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import render_template, jsonify
 from flask_login import current_user
 from . import ajax_bp

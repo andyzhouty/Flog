@@ -1,3 +1,8 @@
+/*
+* @Author: Andy Zhou
+* Copyright (c) 2020 All rights reserved
+* MIT License
+*/
 var hover_timer = null;
 var flash = null;
 function show_profile_popover(e) {

@@ -1,3 +1,8 @@
+/*
+* @Author: Andy Zhou
+* Copyright (c) 2020 All rights reserved
+* MIT License
+*/
 $(function() {
     function render_time() {
         return moment($(this).data('timestamp')).format('lll');

@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import url_for, flash, redirect, request, render_template, abort
 from flask.globals import current_app
 from flask_login import login_user, logout_user, login_required, current_user

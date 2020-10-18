@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import request
 from flask.globals import current_app
 from flask_babel import Babel

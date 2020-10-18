@@ -1,8 +1,9 @@
-from app import admin
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 from random import randint
 from faker import Faker
-from flask import current_app
-import click
 from .models import Notification, db, Post, Feedback, User, Role, Comment
 from .utils import slugify
 

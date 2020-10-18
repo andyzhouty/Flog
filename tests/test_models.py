@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import unittest
 import logging
 from app import create_app, db, fakes

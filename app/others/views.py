@@ -1,4 +1,7 @@
-# -*- coding:utf-8 -*-
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import current_app, abort, make_response, url_for, redirect
 from flask.globals import request
 from flask.templating import render_template, render_template_string

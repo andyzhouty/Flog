@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import render_template
 from flask_wtf.csrf import CSRFError
 from flask_babel import _

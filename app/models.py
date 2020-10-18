@@ -1,6 +1,6 @@
 """
- models.py
- A python module for database storing
+MIT License
+Copyright (c) 2020 Andy Zhou
 """
 import hashlib
 from datetime import datetime
@@ -15,6 +15,7 @@ from .utils import slugify
 
 
 class Collect(db.Model):
+    """Collect Model"""
     collector_id = db.Column(db.Integer(), db.ForeignKey('user.id'), primary_key=True)
     collected_id = db.Column(db.Integer(), db.ForeignKey('post.id'), primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)

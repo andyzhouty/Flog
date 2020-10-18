@@ -1,3 +1,7 @@
+{#
+Copyright (c) 2020 Andy Zhou
+MIT License
+#}
 {% macro static_file(type, filename_or_url, local=True, alt=None) %}
     {% if local -%}
         {% set filename_or_url = url_for('static', filename=filename_or_url) %}

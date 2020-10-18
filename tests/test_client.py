@@ -1,6 +1,9 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 from random import randint
 import unittest
-import time
 from faker import Faker
 from flask import escape
 from app import create_app, db, fakes

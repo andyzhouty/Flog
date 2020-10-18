@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import current_app, make_response, abort, flash
 from flask_login import current_user
 from flask_babel import _

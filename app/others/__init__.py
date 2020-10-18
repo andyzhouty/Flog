@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import Blueprint
 
 others_bp = Blueprint('others', __name__)

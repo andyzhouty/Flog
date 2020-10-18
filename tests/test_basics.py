@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import unittest
 import logging
 from flask import current_app

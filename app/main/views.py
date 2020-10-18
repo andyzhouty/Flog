@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app

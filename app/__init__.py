@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright(c) 2020 Andy Zhou
+"""
 from logging import log
 import os
 import logging
@@ -48,6 +52,10 @@ def register_logger(app: Flask):
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s "
                                   "%(message)s")
     if app.config['DEBUG']:
+        try:
+            os.chdir('logs')
+        except FileNotFoundError:
+            os.mkdir('logs')
         file_handler = RotatingFileHandler(
             filename="logs/flog.log",
             maxBytes=10 * 1024 * 1024,
