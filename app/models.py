@@ -53,7 +53,8 @@ class Post(db.Model):
     comments = db.relationship('Comment', back_populates='post')
     slug = db.Column(db.String(128))
     date = db.Column(db.String(64))
-    content = db.Column(db.Text())
+    content = db.Column(db.Text)
+    private = db.Column(db.Boolean, default=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     def __init__(self, **kwargs):

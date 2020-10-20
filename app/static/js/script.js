@@ -58,6 +58,26 @@ function update_notifications_count() {
         }
     })
 }
+function getCookie(cookie_name)
+{
+    var name = cookie_name + "=";
+    var cookies = document.cookie.split(';');
+    for(let i = 0; i < cookies.length; i++) 
+    {
+        let c = cookies[i].trim();
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+function convertLocaleFormat(locale) {
+    if (locale == 'zh_Hans_CN') {
+        return 'zh-CN';
+    } else {
+        return 'en-US';
+    }
+}
 $('.profile-popover').hover(
     show_profile_popover.bind(this),
     hide_profile_popover.bind(this)

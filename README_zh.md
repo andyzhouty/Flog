@@ -1,4 +1,4 @@
-# <img src="app/static/favicon/favicon.svg" width="50px"> Flog
+# <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
 [英文版](./README.md)
 由[Freepik]("https://www.flaticon.com/authors/freepik")制作的图标
 在Flask学习期间创建的博客网站。

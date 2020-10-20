@@ -3,12 +3,7 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 {% extends 'base.html' %}
-{% block title %} About us {% endblock %}
+{% block title %}{{ _('About us') }} {% endblock %}
 {% block page_content %}
-    <h1>
-    <img src="{{ url_for('static', filename='favicon/favicon.svg') }}" alt="icon" height="100px" width="100px">
-    Flog</h1>
-    <p>
-        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
-    </p>
+    {{ content | safe }}
 {% endblock page_content %}

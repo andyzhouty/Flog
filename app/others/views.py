@@ -2,11 +2,10 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
-from flask import current_app, abort, make_response, url_for, redirect
-from flask.globals import request
-from flask.templating import render_template, render_template_string
+from flask import current_app, request, abort, make_response, url_for, redirect, render_template
+from flask_login import current_user
 from . import others_bp
-from ..utils import redirect_back
+from ..utils import redirect_back, get_markdown, convert_to_html
 
 
 @others_bp.route('/change-theme/<theme_name>')
@@ -29,4 +28,9 @@ def login():
 
 @others_bp.route('/about-us')
 def about_us():
-    return render_template('others/about_us.html')
+    if request.cookies.get('locale') == 'zh_Hans_CN' or current_user.locale == "zh_Hans_CN":
+        markdown = get_markdown('https://gitee.com/andyzhouty/flog/raw/master/README_zh.md')
+    else:
+        markdown = get_markdown('https://gitee.com/andyzhouty/flog/raw/master/README.md')
+    html = convert_to_html(markdown)
+    return render_template('others/about_us.html', content=html)

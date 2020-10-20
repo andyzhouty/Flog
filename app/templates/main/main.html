@@ -16,21 +16,29 @@ MIT License
         <div class="col-md-8">
             <ul class="list-group">
             {% for post in posts %}
-                <li class="list-group-item">
-                    <h3 style="color: #5050bb">{{ post.title }}</h3>
-                    <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}"
-                           class="text-muted profile-popover"
-                           data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                           {{ post.author.name }}
-                        </a></h4>
-                    <div>
-                        {{ post.content | striptags | truncate(200) }}
-                        <small class="text-primary">
-                            <a href="{{ url_for('main.full_post', slug=post.slug) }}">{{ _('Read More') }}</a>
-                        </small>
-                        {{ post_actions(post) }}
-                    </div>
-                </li>
+                {% if not post.private or post.author == current_user %}
+                    <li class="list-group-item">
+                        <h3 style="color: #5050bb">{{ post.title }}</h3>
+                        <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}"
+                            class="text-muted profile-popover"
+                            data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+                            {{ post.author.name }}
+                            </a>
+                            {% if post.private and post.author == current_user %}
+                                <span class="badge badge-dark">
+                                    {{ _('Private') }}
+                                </span>
+                            {% endif %}
+                            </h4>
+                        <div>
+                            {{ post.content | striptags | truncate(200) }}
+                            <small class="text-primary">
+                                <a href="{{ url_for('main.full_post', slug=post.slug) }}">{{ _('Read More') }}</a>
+                            </small>
+                            {{ post_actions(post) }}
+                        </div>
+                    </li>
+                {% endif %}
             {% endfor %}
             </ul>
         </div>

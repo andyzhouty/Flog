@@ -3,6 +3,8 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import re
+import requests
+import markdown
 from urllib.parse import urlparse, urljoin
 from unidecode import unidecode
 from flask import redirect, url_for, request
@@ -32,3 +34,9 @@ def redirect_back(default='main.main', **kwargs):
         if is_safe_url(target):
             return redirect(target)
     return redirect(url_for(default, **kwargs))
+
+def get_markdown(url: str) -> 'markdown_str':
+    return requests.get(url).text
+
+def convert_to_html(markdown_str: str) -> 'html_str':
+    return markdown.markdown(markdown_str)

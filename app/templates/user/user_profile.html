@@ -1,14 +1,10 @@
 
 {% extends 'base.html' %}
 {% from 'macros.html' import role_label_of, follow_area, with context %}
+{% set locale = 'en_US' if not current_user.locale else current_user.locale %}
 {% block title %}
     Flog - {{ user.username }}
 {% endblock title %}
-{% block scripts %}
-    {{ super() }}
-    {{ moment.include_moment(local_js="https://cdn.staticfile.org/moment.js/2.9.0/moment-with-locales.min.js") }}
-    {{ moment.locale(auto_detect=True) }}
-{% endblock scripts %}
 {% block page_content %}
 <div class="row container">
     <div class="col-lg-2">

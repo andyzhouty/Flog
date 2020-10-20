@@ -1,4 +1,5 @@
-# Chinese (Simplified, China) translations for [Flog](https://github.com/z-t-y/flog).
+# Chinese (Simplified, China) translations for
+# [Flog](https://github.com/z-t-y/flog).
 # Copyright (C) 2020 Andy Zhou
 # This file is distributed under the same license as the Flog project.
 #
@@ -6,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-10-15 19:50+0800\n"
+"POT-Creation-Date: 2020-10-20 20:53+0800\n"
 "PO-Revision-Date: 2020-10-08 19:33+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -17,652 +18,675 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.8.0\n"
 
-#: app/errors.py:11
+#: app/errors.py:15
 msgid "400 Bad Request"
 msgstr "400 服务器没有获取到所需信息"
 
-#: app/errors.py:16
+#: app/errors.py:20
 msgid "403 You do not have the permission to access this page"
 msgstr "403 你没有权限查看这个页面"
 
-#: app/errors.py:22
+#: app/errors.py:26
 msgid "404 Not Found"
 msgstr "404 没有找到所需页面"
 
-#: app/errors.py:27
+#: app/errors.py:31
 msgid "405 Method Not Allowed"
 msgstr "405 访问方法错误"
 
-#: app/errors.py:32
+#: app/errors.py:36
 msgid "500 Internal Server Error"
 msgstr "500 服务器内部错误"
 
-#: app/settings.py:35
+#: app/settings.py:37
 msgid "Default"
 msgstr "默认"
 
-#: app/settings.py:35
+#: app/settings.py:37
 msgid "Lite"
 msgstr "现代"
 
-#: app/settings.py:35
+#: app/settings.py:37
 msgid "Dark"
 msgstr "深色"
 
-#: app/admin/forms.py:9 app/auth/forms.py:10 app/feedback/forms.py:7
-#: app/main/forms.py:8
+#: app/admin/forms.py:14 app/auth/forms.py:14 app/feedback/forms.py:11
 msgid "Please fill out this field."
 msgstr "请填充这个输入框"
 
-#: app/admin/forms.py:10 app/auth/forms.py:12 app/feedback/forms.py:8
-#: app/user/forms.py:8
+#: app/admin/forms.py:15 app/auth/forms.py:16 app/feedback/forms.py:12
+#: app/user/forms.py:12
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
 msgstr "字段长度必须在%(min)d和%(max)d之间"
 
-#: app/admin/forms.py:11 app/auth/forms.py:14
+#: app/admin/forms.py:16 app/auth/forms.py:18
 msgid "Invalid email."
 msgstr "不符合格式的电子邮箱"
 
-#: app/admin/forms.py:14
+#: app/admin/forms.py:19
 msgid "Email"
 msgstr "电子邮箱"
 
-#: app/admin/forms.py:17 app/auth/forms.py:18
+#: app/admin/forms.py:22 app/auth/forms.py:22
 msgid "Username"
 msgstr "用户名"
 
-#: app/admin/forms.py:19 app/auth/forms.py:22
+#: app/admin/forms.py:24 app/auth/forms.py:26
 msgid "Usernames must have only letters, numbers, dots, underscores or dashes"
 msgstr "用户名只能包含数字、英文字符、点、下划线和中划线"
 
-#: app/admin/forms.py:21
+#: app/admin/forms.py:26
 msgid "Confirmed"
 msgstr "验证过的"
 
-#: app/admin/forms.py:22
+#: app/admin/forms.py:27
 msgid "Role"
 msgstr "角色"
 
-#: app/admin/forms.py:23 app/auth/forms.py:24 app/user/forms.py:11
+#: app/admin/forms.py:28 app/auth/forms.py:28 app/user/forms.py:15
 msgid "Real Name"
 msgstr "真实姓名"
 
-#: app/admin/forms.py:24 app/user/forms.py:12
+#: app/admin/forms.py:29 app/user/forms.py:16
 msgid "Location"
 msgstr "位置"
 
-#: app/admin/forms.py:25 app/user/forms.py:13
+#: app/admin/forms.py:30 app/user/forms.py:17
 msgid "About me"
 msgstr "关于自己"
 
-#: app/admin/forms.py:26 app/main/forms.py:15 app/user/forms.py:14
+#: app/admin/forms.py:31 app/main/forms.py:20 app/user/forms.py:18
 msgid "Submit"
 msgstr "提交"
 
-#: app/admin/forms.py:37
+#: app/admin/forms.py:42
 msgid "Email already registered."
 msgstr "电子邮件已经注册过了"
 
-#: app/admin/forms.py:42
+#: app/admin/forms.py:47
 msgid "Username already in use."
 msgstr "该用户名正在被其他用户使用"
 
-#: app/admin/views.py:30
+#: app/admin/views.py:33
 #, python-format
 msgid "%s deleted."
 msgstr "%s 已被删除。"
 
-#: app/admin/views.py:59
+#: app/admin/views.py:62
 #, python-format
 msgid "%s's profile has been updated."
 msgstr "%s的个人信息已被更新。"
 
-#: app/admin/views.py:74
+#: app/admin/views.py:77
 msgid "User Deleted"
 msgstr "用户已删除"
 
-#: app/auth/forms.py:26
+#: app/auth/forms.py:30
 msgid "Email (Requires Verification)"
 msgstr "电子邮箱（用于验证）"
 
-#: app/auth/forms.py:29 app/auth/forms.py:48 app/auth/forms.py:54
+#: app/auth/forms.py:33 app/auth/forms.py:52 app/auth/forms.py:58
 msgid "Password"
 msgstr "密码"
 
-#: app/auth/forms.py:31
+#: app/auth/forms.py:35
 msgid "Password (Again)"
 msgstr "密码（重复一遍）"
 
-#: app/auth/forms.py:34
+#: app/auth/forms.py:38
 msgid "Passwords must match"
 msgstr "两个密码框中的内容必须一样"
 
-#: app/auth/forms.py:36 app/templates/auth/register.html:3
-#: app/templates/auth/register.html:5
+#: app/auth/forms.py:40 app/templates/auth/register.html:7
+#: app/templates/auth/register.html:9
 msgid "Register"
 msgstr "注册"
 
-#: app/auth/forms.py:40
+#: app/auth/forms.py:44
 msgid "Email already registered"
 msgstr "这个电子邮箱已经被注册过了"
 
-#: app/auth/forms.py:44
+#: app/auth/forms.py:48
 msgid "Username already in use"
 msgstr "这个用户名已经有人在使用了"
 
-#: app/auth/forms.py:47
+#: app/auth/forms.py:51
 msgid "Username / Email"
 msgstr "用户名 / 电子邮件"
 
-#: app/auth/forms.py:49
+#: app/auth/forms.py:53
 msgid "Remember me"
 msgstr "记住登录状态"
 
-#: app/auth/forms.py:50 app/templates/auth/login.html:3
-#: app/templates/auth/login.html:5
+#: app/auth/forms.py:54 app/templates/auth/login.html:7
+#: app/templates/auth/login.html:9
 msgid "Login"
 msgstr "登录"
 
-#: app/auth/forms.py:55
+#: app/auth/forms.py:59
 msgid "Delete Account"
 msgstr "删除账号"
 
-#: app/auth/views.py:33
+#: app/auth/views.py:37
 msgid "A confirmation email has been sent to you by email! You can now login!"
 msgstr "一个验证邮件已经发送，你现在可以使用设置的用户名和密码登录了。"
 
-#: app/auth/views.py:36
+#: app/auth/views.py:40
 msgid "You can now login!"
 msgstr "你现在可以登录了！"
 
-#: app/auth/views.py:61
+#: app/auth/views.py:65
 msgid "Invalid username or password!"
 msgstr "用户名和密码不符，请检查输入"
 
-#: app/auth/views.py:69
+#: app/auth/views.py:73
 msgid "You have been logged out."
 msgstr "你已经注销了"
 
-#: app/auth/views.py:80
+#: app/auth/views.py:84
 msgid "You have confirmed your account. Thanks !"
 msgstr "你验证了你的账户：）"
 
-#: app/auth/views.py:82
+#: app/auth/views.py:86
 msgid "The confirmation link is invalid or has expired"
 msgstr "这个链接已经过期了或没有通过验证"
 
-#: app/auth/views.py:92
+#: app/auth/views.py:96
 msgid "A new confirmation email has been sent to you by email"
 msgstr "一个新的验证邮件已经发送，请查收"
 
-#: app/auth/views.py:103
+#: app/auth/views.py:107
 msgid "Your account has been deleted"
 msgstr "你的账户已经被删除了"
 
-#: app/auth/views.py:105
+#: app/auth/views.py:109
 msgid "Your password is invalid!"
 msgstr "你的密码不正确！"
 
-#: app/feedback/forms.py:11 app/feedback/forms.py:12 app/templates/base.html:32
-#: app/templates/feedback/feedback.html:9
+#: app/feedback/forms.py:15 app/feedback/forms.py:16 app/templates/base.html:36
 #: app/templates/feedback/feedback.html:13
+#: app/templates/feedback/feedback.html:17
 msgid "Feedback"
 msgstr "反馈"
 
-#: app/feedback/views.py:27
+#: app/feedback/views.py:31
 msgid "Your feedback has been sent to the admins!"
 msgstr "你的反馈已经发送给管理员了！"
 
-#: app/language/views.py:20
+#: app/language/views.py:24
 msgid "Language updated."
 msgstr "语言设置已更新"
 
-#: app/main/forms.py:11
+#: app/main/forms.py:12
+msgid "Please fill out this field with valid values."
+msgstr "请用正确的值填充这个输入框"
+
+#: app/main/forms.py:15
 msgid "Date(yyyy-mm-dd)(2020-01-01)"
 msgstr "日期（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
 
-#: app/main/forms.py:13 app/main/forms.py:19
+#: app/main/forms.py:17 app/main/forms.py:24
 msgid "Title"
 msgstr "标题"
 
-#: app/main/forms.py:14 app/main/forms.py:20
+#: app/main/forms.py:18 app/main/forms.py:25
 msgid "Content"
 msgstr "内容"
 
-#: app/main/forms.py:21
+#: app/main/forms.py:19
+msgid "Can be seen by other users"
+msgstr "其他用户可见"
+
+#: app/main/forms.py:26
 msgid "Publish"
 msgstr "发表"
 
-#: app/main/forms.py:26 app/templates/main/full_post.html:23
+#: app/main/forms.py:31 app/templates/main/full_post.html:27
 msgid "Comment"
 msgid_plural "Comments"
 msgstr[0] "条评论"
 
-#: app/main/views.py:48
+#: app/main/views.py:54
 msgid "Your post has been added"
 msgstr "你的文章发表成功！"
 
-#: app/main/views.py:77
+#: app/main/views.py:84
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: app/main/views.py:121
+#: app/main/views.py:89 app/main/views.py:167
+msgid "The author has set this post to invisible."
+msgstr ""
+
+#: app/main/views.py:131
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: app/main/views.py:141
+#: app/main/views.py:151
 msgid "Edit Succeeded!"
 msgstr "编辑成功"
 
-#: app/main/views.py:152
+#: app/main/views.py:163
 msgid "Post collected."
 msgstr "文章已收藏"
 
-#: app/main/views.py:161
+#: app/main/views.py:165
+msgid "You cannot collect your own post."
+msgstr ""
+
+#: app/main/views.py:176
 msgid "Post uncollected."
 msgstr "文章已取消收藏"
 
-#: app/notification/views.py:44
+#: app/notification/views.py:48
 msgid "All notifications are read."
 msgstr "所有消息都被读过了"
 
-#: app/templates/base.html:31 app/templates/main/main.html:4
+#: app/templates/base.html:35 app/templates/main/main.html:8
 msgid "Main"
 msgstr "主页"
 
-#: app/templates/base.html:33
+#: app/templates/base.html:37
 msgid "About Us"
 msgstr "关于我们"
 
-#: app/templates/base.html:45
+#: app/templates/base.html:49
 msgid "Account"
 msgstr "账户"
 
-#: app/templates/admin/users.html:18 app/templates/base.html:48
-#: app/templates/macros.html:126 app/templates/user/edit_profile.html:3
-#: app/templates/user/edit_profile.html:5
-#: app/templates/user/user_profile.html:51
+#: app/templates/admin/users.html:22 app/templates/base.html:52
+#: app/templates/macros.html:130 app/templates/user/edit_profile.html:7
+#: app/templates/user/edit_profile.html:9
+#: app/templates/user/user_profile.html:52
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
-#: app/templates/base.html:49
+#: app/templates/base.html:53
 msgid "Log out"
 msgstr "注销"
 
-#: app/templates/base.html:52
+#: app/templates/base.html:56
 msgid "Resend Confirmation Email"
 msgstr "重新发送邮箱验证邮件"
 
-#: app/templates/base.html:56
+#: app/templates/base.html:60
 msgid "Delete Your Account"
 msgstr "删除你的账户"
 
-#: app/templates/base.html:71
+#: app/templates/base.html:75
 msgid "Log in / Register"
 msgstr "登录 / 注册"
 
-#: app/templates/base.html:76
+#: app/templates/base.html:80
 msgid "Theme"
 msgstr "样式选择"
 
-#: app/templates/base.html:90
+#: app/templates/base.html:94
 msgid "Language"
 msgstr "语言选择"
 
-#: app/templates/macros.html:16
+#: app/templates/macros.html:20
 msgid "Administrator"
 msgstr "管理员"
 
-#: app/templates/macros.html:18 app/templates/macros.html:29
+#: app/templates/macros.html:22 app/templates/macros.html:33
 msgid "Moderator"
 msgstr "协管员"
 
-#: app/templates/macros.html:20 app/templates/macros.html:31
+#: app/templates/macros.html:24 app/templates/macros.html:35
 msgid "User"
 msgstr "用户"
 
-#: app/templates/macros.html:27 app/templates/main/full_post.html:42
+#: app/templates/macros.html:31 app/templates/main/full_post.html:46
 msgid "Admin"
 msgstr "管理员"
 
-#: app/templates/macros.html:44
+#: app/templates/macros.html:48
 msgid "Unfollow"
 msgstr "取消关注"
 
-#: app/templates/macros.html:46
+#: app/templates/macros.html:50
 msgid "Follow each other"
 msgstr "互相关注"
 
-#: app/templates/macros.html:54
+#: app/templates/macros.html:58
 msgid "Follow"
 msgstr "关注Ta"
 
-#: app/templates/macros.html:56
+#: app/templates/macros.html:60
 msgid "Follows you"
 msgstr "关注了你"
 
-#: app/templates/macros.html:71 app/templates/main/_post_actions.html:6
+#: app/templates/macros.html:75 app/templates/main/_post_actions.html:10
 msgid "Collect"
 msgstr "收藏"
 
-#: app/templates/macros.html:76 app/templates/main/_post_actions.html:11
+#: app/templates/macros.html:80 app/templates/main/_post_actions.html:15
 msgid "Uncollect"
 msgstr "取消收藏"
 
-#: app/templates/macros.html:84
+#: app/templates/macros.html:88
 msgid "EDIT"
 msgstr "编辑"
 
-#: app/templates/admin/feedbacks.html:15 app/templates/admin/users.html:25
-#: app/templates/macros.html:96 app/templates/macros.html:133
-#: app/templates/main/full_post.html:65
+#: app/templates/admin/feedbacks.html:19 app/templates/admin/users.html:29
+#: app/templates/macros.html:100 app/templates/macros.html:137
+#: app/templates/main/full_post.html:69
 msgid "DELETE"
 msgstr "删除"
 
-#: app/templates/macros.html:106
+#: app/templates/macros.html:110
 msgid "Collected by 1 person"
 msgstr "被1个人收藏"
 
-#: app/templates/admin/edit_user_profile.html:3
+#: app/templates/admin/edit_user_profile.html:7
 msgid "Admin Edit Profile"
 msgstr "用管理员身份编辑Ta的个人信息"
 
-#: app/templates/admin/edit_user_profile.html:5
+#: app/templates/admin/edit_user_profile.html:9
 msgid "Edit"
 msgstr "编辑"
 
-#: app/templates/admin/edit_user_profile.html:5
+#: app/templates/admin/edit_user_profile.html:9
 msgid "'s"
 msgstr "的"
 
-#: app/templates/admin/edit_user_profile.html:5
+#: app/templates/admin/edit_user_profile.html:9
 msgid "Profile"
 msgstr "个人信息"
 
-#: app/templates/admin/feedbacks.html:2
+#: app/templates/admin/feedbacks.html:6
 msgid "Manage Feedbacks"
 msgstr "管理反馈"
 
-#: app/templates/admin/feedbacks.html:4
+#: app/templates/admin/feedbacks.html:8
 msgid "Welcome, Administrator"
 msgstr "欢迎，管理员"
 
-#: app/templates/admin/users.html:4
+#: app/templates/admin/users.html:8
 msgid "Manage users"
 msgstr "管理用户"
 
-#: app/templates/admin/users.html:23
+#: app/templates/admin/users.html:27
 msgid "return confirm('Are you sure?');"
 msgstr "return confirm('你确定吗？');"
 
-#: app/templates/ajax/profile_popup.html:9
+#: app/templates/ajax/profile_popup.html:13
 msgid "Homepage"
 msgstr "Ta的Flog个人主页"
 
-#: app/templates/auth/login.html:7
+#: app/templates/auth/login.html:11
 msgid "New user?"
 msgstr "新用户"
 
-#: app/templates/auth/login.html:9
+#: app/templates/auth/login.html:13
 msgid "Click here to register"
 msgstr "点击这里以注册"
 
-#: app/templates/auth/email/confirm.html:2
+#: app/templates/auth/email/confirm.html:6
 msgid "Hello,"
 msgstr "你好"
 
-#: app/templates/auth/email/confirm.html:3
-#: app/templates/auth/email/confirm.txt:3
+#: app/templates/auth/email/confirm.html:7
+#: app/templates/auth/email/confirm.txt:7
 msgid "Welcome to Flog!"
 msgstr "欢迎来到Flog"
 
-#: app/templates/auth/email/confirm.html:4
+#: app/templates/auth/email/confirm.html:8
 msgid "To confirm your account please click on the button or the link given"
 msgstr "为了验证你的邮箱，请点击下方的按钮或者链接"
 
-#: app/templates/auth/email/confirm.html:7
+#: app/templates/auth/email/confirm.html:11
 msgid "Confirm your account"
 msgstr "验证你的账户"
 
-#: app/templates/auth/email/confirm.html:10
+#: app/templates/auth/email/confirm.html:14
 msgid "If the button doesn't work well, then copy this link to your browser"
 msgstr "如果按钮无法正常工作，请复制下方链接到浏览器"
 
-#: app/templates/auth/email/confirm.txt:1
+#: app/templates/auth/email/confirm.txt:5
 msgid "Hello"
 msgstr "你好"
 
-#: app/templates/auth/email/confirm.txt:5
+#: app/templates/auth/email/confirm.txt:9
 msgid "To confirm your account please copy the following link to your browser"
 msgstr "为了验证你的账户，请复制下方的链接到浏览器"
 
-#: app/templates/auth/email/confirm.txt:9
+#: app/templates/auth/email/confirm.txt:13
 msgid "Replies to this email will be ignored. :)"
 msgstr "请不要回复这封邮件 :)"
 
-#: app/templates/errors/404.html:6
+#: app/templates/errors/404.html:10
 msgid "Welcome to special 404 page -- coffin dance!"
 msgstr "你查找的页面被黑人抬走了"
 
-#: app/templates/feedback/feedback.html:19
+#: app/templates/feedback/feedback.html:23
 msgid "feedback"
 msgid_plural "feedbacks"
 msgstr[0] "条反馈"
 
-#: app/templates/feedback/feedback_notification.html:2
-#: app/templates/feedback/feedback_notification.txt:1
+#: app/templates/feedback/feedback_notification.html:6
+#: app/templates/feedback/feedback_notification.txt:5
 msgid "Hello, Admin!"
 msgstr "管理员，你好"
 
-#: app/templates/feedback/feedback_notification.html:3
-#: app/templates/feedback/feedback_notification.txt:2
+#: app/templates/feedback/feedback_notification.html:7
+#: app/templates/feedback/feedback_notification.txt:6
 msgid "A new feedback was added just now!"
 msgstr "一个新的反馈已经由用户发出"
 
-#: app/templates/feedback/feedback_notification.html:4
-#: app/templates/feedback/feedback_notification.txt:3
+#: app/templates/feedback/feedback_notification.html:8
+#: app/templates/feedback/feedback_notification.txt:7
 msgid "Feedbacker"
 msgstr "反馈者"
 
-#: app/templates/feedback/feedback_notification.html:5
-#: app/templates/feedback/feedback_notification.txt:4
+#: app/templates/feedback/feedback_notification.html:9
+#: app/templates/feedback/feedback_notification.txt:8
 msgid "Feedback Content"
 msgstr "反馈内容"
 
-#: app/templates/feedback/feedback_notification.html:12
-#: app/templates/feedback/feedback_notification.txt:5
+#: app/templates/feedback/feedback_notification.html:16
+#: app/templates/feedback/feedback_notification.txt:9
 msgid "If it is a junk one, please delete it immediately!"
 msgstr "如果这是一则垃圾信息，请马上删除它!"
 
-#: app/templates/main/_post_actions.html:17
+#: app/templates/main/_post_actions.html:21
 msgid "EDIT [ADMIN]"
 msgstr "以管理员身份编辑账户信息"
 
-#: app/templates/main/_post_actions.html:28
+#: app/templates/main/_post_actions.html:32
 msgid "DELETE [ADMIN]"
 msgstr "[管理员]删除文章"
 
-#: app/templates/main/_sidebar.html:4
+#: app/templates/main/_sidebar.html:8
 msgid "Quick Actions"
 msgstr "快捷操作"
 
-#: app/templates/main/_sidebar.html:7
+#: app/templates/main/_sidebar.html:11
 msgid "Write a post"
 msgstr "撰写一篇新的文章"
 
-#: app/templates/main/_sidebar.html:10
+#: app/templates/main/_sidebar.html:14
 msgid "Manage your posts"
 msgstr "管理你的文章"
 
-#: app/templates/main/_sidebar.html:13
+#: app/templates/main/_sidebar.html:17
 msgid "Show your collections"
 msgstr "显示你的收藏"
 
-#: app/templates/main/_sidebar.html:16
+#: app/templates/main/_sidebar.html:20
 msgid "Show your followers"
 msgstr "显示关注你的人"
 
-#: app/templates/main/_sidebar.html:22
+#: app/templates/main/_sidebar.html:26
 msgid "Admin Actions"
 msgstr "管理员操作"
 
-#: app/templates/main/_sidebar.html:25
+#: app/templates/main/_sidebar.html:29
 msgid "Manage Users"
 msgstr "管理用户"
 
-#: app/templates/main/_sidebar.html:28
+#: app/templates/main/_sidebar.html:32
 msgid "Manage Posts"
 msgstr "管理文章"
 
-#: app/templates/main/collections.html:3
+#: app/templates/main/collections.html:7
 msgid "Your collections"
 msgstr "你的收藏"
 
-#: app/templates/main/collections.html:13 app/templates/main/main.html:25
+#: app/templates/main/collections.html:17 app/templates/main/main.html:36
 msgid "Read More"
 msgstr "阅读更多"
 
-#: app/templates/main/collections.html:20
+#: app/templates/main/collections.html:24
 msgid "You don't have any collections"
 msgstr "你没有收藏的文章"
 
-#: app/templates/main/edit_post.html:3 app/templates/main/edit_post.html:5
+#: app/templates/main/edit_post.html:7 app/templates/main/edit_post.html:9
 msgid "Edit post"
 msgstr "编辑文章"
 
-#: app/templates/main/full_post.html:13
+#: app/templates/main/full_post.html:17
 msgid "Date:"
 msgstr "日期："
 
-#: app/templates/main/full_post.html:14
+#: app/templates/main/full_post.html:18
 msgid "Author:"
 msgstr "作者："
 
-#: app/templates/main/full_post.html:26
+#: app/templates/main/full_post.html:30
 msgid "latest"
 msgstr "最新的"
 
-#: app/templates/main/full_post.html:45
+#: app/templates/main/full_post.html:49
 msgid "Author"
 msgstr "作者"
 
-#: app/templates/main/full_post.html:70
+#: app/templates/main/full_post.html:74
 msgid "Reply"
 msgstr "回复"
 
-#: app/templates/main/main.html:8
+#: app/templates/main/main.html:12
 msgid "Welcome,"
 msgstr "欢迎，"
 
-#: app/templates/main/new_post.html:4
+#: app/templates/main/main.html:29
+msgid "Private"
+msgstr "个人的"
+
+#: app/templates/main/new_post.html:8
 msgid "Create Post"
 msgstr "写文章"
 
-#: app/templates/main/new_post.html:10
+#: app/templates/main/new_post.html:14
 msgid "New Post"
-msgstr "新的文章"
+msgstr "撰写新的文章"
 
-#: app/templates/main/not_authorized.html:4
+#: app/templates/main/not_authorized.html:8
 msgid "A blog website built for convenience."
 msgstr "一个方便的博客网站"
 
-#: app/templates/main/not_authorized.html:6
+#: app/templates/main/not_authorized.html:10
 msgid "Join Now!"
 msgstr "加入我们"
 
-#: app/templates/main/not_authorized.html:7
+#: app/templates/main/not_authorized.html:11
 msgid "or"
 msgstr "或者"
 
-#: app/templates/main/not_authorized.html:8
+#: app/templates/main/not_authorized.html:12
 msgid "View Posts Directly"
 msgstr "直接查看用户的博客"
 
-#: app/templates/main/notifications.html:6
+#: app/templates/main/notifications.html:10
 msgid "All"
 msgstr "全部"
 
-#: app/templates/main/notifications.html:10
+#: app/templates/main/notifications.html:14
 msgid "Unread"
 msgstr "未读"
 
-#: app/templates/main/personal_posts.html:21
+#: app/templates/main/personal_posts.html:25
 msgid "Nothing Here"
 msgstr "你没有写任何文章:("
 
-#: app/templates/user/followers.html:5
+#: app/templates/others/about_us.html:6
+msgid "About us"
+msgstr "关于我们"
+
+#: app/templates/user/followers.html:9
 msgid "Your"
 msgstr "你的"
 
-#: app/templates/user/followers.html:6
+#: app/templates/user/followers.html:10
 msgid "His or her"
 msgstr "Ta的"
 
-#: app/templates/user/followers.html:7
+#: app/templates/user/followers.html:11
 msgid "followers"
 msgstr "关注者"
 
-#: app/templates/user/followers.html:20
+#: app/templates/user/followers.html:24
 msgid "You have no followers"
 msgstr "你没有关注者:("
 
-#: app/templates/user/user_profile.html:22
+#: app/templates/user/user_profile.html:23
 msgid "from"
 msgstr "住址"
 
-#: app/templates/user/user_profile.html:31
+#: app/templates/user/user_profile.html:32
 msgid "This email hasn't been confirmed yet."
 msgstr "这个用户的邮箱没有被验证过"
 
-#: app/templates/user/user_profile.html:37
+#: app/templates/user/user_profile.html:38
 msgid "Member since"
 msgstr "注册于"
 
-#: app/templates/user/user_profile.html:40
+#: app/templates/user/user_profile.html:41
 msgid "Last seen"
 msgstr "上次登录于"
 
-#: app/templates/user/user_profile.html:45
+#: app/templates/user/user_profile.html:46
 msgid "This user has"
 msgstr "这个用户有"
 
-#: app/templates/user/user_profile.html:46
+#: app/templates/user/user_profile.html:47
 msgid "You have"
 msgstr "你有"
 
-#: app/templates/user/user_profile.html:47
+#: app/templates/user/user_profile.html:48
 #, python-format
 msgid "%(num)s follower"
 msgid_plural "%(num)s followers"
 msgstr[0] "%(num)s个关注者"
 
-#: app/templates/user/user_profile.html:55
+#: app/templates/user/user_profile.html:56
 msgid "Edit Profile [Admin]"
 msgstr "[管理员]编辑Ta的信息"
 
-#: app/user/views.py:25
+#: app/user/views.py:29
 msgid "Your profile has been updated!"
 msgstr "你的个人信息已经被更新了！"
 
-#: app/user/views.py:31
+#: app/user/views.py:35
 msgid "Your email has not been confirmed yet!"
 msgstr "你的邮箱还没有被验证呢！"
 
-#: app/user/views.py:41
+#: app/user/views.py:45
 msgid "Already followed."
 msgstr "你已经关注了该用户"
 
-#: app/user/views.py:45
+#: app/user/views.py:49
 msgid "User followed"
 msgstr "你关注了该用户"
 
-#: app/user/views.py:54
+#: app/user/views.py:58
 msgid "Not following yet."
 msgstr "你还没有关注该用户"
 
-#: app/user/views.py:57
+#: app/user/views.py:61
 msgid "User unfollowed."
 msgstr "你取消关注了这个用户"
 

@@ -134,6 +134,8 @@ MIT License
     {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', local=False)}}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js', local=False) }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
+    {{ moment.include_moment(local_js="https://cdn.staticfile.org/moment.js/2.9.0/moment-with-locales.min.js") }}
+    {{ moment.locale(auto_detect=True) }}
     {{ static_file('js', 'js/script.js') }}
     {% if current_app.config['FLASK_CONFIG'] == 'production' %}
         <script>

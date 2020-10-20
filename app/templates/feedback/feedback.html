@@ -4,12 +4,6 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block scripts %}
-    {{ super() }}
-    {{ static_file('js', '//cdn.staticfile.org/moment.js/2.27.0/moment-with-locales.min.js', local=False)}}
-    {{ static_file('js', 'js/feedback.js') }}
-    {{ moment.locale(auto_detect=True) }}
-{% endblock scripts %}
 {% block title %} {{ _('Feedback') }} {% endblock title %}
 {% block page_content %}
     <h1 class="text-center display-4">

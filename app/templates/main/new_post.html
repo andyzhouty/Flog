@@ -4,7 +4,13 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% set locale = 'en_US' if not current_user.locale else current_user.locale %}
+{% if request.cookies.get('locale') != "" and request.cookies.get('locale') != None %}
+    {% set locale = request.cookies.get('locale') %}
+{% elif current_user.locale %}
+    {% set locale = current_user.locale %}
+{% else %}
+    {% set locale = 'en-US' %}
+{% endif %}
 {% block title %}{{ _('Create Post') }}{% endblock %}
 {% block styles %}
     {{ super() }}
@@ -18,40 +24,19 @@ MIT License
     {{ super() }}
     {{ ckeditor.load() }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery-ui-dist@1.12.1/jquery-ui.min.js', local=False)}}
+    {% if locale == 'zh_Hans_CN' or locale == 'zh-CN' %}
     {{ static_file('js', 'js/datepicker-zh-CN.js') }}
+    {% endif %}
     <script>
-        function getCookie(cookie_name)
-        {
-            var name = cookie_name + "=";
-            var cookies = document.cookie.split(';');
-            for(let i = 0; i < cookies.length; i++) 
-            {
-                let c = cookies[i].trim();
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-        function convertLocaleFormat(locale) {
-            if (locale == 'zh_Hans_CN') {
-                return 'zh-CN';
-            } else {
-                return 'en-US';
-            }
-        }
         $(document).ready(function () {
-            var lang;
-            if (getCookie('locale') != '') {
-                lang = convertLocaleFormat(getCookie('locale'));
-            } else {
-                lang = convertLocaleFormat("{{ locale }}");
-            }
+            var locale = "{{ locale }}";
             $('#date').datepicker({
                 format: 'yyyy-mm-dd',
                 todayHighlight: 1
             });
-            $.datepicker.regional(lang);
+            {% if locale == 'zh_Hans_CN' or locale == 'zh-CN' %}
+                $.datepicker.regional('zh-CN');
+            {% endif %}
         });
     </script>
 {% endblock scripts %}

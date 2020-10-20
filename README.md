@@ -1,4 +1,4 @@
-# <img src="app/static/favicon/favicon.svg" width="50px"> Flog
+# <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
 [中文版](./README_zh.md)
 Icons made by
 [Freepik]("https://www.flaticon.com/authors/freepik") from
