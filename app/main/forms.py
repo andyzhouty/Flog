@@ -12,8 +12,6 @@ from flask_ckeditor import CKEditorField
 dr_message = _l('Please fill out this field with valid values.')
 
 class PostForm(FlaskForm):
-    date = DateField(_l("Date(yyyy-mm-dd)(2020-01-01)"),
-                     validators=[DataRequired(dr_message)])
     title = StringField(_l("Title"), validators=[DataRequired(dr_message)])
     content = CKEditorField(_l("Content"), validators=[DataRequired(dr_message)])
     private = BooleanField(_l('Can be seen by other users'), default="checked")

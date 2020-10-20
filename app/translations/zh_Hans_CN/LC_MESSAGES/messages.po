@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-10-20 20:53+0800\n"
+"POT-Creation-Date: 2020-10-20 22:20+0800\n"
 "PO-Revision-Date: 2020-10-08 19:33+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -96,7 +96,7 @@ msgstr "位置"
 msgid "About me"
 msgstr "关于自己"
 
-#: app/admin/forms.py:31 app/main/forms.py:20 app/user/forms.py:18
+#: app/admin/forms.py:31 app/main/forms.py:18 app/user/forms.py:18
 msgid "Submit"
 msgstr "提交"
 
@@ -205,8 +205,8 @@ msgid "Your password is invalid!"
 msgstr "你的密码不正确！"
 
 #: app/feedback/forms.py:15 app/feedback/forms.py:16 app/templates/base.html:36
-#: app/templates/feedback/feedback.html:13
-#: app/templates/feedback/feedback.html:17
+#: app/templates/feedback/feedback.html:7
+#: app/templates/feedback/feedback.html:11
 msgid "Feedback"
 msgstr "反馈"
 
@@ -222,27 +222,23 @@ msgstr "语言设置已更新"
 msgid "Please fill out this field with valid values."
 msgstr "请用正确的值填充这个输入框"
 
-#: app/main/forms.py:15
-msgid "Date(yyyy-mm-dd)(2020-01-01)"
-msgstr "日期（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
-
-#: app/main/forms.py:17 app/main/forms.py:24
+#: app/main/forms.py:15 app/main/forms.py:22
 msgid "Title"
 msgstr "标题"
 
-#: app/main/forms.py:18 app/main/forms.py:25
+#: app/main/forms.py:16 app/main/forms.py:23
 msgid "Content"
 msgstr "内容"
 
-#: app/main/forms.py:19
+#: app/main/forms.py:17
 msgid "Can be seen by other users"
 msgstr "其他用户可见"
 
-#: app/main/forms.py:26
+#: app/main/forms.py:24
 msgid "Publish"
 msgstr "发表"
 
-#: app/main/forms.py:31 app/templates/main/full_post.html:27
+#: app/main/forms.py:29 app/templates/main/full_post.html:27
 msgid "Comment"
 msgid_plural "Comments"
 msgstr[0] "条评论"
@@ -257,7 +253,7 @@ msgstr "评论发表成功！"
 
 #: app/main/views.py:89 app/main/views.py:167
 msgid "The author has set this post to invisible."
-msgstr ""
+msgstr "这篇文章的作者已经把该文章设为不可见了"
 
 #: app/main/views.py:131
 #, python-format
@@ -274,7 +270,7 @@ msgstr "文章已收藏"
 
 #: app/main/views.py:165
 msgid "You cannot collect your own post."
-msgstr ""
+msgstr "你不能收藏你自己的文章"
 
 #: app/main/views.py:176
 msgid "Post uncollected."
@@ -299,7 +295,7 @@ msgstr "账户"
 #: app/templates/admin/users.html:22 app/templates/base.html:52
 #: app/templates/macros.html:130 app/templates/user/edit_profile.html:7
 #: app/templates/user/edit_profile.html:9
-#: app/templates/user/user_profile.html:52
+#: app/templates/user/user_profile.html:48
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
@@ -462,7 +458,7 @@ msgstr "请不要回复这封邮件 :)"
 msgid "Welcome to special 404 page -- coffin dance!"
 msgstr "你查找的页面被黑人抬走了"
 
-#: app/templates/feedback/feedback.html:23
+#: app/templates/feedback/feedback.html:17
 msgid "feedback"
 msgid_plural "feedbacks"
 msgstr[0] "条反馈"
@@ -576,11 +572,11 @@ msgstr "欢迎，"
 msgid "Private"
 msgstr "个人的"
 
-#: app/templates/main/new_post.html:8
+#: app/templates/main/new_post.html:14
 msgid "Create Post"
 msgstr "写文章"
 
-#: app/templates/main/new_post.html:14
+#: app/templates/main/new_post.html:20
 msgid "New Post"
 msgstr "撰写新的文章"
 
@@ -632,37 +628,37 @@ msgstr "关注者"
 msgid "You have no followers"
 msgstr "你没有关注者:("
 
-#: app/templates/user/user_profile.html:23
+#: app/templates/user/user_profile.html:19
 msgid "from"
 msgstr "住址"
 
-#: app/templates/user/user_profile.html:32
+#: app/templates/user/user_profile.html:28
 msgid "This email hasn't been confirmed yet."
 msgstr "这个用户的邮箱没有被验证过"
 
-#: app/templates/user/user_profile.html:38
+#: app/templates/user/user_profile.html:34
 msgid "Member since"
 msgstr "注册于"
 
-#: app/templates/user/user_profile.html:41
+#: app/templates/user/user_profile.html:37
 msgid "Last seen"
 msgstr "上次登录于"
 
-#: app/templates/user/user_profile.html:46
+#: app/templates/user/user_profile.html:42
 msgid "This user has"
 msgstr "这个用户有"
 
-#: app/templates/user/user_profile.html:47
+#: app/templates/user/user_profile.html:43
 msgid "You have"
 msgstr "你有"
 
-#: app/templates/user/user_profile.html:48
+#: app/templates/user/user_profile.html:44
 #, python-format
 msgid "%(num)s follower"
 msgid_plural "%(num)s followers"
 msgstr[0] "%(num)s个关注者"
 
-#: app/templates/user/user_profile.html:56
+#: app/templates/user/user_profile.html:52
 msgid "Edit Profile [Admin]"
 msgstr "[管理员]编辑Ta的信息"
 
@@ -704,4 +700,7 @@ msgstr "你取消关注了这个用户"
 
 #~ msgid "(Date(yyyy-mm-dd)(2020-01-01)"
 #~ msgstr "（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
+
+#~ msgid "Date(yyyy-mm-dd)(2020-01-01)"
+#~ msgstr "日期（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
 
