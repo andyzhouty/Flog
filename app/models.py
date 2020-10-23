@@ -9,8 +9,7 @@ from flask import current_app, url_for
 from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
-from .extensions import login_manager
+from .extensions import db, login_manager
 from .utils import slugify
 
 
@@ -73,6 +72,7 @@ class Post(db.Model):
     def url(self):
         if self.slug:
             return url_for('main.full_post', slug=self.slug, _external=True)
+
 
     def update_slug(self):
         """Updates the slug when the title is changed."""
@@ -326,3 +326,4 @@ class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self): return False
 
 login_manager.anonymous_user = AnonymousUser
+

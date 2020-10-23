@@ -28,9 +28,12 @@ def login():
 
 @others_bp.route('/about-us')
 def about_us():
-    if request.cookies.get('locale') == 'zh_Hans_CN' or current_user.locale == "zh_Hans_CN":
-        markdown = get_markdown('https://gitee.com/andyzhouty/flog/raw/master/README_zh.md')
-    else:
-        markdown = get_markdown('https://gitee.com/andyzhouty/flog/raw/master/README.md')
+    try:
+        if request.cookies.get('locale') == 'zh_Hans_CN' or current_user.locale == "zh_Hans_CN":
+            markdown = get_markdown('https://gitee.com/andyzhouty/flog/raw/master/README_zh.md')
+        else:
+            markdown = get_markdown('https://gitee.com/andyzhouty/flog/raw/master/README.md')
+    except AttributeError: # exception on anonymous users
+        markdown = get_markdown('https://gitee.com/andyzhouty/raw/master/README.md')
     html = convert_to_html(markdown)
     return render_template('others/about_us.html', content=html)

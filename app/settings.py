@@ -46,6 +46,8 @@ class Base:
         'zh_Hans_CN': '简体中文'
     }
 
+    CKEDITOR_HEIGHT = 800
+
     @classmethod
     def init_app(cls, app):
         pass

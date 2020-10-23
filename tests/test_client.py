@@ -61,7 +61,6 @@ class ClientTestCase(unittest.TestCase):
         self.login()
         text = fake.text()
         data = {
-            'date': fake.date_time_this_year().strftime('%Y-%m-%d'),
             'title': fake.sentence(),
             'content': f"<p>{text}</p>",
         }
@@ -187,3 +186,9 @@ class ClientTestCase(unittest.TestCase):
         self.login()
         self.client.post('/auth/delete-account/', data={'password': 'password'}, follow_redirects=True)
         self.assertEqual(User.query.count(), 0)
+
+    def test_language(self):
+        self.login()
+        self.admin.locale = 'en_US'
+        self.client.get('/language/set-locale/zh_Hans_CN', follow_redirects=True)
+        self.assertEqual(self.admin.locale, 'zh_Hans_CN')

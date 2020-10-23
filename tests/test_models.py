@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import unittest
 import logging
 from app import create_app, db, fakes
-from app.models import Post, User, Role
+from app.models import Post, User, Role, Notification
 
 
 class ModelsTestCase(unittest.TestCase):
@@ -61,3 +61,10 @@ class ModelsTestCase(unittest.TestCase):
         user2 = User.query.get(2)
         user1.follow(user2)
         self.assertTrue(user1.is_following(user2))
+
+    def test_notification(self):
+       notification = Notification(message='Hello World', receiver=User.query.get(1))
+       db.session.add(notification)
+       db.session.commit()
+       self.assertIn(notification, User.query.get(1).notifications)
+

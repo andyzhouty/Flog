@@ -47,7 +47,6 @@ def posts(count: int=2) -> None:
     for i in range(count):
         post = Post(
             title=fake.sentence(),
-            date=fake.date_time_this_year().strftime("%Y-%m-%d"),
             content=fake.text(randint(100, 300)),
             timestamp=fake.date_time_this_year()
         )

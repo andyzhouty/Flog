@@ -45,7 +45,6 @@ def create_post():
         post = Post(
             author=current_user,
             title=form.title.data,
-            date=form.date.data,
             content=form.content.data,
             private=form.private.data
         )
