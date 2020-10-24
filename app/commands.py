@@ -4,15 +4,12 @@ Copyright (c) 2020 Andy Zhou
 """
 import os
 import click
-import pytest
 from flask import Flask
 
 
 def register_commands(app: Flask, db):
     @app.cli.command()
     def test() -> None:
-        import logging
-        import unittest
         """Run the unittests."""
         os.system('pytest -v')
 
