@@ -56,6 +56,7 @@ MarkupSafe = "*"
 Unidecode = "*"
 Werkzeug = "*"
 WTForms = "*"
+coveralls = "*"
 
 [requires]
 python_version = "3.8"

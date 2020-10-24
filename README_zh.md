@@ -1,5 +1,5 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
-[英文版](./README.md)
+[英文版](./README.md)  [![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)  
 由[Freepik]("https://www.flaticon.com/authors/freepik")制作的图标
 在Flask学习期间创建的博客网站。
 
