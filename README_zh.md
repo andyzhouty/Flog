@@ -52,3 +52,46 @@
 
 2. 为什么这个网站有时一天有好几条提交，却有时候连续几周没有提交？  
 这个网站不能及时更新因为我是一名学生（作业有点多）。
+
+## 在本地运行这个网站
+
+### 部署网站到本地
+
+如果你使用pip+requirements.txt，命令如下：
+
+```shell
+git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.com/andyzhouty/Flog.git
+cd flog/
+python3 -m venv venv # 如果你使用Windows,请使用 python -m venv venv
+source ./venv/bin/activate # 如果你使用Windows，请使用 ./venv/Scripts/activate
+pip3 install -r requirements.txt
+flask run
+```
+
+如果你使用pipenv，命令如下：  
+（这里的Pipfile中使用了阿里云的pypi镜像以加快国内下载速度，在国外的同学请使用传统的pip+requirements.txt）
+
+```shell
+# 克隆项目并切换到相应目录（如上）
+pipenv install
+pipenv shell
+flask run
+```
+
+### 运行单元测试
+
+pip+requirements.txt
+
+```shell
+# 假设已经激活了虚拟环境
+pip3 install -r requirements-dev.txt
+flask test
+```
+
+pipenv
+
+```shell
+pipenv install --dev
+pipenv shell
+pytest
+```

@@ -4,6 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 import os
 import click
+import pytest
 from flask import Flask
 
 
@@ -13,9 +14,7 @@ def register_commands(app: Flask, db):
         import logging
         import unittest
         """Run the unittests."""
-        logging.disable(logging.CRITICAL)  # disable log
-        tests = unittest.TestLoader().discover('tests') # use unittest to discover tests
-        unittest.TextTestRunner(verbosity=2).run(tests) # run tests
+        os.system('pytest -v')
 
     @app.cli.command()
     def create_admin():

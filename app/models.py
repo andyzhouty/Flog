@@ -74,14 +74,6 @@ class Post(db.Model):
             return url_for('main.full_post', slug=self.slug, _external=True)
 
 
-    def update_slug(self):
-        """Updates the slug when the title is changed."""
-        if self.title:
-            self.slug = slugify(self.title)
-            db.session.add(self)
-            db.session.commit()
-
-
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
@@ -229,7 +221,7 @@ class User(db.Model, UserMixin):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email in current_app.config['ADMIN_EMAIL_LIST']:
+            if self.email == current_app.config['FLOG_ADMIN_EMAIL']:
                 self.role = Role.query.filter_by(name='Administrator').first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
@@ -327,3 +319,9 @@ class AnonymousUser(AnonymousUserMixin):
 
 login_manager.anonymous_user = AnonymousUser
 
+
+@db.event.listens_for(Post.title, 'set')
+def update_slug(target, value, oldvalue, initiator):
+    """Updates the slug when the title is changed."""
+    if target.title:
+        target.slug = slugify(value)

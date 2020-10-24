@@ -133,41 +133,44 @@ def delete_post(id):
     return redirect(url_for('main.main'))
 
 
-@main_bp.route('/posts/edit/<int:id>', methods=['POST', 'GET'])
+@main_bp.route('/posts/edit/<int:id>/', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
-    post2edit = Post.query.get(id)
-    if not (current_user.is_administrator() or current_user == post2edit.author):
+    post = Post.query.get(id)
+    if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     form = EditForm()
     if form.validate_on_submit():
-        editted_post = Post.query.get(id)
-        editted_post.title = form.title.data
-        editted_post.content = form.content.data
-        editted_post.update_slug()
-        db.session.add(editted_post)
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.add(post)
         db.session.commit()
+        current_app.logger.info(f'Post id {id} editted.')
         flash(_("Edit Succeeded!"),  "success")
         return redirect(url_for('main.main'))
-    return render_template("main/edit_post.html", id=id, form=form)
+    form.title.data = post.title
+    form.content.data = post.content
+    return render_template("main/edit_post.html", form=form)
 
 
-@main_bp.route('/collect-post/<int:id>/')
+@main_bp.route('/posts/collect/<int:id>/')
 @login_required
 def collect_post(id):
     post = Post.query.get(id)
-    if not post.private and post.author != current_user:
+    if not post.private and post.author != current_user and not current_user.is_collecting(post):
         current_user.collect(post)
         push_collect_notification(collector=current_user, post=post, receiver=post.author)
         flash(_('Post collected.'),  'success')
+    elif current_user.is_collecting(post):
+        flash(_('Already collected.'))
     elif post.author == current_user:
         flash(_('You cannot collect your own post.'))
     else:
-        flash(_('The author has set this post to invisible.'))
+        flash(_('The author has set this post to invisible. So you cannot collect this post.'))
     return make_response(redirect_back())
 
 
-@main_bp.route('/uncollect-post/<int:id>/')
+@main_bp.route('/posts/uncollect/<int:id>/')
 @login_required
 def uncollect_post(id):
     post = Post.query.get(id)
@@ -182,4 +185,3 @@ def collected_posts():
     # Get current user's collection
     posts = [post for post in Post.query.all() if current_user.is_collecting(post)]
     return render_template('main/collections.html', posts=posts)
-

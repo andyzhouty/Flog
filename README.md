@@ -56,3 +56,46 @@ A: 'Flog' is a combination of 'Flask' and 'Blog'. The word sounds (and looks) li
 
 2. Q: Why can't the website be updated frequently?  
 The website cannot be updated on time because I'm a student in Middle School now. There is much homework.
+
+## Run Flog locally
+
+### Run the website
+
+If you prefer to use pip + requirements.txt, then:
+
+```shell
+git clone https://github.com/z-t-y/Flog.git ./flog
+cd flog/
+python3 -m venv venv # or `python -m venv venv` on windows
+source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
+pip3 install -r requirements.txt
+flask run
+```
+
+Or, if you prefer to use pipenv, then:  
+(Note that I use [mirrors.aliyun.com](https://mirrors.aliyun.com) in Pipfile to improve the download speed in China, if you don't live in China, use pip+requirements.txt instead)
+
+```shell
+# clone the project and change to that directory
+pipenv install
+pipenv shell
+flask run
+```
+
+### Run the unittests
+
+pip+requirements.txt
+
+```shell
+source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
+pip3 install -r requirements-dev.txt
+flask test
+```
+
+pipenv
+
+```shell
+pipenv install --dev
+pipenv shell
+pytest
+```

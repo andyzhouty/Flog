@@ -15,7 +15,7 @@ MIT License
         </a>
         <form method="POST" action="{{ url_for('notification.read_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="submit" class="btn btn-sm btn-light" value="Mark all notifications as read">
+            <input type="submit" class="btn btn-sm btn-light" value="{{ _('Mark all notifications as read') }}">
         </form>
     </div>
     <ul class="list-group">
@@ -25,7 +25,7 @@ MIT License
                 {% if not notification.is_read %}
                     <form method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <input type="submit" class="fa fa-square-o" value="Mark this notification as read">
+                        <input type="submit" class="fa fa-square-o" value="{{ _('Mark this notification as read') }}">
                     </form>
                 {% else %}
                     <span class="fa fa-check-square-o text-success"></span>

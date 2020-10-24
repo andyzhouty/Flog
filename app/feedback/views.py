@@ -21,7 +21,7 @@ def feedback():
         message = Feedback(body=body, author=current_user)
         db.session.add(message)
         db.session.commit()
-        recipients = current_app.config['ADMIN_EMAIL_LIST']
+        recipients = [current_app.config['FLOG_ADMIN_EMAIL']]
         send_email(
             recipients=recipients,
             subject="A new feedback was added!",

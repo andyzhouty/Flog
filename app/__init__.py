@@ -51,7 +51,7 @@ def register_logger(app: Flask):
     app.logger.setLevel(logging.INFO)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s "
                                   "%(message)s")
-    if app.config['DEBUG']:
+    if app.debug or app.testing:
         if not os.path.exists('logs'):
             os.mkdir('logs')
         file_handler = RotatingFileHandler(

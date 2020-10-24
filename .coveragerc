@@ -7,4 +7,3 @@ omit =
     */fakes.py
     */extensions.py
     */commands.py
-    */models.py

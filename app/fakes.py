@@ -14,31 +14,19 @@ def users(count: int=2) -> None:
     """Generates fake users"""
     for i in range(count):
         name = fake.name()
+        username = slugify(name)
+        # Ensure the username is unique.
+        if User.query.filter_by(username=username).first() is not None:
+            continue
         user = User(
-            username=slugify(name),
+            username=username,
             name=name,
             email=fake.email(),
-            confirmed=True
+            confirmed=True,
         )
         user.set_password('123456')
         user.role = Role.query.filter_by(name='User').first()
         db.session.add(user)
-    db.session.commit()
-
-
-def moderators(count: int=1) -> None:
-    """Generates fake moderators"""
-    for i in range(count):
-        name = fake.name()
-        moderator = User(
-            username=slugify(name),
-            name=name,
-            email=fake.email(),
-            confirmed=True
-        )
-        moderator.set_password('123456')
-        moderator.role = Role.query.filter_by(name='Moderator').first()
-        db.session.add(moderator)
     db.session.commit()
 
 
@@ -48,7 +36,8 @@ def posts(count: int=2) -> None:
         post = Post(
             title=fake.sentence(),
             content=fake.text(randint(100, 300)),
-            timestamp=fake.date_time_this_year()
+            timestamp=fake.date_time_this_year(),
+            private=bool(randint(0, 1))
         )
         post.author = User.query.get(randint(1, User.query.count()))
         db.session.add(post)

@@ -14,14 +14,14 @@ dr_message = _l('Please fill out this field with valid values.')
 class PostForm(FlaskForm):
     title = StringField(_l("Title"), validators=[DataRequired(dr_message)])
     content = CKEditorField(_l("Content"), validators=[DataRequired(dr_message)])
-    private = BooleanField(_l('Can be seen by other users'), default="checked")
+    private = BooleanField(_l('Private'), default="checked")
     submit = SubmitField(_l("Submit"))
 
 
 class EditForm(FlaskForm):
     title = StringField(_l("Title"), validators=[DataRequired(dr_message)])
     content = CKEditorField(_l("Content"), validators=[DataRequired(dr_message)])
-    submit = SubmitField(_l("Publish"), validators=[DataRequired(dr_message)])
+    submit = SubmitField(_l("Publish"))
 
 
 class CommentForm(FlaskForm):

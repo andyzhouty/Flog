@@ -28,10 +28,9 @@ class Base:
     MAIL_PASSWORD = os.getenv("FLOG_EMAIL_PASSWORD", "flog_email_password")
     MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER", "flog <flog_admin@example.com")
 
-    ADMIN_NAME = os.getenv('FLOG_ADMIN_NAME', 'admin')
-    ADMIN_EMAIL = MAIL_USERNAME
-    ADMIN_EMAIL_LIST = [ADMIN_EMAIL]
-    ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD', 'flog_admin_password')
+    FLOG_ADMIN = os.getenv('FLOG_ADMIN', 'admin')
+    FLOG_ADMIN_EMAIL = os.getenv('FLOG_ADMIN_EMAIL', MAIL_USERNAME)
+    FLOG_ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD', 'flog_admin_password')
 
     # ('theme name': 'display name')
     BOOTSTRAP_THEMES = {'default': _l('Default'), 'lite': _l('Lite'), 'dark': _l('Dark')}
@@ -67,19 +66,18 @@ class Production(Base):
         credentials = None
         secure = None
         if getattr(cls, 'ADMIN_EMAIL', None) is not None:
-            credentials = (cls.ADMIN_EMAIL, cls.ADMIN_PASSWORD)
+            credentials = (cls.FLOG_ADMIN_EMAIL, cls.MAIL_PASSWORD)
             if getattr(cls, 'MAIL_USE_TLS', None):
                 secure = ()
         mail_handler = SMTPHandler(
             mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
-            fromaddr=cls.DEFAULT_EMAIL_SENDER,
-            toaddrs=[cls.ADMIN_EMAIL],
+            fromaddr=cls.MAIL_DEFAULT_SENDER,
+            toaddrs=[cls.FLOG_ADMIN_EMAIL],
             subject='Application Error',
             credentials=credentials, secure=secure
         )
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
-        
 
 
 class Development(Base):
@@ -95,25 +93,8 @@ class Test(Base):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
 
-class Heroku(Production):
-    SSL_REDIRECT = True if os.getenv('DYNO') else False
-    @classmethod
-    def init_app(cls, app: Flask):
-        Production.init_app(app)
-        
-        import logging
-        from logging import StreamHandler
-        file_handler = StreamHandler()
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
-
-        from werkzeug.contrib.fixers import ProxyFix
-        app.wsgi_app = ProxyFix(app.wsgi_app)
-
-
 config = {
     'production': Production,
     'development': Development,
     'testing': Test,
-    'heroku': Heroku
 }
