@@ -57,6 +57,8 @@ MarkupSafe = "*"
 Unidecode = "*"
 Werkzeug = "*"
 WTForms = "*"
+flask-cors = "*"
+flask-httpauth = "*"
 
 [requires]
 python_version = "3.8"
