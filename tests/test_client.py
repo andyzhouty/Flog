@@ -7,9 +7,9 @@ import json
 from random import randint
 from faker import Faker
 from flask import current_app
-from app import fakes
-from app.models import db, Post, Role, User
-from app.utils import slugify
+from flog import fakes
+from flog.models import db, Post, Role, User
+from flog.utils import slugify
 from .helpers import *
 
 fake = Faker()

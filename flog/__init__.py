@@ -30,7 +30,7 @@ from .user import user_bp
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
-    app = Flask('app')
+    app = Flask('flog')
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)

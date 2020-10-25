@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flask import current_app
-from app.utils import slugify
+from flog.utils import slugify
 
 
 def test_app_exists(client):

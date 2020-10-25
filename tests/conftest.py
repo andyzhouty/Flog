@@ -1,6 +1,6 @@
 import pytest
-from app import create_app, db, fakes
-from app.models import Role, User
+from flog import create_app, db, fakes
+from flog.models import Role, User
 
 @pytest.fixture()
 def client():

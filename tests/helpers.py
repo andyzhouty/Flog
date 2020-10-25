@@ -1,9 +1,9 @@
 import os
 from faker import Faker
-from app.notifications import (
+from flog.notifications import (
     push_collect_notification, push_comment_notification, push_follow_notification
 )
-from app.models import db, Comment, Notification, Post, User, Role
+from flog.models import db, Comment, Notification, Post, User, Role
 
 fake = Faker()
 

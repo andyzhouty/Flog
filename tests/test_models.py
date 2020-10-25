@@ -3,8 +3,8 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from tests.helpers import send_notification
-from app import db
-from app.models import Post, User, Notification
+from flog import db
+from flog.models import Post, User, Notification
 
 def test_password_setter(client):
     u = User()
