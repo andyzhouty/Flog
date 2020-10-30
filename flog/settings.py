@@ -28,7 +28,7 @@ class Base:
     MAIL_PASSWORD = os.getenv("FLOG_EMAIL_PASSWORD", "flog_email_password")
     MAIL_DEFAULT_SENDER = os.getenv("DEFAULT_EMAIL_SENDER", "flog <flog_admin@example.com")
 
-    FLOG_ADMIN = os.getenv('FLOG_ADMIN', 'admin')
+    FLOG_ADMIN = os.getenv('FLOG_ADMIN', 'flog_admin')
     FLOG_ADMIN_EMAIL = os.getenv('FLOG_ADMIN_EMAIL', MAIL_USERNAME)
     FLOG_ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD', 'flog_admin_password')
 

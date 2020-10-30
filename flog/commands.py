@@ -90,7 +90,7 @@ def register_commands(app: Flask, db):
         if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
             raise RuntimeError('Error: Extracting the config file failed.')
         if os.system(
-            'pybabel init -i messages.pot -d flog/translations -l ' + locale):
+            'pybabel init -i messages.pot -d flog`/translations -l ' + locale):
             raise RuntimeError(f'Error: Initing the new language {locale} failed.')
         os.remove('messages.pot')
 
