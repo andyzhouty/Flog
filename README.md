@@ -45,18 +45,10 @@ that took me into the wonderful world of Flask.
 
 ## Prospect
 
-- Chatting Room
-- Web API
+- Chatting Room (Probabaly deprecated)
+- Web API (In progress)
   - Flog CLI  
   - Linux and Windows application for Flog.  
-
-## Q & A
-
-1. Q: Why 'Flog'?  
-A: 'Flog' is a combination of 'Flask' and 'Blog'. The word sounds (and looks) like 'frog'. So I use a frog as its icon.  
-
-2. Q: Why can't the website be updated frequently?  
-The website cannot be updated on time because I'm a student in Middle School now. There is much homework.
 
 ## Run Flog locally
 
@@ -111,3 +103,11 @@ pipenv install --dev
 pipenv shell
 pytest
 ```
+
+## FAQ
+
+1. Q: Why 'Flog'?  
+A: 'Flog' is a combination of 'Flask' and 'Blog'. The word sounds (and looks) like 'frog'. So I use a frog as its icon.
+
+2. Q: Why can't the website be updated frequently?  
+The website cannot be updated on time because I'm a student in Middle School now. There is much homework.

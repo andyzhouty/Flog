@@ -8,6 +8,8 @@ coverage = "*"
 flake8 = "*"
 faker = "*"
 coveralls = "*"
+pylint = "*"
+autopep8 = "*"
 
 [packages]
 alembic = "*"

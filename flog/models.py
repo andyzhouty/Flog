@@ -50,7 +50,7 @@ class Post(db.Model):
         cascade='all'
     )
     comments = db.relationship('Comment', back_populates='post')
-    slug = db.Column(db.String(128))
+    slug = db.Column(db.String(128), unique=True)
     content = db.Column(db.Text)
     private = db.Column(db.Boolean, default=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
@@ -59,7 +59,6 @@ class Post(db.Model):
         super(Post, self).__init__(**kwargs)
         if self.title:
             self.slug = slugify(self.title)
-
 
     def __repr__(self) -> str:
         return f'<Post {self.title}>'
