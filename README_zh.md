@@ -60,11 +60,13 @@
 如果你使用pip+requirements.txt，命令如下：
 
 ```shell
-git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.com/andyzhouty/Flog.git
+git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.com/andyzhouty/Flog.git ./flog
 cd flog/
 python3 -m venv venv # 如果你使用Windows,请使用 python -m venv venv
 source ./venv/bin/activate # 如果你使用Windows，请使用 ./venv/Scripts/activate
 pip3 install -r requirements.txt
+flask forge # 生成虚拟数据
+flask create-admin
 flask run
 ```
 
@@ -75,8 +77,17 @@ flask run
 # 克隆项目并切换到相应目录（如上）
 pipenv install
 pipenv shell
+flask forge
+flask create-admin
 flask run
 ```
+
+应用配置默认值：
+
+| 配置名            |  FLOG_EMAIL | FLOG_EMAIL_PASSWORD | FLOG_ADMIN | FLOG_ADMIN_EMAIL | FLOG_ADMIN_PASSWORD |
+| ---           | ----------- | ------------------- | ---------- | ---------------- | ------------------- |
+| 默认值 | flog_admin@example.com | flog_email_password | flog_admin | flog_admin@example.com | flog_admin_password |
+| 描述 | flog部署服务器的邮箱（可以使用个人邮箱） | `FLOG_EMAIL`的密码 | 管理员用户的用户名 | 管理员邮箱账号 | 管理员密码
 
 ### 运行单元测试
 

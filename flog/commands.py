@@ -18,9 +18,9 @@ def register_commands(app: Flask, db):
         """Create administrator account"""
         from .models import Role, User
         admin_role = Role.query.filter_by(name='Administrator').first()
-        username = app.config['ADMIN_NAME']
-        email = app.config['ADMIN_EMAIL']
-        password = app.config['ADMIN_PASSWORD']
+        username = app.config['FLOG_ADMIN']
+        email = app.config['FLOG_ADMIN_EMAIL']
+        password = app.config['FLOG_ADMIN_PASSWORD']
         if User.query.filter_by(email=email).count() == 0:
             admin = User(username=username, email=email, name=username, confirmed=True)
             admin.set_password(password)
@@ -90,7 +90,7 @@ def register_commands(app: Flask, db):
         if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
             raise RuntimeError('Error: Extracting the config file failed.')
         if os.system(
-            'pybabel init -i messages.pot -d app/translations -l ' + locale):
+            'pybabel init -i messages.pot -d flog`/translations -l ' + locale):
             raise RuntimeError(f'Error: Initing the new language {locale} failed.')
         os.remove('messages.pot')
 
@@ -99,12 +99,12 @@ def register_commands(app: Flask, db):
         """Update all languages."""
         if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
             raise RuntimeError('Error: Extracting the config file failed.')
-        if os.system('pybabel update -i messages.pot -d app/translations'):
+        if os.system('pybabel update -i messages.pot -d flog/translations'):
             raise RuntimeError('Error: Updating the .po file failed.')
         os.remove('messages.pot')
 
     @translate.command()
     def compile():
         """Compile all languages to .mo file."""
-        if os.system('pybabel compile -d app/translations'):
+        if os.system('pybabel compile -d flog/translations'):
             raise RuntimeError('Error: Compiling failed.')

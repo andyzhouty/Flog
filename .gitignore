@@ -92,7 +92,6 @@ celerybeat-schedule
 .venv
 env/
 venv/
-bluelog_env/
 ENV/
 env.bak/
 venv.bak/
@@ -115,16 +114,16 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# VSCode stuff
+# VSCode configureation files
 .vscode/
 
-# PyCharm stuff
+# PyCharm configuration files
 .idea/
 
-# SQLite stuff
+# SQLite data
 *.db
 *.sqlite
 *.sqlite3
 
 # Automatic scripts
-push_and_deploy.sh
+push.sh

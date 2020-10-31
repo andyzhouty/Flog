@@ -1,5 +1,6 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
-[中文版](./README_zh.md)  [![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)  
+[中文版 README](./README_zh.md)  
+[![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)  
 Icons made by
 [Freepik]("https://www.flaticon.com/authors/freepik") from
 [www.flaticon.com](www.flaticon.com)
@@ -69,18 +70,29 @@ cd flog/
 python3 -m venv venv # or `python -m venv venv` on windows
 source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
 pip3 install -r requirements.txt
+flask forge # generates fake data
+flask create-admin
 flask run
 ```
 
 Or, if you prefer to use pipenv, then:  
-(Note that I use [mirrors.aliyun.com](https://mirrors.aliyun.com) in Pipfile to improve the download speed in China, if you don't live in China, use pip+requirements.txt instead)
+(Note that I use [Aliyun Mirror for PyPI](https://mirrors.aliyun.com) in Pipfile to improve the download speed in China, if you don't live in China, use the traditional pip+requirements.txt instead)
 
 ```shell
 # clone the project and change to that directory
 pipenv install
 pipenv shell
+flask forge # generates fake data
+flask create-admin
 flask run
 ```
+
+The default settings for the app:
+
+| Name          |  FLOG_EMAIL | FLOG_EMAIL_PASSWORD | FLOG_ADMIN | FLOG_ADMIN_EMAIL | FLOG_ADMIN_PASSWORD |
+| ---           | ----------- | ------------------- | ---------- | ---------------- | ------------------- |
+| Default Value | flog_admin@example.com | flog_email_password | flog_admin | flog_admin@example.com | flog_admin_password |
+| Description   | the email address used for deploying flog | the password for `FLOG_EMAIL` | the username for the administrator of flog | the administrator's email address | the administrator's password
 
 ### Run the unittests
 
