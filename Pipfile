@@ -1,6 +1,6 @@
 [[source]]
 name = "pypi"
-url = "http://pypi.org/simple"
+url = "https://pypi.org/simple"
 
 [dev-packages]
 pytest = "*"
