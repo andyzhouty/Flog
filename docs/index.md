@@ -5,7 +5,7 @@ The flog web api uses '/api/v1' as the url prefix for the first version of api.
 ## Auth Type
 It currently uses HTTPBasicAuth, but will change to AuthToken later.
 ## Index
-- [user_doc](./v1/user_doc.md)
+- [userapi_doc](./v1/userapi_doc.md)
 - [post_doc](./v1/post_doc.md)
 
 ## Warning
