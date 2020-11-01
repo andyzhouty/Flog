@@ -67,8 +67,7 @@ flask create-admin
 flask run
 ```
 
-Or, if you prefer to use pipenv, then:  
-(Note that I use [Aliyun Mirror for PyPI](https://mirrors.aliyun.com) in Pipfile to improve the download speed in China, if you don't live in China, use the traditional pip+requirements.txt instead)
+Or if you prefer to use pipenv, then:
 
 ```shell
 # clone the project and change to that directory

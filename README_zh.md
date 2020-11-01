@@ -62,8 +62,8 @@ flask create-admin
 flask run
 ```
 
-如果你使用pipenv，命令如下：  
-（这里的Pipfile中使用了阿里云的pypi镜像以加快国内下载速度，在国外的同学请使用传统的pip+requirements.txt）
+如果你使用pipenv，命令如下：
+（如果想用阿里云等pypi镜像加速，请在
 
 ```shell
 # 克隆项目并切换到相应目录（如上）

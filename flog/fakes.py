@@ -34,7 +34,7 @@ def posts(count: int=2) -> None:
     """Generates fake posts"""
     for i in range(count):
         post = Post(
-            title=fake.sentence(),
+            title=fake.word() + ' ' + fake.word(),
             content=fake.text(randint(100, 300)),
             timestamp=fake.date_time_this_year(),
             private=bool(randint(0, 1))
@@ -87,6 +87,7 @@ def follows(count: int=20) -> None:
     for i in range(count):
         user1 = User.query.get(randint(1, User.query.count()))
         user2 = User.query.get(randint(1, User.query.count()))
+        if not (user1 or user2): continue
         if user1.role != admin_role and admin:
             user1.follow(admin)
         elif not admin and user1 != user2:

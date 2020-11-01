@@ -3,7 +3,6 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import os
-from flask import Flask
 from flask_babel import lazy_gettext as _l
 
 
@@ -60,7 +59,7 @@ class Production(Base):
     @classmethod
     def init_app(cls, app):
         Base.init_app(app)
-        
+
         import logging
         from logging.handlers import SMTPHandler
         credentials = None

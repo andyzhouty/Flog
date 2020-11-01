@@ -22,7 +22,6 @@ Flask-Moment==0.10.0
 flask-sslify==0.1.5
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.3
-gunicorn==20.0.4
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.2
@@ -32,7 +31,6 @@ MarkupSafe==1.1.1
 more-itertools==8.4.0
 pluggy==0.13.1
 py==1.9.0
-psycopg2-binary==2.8.5
 pycparser==2.20
 pyparsing==2.4.7
 python-dateutil==2.8.1

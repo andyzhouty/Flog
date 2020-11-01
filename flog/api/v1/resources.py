@@ -1,11 +1,15 @@
 """
-MIT License
-Copyright(c) 2020 Andy Zhou
+    flog.api.v1.resources
+    ~~~~~~~~~~~~~~~~~~~~~
+    This module contains functions and APIs of this website.
+
+    :copyright: Andy Zhou
+    :license: MIT License
 """
 
 from flask import g, jsonify, request, url_for
 from flask.views import MethodView
-from .errors import ( # noqa
+from .errors import (  # noqa
     ValidationError,
     bad_request,
     unauthorized,
@@ -30,15 +34,15 @@ def can_edit_post(post: Post) -> bool:
     try:
         return (g.current_user == post.author or
                 g.current_user.is_administrator())
-    except: # noqa
+    except:  # noqa
         return False
 
 
 def can_edit_profile(user: User) -> bool:
     try:
         return (g.current_user == user or
-        g.current_user.is_administrator())
-    except: # noqa
+                g.current_user.is_administrator())
+    except:  # noqa
         return False
 
 
@@ -59,13 +63,26 @@ class UserAPI(MethodView):
         user = User.query.get_or_404(user_id)
         return jsonify(user_schema(user))
 
-    def post(self, user_id: int):
+    def put(self, user_id: int):
         """Change user profile"""
         user = User.query.get_or_404(user_id)
         if not can_edit_profile(user):
-            return forbidden('You cannot edit this user\'s profile')
-        
-        pass
+            return forbidden('You cannot edit this user\'s profile.')
+        user.username = request.json.get('username', user.username)
+        user.name = request.json.get('name', user.name)
+        user.location = request.json.get('location', user.location)
+        user.about_me = request.json.get('about_me', user.about_me)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(user_schema(user))
+
+    def delete(self, user_id: int):
+        """Delete user"""
+        user = User.query.get_or_404(user_id)
+        if not can_edit_profile(user):
+            return forbidden('You cannot delete this user.')
+        user.delete()
+        return f'User id {user_id} deleted.', 200
 
 
 class PostAPI(MethodView):
