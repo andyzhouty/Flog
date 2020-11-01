@@ -1,6 +1,6 @@
-# User Doc
+# UserAPI Doc
 ## URL Routing:
-- /api/v1/user/\<int:id>:  
+- /api/v1/user/\<int:user_id>:  
     - METHODS:
 
         - GET: Returns user schema (json):
@@ -23,6 +23,20 @@
                 The user's location(set by user)
             - about_me: str  
                 The user's about_me(set by user)
+
+        The return value should look like this:
+        ```json
+        {
+            "id": 2,
+            "kind": "User",
+            "last_seen": "Fri, 30 Oct 2020 12:36:07 GMT",
+            "location": "Shanghai, China",
+            "member_since": "Fri, 30 Oct 2020 12:36:07 GMT",
+            "name": "Kent Reyes",
+            "url": "http://example.com/api/v1/user/2/",
+            "username": "kent-reyes"
+        }
+        ```
 
         - PUT: Updates user profile (only json is accepted)
 

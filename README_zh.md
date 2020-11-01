@@ -45,6 +45,8 @@
   - Flog命令行客户端
   - Linux和Windows的Flog客户端
 
+## API 文档
+[Github Pages](https://z-t-y.github.io/Flog)
 ## 在本地运行这个网站
 
 ### 部署网站到本地
