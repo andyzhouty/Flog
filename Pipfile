@@ -10,6 +10,10 @@ faker = "*"
 coveralls = "*"
 pylint = "*"
 autopep8 = "*"
+recommonmark = "*"
+sphinx-rtd-theme = "*"
+sphinx = "*"
+sphinx-autobuild = "*"
 
 [packages]
 alembic = "*"
