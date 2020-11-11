@@ -1,5 +1,6 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
-[英文版](./README.md)  [![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)  
+[英文版](./README.md)  [![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master) 
+[![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)   
 由[Freepik]("https://www.flaticon.com/authors/freepik")制作的图标
 在Flask学习期间创建的博客网站。
 
@@ -37,9 +38,12 @@
 - 评论文章
 - 消息中心
 - 双语言支持 (简体中文和美式英语)
+- Web API
 
 ## API 文档
-[Github Pages](https://z-t-y.github.io/Flog)
+
+[ReadTheDocs](https://flog.readthedocs.io/en/latest/?)
+
 ## 在本地运行这个网站
 
 ### 部署网站到本地
