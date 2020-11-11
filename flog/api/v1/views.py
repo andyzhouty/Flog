@@ -7,11 +7,8 @@
     :copyright: Andy Zhou
     :license: MIT
 """
-from sqlalchemy.ext.declarative import api
-from flog.models import Post
 from . import api_v1
 from .resources import CollectionAPI, CommentAPI, FollowAPI, IndexAPI, UserAPI, PostAPI
-
 
 # index
 api_v1.add_url_rule('/', view_func=IndexAPI.as_view('index'), methods=['GET'])
