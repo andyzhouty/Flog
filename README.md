@@ -43,13 +43,6 @@ that took me into the wonderful world of Flask.
 - Notifications
 - Two languages support (zh_CN and en_US)  
 
-## Prospect
-
-- Chatting Room (Probabaly deprecated)
-- Web API (In progress)
-  - Flog CLI  
-  - Linux and Windows application for Flog.  
-
 ## Run Flog locally
 
 ### Run the website

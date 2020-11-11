@@ -1,5 +1,6 @@
 # UserAPI Doc
 
+## User operations
 - /api/v1/user/\<int:user_id>:  
   - **GET**: Returns user schema (json):  
 
@@ -64,3 +65,16 @@
     - **DELETE**: Deletes current user  
         Example Value: `User 1 deleted.`  
         Response: `200 OK`
+
+## Collecting a post
+URL: /api/v1/any(collect,uncollect)/<int:post_id>/
+Method: **GET**
+Status: *200*
+Returns: str
+Example:
+`Post id {post.id} collected.`
+
+## Following another person
+URL: /api/v1/any(follow,unfollow)/<int:user_id>
+Method: **GET**
+Status: **204**

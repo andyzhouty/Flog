@@ -66,6 +66,7 @@ Werkzeug = "*"
 WTForms = "*"
 flask-cors = "*"
 flask-httpauth = "*"
+bleach = "*"
 
 [requires]
 python_version = "3.8"
