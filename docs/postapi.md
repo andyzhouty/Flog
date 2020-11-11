@@ -1,6 +1,6 @@
 # PostAPI Doc
 
-- /api/v1/post/<int:id>
+- /api/v1/post/*int:id*
  - **GET** Returns post schema (json):
 
     Returns:
@@ -34,9 +34,9 @@
       "url": "http://example.com/api/v1/post/2/"
     }
     ```
-  - **PUT** Updates the post
-    Accepts: *application/json*
-    Status: *204*, *403*, *400*
+  - **PUT** Updates the post  
+    Accepts: *application/json*  
+    Status: *204*, *403*, *400*  
     Example:
     ```json
     {
@@ -46,17 +46,17 @@
     }
     ```
 
-  - **PATCH** Toggle post visibility
-    Status: *204*
+  - **PATCH** Toggle post visibility  
+    Status: *204*  
     If you patch the url, the post will automatically change its visibility.
 
-  - **DELETE** Deletes the post
+  - **DELETE** Deletes the post  
     Status: *204*
 
 - /api/v1/post/new
-  - **POST** Creates a post from post data
-    Accepts: *application/json*
-    Status: *200* or *403*
+  - **POST** Creates a post from post data  
+    Accepts: *application/json*  
+    Status: *200* or *403*  
     Example post value:
     ```json
     {

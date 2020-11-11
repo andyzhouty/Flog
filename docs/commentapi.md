@@ -2,9 +2,9 @@
 
 The document for comment web api.
 
-- /api/v1/comment/<int:comment_id>
-  - **GET** Returns a comment schema
-    Status: 200
+- /api/v1/comment/*int:comment_id*
+  - **GET** Returns a comment schema  
+    Status: 200  
     Example Return Value:
     ``` json
     {
@@ -38,13 +38,13 @@ The document for comment web api.
       }
     }
     ```
-  - **DELETE** Deletes a comment
-    Status: 204
+  - **DELETE** Deletes a comment  
+    Status: 204  
 
 - /api/v1/comment/new/
-  - **POST** Creates a comment from input json
-    Accept: *application/json*
-    Response: *201*
+  - **POST** Creates a comment from input json  
+    Accept: *application/json*  
+    Status: *201*  
     Example:
     ```json
     {

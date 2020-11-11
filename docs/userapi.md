@@ -1,7 +1,7 @@
 # UserAPI Doc
 
 ## User operations
-- /api/v1/user/\<int:user_id>:  
+- /api/v1/user/\*int:user_id*:  
   - **GET**: Returns user schema (json):  
 
     Returns:
@@ -39,7 +39,7 @@
     }
     ```
 
-    Response: `200 OK`
+    Status: **200**
 
     - **PUT**: Updates user profile (only json is accepted)
 
@@ -60,21 +60,20 @@
         }
         ```
 
-        Response: `204 No Content`
+        Status: **204**
 
     - **DELETE**: Deletes current user  
         Example Value: `User 1 deleted.`  
-        Response: `200 OK`
+        Status: **200**
 
 ## Collecting a post
-URL: /api/v1/any(collect,uncollect)/<int:post_id>/
-Method: **GET**
-Status: *200*
-Returns: str
-Example:
-`Post id {post.id} collected.`
+URL: /api/v1/*any(collect,uncollect)*/*int:post_id*/  
+Method: **GET**  
+Status: *200*  
+Returns: str  
+Example:`Post id 12 collected.`
 
 ## Following another person
-URL: /api/v1/any(follow,unfollow)/<int:user_id>
-Method: **GET**
-Status: **204**
+URL: /api/v1/*any(follow,unfollow)*/*int:user_id*
+Method: **GET**  
+Status: **204**  

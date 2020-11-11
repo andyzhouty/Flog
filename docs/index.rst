@@ -11,6 +11,8 @@ Welcome to flog's documentation!
    :caption: Contents:
 
    userapi
+   postapi
+   commentapi
 
 
 Indices and tables
