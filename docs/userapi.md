@@ -67,7 +67,7 @@
         Status: **200**
 
 ## Collecting a post
-URL: /api/v1/*any(collect,uncollect)*/*int:post_id*/  
+URL: /api/v1/*any(collect,uncollect)*/*int:post_id*  
 Method: **GET**  
 Status: *200*  
 Returns: str  

@@ -19,7 +19,7 @@ from . import main_bp
 @main_bp.before_app_request
 def before_app_request():
     ua = request.user_agent.string
-    if ('spider' in ua or 'bot' in ua or 'python' in ua) and request.blueprint != 'api_v1':
+    if ('spider' in ua or 'bot' in ua or 'python' in ua) and '/api/v1/' not in request.url:
         return 'F**k you, spider!' # anti-webcrawler :P
 
 
