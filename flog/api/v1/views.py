@@ -8,7 +8,7 @@
     :license: MIT
 """
 from . import api_v1
-from .resources import CollectionAPI, CommentAPI, FollowAPI, IndexAPI, TokenAPI, UserAPI, PostAPI
+from .resources import CollectionAPI, CommentAPI, FollowAPI, IndexAPI, TokenAPI, UserAPI, PostAPI, NotificationAPI
 
 # index
 api_v1.add_url_rule('/', view_func=IndexAPI.as_view('index'), methods=['GET'])
@@ -37,4 +37,8 @@ api_v1.add_url_rule('/comment/new/',
 # auth token
 api_v1.add_url_rule('/auth/token/',
                     view_func=TokenAPI.as_view('auth_token'),
+                    methods=['GET'])
+# notification
+api_v1.add_url_rule('/notifications/unread',
+                    view_func=NotificationAPI.as_view('notification'),
                     methods=['GET'])

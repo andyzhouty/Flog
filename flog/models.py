@@ -273,13 +273,13 @@ class User(db.Model, UserMixin):
 
     def gen_auth_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'id': self.id}).decode('utf-8')
+        return s.dumps({'id': self.id}).decode('ascii')
 
     @staticmethod
     def verify_auth_token(token: str):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token.encode('utf-8'))
+            data = s.loads(token.encode('ascii'))
         except:
             return None
         return User.query.get(data.get('id'))

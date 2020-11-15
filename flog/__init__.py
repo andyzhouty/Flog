@@ -19,6 +19,7 @@ from .commands import register_commands
 from .admin import admin_bp
 from .ajax import ajax_bp
 from .api.v1 import api_v1
+from .api.v2 import api_v2
 from .auth import auth_bp
 from .feedback import feedback_bp
 from .language import language_bp
@@ -74,6 +75,7 @@ def register_extensions(app: Flask) -> None:
     ckeditor.init_app(app)
     csrf.init_app(app)
     csrf.exempt(api_v1)
+    csrf.exempt(api_v2)
     db.init_app(app)
     login_manager.login_view = 'auth.login'
     login_manager.login_message = u'Please log in to access this page'
@@ -95,6 +97,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(ajax_bp, url_prefix="/ajax")
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(api_v1, url_prefix="/api/v1")
+    app.register_blueprint(api_v2, url_prefix="/api/v2")
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(language_bp, url_prefix="/language")

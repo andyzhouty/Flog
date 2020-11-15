@@ -1,5 +1,5 @@
 """
-    flog.api.v1.resources
+    flog.api.v2.resources
     ~~~~~~~~~~~~~~~~~~~~~
     This module contains functions and APIs of this website.
 
@@ -7,21 +7,18 @@
     :license: MIT License
 """
 
-from flog import notification
 from flask import g, jsonify, request, url_for
-from flask.globals import current_app
 from flask.views import MethodView
-from flask_login.utils import login_required
-from sqlalchemy.util.langhelpers import decorator
 from .errors import (  # noqa
     ValidationError,
     bad_request,
     forbidden
 )
-from .authentication import auth
+from .authentication import auth_required
 from .schemas import user_schema, post_schema
 from flog.models import db, User, Post, Comment, Notification
 import bleach
+
 
 def get_post_data() -> tuple:
     data = request.get_json()
@@ -54,14 +51,14 @@ def can_edit_profile(user: User) -> bool:
 class IndexAPI(MethodView):
     def get(self):
         return jsonify({
-            "api_version": "1.0",
-            "api_base_url": url_for('api_v1.index', _external=True),
+            "api_version": "2.0",
+            "api_base_url": url_for('api_v2.index', _external=True),
         })
 
 
 class UserAPI(MethodView):
     """API for user operations"""
-    decorators = [auth.login_required]
+    decorators = [auth_required]
 
     def get(self, user_id: int):
         """Get User"""
@@ -92,7 +89,7 @@ class UserAPI(MethodView):
 
 class PostAPI(MethodView):
     """API for post operations"""
-    decorators = [auth.login_required]
+    decorators = [auth_required]
 
     def get(self, post_id: int):
         """Get Post"""
@@ -161,7 +158,7 @@ class PostAPI(MethodView):
 
 class CollectionAPI(MethodView):
     """API for collections."""
-    decorators = [auth.login_required]
+    decorators = [auth_required]
 
     def get(self, collect_or_uncollect: str,post_id: int) -> '200' or '404':
         post = Post.query.get_or_404(post_id)
@@ -175,7 +172,7 @@ class CollectionAPI(MethodView):
 
 class FollowAPI(MethodView):
     """API for following operations."""
-    decorators = [auth.login_required]
+    decorators = [auth_required]
 
     def get(self, follow_or_unfollow: str, user_id: int) -> '204':
         user = User.query.get_or_404(user_id)
@@ -188,7 +185,7 @@ class FollowAPI(MethodView):
 
 class CommentAPI(MethodView):
     """API for comments."""
-    decorators = [auth.login_required]
+    decorators = [auth_required]
 
     def get(self, comment_id: int) -> dict:
         comment = Comment.query.get_or_404(comment_id)
@@ -225,14 +222,26 @@ class CommentAPI(MethodView):
 
 
 class TokenAPI(MethodView):
-    decorators = [auth.login_required]
 
-    def get(self):
-        return g.current_user.gen_auth_token()
-
+    def post(self):
+        print('Here')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = User.query.filter_by(username=username).first()
+        if user is None or not user.verify_password(password):
+            return bad_request('Either the username or the password was invalid.')
+        token = user.gen_auth_token()
+        response = jsonify({
+            'access_token': token,
+            'expires_in': 3600,
+            'token_type': 'Bearer'
+        })
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Pragma'] = 'no-cache'
+        return response
 
 class NotificationAPI(MethodView):
-    decorators = [auth.login_required]
+    decorators = [auth_required]
 
     def get(self):
         unread_num = Notification.query.with_parent(g.current_user).filter_by(is_read=False).count()
