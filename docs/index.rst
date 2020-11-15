@@ -10,8 +10,12 @@ Welcome to flog's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   v1/commentapi
-   v2/
+   userapi_v1
+   userapi_v2
+   postapi_v1
+   postapi_v2
+   commentapi_v1
+   commentapi_v2
 
 
 Indices and tables
