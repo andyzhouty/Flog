@@ -1,4 +1,4 @@
-# Post Doc
+# Post Doc (API V2)
 
 - /api/v2/post/*int:id*/
  - **GET** Returns post schema (json):

@@ -1,6 +1,6 @@
-# User Doc
+# User Doc (API V2)
 
-## How to login the web api
+## How to login the web api (Bearer)
 ### Login with OAuth Token
 POST /api/v2/oauth/token/ with your username and your password.  
 If the credentials are correct, it should returns an access_token, the

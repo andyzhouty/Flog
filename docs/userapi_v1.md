@@ -1,6 +1,6 @@
-# User Doc
+# User Doc (API V1)
 
-## How to login the web api
+## How to login the web api (HTTPBasicAuth)
 1. Login with username / password
 If you use httpie, you can auth by this
 ```bash
