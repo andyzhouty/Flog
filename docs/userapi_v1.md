@@ -4,13 +4,15 @@
 1. Login with username / password
 If you use httpie, you can auth by this
 ```bash
-http localhost:5000/api/v1/user/2/ -a username:password
+http 127.0.0.1:5000/api/v1/user/1/ -a <username>:<password>
 ```
+
 2. Login with auth token (recommended)
 To get the auth token, you need to **GET**
-`/api/v1/auth/token` to get the token using the username / password.
+`/api/v1/auth/token` to get the token using the username / password auth method mentioned above.
+
 Note that the token will expire in an hour for security, so you should
-automatically get the valid auth token at least once an hour.
+get another valid auth token at least once an hour.
 
 ## User operations
 - /api/v1/user/*int:user_id*/:  

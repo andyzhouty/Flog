@@ -2,11 +2,11 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
+import bleach
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app
 )
-from flask.signals import message_flashed
 from flask_babel import _
 from flask_login import current_user, login_required
 from ..models import db, Post, Comment
@@ -42,10 +42,17 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         # Add a post to the database.
+        cleaned_content = bleach.clean(
+            form.content.data,
+            tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
+                  'strong', 'em', 'div', 'span'],
+            attributes=['href', 'src', 'style'],
+            strip_comments=True
+        )
         post = Post(
             author=current_user,
             title=form.title.data,
-            content=form.content.data,
+            content=cleaned_content,
             private=form.private.data
         )
         db.session.add(post)
@@ -59,7 +66,7 @@ def create_post():
 @login_required
 def full_post(author, slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
-    if not post.private:
+    if not post.private or post.author == current_user:
         if post.author.username != author:
             abort(404)
         page = request.args.get('page', 1, type=int)
@@ -88,7 +95,7 @@ def full_post(author, slug):
                             comments=comments, form=form)
     else:
         flash(_('The author has set this post to invisible.'))
-        make_response(redirect_back())
+        return make_response(redirect_back())
 
 
 @main_bp.route('/reply/comment/<int:comment_id>')

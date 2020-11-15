@@ -107,7 +107,10 @@ class PostAPI(MethodView):
         # remove javascript and css from the content
         cleaned_content = bleach.clean(
             content,
-            tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'a', 'img']
+            tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
+                  'strong', 'em', 'div', 'span'],
+            attributes=['href', 'src', 'style'],
+            strip_comments=True
         )
         private = data.get('private')
         if (isinstance(title, str) and isinstance(content, str) and

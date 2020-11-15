@@ -1,13 +1,33 @@
 # User Doc (API V2)
 
-## How to login the web api (Bearer)
+## How to login the web api (Bearer Token)
 ### Login with OAuth Token
-POST /api/v2/oauth/token/ with your username and your password.  
-If the credentials are correct, it should returns an access_token, the
-expiration time(an hour) and the token type.  
-Put `Bearer <your_token>` to the Authorization header, then you can explore
-flog as you want.  
-Note that the only difference between v1 and v2 is authorization type.
+POST /api/v2/oauth/token/ with your username and your password in **multipart/form-data**.
+
+Example:
+| Key      | Value       |
+| -------- | ----------- |
+| username | kevin-romes |
+| password | abcd123456  |
+
+
+If your credentials are correct, it should return an access_token, the
+expiration time(an hour) and the token type (bearer).
+
+Example Value:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzUxMiIsImlhdCI6...",
+  "expiration": 3600,
+  "token_type": "Bearer"
+}
+```
+
+Put `Bearer <your_token>` to the `Authorization` Header, then you can explore
+flog! After an hour, the token will expire and you should get another token to use.
+
+Note that the only difference between v1 and v2 is the authorization type
+and v2 ONLY supports Bearer Token.
 
 ## User operations
 - /api/v2/user/*int:user_id*/:  
