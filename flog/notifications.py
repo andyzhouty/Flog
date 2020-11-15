@@ -24,7 +24,7 @@ def push_comment_notification(comment, receiver, page=1):
     a comment is replied.
     """
     message = f"""
-        User <a href="{url_for('main.full_post', slug=comment.post.slug, page=page)}">
+        <a href="{url_for('main.full_post', slug=comment.post.slug, author=comment.post.username, page=page)}">
         This post</a> has a new comment/reply.
     """
     notification = Notification(message=message, receiver=receiver)

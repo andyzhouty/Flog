@@ -14,7 +14,7 @@ The document for comment web api.
         "last_seen": "Sun, 08 Nov 2020 02:04:42 GMT",
         "member_since": "Sun, 08 Nov 2020 02:04:42 GMT",
         "name": "Charles Gutierrez",
-        "url": "http://example.com/api/v1/user/11/",
+        "url": "http://127.0.0.1:5000/api/v1/user/11/",
         "username": "charles-gutierrez"
       },
       "body": "They pattern image yard. Remember sort star call paper. Character imagine yeahminute.\nAgain participant official grow collection. Value positive explain.",
@@ -34,7 +34,7 @@ The document for comment web api.
         "id": 11,
         "slug": "eight-simple",
         "title": "eight simple",
-        "url": "http://example.com/api/v1/post/11/"
+        "url": "http://127.0.0.1:5000/api/v1/post/11/"
       }
     }
     ```

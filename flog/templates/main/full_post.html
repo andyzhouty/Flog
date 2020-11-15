@@ -26,7 +26,7 @@ MIT License
             <div class="comments" id="comments">
                 <h3>{{ comments|length }} {{ ngettext('Comment', 'Comments', __num=comments|length) }}
                     <small>
-                        <a href="{{ url_for('.full_post', slug=post.slug, page=pagination.pages or 1) }}#comments">
+                        <a href="{{ url_for('.full_post', slug=post.slug, author=post.author.username, page=pagination.pages or 1) }}#comments">
                             {{ _('latest') }}
                         </a>
                     </small>

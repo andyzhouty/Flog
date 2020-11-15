@@ -42,7 +42,7 @@ def create_article(client):
     return {
         'response': client.post('/write/', data=data, follow_redirects=True),
         'post': data,
-        'text': text
+        'text': text,
     }
 
 def send_notification(client):

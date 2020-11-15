@@ -54,7 +54,8 @@ def test_post_slug(client):
     login(client)
     post = create_article(client)['post']
     slugified_title = slugify(post['title'])
-    assert client.get(f'/post/{slugified_title}/').status_code == 200
+    user = User.query.filter_by(username=current_app.config["FLOG_ADMIN"]).first()
+    assert client.get(f'/{user.username}/{slugified_title}/').status_code == 200
 
 
 def test_edit_profile(client):

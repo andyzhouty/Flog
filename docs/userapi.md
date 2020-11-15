@@ -46,7 +46,7 @@ automatically get the valid auth token at least once an hour.
         "location": "Shanghai, China",
         "member_since": "Fri, 30 Oct 2020 12:36:07 GMT",
         "name": "Kent Reyes",
-        "url": "http://example.com/api/v1/user/2/",
+        "url": "http://127.0.0.1:5000/api/v1/user/2/",
         "username": "kent-reyes"
     }
     ```

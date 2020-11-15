@@ -41,7 +41,7 @@ class Post(db.Model):
     """
     # initialize columns
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), index=True)
+    title = db.Column(db.String(128), index=True)
     author = db.relationship('User', back_populates='posts')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     collectors = db.relationship(
@@ -50,7 +50,7 @@ class Post(db.Model):
         cascade='all'
     )
     comments = db.relationship('Comment', back_populates='post')
-    slug = db.Column(db.String(128), unique=True)
+    slug = db.Column(db.String(128))
     content = db.Column(db.Text)
     private = db.Column(db.Boolean, default=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
@@ -70,7 +70,7 @@ class Post(db.Model):
 
     def url(self):
         if self.slug:
-            return url_for('main.full_post', slug=self.slug, _external=True)
+            return url_for('main.full_post', slug=self.slug, author=self.author.username, _external=True)
 
 
 class Comment(db.Model):

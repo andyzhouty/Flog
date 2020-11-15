@@ -55,11 +55,13 @@ def create_post():
     return render_template('main/new_post.html', form=form)
 
 
-@main_bp.route('/post/<slug>/', methods=['GET', 'POST'])
+@main_bp.route('/<author>/<slug>/', methods=['GET', 'POST'])
 @login_required
-def full_post(slug):
+def full_post(author, slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
     if not post.private:
+        if post.author.username != author:
+            abort(404)
         page = request.args.get('page', 1, type=int)
         per_page = current_app.config['COMMENTS_PER_PAGE']
         pagination = (Comment.query.with_parent(post)
@@ -93,8 +95,7 @@ def full_post(slug):
 @login_required
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
-    return redirect(url_for('main.full_post', slug=comment.post.slug, reply=comment_id,
-                            author=comment.author.name) + '#comment-form')
+    return redirect(url_for('main.full_post', slug=comment.post.slug, author=comment.post.author.username, reply=comment_id) + '#comment-form')
 
 
 @main_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
