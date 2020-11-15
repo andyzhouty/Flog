@@ -91,7 +91,7 @@ class PostAPI(MethodView):
     """API for post operations"""
     decorators = [auth.login_required]
 
-    def get(self, post_id: int) -> 'json' or '404':
+    def get(self, post_id: int):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
         return jsonify(post_schema(post))
@@ -219,3 +219,10 @@ class CommentAPI(MethodView):
             return '', 204
         else:
             return forbidden('You cannot delete this comment.')
+
+
+class TokenAPI(MethodView):
+    decorators = [auth.login_required]
+
+    def get(self):
+        return g.current_user.gen_auth_token()

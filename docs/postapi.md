@@ -1,6 +1,6 @@
-# PostAPI Doc
+# Post Doc
 
-- /api/v1/post/*int:id*
+- /api/v1/post/*int:id*/
  - **GET** Returns post schema (json):
 
     Returns:
@@ -31,7 +31,7 @@
       "id": 2,
       "slug": "actually-quite",
       "title": "actually quite",
-      "url": "http://example.com/api/v1/post/2/"
+      "url": "http://127.0.0.1:5000/api/v1/post/2/"
     }
     ```
   - **PUT** Updates the post  
@@ -53,7 +53,7 @@
   - **DELETE** Deletes the post  
     Status: *204*
 
-- /api/v1/post/new
+- /api/v1/post/new/
   - **POST** Creates a post from post data  
     Accepts: *application/json*  
     Status: *200* or *403*  

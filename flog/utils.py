@@ -35,8 +35,8 @@ def redirect_back(default='main.main', **kwargs):
             return redirect(target)
     return redirect(url_for(default, **kwargs))
 
-def get_markdown(url: str) -> 'markdown_str':
+def get_markdown(url: str):
     return requests.get(url).text
 
-def convert_to_html(markdown_str: str) -> 'html_str':
+def convert_to_html(markdown_str: str):
     return markdown.markdown(markdown_str)

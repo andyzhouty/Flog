@@ -8,7 +8,7 @@
     :license: MIT
 """
 from . import api_v1
-from .resources import CollectionAPI, CommentAPI, FollowAPI, IndexAPI, UserAPI, PostAPI
+from .resources import CollectionAPI, CommentAPI, FollowAPI, IndexAPI, TokenAPI, UserAPI, PostAPI
 
 # index
 api_v1.add_url_rule('/', view_func=IndexAPI.as_view('index'), methods=['GET'])
@@ -34,3 +34,7 @@ api_v1.add_url_rule('/comment/<int:comment_id>/',
 api_v1.add_url_rule('/comment/new/',
                     view_func=CollectionAPI.as_view('new_comment'),
                     methods=['POST'])
+# auth token
+api_v1.add_url_rule('/auth/token/',
+                    view_func=TokenAPI.as_view('auth_token'),
+                    methods=['GET'])

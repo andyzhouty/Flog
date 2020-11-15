@@ -271,6 +271,19 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         return True
 
+    def gen_auth_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_auth_token(token: str):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return None
+        return User.query.get(data.get('id'))
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()

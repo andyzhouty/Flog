@@ -6,12 +6,14 @@ auth = HTTPBasicAuth()
 
 
 @auth.verify_password
-def verify_password(username, password):
-    if username == '':
+def verify_password_or_token(username_or_token, password):
+    if username_or_token == '':
         return False
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username_or_token).first()
     if not user:
-        return False
+        user = User.verify_auth_token()
+        g.current_user = user
+        return bool(user)
     g.current_user = user
     return user.verify_password(password)
 

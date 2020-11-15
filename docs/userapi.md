@@ -1,7 +1,19 @@
-# UserAPI Doc
+# User Doc
+
+## How to login the web api
+1. Login with username / password
+If you use httpie, you can auth by this
+```bash
+http localhost:5000/api/v1/user/2/ -a username:password
+```
+2. Login with auth token (recommended)
+To get the auth token, you need to **GET**
+`/api/v1/auth/token` to get the token using the username / password.
+Note that the token will expire in an hour for security, so you should
+automatically get the valid auth token at least once an hour.
 
 ## User operations
-- /api/v1/user/\*int:user_id*:  
+- /api/v1/user/*int:user_id*/:  
   - **GET**: Returns user schema (json):  
 
     Returns:
@@ -67,13 +79,13 @@
         Status: **200**
 
 ## Collecting a post
-URL: /api/v1/*any(collect,uncollect)*/*int:post_id*  
+URL: /api/v1/*any(collect,uncollect)*/*int:post_id*/  
 Method: **GET**  
 Status: *200*  
 Returns: str  
 Example:`Post id 12 collected.`
 
 ## Following another person
-URL: /api/v1/*any(follow,unfollow)*/*int:user_id*
+URL: /api/v1/*any(follow,unfollow)*/*int:user_id*/
 Method: **GET**  
 Status: **204**  

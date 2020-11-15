@@ -1,8 +1,8 @@
-# CommentAPI Doc
+# Comment Doc
 
 The document for comment web api.
 
-- /api/v1/comment/*int:comment_id*
+- /api/v1/comment/*int:comment_id*/
   - **GET** Returns a comment schema  
     Status: 200  
     Example Return Value:
