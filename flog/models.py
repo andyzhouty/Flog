@@ -50,7 +50,7 @@ class Post(db.Model):
         cascade='all'
     )
     comments = db.relationship('Comment', back_populates='post')
-    slug = db.Column(db.String(128))
+    slug = db.Column(db.String(128), unique=True)
     content = db.Column(db.Text)
     private = db.Column(db.Boolean, default=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
@@ -337,7 +337,3 @@ def update_slug(target, value, oldvalue, initiator):
     """Updates the slug when the title is changed."""
     if target.title:
         target.slug = slugify(value)
-        query = Post.query.filter(Post.slug==target.slug, Post.author==target.author)
-        if query.first() is not None:
-            # deal with duplicated slug
-            target.slug += str(query.count() + 1)
