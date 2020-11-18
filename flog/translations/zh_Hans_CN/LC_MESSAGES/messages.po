@@ -247,7 +247,7 @@ msgstr[0] "条评论"
 msgid ""
 "The slug is duplicated with another post posted by you. Please change the"
 " title."
-msgstr "这篇文章的缩略小标题和你的另外一篇文章重复了，请更换这篇文章的标题。"
+msgstr "这篇文章的别名和你的另外一篇文章重复了，请更换这篇文章的标题。"
 
 #: flog/main/views.py:65
 msgid "Your post has been added"
