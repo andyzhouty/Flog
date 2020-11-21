@@ -46,6 +46,11 @@ class Base:
 
     CKEDITOR_HEIGHT = 800
 
+    # Specially configured for pythonanywhere
+    SQLALCHEMY_ENGINE_OPTIONS = {'pool_recycle': 280}
+    SQLALCHEMY_POOL_RECYCLE = 280
+    SQLALCHEMY_POOL_TIMEOUT = 20
+
     @classmethod
     def init_app(cls, app):
         pass
@@ -55,8 +60,6 @@ class Production(Base):
     FLASK_CONFIG = 'production'
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL", generate_sqlite_filename('data'))
-    # Specially configured for pythonanywhere
-    SQLALCHEMY_ENGINE_OPTIONS = {'pool_recycle': 280}
 
     @classmethod
     def init_app(cls, app):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-15 20:07+0800\n"
+"POT-Creation-Date: 2020-11-21 19:30+0800\n"
 "PO-Revision-Date: 2020-10-08 19:33+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -37,6 +37,18 @@ msgstr "405 访问方法错误"
 #: flog/errors.py:62
 msgid "500 Internal Server Error"
 msgstr "500 服务器内部错误"
+
+#: flog/notifications.py:15
+msgid "User <a href=\"{0}\">{1}</a> followed you."
+msgstr "用户 <a href=\"{0}\">{1}</a>关注了你。"
+
+#: flog/notifications.py:29
+msgid "<a href=\"{0}\">This post</a> has a new comment/reply."
+msgstr "<a href=\"{0}\">这篇文章</a>有一个新的评论/评论的回复"
+
+#: flog/notifications.py:40
+msgid "User <a href=\"{0}\">{1}</a> collected your <a href=\"{2}\">post</a>"
+msgstr "用户<a href=\"{0}\">{1}</a>收藏了你的<a href=\"{2}\">这篇文章</a>"
 
 #: flog/settings.py:35
 msgid "Default"
@@ -230,15 +242,15 @@ msgstr "标题"
 msgid "Content"
 msgstr "内容"
 
-#: flog/main/forms.py:17 flog/templates/main/main.html:29
+#: flog/main/forms.py:17 flog/main/forms.py:24 flog/templates/main/main.html:29
 msgid "Private"
 msgstr "个人的"
 
-#: flog/main/forms.py:24
+#: flog/main/forms.py:25
 msgid "Publish"
 msgstr "发表"
 
-#: flog/main/forms.py:29 flog/templates/main/full_post.html:27
+#: flog/main/forms.py:30 flog/templates/main/full_post.html:27
 msgid "Comment"
 msgid_plural "Comments"
 msgstr[0] "条评论"
@@ -738,4 +750,23 @@ msgstr "你取消关注了这个用户"
 
 #~ msgid "The slug is duplicated. Please change the title."
 #~ msgstr "这篇文章的缩略小标题和你的另外一篇文章重复了，请更换这篇文章的标题"
+
+#~ msgid ""
+#~ "\n"
+#~ "        User <a href=\"{0}\">{1}</a> followed you.\n"
+#~ "        "
+#~ msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "        <a href=\"{0}\">This post</a> has a new comment/reply.\n"
+#~ "    "
+#~ msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "        User <a href=\"{0}\">{1}</a> collected"
+#~ " your <a href=\"{post.url()}\">post</a>\n"
+#~ "    "
+#~ msgstr ""
 
