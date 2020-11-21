@@ -41,7 +41,6 @@ def main():
 def create_post():
     form = PostForm()
     if form.validate_on_submit():
-        # Add a post to the database.
         cleaned_content = bleach.clean(
             form.content.data,
             tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
@@ -56,12 +55,8 @@ def create_post():
             private=form.private.data
         )
         db.session.add(post)
-        try:
-            db.session.commit()
-        except:
-            db.session.rollback()
-            flash(_('The slug is duplicated with another post posted by you. Please change the title.'))
-            return make_response(redirect_back())
+        # Add the post to the database.
+        db.session.commit()
         flash(_('Your post has been added'),  "success")
         return redirect(url_for('main.main'))
     return render_template('main/new_post.html', form=form)
