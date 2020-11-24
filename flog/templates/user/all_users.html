@@ -1,0 +1,27 @@
+{#
+Copyright (c) 2020 Andy Zhou
+MIT License
+#}
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'macros.html' import role_label_of, static_file with context %}
+{% block title %}{{ _('Manage users') }} {% endblock %}
+{% block page_content %}
+    <div class="row">
+    <div class="col-lg-8">
+    <ul class="list-group">
+    {% for user in pagination.items %}
+        <li class="list-group-item">
+            <a href="{{ url_for('user.user_profile', username=user.username) }}"  class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
+                <img src="{{ user.gravatar() }}"></a>
+            <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
+            {{ role_label_of(user) }}
+            {% block user_operations %}
+            {% endblock %}
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+    {% include 'main/_sidebar.html' %}
+    {{ render_pagination(pagination) }}
+{% endblock page_content %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-21 19:30+0800\n"
+"POT-Creation-Date: 2020-11-22 18:30+0800\n"
 "PO-Revision-Date: 2020-10-08 19:33+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_Hans_CN\n"
@@ -108,7 +108,7 @@ msgstr "位置"
 msgid "About me"
 msgstr "关于自己"
 
-#: flog/admin/forms.py:31 flog/main/forms.py:18 flog/user/forms.py:18
+#: flog/admin/forms.py:31 flog/main/forms.py:21 flog/user/forms.py:18
 msgid "Submit"
 msgstr "提交"
 
@@ -230,77 +230,75 @@ msgstr "你的反馈已经发送给管理员了！"
 msgid "Language updated."
 msgstr "语言设置已更新"
 
-#: flog/main/forms.py:12
+#: flog/main/forms.py:15
 msgid "Please fill out this field with valid values."
 msgstr "请用正确的值填充这个输入框"
 
-#: flog/main/forms.py:15 flog/main/forms.py:22
+#: flog/main/forms.py:18 flog/main/forms.py:30
 msgid "Title"
 msgstr "标题"
 
-#: flog/main/forms.py:16 flog/main/forms.py:23
+#: flog/main/forms.py:19 flog/main/forms.py:31
 msgid "Content"
 msgstr "内容"
 
-#: flog/main/forms.py:17 flog/main/forms.py:24 flog/templates/main/main.html:29
+#: flog/main/forms.py:20 flog/main/forms.py:32 flog/templates/main/main.html:29
 msgid "Private"
 msgstr "个人的"
 
-#: flog/main/forms.py:25
+#: flog/main/forms.py:26
+msgid "The title is duplicated with your other post(s). Please change it."
+msgstr ""
+
+#: flog/main/forms.py:33
 msgid "Publish"
 msgstr "发表"
 
-#: flog/main/forms.py:30 flog/templates/main/full_post.html:27
+#: flog/main/forms.py:38 flog/templates/main/full_post.html:27
 msgid "Comment"
 msgid_plural "Comments"
 msgstr[0] "条评论"
 
-#: flog/main/views.py:63
-msgid ""
-"The slug is duplicated with another post posted by you. Please change the"
-" title."
-msgstr "这篇文章的别名和你的另外一篇文章重复了，请更换这篇文章的标题。"
-
-#: flog/main/views.py:65
+#: flog/main/views.py:60
 msgid "Your post has been added"
 msgstr "你的文章发表成功！"
 
-#: flog/main/views.py:97
+#: flog/main/views.py:92
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:102
+#: flog/main/views.py:97
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了"
 
-#: flog/main/views.py:143
+#: flog/main/views.py:138
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:162
+#: flog/main/views.py:157
 msgid "Edit Succeeded!"
 msgstr "编辑成功"
 
-#: flog/main/views.py:176
+#: flog/main/views.py:171
 msgid "Post collected."
 msgstr "文章已收藏"
 
-#: flog/main/views.py:178
+#: flog/main/views.py:173
 msgid "Already collected."
 msgstr "你已经收藏了该文章"
 
-#: flog/main/views.py:180
+#: flog/main/views.py:175
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章"
 
-#: flog/main/views.py:182
+#: flog/main/views.py:177
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章"
 
-#: flog/main/views.py:191
+#: flog/main/views.py:186
 msgid "Post uncollected."
 msgstr "文章已取消收藏"
 
@@ -320,7 +318,7 @@ msgstr "关于我们"
 msgid "Account"
 msgstr "账户"
 
-#: flog/templates/admin/users.html:22 flog/templates/base.html:52
+#: flog/templates/admin/users.html:11 flog/templates/base.html:52
 #: flog/templates/macros.html:130 flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
 #: flog/templates/user/user_profile.html:48
@@ -395,7 +393,7 @@ msgstr "取消收藏"
 msgid "EDIT"
 msgstr "编辑"
 
-#: flog/templates/admin/feedbacks.html:19 flog/templates/admin/users.html:29
+#: flog/templates/admin/feedbacks.html:19 flog/templates/admin/users.html:18
 #: flog/templates/macros.html:100 flog/templates/macros.html:137
 #: flog/templates/main/full_post.html:69
 msgid "DELETE"
@@ -429,11 +427,7 @@ msgstr "管理反馈"
 msgid "Welcome, Administrator"
 msgstr "欢迎，管理员"
 
-#: flog/templates/admin/users.html:8
-msgid "Manage users"
-msgstr "管理用户"
-
-#: flog/templates/admin/users.html:27
+#: flog/templates/admin/users.html:16
 msgid "return confirm('Are you sure?');"
 msgstr "return confirm('你确定吗？');"
 
@@ -544,15 +538,23 @@ msgstr "显示你的收藏"
 msgid "Show your followers"
 msgstr "显示关注你的人"
 
-#: flog/templates/main/_sidebar.html:26
+#: flog/templates/main/_sidebar.html:25
+msgid "Explore"
+msgstr "发现"
+
+#: flog/templates/main/_sidebar.html:28
+msgid "View all users"
+msgstr "查看所有Flog用户"
+
+#: flog/templates/main/_sidebar.html:34
 msgid "Admin Actions"
 msgstr "管理员操作"
 
-#: flog/templates/main/_sidebar.html:29
+#: flog/templates/main/_sidebar.html:37
 msgid "Manage Users"
 msgstr "管理用户"
 
-#: flog/templates/main/_sidebar.html:32
+#: flog/templates/main/_sidebar.html:40
 msgid "Manage Posts"
 msgstr "管理文章"
 
@@ -643,6 +645,10 @@ msgstr "你没有写任何文章:("
 #: flog/templates/others/about_us.html:6
 msgid "About us"
 msgstr "关于我们"
+
+#: flog/templates/user/all_users.html:8
+msgid "Manage users"
+msgstr "管理用户"
 
 #: flog/templates/user/followers.html:9
 msgid "Your"
@@ -769,4 +775,10 @@ msgstr "你取消关注了这个用户"
 #~ " your <a href=\"{post.url()}\">post</a>\n"
 #~ "    "
 #~ msgstr ""
+
+#~ msgid ""
+#~ "The slug is duplicated with another "
+#~ "post posted by you. Please change "
+#~ "the title."
+#~ msgstr "这篇文章的别名和你的另外一篇文章重复了，请更换这篇文章的标题。"
 

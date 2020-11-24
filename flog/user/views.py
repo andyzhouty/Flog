@@ -68,7 +68,7 @@ def user_profile(username):
     return render_template('user/user_profile.html', user=user)
 
 
-@user_bp.route('/<username>/followers')
+@user_bp.route('/user/<username>/followers')
 def show_followers(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
@@ -76,3 +76,13 @@ def show_followers(username):
         page, per_page=current_app.config['USERS_PER_PAGE']
     )
     return render_template('user/followers.html', pagination=pagination, user=user)
+
+
+@user_bp.route('/user/all/')
+def all_users():
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followers.paginate(
+        page, per_page=current_app.config['USERS_PER_PAGE']
+    )
+    return render_template('user/users.html')

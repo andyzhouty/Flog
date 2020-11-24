@@ -1,0 +1,49 @@
+{#
+Copyright (c) 2020 Andy Zhou
+MIT License
+#}
+{% extends 'base.html' %}
+{% block styles %}
+    {{ super() }}
+    <style>
+        .larger {
+            font-size: larger;
+        }
+    </style>
+{% endblock styles %}
+{% block page_content %}
+<h1><img src="{{ url_for('static', filename='favicon/favicon.svg') }}" width="100px" height="100px">
+Flog</h1>
+<p class="text-muted">
+    Icon made by<a href="https://www.flaticon.com/authors/freepik" title="Freepik" alt="Freepik">Freepik</a>
+</p>
+<h2>Administrator of Flog</h2>
+<p>
+    Flog Account:
+    <a href="https://flog.pythonanywhere.com/user/andyzhou/">andyzhou</a><br>
+    Github Account:
+    <a href="https://github.com/z-t-y/">z-t-y (Andy Zhou)</a><br>
+</p>
+<h2>Special Thanks To:</h2>
+<p>
+    <ul>
+        <li><p>
+            <span class="larger">Grey Li</span><br>
+            A professional in Python, member of the pallets team. And his book <i>Python Web Development with Flask</i> inspired me to write this website.
+            He is also one of the starrers of this website.<br>
+            His email: <a href="mailto:withlihui@gmail.com">withlihui@gmail.com</a><br>
+            His website：<a href="https://greyli.com" target="_blank">greyli.com</a>
+        </p></li>
+        <li><p>
+            <span class="larger">Flask</span>
+            A micro python web application framework. I use it as the framework of Flog.
+            Flask's documentation：<a href="https://flask.palletsprojects.com/en/1.1.x/">flask.palletsprojects.com</a>
+        </p></li>
+    </ul>
+</p>
+<h2>The source code of this website</h2>
+<p>
+    If you are a Python like me, then you might want to take a look at the source code<br>
+    GitHub: <a href="https://github.com/z-t-y/flog">z-t-y/flog</a><br>
+</p>
+{% endblock page_content %}

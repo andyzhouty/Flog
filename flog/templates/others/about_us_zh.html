@@ -1,0 +1,53 @@
+{#
+Copyright (c) 2020 Andy Zhou
+MIT License
+#}
+{% extends 'base.html' %}
+{% block styles %}
+    {{ super() }}
+    <style>
+        .larger {
+            font-size: larger;
+        }
+    </style>
+{% endblock styles %}
+{% block page_content %}
+<h1><img src="{{ url_for('static', filename='favicon/favicon.svg') }}" width="100px" height="100px">
+Flog</h1>
+<p class="text-muted">
+    由<a href="https://www.flaticon.com/authors/freepik" title="Freepik" alt="Freepik">Freepik</a>制作的图标
+</p>
+<h2>网站站长 & 管理员</h2>
+<p>
+    Flog 账户：
+    <a href="https://flog.pythonanywhere.com/user/andyzhou/">andyzhou</a><br>
+    Github 账户：
+    <a href="https://github.com/z-t-y/">z-t-y (Andy Zhou)</a><br>
+    Gitee 账户：
+    <a href="https://gitee.com/andyzhouty">andyzhouty (周天佑)</a><br>
+</p>
+<h2>致谢</h2>
+<p>
+    <ul>
+        <li><p>
+            <span class="larger">李辉</span><br>
+            一位国内Python大佬，Flask官方团队之一，他撰写的《Flask Web开发实战》是Flog网站的主要技术来源，
+            他也是本网站源码<del>为数不多的</del>starrer之一。<br>
+            他的邮箱: <a href="mailto:withlihui@gmail.com">withlihui@gmail.com</a><br>
+            他的个人网站：<a href="https://greyli.com" target="_blank">greyli.com</a>
+        </p></li>
+        <li><p>
+            <span class="larger">Flask</span>
+            一个用Python编写的轻量级网站框架，是两大Python网站框架之一（另外一个是Django），
+            它也是Flog采用的框架。<br>
+            框架文档地址：<a href="https://flask.palletsprojects.com/en/1.1.x/">flask.palletsprojects.com</a>
+        </p></li>
+    </ul>
+</p>
+<h2>项目源码地址</h2>
+<p>
+    如果你和我（网站管理员）一样是一位Python开发者，那么你可以试着看看这个网站的源代码。<br>
+    GitHub: <a href="https://github.com/z-t-y/flog">z-t-y/flog</a><br>
+    Gitee: <a href="https://gitee.com/andyzhouty/flog">andyzhouty/flog</a>
+</p>
+{% endblock page_content %}

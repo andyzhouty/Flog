@@ -9,7 +9,7 @@ MIT License
 {% block page_content %}
     {% if current_user.is_authenticated %}
     <div class="page-header">
-        <h1 class="display-4">{{ _('Welcome,') }} {{ role_of(current_user) }} {{ current_user.name }}</h1>
+        <h1 class="display-4">{{ _('Welcome,') }} {{ role_of(current_user) }} {{ current_user.username }}</h1>
     </div>
     {% endif %}
     <div class="row">
@@ -22,7 +22,7 @@ MIT License
                         <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}"
                             class="text-muted profile-popover"
                             data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                            {{ post.author.name }}
+                            {{ post.author.username }}
                             </a>
                             {% if post.private and post.author == current_user %}
                                 <span class="badge badge-dark">
