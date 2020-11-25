@@ -8,7 +8,6 @@ from wtforms import StringField, SubmitField, DateField, TextAreaField, BooleanF
 from wtforms.validators import DataRequired, ValidationError
 from flask_ckeditor import CKEditorField
 from flask_login import current_user
-from ..utils import slugify
 from ..models import db, Post
 
 
@@ -19,11 +18,6 @@ class PostForm(FlaskForm):
     content = CKEditorField(_l("Content"), validators=[DataRequired(dr_message)])
     private = BooleanField(_l('Private'))
     submit = SubmitField(_l("Submit"))
-    
-    def validate_title(self, field):
-        slug = slugify(field.data)
-        if Post.query.filter(Post.slug==slug, Post.author==current_user).count() != 0:
-            raise ValidationError(_l("The title is duplicated with your other post(s). Please change it."))
 
 
 class EditForm(FlaskForm):

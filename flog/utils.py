@@ -2,20 +2,14 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-import re
 from urllib.parse import urlparse, urljoin
-from unidecode import unidecode
 from flask import redirect, url_for, request
 
 
-_punct_re = re.compile(r'[\t !"#$%&\]\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+def lower_username(username: str) -> str:
+    """Returns lowered username"""
+    return username.strip().lower().replace(' ', '')
 
-def slugify(text, delim=u'-'):
-    """Generates ASCII slugs"""
-    result = []
-    for word in _punct_re.split(text.lower()):
-        result.extend(unidecode(word).lower().split())
-    return unidecode(delim.join(result))
 
 def is_safe_url(target):
     """Check if target url is safe"""

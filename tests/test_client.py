@@ -6,13 +6,14 @@ import os
 import json
 from random import randint
 from faker import Faker
-from flask import current_app
+from flask import current_app, url_for
 from flog import fakes
 from flog.models import db, Post, Role, User
-from flog.utils import slugify
+from flog.utils import lower_username
 from .helpers import *
 
 fake = Faker()
+
 
 def test_login_logout(client):
     response = login(client)
@@ -34,7 +35,8 @@ def test_register_login_and_confirm(client):
     login_response = login(client, username='test', password='password')
     assert 'test' in login_response.get_data(as_text=True)
     user = User.query.filter_by(email='test@example.com').first()
-    client.get(f'/auth/confirm/{user.generate_confirmation_token()}/', follow_redirects=True)
+    client.get(url_for('auth.confirm', token=user.generate_confirmation_token()),
+               follow_redirects=True)
     assert user.confirmed
 
 
@@ -50,14 +52,6 @@ def test_create_article(client):
     assert not(post['content'] in response_data)
 
 
-def test_post_slug(client):
-    login(client)
-    post = create_article(client)['post']
-    slugified_title = slugify(post['title'])
-    user = User.query.filter_by(username=current_app.config["FLOG_ADMIN"]).first()
-    assert client.get(f'/{user.username}/{slugified_title}/').status_code == 200
-
-
 def test_edit_profile(client):
     user = User(name='abcd', username='abcd', email='test@example.com', confirmed=True)
     user.role = Role.query.filter_by(name='User').first()
@@ -70,7 +64,7 @@ def test_edit_profile(client):
         'location': fake.address(),
         'about_me': fake.sentence(),
     }
-    response = client.post('/edit-profile', data=data, follow_redirects=True)
+    response = client.post(url_for('user.edit_profile'), data=data, follow_redirects=True)
     print(response.get_data(as_text=True))
     user = User.query.filter_by(username='abcd').first()
     assert user.name == data['name']
@@ -83,7 +77,7 @@ def test_admin_edit_article(client):
     post_data = create_article(client)
     title = post_data['post']['title']
     post_id = Post.query.filter_by(title=title).first().id
-    response = client.get(f'/posts/edit/{post_id}/')
+    response = client.get(url_for('main.edit_post', id=post_id))
     response_data = response.get_data(as_text=True)
     # test if the old content exists in the edit page.
     assert post_data['text'] in response_data
@@ -91,31 +85,30 @@ def test_admin_edit_article(client):
         'title': 'new title',
         'content': 'new content'
     }
-    response = client.post(f'/posts/edit/{post_id}/', data=data, follow_redirects=True)
+    response = client.post(url_for('main.edit_post'), id=post_id, data=data, follow_redirects=True)
     print(response)
     post = Post.query.get(post_id)
     print(post.content)
     assert post is not None
     assert post.title == data['title']
-    assert post.slug == slugify(data['title'])
 
 
 def test_admin_edit_user_profile(client):
     login(client)
-    response = client.get('/admin/users/')
+    response = client.get('admin.manage_user')
     assert response.status_code == 200
     user_id = randint(2, 11)
     data = {
         'email': fake.email(),
-        'username': slugify(fake.name()),
+        'username': lower_username(fake.name()),
         'confirmed': bool(randint(0, 1)),
         'role': 1,
         'name': fake.name(),
         'location': fake.address(),
         'about_me': fake.text()
     }
-    response = client.post(f'/admin/users/{user_id}/edit-profile',
-                                data=data, follow_redirects=True)
+    response = client.post(url_for('admin.edit_user_profile', id=user_id),
+                           data=data, follow_redirects=True)
     response_data = response.get_data(as_text=True)
     assert data['email'] in response_data
     assert data['username'] in response_data
@@ -125,13 +118,14 @@ def test_admin_edit_user_profile(client):
 
 def test_send_feedback(client):
     login(client)
-    data = {'body': fake.text(),}
-    response = client.post('/feedback/', data=data, follow_redirects=True)
+    data = {'body': fake.text(), }
+    response = client.post(url_for('feedback.feedback'), data=data, follow_redirects=True)
     response_data = response.get_data(as_text=True)
     assert data['body'] in response_data
 
+
 def test_change_theme(client):
-    client.get('/change-theme/lite', follow_redirects=True)
+    client.get(url_for('others_bp', theme_name='lite'), follow_redirects=True)
     cookie = next(
         (cookie for cookie in client.cookie_jar if cookie.name == "theme"),
         None
@@ -139,11 +133,15 @@ def test_change_theme(client):
     assert cookie is not None
     assert cookie.value == 'lite'
 
+
 def test_delete_account(client):
     login(client)
     user_count = User.query.count()
-    client.post('/auth/delete-account/', data={'password': os.getenv('FLOG_ADMIN_PASSWORD')}, follow_redirects=True)
+    client.post(url_for('auth.delete_account'),
+                data={'password': os.getenv('FLOG_ADMIN_PASSWORD')},
+                follow_redirects=True)
     assert User.query.count() == user_count - 1
+
 
 def test_language_selection(client):
     login(client)
@@ -153,11 +151,12 @@ def test_language_selection(client):
         ).first()
     ).first()
     admin.locale = 'en_US'
-    print(client.get('/language/set-locale/zh_Hans_CN', follow_redirects=True).get_data(as_text=True))
+    print(client.get(url_for('language.set_locale', locale='zh_Hans_CN'), follow_redirects=True).get_data(as_text=True))
     assert admin.locale == 'zh_Hans_CN'
 
+
 def test_no_login_language_selection(client):
-    client.get('/language/set-locale/zh_Hans_CN', follow_redirects=True)
+    client.get(url_for('language.set_locale', locale='zh_Hans_CN'), follow_redirects=True)
     data = client.get('/').get_data(as_text=True)
     assert '加入我们' in data
 
@@ -170,36 +169,37 @@ def test_collect_uncollect(client):
         ).first()
     ).first()
 
-    post_not_private = Post.query.filter(Post.author!=admin, ~Post.private).first()
-    while post_not_private is None: # ensure the post exists
+    post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
+    while post_not_private is None:  # ensure the post exists
         fakes.posts(2)
-        post_not_private = Post.query.filter(Post.author!=admin, ~Post.private).first()
+        post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
     post_id = post_not_private.id
-    data = client.get(f'/posts/collect/{post_id}', follow_redirects=True).get_data(as_text=True)
+    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True).get_data(as_text=True)
     assert 'Post collected.' in data
     assert admin.is_collecting(post_not_private)
 
-    data = client.get(f'/posts/collect/{post_id}', follow_redirects=True).get_data(as_text=True)
+    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True).get_data(as_text=True)
     assert 'Already collected.' in data
 
-    data = client.get(f'/posts/uncollect/{post_id}', follow_redirects=True).get_data(as_text=True)
+    data = client.get(url_for('main.uncollect_post', id=post_id), follow_redirects=True).get_data(as_text=True)
     assert 'Post uncollected.' in data
     assert not admin.is_collecting(post_not_private)
 
-    private_post = Post.query.filter(Post.author!=admin, Post.private).first()
-    while private_post is None: # same as the while loop above
+    private_post = Post.query.filter(Post.author != admin, Post.private).first()
+    while private_post is None:  # same as the while loop above
         fakes.posts(2)
-        private_post = Post.query.filter(Post.author!=admin, Post.private).first()
+        private_post = Post.query.filter(Post.author != admin, Post.private).first()
     post_id = private_post.id
-    data = client.get(f'/posts/collect/{post_id}', follow_redirects=True).get_data(as_text=True)
+    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True).get_data(as_text=True)
     assert 'The author has set this post to invisible. So you cannot collect this post.' in data
     assert not admin.is_collecting(private_post)
 
     title = create_article(client)['post']['title']
     post_id = Post.query.filter_by(title=title).first().id
-    data = client.get(f'/posts/collect/{post_id}', follow_redirects=True).get_data(as_text=True)
+    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True).get_data(as_text=True)
     assert 'You cannot collect your own post.' in data
     assert not admin.is_collecting(Post.query.get(post_id))
+
 
 def test_follow(client):
     login(client)
@@ -213,14 +213,15 @@ def test_follow(client):
             name='User'
         ).first()
     ).first()
-    data = client.post(f'/follow/{user.username}', follow_redirects=True).get_data(as_text=True)
+    data = client.post(url_for('user.follow', username=user.username), follow_redirects=True).get_data(as_text=True)
     assert 'User followed.' in data
     assert admin.is_following(user)
-    data = client.post(f'/follow/{user.username}', follow_redirects=True).get_data(as_text=True)
+    data = client.post(url_for('user.follow', username=user.username), follow_redirects=True).get_data(as_text=True)
     assert 'Already followed' in data
-    data = client.post(f'/unfollow/{user.username}', follow_redirects=True).get_data(as_text=True)
+    data = client.post(url_for('user.unfollow', username=user.username), follow_redirects=True).get_data(as_text=True)
     assert 'User unfollowed.' in data
     assert not admin.is_following(user)
+
 
 def test_notification(client):
     login(client)
@@ -233,13 +234,13 @@ def test_notification(client):
     ).first()
     assert len(admin.notifications) == 5
     assert Notification.query.filter_by(is_read=False).count() == 5
-    str_data = client.get('/ajax/notifications-count/').get_data(as_text=True).strip()
+    str_data = client.get(url_for('ajax.notification_count')).get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=5) == data
-    client.post('/notification/read/1/')
+    client.post(url_for('notification.read', id=1))
     assert Notification.query.filter_by(is_read=False).count() == 4
-    client.post('/notification/read/all/')
+    client.post(url_for('notification.read_all'))
     assert Notification.query.filter_by(is_read=False).count() == 0
-    str_data = client.get('/ajax/notifications-count/').get_data(as_text=True).strip()
+    str_data = client.get(url_for('ajax.notification_count')).get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=0) == data

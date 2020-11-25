@@ -26,7 +26,7 @@ def push_comment_notification(comment, receiver, page=1):
     a comment is replied.
     """
     message = _l("""<a href="{0}">This post</a> has a new comment/reply."""
-                 .format(url_for('main.full_post', slug=comment.post.slug, author=comment.post.author.username, page=page))
+                 .format(url_for('main.full_post', id=comment.post.id, page=page))
                  )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)

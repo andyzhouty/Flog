@@ -20,7 +20,7 @@ from . import main_bp
 def before_app_request():
     ua = request.user_agent.string
     if ('spider' in ua or 'bot' in ua or 'python' in ua) and '/api/v1/' not in request.url:
-        return 'F**k you, spider!' # anti-webcrawler :P
+        return 'F**k you, spider!'  # anti-webcrawler :P
 
 
 @main_bp.route('/')
@@ -36,6 +36,7 @@ def main():
 
 
 ####################### Post Part ##################################
+
 @main_bp.route('/write/', endpoint='write', methods=['GET', 'POST'])
 @login_required
 def create_post():
@@ -57,23 +58,21 @@ def create_post():
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
-        flash(_('Your post has been added'),  "success")
+        flash(_('Your post has been added'), "success")
         return redirect(url_for('main.main'))
     return render_template('main/new_post.html', form=form)
 
 
-@main_bp.route('/<author>/<slug>/', methods=['GET', 'POST'])
+@main_bp.route('/post/<int:id>/', methods=['GET', 'POST'])
 @login_required
-def full_post(author, slug):
-    post = Post.query.filter_by(slug=slug).first_or_404()
+def full_post(id: int):
+    post = Post.query.get_or_404(id)
     if not post.private or post.author == current_user:
-        if post.author.username != author:
-            abort(404)
         page = request.args.get('page', 1, type=int)
         per_page = current_app.config['COMMENTS_PER_PAGE']
         pagination = (Comment.query.with_parent(post)
-                                .order_by(Comment.timestamp.asc())
-                                .paginate(page, per_page))
+                      .order_by(Comment.timestamp.asc())
+                      .paginate(page, per_page))
         comments = pagination.items
         form = CommentForm()
         if form.validate_on_submit():
@@ -89,10 +88,10 @@ def full_post(author, slug):
             db.session.add(comment)
             db.session.commit()
             push_comment_notification(comment=comment, receiver=post.author)
-            flash(_('Comment published!'),  'success')
+            flash(_('Comment published!'), 'success')
             return make_response(redirect_back())
         return render_template('main/full_post.html', post=post, pagination=pagination,
-                            comments=comments, form=form)
+                               comments=comments, form=form)
     else:
         flash(_('The author has set this post to invisible.'))
         return make_response(redirect_back())
@@ -102,7 +101,7 @@ def full_post(author, slug):
 @login_required
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
-    return redirect(url_for('main.full_post', slug=comment.post.slug, author=comment.post.author.username, reply=comment_id) + '#comment-form')
+    return redirect(url_for('main.full_post', id=comment.post.id, reply=comment_id) + '#comment-form')
 
 
 @main_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
@@ -119,12 +118,12 @@ def manage_posts():
     page = request.args.get('page', 1, type=int)
     pagination = (
         Post.query.filter_by(author=current_user)
-                            .order_by(Post.timestamp.desc())
-                            .paginate(
-                                page,
-                                per_page=current_app.config['POSTS_PER_PAGE'],
-                                error_out=False
-                            ))
+            .order_by(Post.timestamp.desc())
+            .paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        ))
     return render_template('main/personal_posts.html', pagination=pagination)
 
 
@@ -135,7 +134,7 @@ def delete_post(id):
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     post.delete()
-    flash(_("Post id %d deleted" % id),  "success")
+    flash(_("Post id %d deleted" % id), "success")
     post_str = str(post)
     current_app.logger.info(f"{post_str} deleted.")
     return redirect(url_for('main.main'))
@@ -154,7 +153,7 @@ def edit_post(id):
         db.session.add(post)
         db.session.commit()
         current_app.logger.info(f'Post id {id} editted.')
-        flash(_("Edit Succeeded!"),  "success")
+        flash(_("Edit Succeeded!"), "success")
         return redirect(url_for('main.main'))
     form.title.data = post.title
     form.content.data = post.content
@@ -168,7 +167,7 @@ def collect_post(id):
     if not post.private and post.author != current_user and not current_user.is_collecting(post):
         current_user.collect(post)
         push_collect_notification(collector=current_user, post=post, receiver=post.author)
-        flash(_('Post collected.'),  'success')
+        flash(_('Post collected.'), 'success')
     elif current_user.is_collecting(post):
         flash(_('Already collected.'))
     elif post.author == current_user:
@@ -183,7 +182,7 @@ def collect_post(id):
 def uncollect_post(id):
     post = Post.query.get(id)
     current_user.uncollect(post)
-    flash(_('Post uncollected.'),  'info')
+    flash(_('Post uncollected.'), 'info')
     return make_response(redirect_back())
 
 

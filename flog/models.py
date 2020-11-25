@@ -10,7 +10,6 @@ from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
-from .utils import slugify
 
 
 class Collect(db.Model):
@@ -50,15 +49,12 @@ class Post(db.Model):
         cascade='all'
     )
     comments = db.relationship('Comment', back_populates='post')
-    slug = db.Column(db.String(128), unique=True)
     content = db.Column(db.Text)
     private = db.Column(db.Boolean, default=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
-        if self.title:
-            self.slug = slugify(self.title)
 
     def __repr__(self) -> str:
         return f'<Post {self.title}>'
@@ -70,7 +66,7 @@ class Post(db.Model):
 
     def url(self):
         if self.slug:
-            return url_for('main.full_post', slug=self.slug, author=self.author.username, _external=True)
+            return url_for('main.full_post', id=self.id, _external=True)
 
 
 class Comment(db.Model):
@@ -329,11 +325,5 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self): return False
 
+
 login_manager.anonymous_user = AnonymousUser
-
-
-@db.event.listens_for(Post.title, 'set')
-def update_slug(target, value, oldvalue, initiator):
-    """Updates the slug when the title is changed."""
-    if target.title:
-        target.slug = slugify(value)

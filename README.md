@@ -1,6 +1,5 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
-[中文版 README](./README_zh.md)  
-[![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)  
+[中文版 README](./README_zh.md)   
 [![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)  
 Icons made by
 [Freepik]("https://www.flaticon.com/authors/freepik") from

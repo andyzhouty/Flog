@@ -7,7 +7,7 @@ from flask_login import current_user
 from . import others_bp
 from ..utils import redirect_back
 
-@others_bp.route('/change-theme/<theme_name>')
+@others_bp.route('/change-theme/<theme_name>/')
 def change_theme(theme_name):
     if theme_name not in current_app.config['BOOTSTRAP_THEMES'].keys():
         abort(404)

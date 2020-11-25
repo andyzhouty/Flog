@@ -5,7 +5,7 @@ from flog.models import Role, User
 @pytest.fixture()
 def client():
     app = create_app('testing')
-    context = app.app_context()
+    context = app.test_request_context()
     client = app.test_client()
     context.push()
     db.create_all()

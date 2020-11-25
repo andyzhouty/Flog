@@ -4,8 +4,8 @@ Copyright (c) 2020 Andy Zhou
 """
 from random import randint
 from faker import Faker
+from .utils import lower_username
 from .models import Notification, db, Post, Feedback, User, Role, Comment
-from .utils import slugify
 
 fake = Faker()
 
@@ -14,7 +14,7 @@ def users(count: int=2) -> None:
     """Generates fake users"""
     for i in range(count):
         name = fake.name()
-        username = slugify(name)
+        username = lower_username(name)
         # Ensure the username is unique.
         if User.query.filter_by(username=username).first() is not None:
             continue

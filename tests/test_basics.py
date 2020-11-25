@@ -3,7 +3,6 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flask import current_app
-from flog.utils import slugify
 
 
 def test_app_exists(client):
@@ -12,11 +11,6 @@ def test_app_exists(client):
 
 def test_app_is_testing(client):
     assert current_app.config['TESTING']
-
-
-def test_slugify():
-    string = 'Test Str'
-    assert slugify(string) == 'test-str'
 
 
 def test_about_us(client):
