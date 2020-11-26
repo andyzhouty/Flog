@@ -80,9 +80,8 @@ def show_followers(username):
 
 @user_bp.route('/user/all/')
 def all_users():
-    user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    pagination = user.followers.paginate(
+    pagination = User.query.order_by(User.id.desc()).paginate(
         page, per_page=current_app.config['USERS_PER_PAGE']
     )
-    return render_template('user/users.html')
+    return render_template('user/all_users.html', pagination=pagination)
