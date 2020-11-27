@@ -28,10 +28,17 @@ def main():
     if not (current_user.is_authenticated or request.args.get('force', False)):
         return render_template('main/not_authorized.html')
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
-        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
-    )
+    if current_user.is_administrator():
+        pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+            page, per_page=current_app.config['POSTS_PER_PAGE']
+        )
+    else:
+        pagination = Post.query.filter(~Post.private).order_by(Post.timestamp.desc()).paginate(
+            page, per_page=current_app.config['POSTS_PER_PAGE']
+        )
+    print(current_app.config['POSTS_PER_PAGE'])
     posts = pagination.items
+    print(len(posts))
     return render_template('main/main.html', pagination=pagination, posts=posts)
 
 
@@ -67,7 +74,7 @@ def create_post():
 @login_required
 def full_post(id: int):
     post = Post.query.get_or_404(id)
-    if not post.private or post.author == current_user:
+    if not post.private or post.author == current_user or current_user.is_administrator():
         page = request.args.get('page', 1, type=int)
         per_page = current_app.config['COMMENTS_PER_PAGE']
         pagination = (Comment.query.with_parent(post)
@@ -75,7 +82,7 @@ def full_post(id: int):
                       .paginate(page, per_page))
         comments = pagination.items
         form = CommentForm()
-        if form.validate_on_submit():
+        if form.validate_on_submit() and not post.private:
             comment = Comment(
                 author=current_user,
                 post=post,
@@ -89,6 +96,9 @@ def full_post(id: int):
             db.session.commit()
             push_comment_notification(comment=comment, receiver=post.author)
             flash(_('Comment published!'), 'success')
+            return make_response(redirect_back())
+        elif post.private:
+            flash(_('You cannot comment a private post!'))
             return make_response(redirect_back())
         return render_template('main/full_post.html', post=post, pagination=pagination,
                                comments=comments, form=form)

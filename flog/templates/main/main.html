@@ -16,15 +16,17 @@ MIT License
         <div class="col-md-8">
             <ul class="list-group">
             {% for post in posts %}
-                {% if not post.private or post.author == current_user %}
+                {% if (not post.private) or post.author == current_user or current_user.is_administrator() %}
                     <li class="list-group-item">
-                        <h3 style="color: #5050bb">{{ post.title }}</h3>
+                        <h3 style="color: #5050bb">
+                            <a href="{{ post.url() }}" title="{{ post.title }}">{{ post.title }}</a>
+                        </h3>
                         <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}"
                             class="text-muted profile-popover"
                             data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
                             {{ post.author.username }}
                             </a>
-                            {% if post.private and post.author == current_user %}
+                            {% if post.private %}
                                 <span class="badge badge-dark">
                                     {{ _('Private') }}
                                 </span>

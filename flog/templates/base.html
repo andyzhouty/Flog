@@ -14,7 +14,7 @@ MIT License
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% endblock metas %}
         {% block styles %}
-            {{ static_file('icon', 'favicon/favicon.svg')}}
+            {{ static_file('icon', 'favicon/favicon.svg') }}
             {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
@@ -49,13 +49,20 @@ MIT License
                             {{ _('Account') }}
                         </a>
                         <div class="dropdown-menu">
-                            <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item" id="edit-profile">{{ _('Edit Profile') }}</a>
-                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item" id="logout">{{ _('Log out') }}</a>
+                            <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item"
+                               id="edit-profile-link">{{ _('Edit Profile') }}</a>
+                            <a href="{{ url_for('auth.logout') }}" class="dropdown-item"
+                               id="logout-link">{{ _('Log out') }}</a>
                             {% if not current_user.confirmed %}
-                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item" id="resend-confirmation">
+                                <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item"
+                                   id="resend-confirmation-link">
                                     {{ _('Resend Confirmation Email') }}
                                 </a>
                             {% endif %}
+                            <a href="{{ url_for('user.change_password') }}" class="dropdown-item"
+                               id="change-password-link">
+                                {{ _('Change Password') }}
+                            </a>
                             <a href="{{ url_for('auth.delete_account') }}" class="dropdown-item text-white bg-danger">
                                 {{ _('Delete Your Account') }}
                             </a>
@@ -64,15 +71,17 @@ MIT License
                     <li class="nav-item">
                         <a href="{{ url_for('notification.show', filter='unread') }}" class="nav-link">
                             <span class="fa fa-bell"></span>
-                            <span id="notification-badge" class="badge badge-notification badge-danger" data-href="{{ url_for('ajax.notification_count') }}"
-                            style="{% if notification_count == 0 %}display: none{% endif %}">
+                            <span id="notification-badge" class="badge badge-notification badge-danger"
+                                  data-href="{{ url_for('ajax.notification_count') }}"
+                                  style="{% if notification_count == 0 %}display: none{% endif %}">
                                 {{ notification_count }}
                             </span>
                         </a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a href="{{ url_for('auth.login') }}" class="nav-link btn btn-success text-light">{{ _('Log in / Register') }}</a>
+                        <a href="{{ url_for('auth.login') }}"
+                           class="nav-link btn btn-success text-light">{{ _('Log in / Register') }}</a>
                     </li>
                 {% endif %}
                 <li class="nav-item dropdown">
@@ -82,7 +91,7 @@ MIT License
                     <div class="dropdown-menu">
                         {% for theme_name, display_name in config.BOOTSTRAP_THEMES.items() %}
                             <a class="dropdown-item"
-                                href="{{ url_for('others.change_theme', theme_name=theme_name, next=request.full_path) }}">
+                               href="{{ url_for('others.change_theme', theme_name=theme_name, next=request.full_path) }}">
                                 {{ display_name }}
                             </a>
                         {% endfor %}
@@ -97,7 +106,7 @@ MIT License
                         {% for language, display_name in config.LOCALES.items() %}
                             <a class="dropdown-item"
                                href="{{ url_for('language.set_locale', locale=language) }}">
-                               {{ display_name }}
+                                {{ display_name }}
                             </a>
                         {% endfor %}
                     </div>
@@ -131,27 +140,27 @@ MIT License
     &copy; Copyright 2020 Andy Zhou
 </footer>
 {% block scripts %}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', local=False)}}
+    {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', local=False) }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js', local=False) }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
-    {{ moment.include_moment(local_js="https://cdn.staticfile.org/moment.js/2.9.0/moment-with-locales.min.js") }}
+    {{ moment.include_moment(local_js="//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js") }}
     {{ moment.locale(auto_detect=True) }}
     {{ static_file('js', 'js/script.js') }}
     {% if current_app.config['FLASK_CONFIG'] == 'production' %}
         <script>
-            $(document).ready(function (){
-            if (window.navigator._selenium || window.navigator.webdriver){
-                document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
-            }})
+            $(document).ready(function () {
+                if (window.navigator._selenium || window.navigator.webdriver) {
+                    document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
+                }
+            })
         </script>
     {% endif %}
     <script>
+        var is_authenticated = false;
         {% if current_user.is_authenticated %}
-            var is_authenticated = true;
-        {% else %}
-            var is_authenticated = false;
+            is_authenticated = true;
         {% endif %}
-        if(is_authenticated) {
+        if (is_authenticated) {
             setInterval(update_notifications_count, 30000);
         }
     </script>

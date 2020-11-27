@@ -65,8 +65,7 @@ class Post(db.Model):
             db.session.commit()
 
     def url(self):
-        if self.slug:
-            return url_for('main.full_post', id=self.id, _external=True)
+        return url_for('main.full_post', id=self.id, _external=True)
 
 
 class Comment(db.Model):

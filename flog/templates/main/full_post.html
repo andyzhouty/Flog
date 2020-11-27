@@ -24,7 +24,7 @@ MIT License
             {{ post.content | safe }}
             {{ post_actions(post, show_collectors=True) }}
             <div class="comments" id="comments">
-                <h3>{{ comments|length }} {{ ngettext('Comment', 'Comments', __num=comments|length) }}
+                <h3>{{ comments|length }} {{ ngettext('comment', 'comments', __num=comments|length) }}
                     <small>
                         <a href="{{ url_for('main.full_post', id=post.id, page=pagination.pages or 1) }}#comments">
                             {{ _('latest') }}
@@ -87,7 +87,7 @@ MIT License
                         </div>
                     {% endif %}
                 {% else %}
-                No comments yet.
+                {{ _("No comments yet.")}}
                 {% endif %}
             </div>
         </div>

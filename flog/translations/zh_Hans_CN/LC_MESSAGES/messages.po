@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-22 18:30+0800\n"
-"PO-Revision-Date: 2020-10-08 19:33+0800\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: zh_Hans_CN\n"
+"POT-Creation-Date: 2020-11-27 20:00+0800\n"
+"PO-Revision-Date: 2020-11-27 19:59+0800\n"
+"Last-Translator: \n"
+"Language: zh\n"
 "Language-Team: zh_Hans_CN <LL@li.org>\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.9.0\n"
 
 #: flog/errors.py:21
 msgid "400 Bad Request"
@@ -44,7 +44,7 @@ msgstr "用户 <a href=\"{0}\">{1}</a>关注了你。"
 
 #: flog/notifications.py:29
 msgid "<a href=\"{0}\">This post</a> has a new comment/reply."
-msgstr "<a href=\"{0}\">这篇文章</a>有一个新的评论/评论的回复"
+msgstr "<a href=\"{0}\">这篇文章</a>有一个新的评论/评论的回复。"
 
 #: flog/notifications.py:40
 msgid "User <a href=\"{0}\">{1}</a> collected your <a href=\"{2}\">post</a>"
@@ -64,17 +64,17 @@ msgstr "深色"
 
 #: flog/admin/forms.py:14 flog/auth/forms.py:14 flog/feedback/forms.py:11
 msgid "Please fill out this field."
-msgstr "请填充这个输入框"
+msgstr "请填充这个输入框。"
 
 #: flog/admin/forms.py:15 flog/auth/forms.py:16 flog/feedback/forms.py:12
-#: flog/user/forms.py:12
+#: flog/user/forms.py:11
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
-msgstr "字段长度必须在%(min)d和%(max)d之间"
+msgstr "字段长度必须在%(min)d和%(max)d之间。"
 
 #: flog/admin/forms.py:16 flog/auth/forms.py:18
 msgid "Invalid email."
-msgstr "不符合格式的电子邮箱"
+msgstr "不符合格式的电子邮箱。"
 
 #: flog/admin/forms.py:19
 msgid "Email"
@@ -108,17 +108,18 @@ msgstr "位置"
 msgid "About me"
 msgstr "关于自己"
 
-#: flog/admin/forms.py:31 flog/main/forms.py:21 flog/user/forms.py:18
+#: flog/admin/forms.py:31 flog/main/forms.py:20 flog/user/forms.py:18
+#: flog/user/forms.py:24
 msgid "Submit"
 msgstr "提交"
 
 #: flog/admin/forms.py:42
 msgid "Email already registered."
-msgstr "电子邮件已经注册过了"
+msgstr "电子邮件已经注册过了。"
 
 #: flog/admin/forms.py:47
 msgid "Username already in use."
-msgstr "该用户名正在被其他用户使用"
+msgstr "该用户名正在被其他用户使用。"
 
 #: flog/admin/views.py:33
 #, python-format
@@ -146,7 +147,7 @@ msgstr "密码"
 msgid "Password (Again)"
 msgstr "密码（重复一遍）"
 
-#: flog/auth/forms.py:38
+#: flog/auth/forms.py:38 flog/user/forms.py:23
 msgid "Passwords must match"
 msgstr "两个密码框中的内容必须一样"
 
@@ -182,7 +183,7 @@ msgstr "删除账号"
 
 #: flog/auth/views.py:37
 msgid "A confirmation email has been sent to you by email! You can now login!"
-msgstr "一个验证邮件已经发送，你现在可以使用设置的用户名和密码登录了。"
+msgstr "一个验证邮件已经发送，你现在可以使用设置的用户名和密码登录了！"
 
 #: flog/auth/views.py:40
 msgid "You can now login!"
@@ -190,11 +191,11 @@ msgstr "你现在可以登录了！"
 
 #: flog/auth/views.py:65
 msgid "Invalid username or password!"
-msgstr "用户名和密码不符，请检查输入"
+msgstr "用户名和密码不符，请检查输入！"
 
 #: flog/auth/views.py:73
 msgid "You have been logged out."
-msgstr "你已经注销了"
+msgstr "你已经注销了。"
 
 #: flog/auth/views.py:84
 msgid "You have confirmed your account. Thanks !"
@@ -228,83 +229,83 @@ msgstr "你的反馈已经发送给管理员了！"
 
 #: flog/language/views.py:24
 msgid "Language updated."
-msgstr "语言设置已更新"
+msgstr "语言设置已更新。"
 
-#: flog/main/forms.py:15
+#: flog/main/forms.py:13
 msgid "Please fill out this field with valid values."
-msgstr "请用正确的值填充这个输入框"
+msgstr "请用正确的值填充这个输入框。"
 
-#: flog/main/forms.py:18 flog/main/forms.py:30
+#: flog/main/forms.py:17 flog/main/forms.py:24
 msgid "Title"
 msgstr "标题"
 
-#: flog/main/forms.py:19 flog/main/forms.py:31
+#: flog/main/forms.py:18 flog/main/forms.py:25
 msgid "Content"
 msgstr "内容"
 
-#: flog/main/forms.py:20 flog/main/forms.py:32 flog/templates/main/main.html:29
+#: flog/main/forms.py:19 flog/main/forms.py:26 flog/templates/main/main.html:31
 msgid "Private"
 msgstr "个人的"
 
-#: flog/main/forms.py:26
-msgid "The title is duplicated with your other post(s). Please change it."
-msgstr ""
-
-#: flog/main/forms.py:33
+#: flog/main/forms.py:27
 msgid "Publish"
 msgstr "发表"
 
-#: flog/main/forms.py:38 flog/templates/main/full_post.html:27
+#: flog/main/forms.py:32
+#, fuzzy
 msgid "Comment"
-msgid_plural "Comments"
-msgstr[0] "条评论"
+msgstr "评论"
 
-#: flog/main/views.py:60
+#: flog/main/views.py:68
 msgid "Your post has been added"
-msgstr "你的文章发表成功！"
+msgstr "你的文章发表成功"
 
-#: flog/main/views.py:92
+#: flog/main/views.py:98
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:97
-msgid "The author has set this post to invisible."
-msgstr "这篇文章的作者已经把该文章设为不可见了"
+#: flog/main/views.py:101
+msgid "You cannot comment a private post!"
+msgstr "你不能收藏你自己的文章!"
 
-#: flog/main/views.py:138
+#: flog/main/views.py:106
+msgid "The author has set this post to invisible."
+msgstr "这篇文章的作者已经把该文章设为不可见了。"
+
+#: flog/main/views.py:147
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:157
+#: flog/main/views.py:166
 msgid "Edit Succeeded!"
-msgstr "编辑成功"
+msgstr "编辑成功！"
 
-#: flog/main/views.py:171
+#: flog/main/views.py:180
 msgid "Post collected."
-msgstr "文章已收藏"
+msgstr "文章已收藏。"
 
-#: flog/main/views.py:173
+#: flog/main/views.py:182
 msgid "Already collected."
-msgstr "你已经收藏了该文章"
+msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:175
+#: flog/main/views.py:184
 msgid "You cannot collect your own post."
-msgstr "你不能收藏你自己的文章"
+msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:177
+#: flog/main/views.py:186
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
-msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章"
+msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:186
+#: flog/main/views.py:195
 msgid "Post uncollected."
-msgstr "文章已取消收藏"
+msgstr "文章已取消收藏。"
 
 #: flog/notification/views.py:48
 msgid "All notifications are read."
-msgstr "所有消息都被读过了"
+msgstr "所有消息都已读。"
 
 #: flog/templates/base.html:35 flog/templates/main/main.html:8
 msgid "Main"
@@ -435,9 +436,18 @@ msgstr "return confirm('你确定吗？');"
 msgid "Homepage"
 msgstr "Ta的Flog个人主页"
 
+#: flog/templates/auth/delete_account.html:7
+#, fuzzy
+msgid "Delete account"
+msgstr "删除账号"
+
+#: flog/templates/auth/delete_account.html:9
+msgid "Before deleting your account, we need to confirm your password."
+msgstr "删除你的账号之前，我们必须验证你的密码。"
+
 #: flog/templates/auth/login.html:11
 msgid "New user?"
-msgstr "新用户"
+msgstr "新用户？"
 
 #: flog/templates/auth/login.html:13
 msgid "Click here to register"
@@ -445,12 +455,12 @@ msgstr "点击这里以注册"
 
 #: flog/templates/auth/email/confirm.html:6
 msgid "Hello,"
-msgstr "你好"
+msgstr "你好，"
 
 #: flog/templates/auth/email/confirm.html:7
 #: flog/templates/auth/email/confirm.txt:7
 msgid "Welcome to Flog!"
-msgstr "欢迎来到Flog"
+msgstr "欢迎来到Flog！"
 
 #: flog/templates/auth/email/confirm.html:8
 msgid "To confirm your account please click on the button or the link given"
@@ -478,7 +488,7 @@ msgstr "请不要回复这封邮件 :)"
 
 #: flog/templates/errors/404.html:10
 msgid "Welcome to special 404 page -- coffin dance!"
-msgstr "你查找的页面被黑人抬走了"
+msgstr "你查找的页面被黑人抬走了！"
 
 #: flog/templates/feedback/feedback.html:17
 msgid "feedback"
@@ -488,12 +498,12 @@ msgstr[0] "条反馈"
 #: flog/templates/feedback/feedback_notification.html:6
 #: flog/templates/feedback/feedback_notification.txt:5
 msgid "Hello, Admin!"
-msgstr "管理员，你好"
+msgstr "管理员，你好！"
 
 #: flog/templates/feedback/feedback_notification.html:7
 #: flog/templates/feedback/feedback_notification.txt:6
 msgid "A new feedback was added just now!"
-msgstr "一个新的反馈已经由用户发出"
+msgstr "一个新的反馈已经由用户发出。"
 
 #: flog/templates/feedback/feedback_notification.html:8
 #: flog/templates/feedback/feedback_notification.txt:7
@@ -562,7 +572,7 @@ msgstr "管理文章"
 msgid "Your collections"
 msgstr "你的收藏"
 
-#: flog/templates/main/collections.html:17 flog/templates/main/main.html:36
+#: flog/templates/main/collections.html:17 flog/templates/main/main.html:38
 msgid "Read More"
 msgstr "阅读更多"
 
@@ -582,6 +592,12 @@ msgstr "日期："
 msgid "Author:"
 msgstr "作者："
 
+#: flog/templates/main/full_post.html:27
+#, fuzzy
+msgid "comment"
+msgid_plural "comments"
+msgstr[0] "条评论"
+
 #: flog/templates/main/full_post.html:30
 msgid "latest"
 msgstr "最新的"
@@ -593,6 +609,10 @@ msgstr "作者"
 #: flog/templates/main/full_post.html:74
 msgid "Reply"
 msgstr "回复"
+
+#: flog/templates/main/full_post.html:90
+msgid "No comments yet."
+msgstr "这篇文章还没有评论。"
 
 #: flog/templates/main/main.html:12
 msgid "Welcome,"
@@ -650,6 +670,10 @@ msgstr "关于我们"
 msgid "Manage users"
 msgstr "管理用户"
 
+#: flog/templates/user/change_password.html:4
+msgid "Change Password"
+msgstr "更改密码"
+
 #: flog/templates/user/followers.html:9
 msgid "Your"
 msgstr "你的"
@@ -662,6 +686,7 @@ msgstr "Ta的"
 msgid "followers"
 msgstr "关注者"
 
+# flog/templates/user/followers.html:24
 #: flog/templates/user/followers.html:24
 msgid "You have no followers"
 msgstr "你没有关注者:("
@@ -672,7 +697,7 @@ msgstr "住址"
 
 #: flog/templates/user/user_profile.html:28
 msgid "This email hasn't been confirmed yet."
-msgstr "这个用户的邮箱没有被验证过"
+msgstr "这个用户的邮箱没有被验证过。"
 
 #: flog/templates/user/user_profile.html:34
 msgid "Member since"
@@ -700,6 +725,14 @@ msgstr[0] "%(num)s个关注者"
 msgid "Edit Profile [Admin]"
 msgstr "[管理员]编辑Ta的信息"
 
+#: flog/user/forms.py:22
+msgid "New Password"
+msgstr "新密码"
+
+#: flog/user/forms.py:23
+msgid "Again"
+msgstr "确认密码"
+
 #: flog/user/views.py:29
 msgid "Your profile has been updated!"
 msgstr "你的个人信息已经被更新了！"
@@ -710,28 +743,23 @@ msgstr "你的邮箱还没有被验证呢！"
 
 #: flog/user/views.py:45
 msgid "Already followed."
-msgstr "你已经关注了该用户"
+msgstr "你已经关注了该用户。"
 
 #: flog/user/views.py:49
 msgid "User followed."
-msgstr "你关注了该用户"
+msgstr "你关注了该用户。"
 
 #: flog/user/views.py:58
 msgid "Not following yet."
-msgstr "你还没有关注该用户"
+msgstr "你还没有关注该用户。"
 
 #: flog/user/views.py:61
 msgid "User unfollowed."
-msgstr "你取消关注了这个用户"
+msgstr "你取消关注了这个用户。"
 
-#~ msgid "Feedback Content:"
-#~ msgstr ""
-
-#~ msgid "Remeber me"
-#~ msgstr ""
-
-#~ msgid "Invalid Email"
-#~ msgstr ""
+#: flog/user/views.py:96
+msgid "Password Changed"
+msgstr "你的密码已更改"
 
 #~ msgid "(Date(yyyy-mm-dd like 2020-01-01)"
 #~ msgstr "（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
@@ -756,25 +784,6 @@ msgstr "你取消关注了这个用户"
 
 #~ msgid "The slug is duplicated. Please change the title."
 #~ msgstr "这篇文章的缩略小标题和你的另外一篇文章重复了，请更换这篇文章的标题"
-
-#~ msgid ""
-#~ "\n"
-#~ "        User <a href=\"{0}\">{1}</a> followed you.\n"
-#~ "        "
-#~ msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "        <a href=\"{0}\">This post</a> has a new comment/reply.\n"
-#~ "    "
-#~ msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "        User <a href=\"{0}\">{1}</a> collected"
-#~ " your <a href=\"{post.url()}\">post</a>\n"
-#~ "    "
-#~ msgstr ""
 
 #~ msgid ""
 #~ "The slug is duplicated with another "

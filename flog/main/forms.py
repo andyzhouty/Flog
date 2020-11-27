@@ -10,8 +10,8 @@ from flask_ckeditor import CKEditorField
 from flask_login import current_user
 from ..models import db, Post
 
-
 dr_message = _l('Please fill out this field with valid values.')
+
 
 class PostForm(FlaskForm):
     title = StringField(_l("Title"), validators=[DataRequired(dr_message)])
