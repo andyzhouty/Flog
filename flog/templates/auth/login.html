@@ -5,9 +5,20 @@ MIT License
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% block title %} Flog - {{ _('Login') }} {% endblock %}
+{% block styles %}
+    {{ super() }}
+    <style>
+        .register {
+            font-size: 1.15em;
+            padding: 15px;
+            background-color: rgba(256, 220, 0, 0.35);
+            border-radius: 10px;
+        }
+    </style>
+{% endblock styles %}
 {% block page_content %}
     <h1 class="display-4">{{ _('Login') }}</h1>
-    <p>
+    <p class="register">
         {{ _('New user?') }}
         <a href="{{ url_for('auth.register') }}">
             {{ _('Click here to register') }}</a>
