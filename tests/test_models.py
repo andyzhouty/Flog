@@ -2,7 +2,6 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from tests.helpers import send_notification
 from flog import db
 from flog.models import Post, User, Notification
 

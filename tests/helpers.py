@@ -1,11 +1,10 @@
 import os
 from faker import Faker
-from flog.notifications import (
-    push_collect_notification, push_comment_notification, push_follow_notification
-)
+from base64 import b64encode
 from flog.models import db, Comment, Notification, Post, User, Role
 
 fake = Faker()
+
 
 def login(client, username=os.getenv('FLOG_ADMIN'),
           password=os.getenv('FLOG_ADMIN_PASSWORD')):
@@ -15,6 +14,7 @@ def login(client, username=os.getenv('FLOG_ADMIN'),
         data=dict(username_or_email=username, password=password),
         follow_redirects=True
     )
+
 
 def logout(client):
     """Logout helper function"""
@@ -31,6 +31,7 @@ def register(client, name='Test', username='test', password='password', email='t
         password_again=password
     ), follow_redirects=True)
 
+
 def create_article(client):
     """Create a post for test use"""
     login(client)
@@ -44,6 +45,7 @@ def create_article(client):
         'post': data,
         'text': text,
     }
+
 
 def send_notification(client):
     """Send notifications for test user"""
@@ -59,3 +61,12 @@ def send_notification(client):
     )
     db.session.add(notification)
     db.session.commit()
+
+
+def get_api_v1_headers(username, password):
+    return {
+        'Authorization': 'Basic ' + b64encode(
+            f'{username}:{password}'.encode('utf-8')).decode('utf-8'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }

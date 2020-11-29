@@ -16,8 +16,23 @@ MIT License
                 <img src="{{ user.gravatar() }}"></a>
             <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
             {{ role_label_of(user) }}
-            {% block user_operations %}
-            {% endblock %}
+            {% if current_user.is_administrator() %}
+                <br><br>
+                <span class="text-white">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                        <i class="fa fa-edit"></i>
+                        {{ _('Edit Profile') }}
+                    </a>
+                    <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
+                        style="display: inline !important">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-outline-danger" onclick="{{ _('return confirm(\'Are you sure?\');') }}">
+                            <i class="fa fa-trash"></i>
+                            {{ _('DELETE') }}
+                        </button>
+                    </form>
+                </span>
+            {% endif %}
         </li>
     {% endfor %}
     </ul>

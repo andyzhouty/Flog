@@ -11,6 +11,7 @@
     - url: str (the url of the post in api)
     - comments_count: int
     - comments: list
+    - author: dict
     
     Example:
 

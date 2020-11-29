@@ -48,7 +48,6 @@ class Base:
 
     # Specially configured for pythonanywhere
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_recycle': 280}
-    SQLALCHEMY_POOL_RECYCLE = 280
 
     @classmethod
     def init_app(cls, app):

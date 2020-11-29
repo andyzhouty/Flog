@@ -45,7 +45,8 @@ def follow(username):
         flash(_('Already followed.'),  'info')
         return make_response(redirect_back())
     current_user.follow(user)
-    push_follow_notification(follower=current_user, receiver=user)
+    if not current_app.testing:
+        push_follow_notification(follower=current_user, receiver=user)
     flash(_('User followed.'),  'success')
     return make_response(redirect_back())
 

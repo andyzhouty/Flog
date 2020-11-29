@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-27 20:00+0800\n"
+"POT-Creation-Date: 2020-11-29 08:54+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -126,12 +126,12 @@ msgstr "该用户名正在被其他用户使用。"
 msgid "%s deleted."
 msgstr "%s 已被删除。"
 
-#: flog/admin/views.py:62
+#: flog/admin/views.py:63
 #, python-format
 msgid "%s's profile has been updated."
 msgstr "%s的个人信息已被更新。"
 
-#: flog/admin/views.py:77
+#: flog/admin/views.py:79
 msgid "User Deleted"
 msgstr "用户已删除"
 
@@ -260,13 +260,13 @@ msgstr "评论"
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:98
-msgid "Comment published!"
-msgstr "评论发表成功！"
-
-#: flog/main/views.py:101
+#: flog/main/views.py:87 flog/templates/main/full_post.html:94
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
+
+#: flog/main/views.py:101
+msgid "Comment published!"
+msgstr "评论发表成功！"
 
 #: flog/main/views.py:106
 msgid "The author has set this post to invisible."
@@ -319,34 +319,39 @@ msgstr "关于我们"
 msgid "Account"
 msgstr "账户"
 
-#: flog/templates/admin/users.html:11 flog/templates/base.html:52
-#: flog/templates/macros.html:130 flog/templates/user/edit_profile.html:7
+#: flog/templates/admin/users.html:11 flog/templates/base.html:53
+#: flog/templates/macros.html:130 flog/templates/user/all_users.html:24
+#: flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
 #: flog/templates/user/user_profile.html:48
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
-#: flog/templates/base.html:53
+#: flog/templates/base.html:55
 msgid "Log out"
 msgstr "注销"
 
-#: flog/templates/base.html:56
+#: flog/templates/base.html:59
 msgid "Resend Confirmation Email"
 msgstr "重新发送邮箱验证邮件"
 
-#: flog/templates/base.html:60
+#: flog/templates/base.html:64 flog/templates/user/change_password.html:4
+msgid "Change Password"
+msgstr "更改密码"
+
+#: flog/templates/base.html:67
 msgid "Delete Your Account"
 msgstr "删除你的账户"
 
-#: flog/templates/base.html:75
+#: flog/templates/base.html:84
 msgid "Log in / Register"
 msgstr "登录 / 注册"
 
-#: flog/templates/base.html:80
+#: flog/templates/base.html:89
 msgid "Theme"
 msgstr "样式选择"
 
-#: flog/templates/base.html:94
+#: flog/templates/base.html:103
 msgid "Language"
 msgstr "语言选择"
 
@@ -362,7 +367,7 @@ msgstr "协管员"
 msgid "User"
 msgstr "用户"
 
-#: flog/templates/macros.html:31 flog/templates/main/full_post.html:46
+#: flog/templates/macros.html:31 flog/templates/main/full_post.html:47
 msgid "Admin"
 msgstr "管理员"
 
@@ -396,7 +401,7 @@ msgstr "编辑"
 
 #: flog/templates/admin/feedbacks.html:19 flog/templates/admin/users.html:18
 #: flog/templates/macros.html:100 flog/templates/macros.html:137
-#: flog/templates/main/full_post.html:69
+#: flog/templates/main/full_post.html:70 flog/templates/user/all_users.html:31
 msgid "DELETE"
 msgstr "删除"
 
@@ -428,7 +433,7 @@ msgstr "管理反馈"
 msgid "Welcome, Administrator"
 msgstr "欢迎，管理员"
 
-#: flog/templates/admin/users.html:16
+#: flog/templates/admin/users.html:16 flog/templates/user/all_users.html:29
 msgid "return confirm('Are you sure?');"
 msgstr "return confirm('你确定吗？');"
 
@@ -592,25 +597,25 @@ msgstr "日期："
 msgid "Author:"
 msgstr "作者："
 
-#: flog/templates/main/full_post.html:27
+#: flog/templates/main/full_post.html:28
 #, fuzzy
 msgid "comment"
 msgid_plural "comments"
 msgstr[0] "条评论"
 
-#: flog/templates/main/full_post.html:30
+#: flog/templates/main/full_post.html:31
 msgid "latest"
 msgstr "最新的"
 
-#: flog/templates/main/full_post.html:49
+#: flog/templates/main/full_post.html:50
 msgid "Author"
 msgstr "作者"
 
-#: flog/templates/main/full_post.html:74
+#: flog/templates/main/full_post.html:75
 msgid "Reply"
 msgstr "回复"
 
-#: flog/templates/main/full_post.html:90
+#: flog/templates/main/full_post.html:91
 msgid "No comments yet."
 msgstr "这篇文章还没有评论。"
 
@@ -669,10 +674,6 @@ msgstr "关于我们"
 #: flog/templates/user/all_users.html:8
 msgid "Manage users"
 msgstr "管理用户"
-
-#: flog/templates/user/change_password.html:4
-msgid "Change Password"
-msgstr "更改密码"
 
 #: flog/templates/user/followers.html:9
 msgid "Your"
@@ -790,4 +791,7 @@ msgstr "你的密码已更改"
 #~ "post posted by you. Please change "
 #~ "the title."
 #~ msgstr "这篇文章的别名和你的另外一篇文章重复了，请更换这篇文章的标题。"
+
+#~ msgid "You cannot comment a private post."
+#~ msgstr "你不能收藏你自己的文章!"
 

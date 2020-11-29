@@ -42,7 +42,8 @@ def manage_users():
     pagination = User.query.order_by(User.id.desc()).paginate(
         page, per_page=current_app.config['USERS_PER_PAGE'], error_out=False
     )
-    return render_template("admin/users.html", pagination=pagination)
+    return render_template("user/all_users.html", pagination=pagination)
+
 
 @admin_bp.route('/users/<int:id>/edit-profile/', methods=['GET', 'POST'])
 @admin_required
@@ -69,6 +70,7 @@ def edit_user_profile(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('admin/edit_user_profile.html', form=form, user=user)
+
 
 @admin_bp.route('/users/delete/<int:id>', methods=['POST'])
 @admin_required

@@ -82,7 +82,10 @@ def full_post(id: int):
                       .paginate(page, per_page))
         comments = pagination.items
         form = CommentForm()
-        if form.validate_on_submit() and not post.private:
+        if form.validate_on_submit():
+            if post.private:
+                flash(_('You cannot comment a private post!'))
+                return make_response(redirect_back())
             comment = Comment(
                 author=current_user,
                 post=post,
@@ -96,9 +99,6 @@ def full_post(id: int):
             db.session.commit()
             push_comment_notification(comment=comment, receiver=post.author)
             flash(_('Comment published!'), 'success')
-            return make_response(redirect_back())
-        elif post.private:
-            flash(_('You cannot comment a private post!'))
             return make_response(redirect_back())
         return render_template('main/full_post.html', post=post, pagination=pagination,
                                comments=comments, form=form)
@@ -176,7 +176,12 @@ def collect_post(id):
     post = Post.query.get(id)
     if not post.private and post.author != current_user and not current_user.is_collecting(post):
         current_user.collect(post)
-        push_collect_notification(collector=current_user, post=post, receiver=post.author)
+        if not current_app.testing:
+            push_collect_notification(
+                collector=current_user,
+                post=post,
+                receiver=post.author,
+            )
         flash(_('Post collected.'), 'success')
     elif current_user.is_collecting(post):
         flash(_('Already collected.'))

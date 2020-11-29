@@ -45,13 +45,16 @@ def post_schema(post: Post) -> dict:
     Returns:
         dict: contains post data
     """
-    return dict(
+    post_schema = dict(
         id=post.id,
+        author=user_schema(post.author),
         title=post.title,
-        slug=post.slug,
         content=post.content,
         url=url_for('api_v1.post', post_id=post.id, _external=True),
         comments_count=len(post.comments),
-        comments=[dict(author=comment.author.username, body=comment.body)
-                  for comment in post.comments]
+        private=post.private
     )
+    if len(post.comments) > 0:
+        post_schema['comments'] = [dict(author=comment.author.username, body=comment.body)
+                                   for comment in post.comments]
+    return post_schema

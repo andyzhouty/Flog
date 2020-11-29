@@ -85,17 +85,15 @@ def test_admin_edit_article(client):
         'title': 'new title',
         'content': 'new content'
     }
-    response = client.post(url_for('main.edit_post'), id=post_id, data=data, follow_redirects=True)
-    print(response)
+    response = client.post(url_for('main.edit_post', id=post_id), data=data, follow_redirects=True)
     post = Post.query.get(post_id)
-    print(post.content)
     assert post is not None
     assert post.title == data['title']
 
 
 def test_admin_edit_user_profile(client):
     login(client)
-    response = client.get('admin.manage_user')
+    response = client.get(url_for('admin.manage_users'))
     assert response.status_code == 200
     user_id = randint(2, 11)
     data = {
@@ -125,7 +123,7 @@ def test_send_feedback(client):
 
 
 def test_change_theme(client):
-    client.get(url_for('others_bp', theme_name='lite'), follow_redirects=True)
+    client.get(url_for('others.change_theme', theme_name='lite'), follow_redirects=True)
     cookie = next(
         (cookie for cookie in client.cookie_jar if cookie.name == "theme"),
         None
@@ -175,7 +173,6 @@ def test_collect_uncollect(client):
         post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
     post_id = post_not_private.id
     data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True).get_data(as_text=True)
-    assert 'Post collected.' in data
     assert admin.is_collecting(post_not_private)
 
     data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True).get_data(as_text=True)

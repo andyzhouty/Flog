@@ -15,7 +15,7 @@ def push_follow_notification(follower, receiver):
                  format(url_for('user.user_profile', username=follower.username),
                         follower.username)
                  )
-    notification = Notification(message=message, receiver=receiver)
+    notification = Notification(message=message, receiver=receiver, is_read=False)
     db.session.add(notification)
     db.session.commit()
 
@@ -28,7 +28,7 @@ def push_comment_notification(comment, receiver, page=1):
     message = _l("""<a href="{0}">This post</a> has a new comment/reply."""
                  .format(url_for('main.full_post', id=comment.post.id, page=page))
                  )
-    notification = Notification(message=message, receiver=receiver)
+    notification = Notification(message=message, receiver=receiver, is_read=False)
     db.session.add(notification)
     db.session.commit()
 
@@ -39,6 +39,6 @@ def push_collect_notification(collector, post, receiver):
                  .format(url_for('user.user_profile', username=collector.username),
                          collector.username, post.url())
                  )
-    notification = Notification(message=message, receiver=receiver)
+    notification = Notification(message=message, receiver=receiver, is_read=False)
     db.session.add(notification)
     db.session.commit()

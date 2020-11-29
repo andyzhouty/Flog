@@ -97,7 +97,10 @@ class PostAPI(MethodView):
     def get(self, post_id: int):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
-        return jsonify(post_schema(post))
+        if not post.private or g.current_user.is_administrator():
+            return jsonify(post_schema(post))
+        else:
+            return forbidden('The post is private!')
 
     def post(self) -> '201':
         """Create a post"""
