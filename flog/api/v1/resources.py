@@ -97,7 +97,7 @@ class PostAPI(MethodView):
     def get(self, post_id: int):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
-        if not post.private or g.current_user.is_administrator():
+        if not post.private or g.current_user.is_administrator() or post.author == g.current_user:
             return jsonify(post_schema(post))
         else:
             return forbidden('The post is private!')
@@ -138,10 +138,13 @@ class PostAPI(MethodView):
         post = Post.query.get_or_404(post_id)
         if not can_edit_post(post):
             return forbidden('You cannot edit this post.')
-        post_data = get_post_data()
-        post.title = post_data[0]
-        post.content = post_data[1]
-        
+        data = request.get_json()
+        if isinstance(data.get('title'), str):
+            post.title = data['title']
+        if isinstance(data.get('content'), str):
+            post.content = data['content']
+        if isinstance(data.get('private'), bool):
+            post.private = data['private']
         db.session.add(post)
         db.session.commit()
         return '', 204

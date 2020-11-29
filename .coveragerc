@@ -1,5 +1,5 @@
 [run]
-source = app
+source = flog
 branch = True
 omit =
     */test_*.py
@@ -7,3 +7,4 @@ omit =
     */fakes.py
     */extensions.py
     */commands.py
+    */settings.py
