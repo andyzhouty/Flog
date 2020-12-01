@@ -17,7 +17,7 @@ MIT License
                     {{ _('Date:') }} {{ moment(post.timestamp).format('LL') }}<br>
                     {{ _('Author:') }}
                     <a href="{{ post.author.profile_url() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                        {{ post.author.name }}
+                        {{ post.author.username }}
                     </a>
                 </small>
             </div><br>
