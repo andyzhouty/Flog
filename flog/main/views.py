@@ -71,7 +71,6 @@ def create_post():
 
 
 @main_bp.route('/post/<int:id>/', methods=['GET', 'POST'])
-@login_required
 def full_post(id: int):
     post = Post.query.get_or_404(id)
     if not post.private or post.author == current_user or current_user.is_administrator():

@@ -2,15 +2,17 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from flask import render_template, redirect, make_response, url_for, flash, request, current_app
-from flask_login import current_user, login_required
+from flask import abort, render_template, redirect, make_response, url_for, flash, request, current_app
+from flask_login import current_user, login_required, login_user
 from flask_babel import _
+from itsdangerous import Serializer
 from . import user_bp
-from .forms import EditProfileForm, PasswordChangeForm
+from .forms import EditProfileForm, PasswordChangeForm, ValidateEmailForm
 from ..models import db, User, Permission
 from ..decorators import permission_required
 from ..utils import redirect_back
 from ..notifications import push_follow_notification
+from ..emails import send_email
 
 
 @user_bp.route('/profile/edit/', methods=['GET', 'POST'])
@@ -96,4 +98,29 @@ def change_password():
         current_user.set_password(form.password)
         flash(_("Password Changed"))
         return redirect(url_for('user.user_profile', username=current_user.username))
+    return render_template('user/change_password.html', form=form)
+
+
+@user_bp.route('/password/forget/', methods=['GET', 'POST'])
+def forget_password():
+    form = ValidateEmailForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if not current_app.config['TESTING']:
+            token = user.gen_auth_token()
+            send_email([user.email], 'Reset Password', '/user/email/reset_password', user=user, token=token)
+        flash(_("A confirmation email has been sent."))
+        return redirect(url_for('user.forget_password'))
+    return render_template('user/forget_password.html', form=form)
+
+
+@user_bp.route('/password/reset/<token>/', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.verify_auth_token(token)
+    form = PasswordChangeForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        login_user(user)
+        flash(_("Password Changed"))
+        return redirect(url_for('main.main'))
     return render_template('user/change_password.html', form=form)

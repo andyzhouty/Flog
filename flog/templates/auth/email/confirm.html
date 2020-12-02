@@ -11,7 +11,7 @@ MIT License
         {{ _('Confirm your account') }}
     </button>
     </a>
-    <p>{{ _("If the button doesn't work well, then copy this link to your browser") }}:<br>
+    <p>{{ _("If the button doesn't work well, then copy this link to your browser") }}<br>
     {{ url_for('auth.confirm', token=token, _external=True) }}
     </p>
 </div>

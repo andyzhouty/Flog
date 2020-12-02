@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-11-29 08:54+0800\n"
+"POT-Creation-Date: 2020-12-02 22:23+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -67,16 +67,16 @@ msgid "Please fill out this field."
 msgstr "请填充这个输入框。"
 
 #: flog/admin/forms.py:15 flog/auth/forms.py:16 flog/feedback/forms.py:12
-#: flog/user/forms.py:11
+#: flog/user/forms.py:12
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
 msgstr "字段长度必须在%(min)d和%(max)d之间。"
 
-#: flog/admin/forms.py:16 flog/auth/forms.py:18
+#: flog/admin/forms.py:16 flog/auth/forms.py:18 flog/user/forms.py:13
 msgid "Invalid email."
 msgstr "不符合格式的电子邮箱。"
 
-#: flog/admin/forms.py:19
+#: flog/admin/forms.py:19 flog/user/forms.py:30
 msgid "Email"
 msgstr "电子邮箱"
 
@@ -96,20 +96,20 @@ msgstr "验证过的"
 msgid "Role"
 msgstr "角色"
 
-#: flog/admin/forms.py:28 flog/auth/forms.py:28 flog/user/forms.py:15
+#: flog/admin/forms.py:28 flog/auth/forms.py:28 flog/user/forms.py:17
 msgid "Real Name"
 msgstr "真实姓名"
 
-#: flog/admin/forms.py:29 flog/user/forms.py:16
+#: flog/admin/forms.py:29 flog/user/forms.py:18
 msgid "Location"
 msgstr "位置"
 
-#: flog/admin/forms.py:30 flog/user/forms.py:17
+#: flog/admin/forms.py:30 flog/user/forms.py:19
 msgid "About me"
 msgstr "关于自己"
 
-#: flog/admin/forms.py:31 flog/main/forms.py:20 flog/user/forms.py:18
-#: flog/user/forms.py:24
+#: flog/admin/forms.py:31 flog/main/forms.py:20 flog/user/forms.py:20
+#: flog/user/forms.py:26 flog/user/forms.py:31
 msgid "Submit"
 msgstr "提交"
 
@@ -147,7 +147,7 @@ msgstr "密码"
 msgid "Password (Again)"
 msgstr "密码（重复一遍）"
 
-#: flog/auth/forms.py:38 flog/user/forms.py:23
+#: flog/auth/forms.py:38 flog/user/forms.py:25
 msgid "Passwords must match"
 msgstr "两个密码框中的内容必须一样"
 
@@ -173,7 +173,7 @@ msgid "Remember me"
 msgstr "记住登录状态"
 
 #: flog/auth/forms.py:54 flog/templates/auth/login.html:7
-#: flog/templates/auth/login.html:9
+#: flog/templates/auth/login.html:21
 msgid "Login"
 msgstr "登录"
 
@@ -260,46 +260,46 @@ msgstr "评论"
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:87 flog/templates/main/full_post.html:94
+#: flog/main/views.py:86 flog/templates/main/full_post.html:94
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
 
-#: flog/main/views.py:101
+#: flog/main/views.py:100
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:106
+#: flog/main/views.py:105
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:147
+#: flog/main/views.py:146
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:166
+#: flog/main/views.py:165
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:180
+#: flog/main/views.py:184
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:182
+#: flog/main/views.py:186
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:184
+#: flog/main/views.py:188
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:186
+#: flog/main/views.py:190
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:195
+#: flog/main/views.py:199
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
@@ -450,13 +450,18 @@ msgstr "删除账号"
 msgid "Before deleting your account, we need to confirm your password."
 msgstr "删除你的账号之前，我们必须验证你的密码。"
 
-#: flog/templates/auth/login.html:11
+#: flog/templates/auth/login.html:23
 msgid "New user?"
 msgstr "新用户？"
 
-#: flog/templates/auth/login.html:13
+#: flog/templates/auth/login.html:25
 msgid "Click here to register"
 msgstr "点击这里以注册"
+
+#: flog/templates/auth/login.html:32
+#, fuzzy
+msgid "Forget your password?"
+msgstr "忘记密码？"
 
 #: flog/templates/auth/email/confirm.html:6
 msgid "Hello,"
@@ -631,19 +636,19 @@ msgstr "写文章"
 msgid "New Post"
 msgstr "撰写新的文章"
 
-#: flog/templates/main/not_authorized.html:8
+#: flog/templates/main/not_authorized.html:9
 msgid "A blog website built for convenience."
 msgstr "一个方便的博客网站"
 
-#: flog/templates/main/not_authorized.html:10
+#: flog/templates/main/not_authorized.html:11
 msgid "Join Now!"
 msgstr "加入我们"
 
-#: flog/templates/main/not_authorized.html:11
+#: flog/templates/main/not_authorized.html:12
 msgid "or"
 msgstr "或者"
 
-#: flog/templates/main/not_authorized.html:12
+#: flog/templates/main/not_authorized.html:13
 msgid "View Posts Directly"
 msgstr "直接查看用户的博客"
 
@@ -692,6 +697,11 @@ msgstr "关注者"
 msgid "You have no followers"
 msgstr "你没有关注者:("
 
+#: flog/templates/user/forget_password.html:4
+#, fuzzy
+msgid "Forget password"
+msgstr "忘记密码"
+
 #: flog/templates/user/user_profile.html:19
 msgid "from"
 msgstr "住址"
@@ -726,41 +736,75 @@ msgstr[0] "%(num)s个关注者"
 msgid "Edit Profile [Admin]"
 msgstr "[管理员]编辑Ta的信息"
 
-#: flog/user/forms.py:22
+#: flog/templates/user/email/reset_password.html:2
+#: flog/templates/user/email/reset_password.html:8
+#: flog/templates/user/email/reset_password.txt:1
+msgid "Reset your password"
+msgstr "重置你的密码"
+
+#: flog/templates/user/email/reset_password.html:3
+#: flog/templates/user/email/reset_password.txt:2
+#, fuzzy
+msgid "Dear User"
+msgstr "新用户？"
+
+#: flog/templates/user/email/reset_password.html:4
+#: flog/templates/user/email/reset_password.txt:3
+msgid ""
+"We've received a request that you forgot your password and decided to "
+"reset it."
+msgstr "我们收到了来自您的重置密码的请求。"
+
+#: flog/templates/user/email/reset_password.html:5
+msgid "Here's the link"
+msgstr "这是链接："
+
+#: flog/templates/user/email/reset_password.html:10
+#: flog/templates/user/email/reset_password.txt:4
+#, fuzzy
+msgid "or enter the following link to your browser"
+msgstr "为了验证你的账户，请复制下方的链接到浏览器"
+
+#: flog/user/forms.py:24
 msgid "New Password"
 msgstr "新密码"
 
-#: flog/user/forms.py:23
+#: flog/user/forms.py:25
 msgid "Again"
 msgstr "确认密码"
 
-#: flog/user/views.py:29
+#: flog/user/views.py:31
 msgid "Your profile has been updated!"
 msgstr "你的个人信息已经被更新了！"
 
-#: flog/user/views.py:35
+#: flog/user/views.py:37
 msgid "Your email has not been confirmed yet!"
 msgstr "你的邮箱还没有被验证呢！"
 
-#: flog/user/views.py:45
+#: flog/user/views.py:47
 msgid "Already followed."
 msgstr "你已经关注了该用户。"
 
-#: flog/user/views.py:49
+#: flog/user/views.py:52
 msgid "User followed."
 msgstr "你关注了该用户。"
 
-#: flog/user/views.py:58
+#: flog/user/views.py:61
 msgid "Not following yet."
 msgstr "你还没有关注该用户。"
 
-#: flog/user/views.py:61
+#: flog/user/views.py:64
 msgid "User unfollowed."
 msgstr "你取消关注了这个用户。"
 
-#: flog/user/views.py:96
+#: flog/user/views.py:99 flog/user/views.py:124
 msgid "Password Changed"
 msgstr "你的密码已更改"
+
+#: flog/user/views.py:112
+#, fuzzy
+msgid "A confirmation email has been sent."
+msgstr "一个新的验证邮件已经发送，请查收"
 
 #~ msgid "(Date(yyyy-mm-dd like 2020-01-01)"
 #~ msgstr "（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
@@ -794,4 +838,7 @@ msgstr "你的密码已更改"
 
 #~ msgid "You cannot comment a private post."
 #~ msgstr "你不能收藏你自己的文章!"
+
+#~ msgid "You can't view this page!"
+#~ msgstr "你没有权限查看这个页面！"
 

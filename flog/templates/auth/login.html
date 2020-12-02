@@ -8,8 +8,9 @@ MIT License
 {% block styles %}
     {{ super() }}
     <style>
-        .register {
+        .highlight {
             font-size: 1.15em;
+            margin: 20px;
             padding: 15px;
             background-color: rgba(256, 220, 0, 0.35);
             border-radius: 10px;
@@ -18,10 +19,17 @@ MIT License
 {% endblock styles %}
 {% block page_content %}
     <h1 class="display-4">{{ _('Login') }}</h1>
-    <p class="register">
+    <p class="highlight">
         {{ _('New user?') }}
         <a href="{{ url_for('auth.register') }}">
             {{ _('Click here to register') }}</a>
     </p>
-    {{ render_form(form, action=request.full_path) }}
+    <div>
+        {{ render_form(form, action=request.full_path) }}
+    </div>
+    <p>
+        <a href="{{ url_for('user.forget_password') }}">
+            {{ _('Forget your password?') }}
+        </a>
+    </p>
 {% endblock page_content %}

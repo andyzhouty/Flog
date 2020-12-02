@@ -4,10 +4,12 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% block page_content %}
+<div class="jumbotron">
     <h1 class="display-3">Flog</h1>
     <h1 class="text-muted">{{ _('A blog website built for convenience.') }}</a>
     </h1>
     <a href="{{ url_for('auth.login') }}" class="btn btn-primary">{{ _('Join Now!') }}</a>
     {{ _('or') }} <a href="{{ url_for('main.main', force=True) }}" class="btn btn-primary">
-    {{ _('View Posts Directly') }}</a>
+        {{ _('View Posts Directly') }}</a>
+</div>
 {% endblock %}
