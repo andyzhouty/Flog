@@ -4,6 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 import json
 from flask import url_for
+from flask.globals import current_app
 from flog.models import User
 from tests.helpers import register, get_api_v1_headers
 from flog import fakes as fake
@@ -132,14 +133,15 @@ def test_users(client):
 
 
 def test_notifications(client):
-    register(email='user@example.com', password='1234',
-             username='user', client=client)
-    fake.notifications(10)
+    fake.notifications(receiver=User.query.get(1),count=10)
     response = client.get(
         url_for('api_v1.notification'),
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers(
+            current_app.config['FLOG_ADMIN'],
+            current_app.config['FLOG_ADMIN_PASSWORD']
+        )
     )
     data = response.get_json()
     assert data.get('unread_num') == 10
-    assert isinstance(data.get('unread_items'), list)
-    assert isinstance(data.get('unread_items')[1], dict)
+    assert data.get('unread_num') == len(data.get('unread_items'))
+    assert isinstance(data.get('unread_items')[1], list)

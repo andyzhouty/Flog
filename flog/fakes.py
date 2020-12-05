@@ -97,17 +97,17 @@ def follows(count: int = 20) -> None:
             user1.follow(user2)
 
 
-def notifications(count: int = 20) -> None:
+def notifications(receiver: User, count: int) -> None:
     """Generates fake notifications"""
     for i in range(count):
-        random_user = User.query.get(randint(1, User.query.count()))
-        if random_user is None:
-            click.echo('There are no users!')
-            break
+        if receiver is None:
+            receiver = User.query.get(randint(1, User.query.count()))
+            if receiver is None:
+                click.echo('There are no users!')
+                break
         notification = Notification(
             message=fake.sentence(),
-            receiver=random_user,
-            is_read=False
+            receiver=receiver,
         )
         db.session.add(notification)
     db.session.commit()

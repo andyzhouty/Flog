@@ -6,6 +6,7 @@ import json
 from flask import url_for, current_app
 from flog.models import User
 from tests.helpers import register, get_api_v2_headers
+from flog import fakes as fake
 
 
 def test_api_index(client):
@@ -135,3 +136,19 @@ def test_users(client):
     assert response.status_code == 200
     assert response.get_data(as_text=True) == f'User id {user.id} deleted.'
     assert User.query.get(user.id) is None
+
+
+def test_notifications(client):
+    fake.notifications(receiver=User.query.get(1), count=10)
+    response = client.get(
+        url_for('api_v2.notification'),
+        headers=get_api_v2_headers(
+            client,
+            current_app.config['FLOG_ADMIN'],
+            current_app.config['FLOG_ADMIN_PASSWORD']
+        )
+    )
+    data = response.get_json()
+    assert data.get('unread_num') == 10
+    assert data.get('unread_num') == len(data.get('unread_items'))
+    assert isinstance(data.get('unread_items')[1], list)
