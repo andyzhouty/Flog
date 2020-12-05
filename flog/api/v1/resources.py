@@ -7,12 +7,8 @@
     :license: MIT License
 """
 
-from flog import notification
 from flask import g, jsonify, request, url_for
-from flask.globals import current_app
 from flask.views import MethodView
-from flask_login.utils import login_required
-from sqlalchemy.util.langhelpers import decorator
 from .errors import (  # noqa
     ValidationError,
     bad_request,
@@ -22,6 +18,7 @@ from .authentication import auth
 from .schemas import user_schema, post_schema
 from flog.models import db, User, Post, Comment, Notification
 import bleach
+
 
 def get_post_data() -> tuple:
     data = request.get_json()
@@ -117,7 +114,7 @@ class PostAPI(MethodView):
         )
         private = data.get('private')
         if (isinstance(title, str) and isinstance(content, str) and
-            isinstance(private, bool)):
+                isinstance(private, bool)):
             post = Post(
                 author=g.current_user,
                 title=title,
@@ -132,7 +129,7 @@ class PostAPI(MethodView):
             return jsonify(post_schema(post))
         else:
             return bad_request('Data is invalid!')
-        
+
     def put(self, post_id: int) -> '204' or '403' or '404':
         """Edit Post"""
         post = Post.query.get_or_404(post_id)
@@ -172,7 +169,7 @@ class CollectionAPI(MethodView):
     """API for collections."""
     decorators = [auth.login_required]
 
-    def get(self, collect_or_uncollect: str,post_id: int) -> '200' or '404':
+    def get(self, collect_or_uncollect: str, post_id: int) -> '200' or '404':
         post = Post.query.get_or_404(post_id)
         if collect_or_uncollect == 'collect':
             g.current_user.collect(post)
@@ -244,10 +241,12 @@ class NotificationAPI(MethodView):
     decorators = [auth.login_required]
 
     def get(self):
-        unread_num = Notification.query.with_parent(g.current_user).filter_by(is_read=False).count()
+        unread_num = (Notification.query.with_parent(g.current_user)
+                                        .filter_by(is_read=False).count())
         unread_items = [
-            (notification.message, notification.id) \
-                for notification in Notification.query.with_parent(g.current_user) \
-                                                      .filter_by(is_read=False).all()
+            (notification.message, notification.id) for notification in
+            Notification.query
+                        .with_parent(g.current_user)
+                        .filter_by(is_read=False).all()
         ]
         return jsonify({'unread_num': unread_num, 'unread_items': unread_items})

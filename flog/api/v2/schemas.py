@@ -21,7 +21,7 @@ def user_schema(user: User) -> dict:
     """
     user_dict = dict(
         id=user.id,
-        url=url_for('api_v1.user', user_id=user.id, _external=True),
+        url=url_for('api_v2.user', user_id=user.id, _external=True),
         kind='User',
         username=user.username,
         member_since=user.member_since,
@@ -48,10 +48,11 @@ def post_schema(post: Post) -> dict:
     return dict(
         id=post.id,
         title=post.title,
-        slug=post.slug,
+        author=user_schema(post.author),
         content=post.content,
-        url=url_for('api_v1.post', post_id=post.id, _external=True),
+        private=post.private,
+        url=url_for('api_v2.post', post_id=post.id, _external=True),
         comments_count=len(post.comments),
         comments=[dict(author=comment.author.username, body=comment.body)
-                  for comment in post.comments]
+                  for comment in post.comments],
     )

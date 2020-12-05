@@ -29,7 +29,7 @@ def get_post_data() -> tuple:
             title is None or str(title).strip() == '' or
             not isinstance(private, bool)):
         raise ValidationError('The post is invalid or empty.')
-    return (title, content)
+    return title, content, private
 
 
 def can_edit_post(post: Post) -> bool:
@@ -111,7 +111,7 @@ class PostAPI(MethodView):
         )
         private = data.get('private')
         if (isinstance(title, str) and isinstance(content, str) and
-            isinstance(private, bool)):
+                isinstance(private, bool)):
             post = Post(
                 author=g.current_user,
                 title=title,
@@ -126,7 +126,7 @@ class PostAPI(MethodView):
             return jsonify(post_schema(post))
         else:
             return bad_request('Data is invalid!')
-        
+
     def put(self, post_id: int) -> '204' or '403' or '404':
         """Edit Post"""
         post = Post.query.get_or_404(post_id)
@@ -135,7 +135,7 @@ class PostAPI(MethodView):
         post_data = get_post_data()
         post.title = post_data[0]
         post.content = post_data[1]
-        
+        post.private = post_data[2]
         db.session.add(post)
         db.session.commit()
         return '', 204
@@ -163,7 +163,7 @@ class CollectionAPI(MethodView):
     """API for collections."""
     decorators = [auth_required]
 
-    def get(self, collect_or_uncollect: str,post_id: int) -> '200' or '404':
+    def get(self, collect_or_uncollect: str, post_id: int) -> '200' or '404':
         post = Post.query.get_or_404(post_id)
         if collect_or_uncollect == 'collect':
             g.current_user.collect(post)
@@ -243,14 +243,17 @@ class TokenAPI(MethodView):
         response.headers['Pragma'] = 'no-cache'
         return response
 
+
 class NotificationAPI(MethodView):
     decorators = [auth_required]
 
     def get(self):
-        unread_num = Notification.query.with_parent(g.current_user).filter_by(is_read=False).count()
+        unread_num = (Notification.query.with_parent(g.current_user)
+                                        .filter_by(is_read=False).count())
         unread_items = [
-            (notification.message, notification.id) \
-                for notification in Notification.query.with_parent(g.current_user) \
-                                                      .filter_by(is_read=False).all()
+            (notification.message, notification.id) for notification in
+            Notification.query
+                        .with_parent(g.current_user)
+                        .filter_by(is_read=False).all()
         ]
         return jsonify({'unread_num': unread_num, 'unread_items': unread_items})

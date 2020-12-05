@@ -3,28 +3,34 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import json
-from flask import url_for
+from flask import url_for, current_app
 from flog.models import User
-from tests.helpers import register, get_api_v1_headers
-from flog import fakes as fake
+from tests.helpers import register, get_api_v2_headers
+
 
 def test_api_index(client):
-    response = client.get(url_for('api_v1.index'))
+    response = client.get(url_for('api_v2.index'))
     data = response.get_json()
-    assert data['api_version'] == '1.0'
+    assert data['api_version'] == '2.0'
 
 
-def test_no_auth(client):
-    response = client.get(url_for('api_v1.post', post_id=1))
-    assert response.status_code == 401
+def test_get_token(client):
+    response = client.post(url_for('api_v2.oauth_token'), data=dict(
+        grant_type='password',
+        username=current_app.config['FLOG_ADMIN'],
+        password=current_app.config['FLOG_ADMIN_PASSWORD']
+    ))
+    data = response.get_json()
+    assert response.status_code == 200
+    assert isinstance(data.get('access_token'), str)
 
 
 def test_posts(client):
     register(email='user@example.com', password='1234',
              username='user', client=client)
     response = client.post(
-        url_for('api_v1.new_post'),
-        headers=get_api_v1_headers('user', '1234'),
+        url_for('api_v2.new_post'),
+        headers=get_api_v2_headers(client, 'user', '1234'),
         data=json.dumps(
             {'content': '<p>body of the post</p>',
              'title': 'hello',
@@ -40,8 +46,8 @@ def test_posts(client):
     assert data.get('private') is False
 
     response = client.get(
-        url_for('api_v1.post', post_id=post_id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.post', post_id=post_id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     data = response.get_json()
     assert isinstance(data['author'], dict)
@@ -53,40 +59,40 @@ def test_posts(client):
         'private': True
     }
     response = client.put(
-        url_for('api_v1.post', post_id=post_id),
+        url_for('api_v2.post', post_id=post_id),
         json=data,
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 204
 
     response = client.get(
-        url_for('api_v1.post', post_id=post_id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.post', post_id=post_id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 200
     assert response.get_json().get('content') == data['content']
 
     response = client.patch(
-        url_for('api_v1.post', post_id=post_id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.post', post_id=post_id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 204
 
     response = client.get(
-        url_for('api_v1.post', post_id=post_id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.post', post_id=post_id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.get_json()['private'] is False
 
     response = client.delete(
-        url_for('api_v1.post', post_id=post_id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.post', post_id=post_id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 204
 
     response = client.get(
-        url_for('api_v1.post', post_id=post_id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.post', post_id=post_id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 404
 
@@ -97,8 +103,8 @@ def test_users(client):
     user = User.query.filter_by(username='user').first()
     assert user is not None
     response = client.get(
-        url_for('api_v1.user', user_id=user.id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.user', user_id=user.id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     data = response.get_json()
     assert data['id'] == user.id
@@ -111,9 +117,9 @@ def test_users(client):
         'location': 'Shanghai'
     }
     response = client.put(
-        url_for('api_v1.user', user_id=user.id),
+        url_for('api_v2.user', user_id=user.id),
         json=user_data,
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 200
     data = response.get_json()
@@ -123,23 +129,9 @@ def test_users(client):
 
     # test delete method
     response = client.delete(
-        url_for('api_v1.user', user_id=user.id),
-        headers=get_api_v1_headers('user', '1234')
+        url_for('api_v2.user', user_id=user.id),
+        headers=get_api_v2_headers(client, 'user', '1234')
     )
     assert response.status_code == 200
     assert response.get_data(as_text=True) == f'User id {user.id} deleted.'
     assert User.query.get(user.id) is None
-
-
-def test_notifications(client):
-    register(email='user@example.com', password='1234',
-             username='user', client=client)
-    fake.notifications(10)
-    response = client.get(
-        url_for('api_v1.notification'),
-        headers=get_api_v1_headers('user', '1234')
-    )
-    data = response.get_json()
-    assert data.get('unread_num') == 10
-    assert isinstance(data.get('unread_items'), list)
-    assert isinstance(data.get('unread_items')[1], dict)

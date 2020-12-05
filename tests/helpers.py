@@ -1,12 +1,14 @@
 import os
 from faker import Faker
 from base64 import b64encode
-from flog.models import db, Comment, Notification, Post, User, Role
+from flog.models import db, Notification, User, Role
+from flask import url_for
+from flask.ctx import RequestContext
 
 fake = Faker()
 
 
-def login(client, username=os.getenv('FLOG_ADMIN'),
+def login(client: RequestContext, username=os.getenv('FLOG_ADMIN'),
           password=os.getenv('FLOG_ADMIN_PASSWORD')):
     """Login helper function"""
     return client.post(
@@ -16,12 +18,13 @@ def login(client, username=os.getenv('FLOG_ADMIN'),
     )
 
 
-def logout(client):
+def logout(client: RequestContext):
     """Logout helper function"""
     return client.get('/auth/logout/', follow_redirects=True)
 
 
-def register(client, name='Test', username='test', password='password', email='test@example.com'):
+def register(client: RequestContext, name: str = 'Test', username: str = 'test',
+             password: str = 'password', email: str = 'test@example.com'):
     """Register helper function"""
     return client.post('/auth/register/', data=dict(
         name=name,
@@ -32,7 +35,7 @@ def register(client, name='Test', username='test', password='password', email='t
     ), follow_redirects=True)
 
 
-def create_article(client):
+def create_article(client: RequestContext) -> dict:
     """Create a post for test use"""
     login(client)
     text = fake.text()
@@ -47,7 +50,7 @@ def create_article(client):
     }
 
 
-def send_notification(client):
+def send_notification(client: RequestContext) -> None:
     """Send notifications for test user"""
     login(client)
     admin = User.query.filter_by(
@@ -63,10 +66,27 @@ def send_notification(client):
     db.session.commit()
 
 
-def get_api_v1_headers(username, password):
+def get_api_v1_headers(username: str, password: str) -> dict:
+    """Returns auth headers for api v1"""
     return {
         'Authorization': 'Basic ' + b64encode(
             f'{username}:{password}'.encode('utf-8')).decode('utf-8'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+
+
+def get_api_v2_headers(client: RequestContext, username, password):
+    """Returns auth headers for api v2"""
+    response = client.post(url_for('api_v2.oauth_token'), data=dict(
+        grant_type='password',
+        username=username,
+        password=password
+    ))
+    data = response.get_json()
+    token = data.get('access_token')
+    return {
+        'Authorization': 'Bearer ' + token,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }

@@ -3,14 +3,15 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from random import randint
+import click
 from faker import Faker
 from .utils import lower_username
-from .models import Notification, db, Post, Feedback, User, Role, Comment
+from .models import db, Post, Feedback, User, Role, Comment, Notification
 
 fake = Faker()
 
 
-def users(count: int=2) -> None:
+def users(count: int = 2) -> None:
     """Generates fake users"""
     for i in range(count):
         name = fake.name()
@@ -30,7 +31,7 @@ def users(count: int=2) -> None:
     db.session.commit()
 
 
-def posts(count: int=2) -> None:
+def posts(count: int = 2) -> None:
     """Generates fake posts"""
     for i in range(count):
         post = Post(
@@ -44,7 +45,7 @@ def posts(count: int=2) -> None:
     db.session.commit()
 
 
-def comments(count: int=2) -> None:
+def comments(count: int = 2) -> None:
     """Generates fake comments for posts."""
     for i in range(count):
         comment = Comment(
@@ -56,7 +57,7 @@ def comments(count: int=2) -> None:
     db.session.commit()
 
 
-def notifications(count: int=2) -> None:
+def notifications(count: int = 2) -> None:
     admin_role = Role.query.filter_by(name='Administrator').first()
     admin = User.query.filter_by(role=admin_role).first()
     for i in range(count):
@@ -68,7 +69,8 @@ def notifications(count: int=2) -> None:
         db.session.add(notification)
     db.session.commit()
 
-def feedbacks(count: int=2) -> None:
+
+def feedbacks(count: int = 2) -> None:
     """Generates fake feedbacks"""
     for i in range(count):
         feedback = Feedback(
@@ -80,15 +82,32 @@ def feedbacks(count: int=2) -> None:
     db.session.commit()
 
 
-def follows(count: int=20) -> None:
+def follows(count: int = 20) -> None:
     """Generates fake follow relationships"""
     admin_role = Role.query.filter_by(name='Administrator').first()
     admin = User.query.filter_by(role=admin_role).first()
     for i in range(count):
         user1 = User.query.get(randint(1, User.query.count()))
         user2 = User.query.get(randint(1, User.query.count()))
-        if not (user1 or user2): continue
+        if not (user1 or user2):
+            continue
         if user1.role != admin_role and admin:
             user1.follow(admin)
         elif not admin and user1 != user2:
             user1.follow(user2)
+
+
+def notifications(count: int = 20) -> None:
+    """Generates fake notifications"""
+    for i in range(count):
+        random_user = User.query.get(randint(1, User.query.count()))
+        if random_user is None:
+            click.echo('There are no users!')
+            break
+        notification = Notification(
+            message=fake.sentence(),
+            receiver=random_user,
+            is_read=False
+        )
+        db.session.add(notification)
+    db.session.commit()
