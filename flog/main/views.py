@@ -72,7 +72,7 @@ def create_post():
             form.content.data,
             tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
                   'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
-                  'br /'],
+                  'br /', 's'],
             attributes=['href', 'src', 'style'],
             strip_comments=True
         )
