@@ -71,7 +71,8 @@ def create_post():
         cleaned_content = bleach.clean(
             form.content.data,
             tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
-                  'strong', 'em', 'div', 'span'],
+                  'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
+                  'br /'],
             attributes=['href', 'src', 'style'],
             strip_comments=True
         )
