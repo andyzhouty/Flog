@@ -65,6 +65,7 @@ def create_post():
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
+        current_app.logger.info(f'{str(post)} is added.')
         flash(_('Your post has been added'), "success")
         return redirect(url_for('main.main'))
     return render_template('main/new_post.html', form=form)
@@ -73,7 +74,9 @@ def create_post():
 @main_bp.route('/post/<int:id>/', methods=['GET', 'POST'])
 def full_post(id: int):
     post = Post.query.get_or_404(id)
-    if not post.private or post.author == current_user or current_user.is_administrator():
+    if ((not post.private) or post.author == current_user
+        or current_user.is_administrator() and
+        current_user.is_authenticated):
         page = request.args.get('page', 1, type=int)
         per_page = current_app.config['COMMENTS_PER_PAGE']
         pagination = (Comment.query.with_parent(post)

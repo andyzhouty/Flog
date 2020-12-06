@@ -92,7 +92,7 @@ class Development(Base):
 class Test(Base):
     TESTING = True
     WTF_CSRF_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST', 'sqlite:///:memory:')
 
 
 config = {

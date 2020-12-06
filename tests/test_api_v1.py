@@ -9,6 +9,7 @@ from flog.models import User
 from tests.helpers import register, get_api_v1_headers
 from flog import fakes as fake
 
+
 def test_api_index(client):
     response = client.get(url_for('api_v1.index'))
     data = response.get_json()
@@ -133,7 +134,7 @@ def test_users(client):
 
 
 def test_notifications(client):
-    fake.notifications(receiver=User.query.get(1),count=10)
+    fake.notifications(receiver=User.query.get(1), count=10)
     response = client.get(
         url_for('api_v1.notification'),
         headers=get_api_v1_headers(

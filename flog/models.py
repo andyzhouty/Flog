@@ -195,7 +195,7 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.Text)
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-    
+
     collections = db.relationship(
         'Collect',
         back_populates='collector',
@@ -210,7 +210,6 @@ class User(db.Model, UserMixin):
 
     comments = db.relationship('Comment', back_populates='author')
     notifications = db.relationship('Notification', back_populates='receiver', cascade='all')
-
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -261,7 +260,8 @@ class User(db.Model, UserMixin):
             data = s.loads(token.encode('utf-8'))
         except:
             return False
-        if data.get('confirm') != self.id: return False
+        if data.get('confirm') != self.id:
+            return False
         self.confirmed = True
         db.session.add(self)
         return True

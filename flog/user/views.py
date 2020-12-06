@@ -87,7 +87,8 @@ def all_users():
     pagination = User.query.order_by(User.id.desc()).paginate(
         page, per_page=current_app.config['USERS_PER_PAGE']
     )
-    return render_template('user/all_users.html', pagination=pagination)
+    user_count = User.query.count()
+    return render_template('user/all_users.html', pagination=pagination, user_count=user_count)
 
 
 @user_bp.route('/password/change/', methods=['GET', 'POST'])
@@ -95,7 +96,7 @@ def all_users():
 def change_password():
     form = PasswordChangeForm()
     if form.validate_on_submit():
-        current_user.set_password(form.password)
+        current_user.set_password(form.password.data)
         flash(_("Password Changed"))
         return redirect(url_for('user.user_profile', username=current_user.username))
     return render_template('user/change_password.html', form=form)
@@ -106,9 +107,8 @@ def forget_password():
     form = ValidateEmailForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if not current_app.config['TESTING']:
-            token = user.gen_auth_token()
-            send_email([user.email], 'Reset Password', '/user/email/reset_password', user=user, token=token)
+        token = user.gen_auth_token()
+        send_email([user.email], 'Reset Password', '/user/email/reset_password', user=user, token=token)
         flash(_("A confirmation email has been sent."))
         return redirect(url_for('user.forget_password'))
     return render_template('user/forget_password.html', form=form)

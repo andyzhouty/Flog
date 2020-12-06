@@ -15,6 +15,12 @@ def test_api_index(client):
     assert data['api_version'] == '2.0'
 
 
+def test_no_auth(client):
+    response = client.get(url_for('api_v2.post', post_id=1))
+    data = response.get_json()
+    assert data.get('message') == 'The token type must be bearer'
+
+
 def test_get_token(client):
     response = client.post(url_for('api_v2.oauth_token'), data=dict(
         grant_type='password',

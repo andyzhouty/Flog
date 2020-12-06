@@ -3,7 +3,7 @@ from faker import Faker
 from base64 import b64encode
 from flog.models import db, Notification, User, Role
 from flask import url_for
-from flask.ctx import RequestContext
+from flask.ctx import AppContext, RequestContext
 
 fake = Faker()
 
@@ -35,7 +35,7 @@ def register(client: RequestContext, name: str = 'Test', username: str = 'test',
     ), follow_redirects=True)
 
 
-def create_article(client: RequestContext) -> dict:
+def create_article(client: AppContext) -> dict:
     """Create a post for test use"""
     login(client)
     text = fake.text()
