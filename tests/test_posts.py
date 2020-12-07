@@ -1,7 +1,7 @@
 from flask import url_for
 from flog import fakes
 from flog.models import User, Role, Post
-from .helpers import login, create_article
+from .helpers import login, create_article, get_response_and_data_of_post, logout, register
 
 
 def test_create_article(client):
@@ -63,16 +63,39 @@ def test_collect_uncollect(client):
 
 
 def test_view_post(client):
+    post = Post.query.filter(~Post.private).first()
+    data = get_response_and_data_of_post(client, post.id)[1]
+    assert post.content in data
+
+    post_private = Post.query.filter(Post.private).first()
+    data = get_response_and_data_of_post(client, post_private.id)[1]
+    assert 'The author has set this post to invisible.' in data
+
     login(client)
     admin = User.query.filter_by(
         role=Role.query.filter_by(
             name='Administrator'
         ).first()
     ).first()
+
     post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
     while post_not_private is None:  # ensure the post exists
         fakes.posts(1)
         post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
-    response = client.get(url_for('main.full_post', id=post_not_private.id))
-    data = response.get_data(as_text=True)
+    data = get_response_and_data_of_post(client, post_not_private.id)[1]
     assert post_not_private.content in data
+
+    # test if admin users can see other users' private postss
+    post_private = Post.query.filter(Post.author != admin, Post.private).first()
+    while post_private is None:
+        fakes.posts(1)
+        post_private = Post.query.filter(Post.author != admin, Post.private).first()
+    data = get_response_and_data_of_post(client, post_private.id)[1]
+    assert post_private.content in data
+
+    logout(client)
+
+    register(client, 'john', 'john', '123456', 'john@example.com')
+    login(client, 'john', '123456')
+    data = get_response_and_data_of_post(client, post_private.id)[1]
+    assert  'The author has set this post to invisible.' in data

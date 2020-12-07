@@ -90,3 +90,12 @@ def get_api_v2_headers(client: RequestContext, username, password):
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
+
+
+def get_response_and_data_of_post(client: RequestContext, post_id: int) -> list:
+    response = client.get(
+        url_for('main.full_post', id=post_id), 
+        follow_redirects=True
+    )
+    data = response.get_data(as_text=True)
+    return response, data

@@ -29,6 +29,12 @@ def test_fail_login(client):
 
 
 def test_register_login_and_confirm(client):
+    # test special username
+    register(client, 'Test1234', 'Test1234', 'A RaNDom s3cRet p@ssword')
+    login_response2 = login(client, username='Test1234', password='A RaNDom s3cRet p@ssword')
+    assert 'Test1234' in login_response2.get_data(as_text=True)
+    logout(client)
+
     register(client)
     login_response = login(client, username='test', password='password')
     assert 'test' in login_response.get_data(as_text=True)

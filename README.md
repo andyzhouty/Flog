@@ -103,6 +103,20 @@ pipenv shell
 pytest
 ```
 
+Note:
+If the `test_push_notification` test failed to run and the error message is like:
+
+```text
+sqlite3.InterfaceError Error binding parameter 0.
+```
+
+It should be caused by sqlite3 and you should set another database in env variable `DATABASE_TEST` for unittesting such as mysql or postgresql.
+
+Tests succeeded on:
+OS: Ubuntu 20.04
+Python Version: 3.8.5
+Database: MariaDB 10.3
+
 ## FAQ
 
 1. Q: Why 'Flog'?  

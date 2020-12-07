@@ -49,8 +49,8 @@ def comments(count: int = 2) -> None:
     """Generates fake comments for posts."""
     for i in range(count):
         comment = Comment(
-            author=User.query.get(randint(0, User.query.count())),
-            post=Post.query.get(randint(0, User.query.count())),
+            author=User.query.get(randint(1, User.query.count())),
+            post=Post.query.get(randint(1, User.query.count())),
             body=fake.text()
         )
         db.session.add(comment)

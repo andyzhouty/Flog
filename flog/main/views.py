@@ -75,8 +75,7 @@ def create_post():
 def full_post(id: int):
     post = Post.query.get_or_404(id)
     if ((not post.private) or post.author == current_user
-        or current_user.is_administrator() and
-        current_user.is_authenticated):
+        or current_user.is_administrator()):
         page = request.args.get('page', 1, type=int)
         per_page = current_app.config['COMMENTS_PER_PAGE']
         pagination = (Comment.query.with_parent(post)

@@ -99,6 +99,20 @@ pipenv shell
 pytest
 ```
 
+注意:
+如果`test_push_notification`测试运行报错且报错信息如下
+
+```text
+sqlite3.InterfaceError Error binding parameter 0
+```
+
+这应该是由sqlite3对某些数据类型的不支持引起的,你应该指定`DATABASE_TEST`环境变量来更该默认的sqlite内存数据库。
+
+测试环境：
+系统：Ubuntu 20.04
+Python版本：Python 3.8.5
+测试用数据库：MariaDB 10.3
+
 ## 关于一些小问题
 
 1. 为什么这个项目名为'Flog'?  
