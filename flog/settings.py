@@ -3,6 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import os
+from os.path import  curdir, join, abspath, dirname
 from flask_babel import lazy_gettext as _l
 
 
@@ -44,7 +45,14 @@ class Base:
         'zh_Hans_CN': '简体中文'
     }
 
+    UPLOAD_DIRECTORY = join(abspath(curdir), 'images/')
+    MAX_CONTENT_LENGTH = 1 * 1024 * 1024
+
     CKEDITOR_HEIGHT = 800
+    CKEDITOR_WIDTH = 1024
+    CKEDITOR_SERVE_LOCAL = True
+    CKEDITOR_FILE_UPLOADER = 'main.upload'
+    CKEDITOR_ENABLE_CSRF = True
 
     # Specially configured for pythonanywhere
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_recycle': 280}

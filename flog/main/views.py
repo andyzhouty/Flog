@@ -2,13 +2,16 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
+from os.path import curdir, dirname, abspath, join
 import bleach
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app
 )
+from flask.helpers import send_from_directory
 from flask_babel import _
 from flask_login import current_user, login_required
+from flask_ckeditor import upload_fail, upload_success
 from ..models import db, Post, Comment
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
@@ -41,8 +44,24 @@ def main():
     print(len(posts))
     return render_template('main/main.html', pagination=pagination, posts=posts)
 
+# Deal with upload files
+@main_bp.route('/images/<path:filename>')
+def uploaded_files(filename: str):
+    image_path = current_app.config['UPLOAD_DIRECTORY']
+    return send_from_directory(image_path, filename=filename)
 
-####################### Post Part ##################################
+
+@main_bp.route('/upload/', methods=['POST'])
+@login_required
+def upload():
+    fileobj = request.files.get('upload')
+    extension = fileobj.filename.split('.')[1].lower()
+    if extension not in ['jpg', 'gif', 'png', 'jpeg', 'jpg']:
+        return upload_fail(message='Images only!')
+    fileobj.save(join(current_app.config['UPLOAD_DIRECTORY'], fileobj.filename))
+    url = url_for('.uploaded_files', filename=fileobj.filename)
+    return upload_success(url=url, filename=fileobj.filename)
+
 
 @main_bp.route('/write/', endpoint='write', methods=['GET', 'POST'])
 @login_required
@@ -75,7 +94,7 @@ def create_post():
 def full_post(id: int):
     post = Post.query.get_or_404(id)
     if ((not post.private) or post.author == current_user
-        or current_user.is_administrator()):
+            or current_user.is_administrator()):
         page = request.args.get('page', 1, type=int)
         per_page = current_app.config['COMMENTS_PER_PAGE']
         pagination = (Comment.query.with_parent(post)
