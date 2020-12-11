@@ -50,7 +50,6 @@ class Base:
 
     CKEDITOR_HEIGHT = 800
     CKEDITOR_WIDTH = 1024
-    CKEDITOR_SERVE_LOCAL = True
     CKEDITOR_FILE_UPLOADER = 'main.upload'
     CKEDITOR_ENABLE_CSRF = True
 
