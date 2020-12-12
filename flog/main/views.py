@@ -2,7 +2,7 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
-from os.path import curdir, dirname, abspath, join
+from os.path import curdir, dirname, abspath, join, exists
 import bleach
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
@@ -12,7 +12,7 @@ from flask.helpers import send_from_directory
 from flask_babel import _
 from flask_login import current_user, login_required
 from flask_ckeditor import upload_fail, upload_success
-from ..models import db, Post, Comment
+from ..models import Image, db, Post, Comment
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
@@ -47,6 +47,9 @@ def main():
 # Deal with upload files
 @main_bp.route('/images/<path:filename>')
 def uploaded_files(filename: str):
+    image = Image.query.filter_by(filename=filename).first()
+    if image.private:
+        abort(403)
     image_path = current_app.config['UPLOAD_DIRECTORY']
     return send_from_directory(image_path, filename=filename)
 
@@ -55,12 +58,56 @@ def uploaded_files(filename: str):
 @login_required
 def upload():
     fileobj = request.files.get('upload')
-    extension = fileobj.filename.split('.')[1].lower()
+    filename = fileobj.filename
+    # add the current user's username to the filename of the image
+    filename = current_user.username + '_' + filename
+    # find the position of the last dot in the filename
+    last_dot_in_filename = filename.rfind('.')
+    # get the filename(without extension) and the extension
+    filename_without_ext = filename[:last_dot_in_filename]
+    extension = filename[last_dot_in_filename+1:]
     if extension not in ['jpg', 'gif', 'png', 'jpeg', 'jpg']:
         return upload_fail(message='Images only!')
-    fileobj.save(join(current_app.config['UPLOAD_DIRECTORY'], fileobj.filename))
-    url = url_for('.uploaded_files', filename=fileobj.filename)
-    return upload_success(url=url, filename=fileobj.filename)
+    # get the absolute image path for the new image
+    image_path = join(current_app.config['UPLOAD_DIRECTORY'], filename)
+    current_app.logger.info(image_path)
+    # deal with duplicated filenames
+    while exists(image_path):
+        filename_without_ext += '_' # add underscores after the existed filename
+        image_path = join(
+            current_app.config['UPLOAD_DIRECTORY'],
+            filename_without_ext + '.' + extension
+        )
+    # get final filename
+    filename = filename_without_ext + '.' + extension
+    current_app.logger.info(f'Upload file {filename} saved.')
+    fileobj.save(image_path)
+    # commit the image to the db
+    image = Image(filename=filename, author=current_user)
+    db.session.add(image)
+    db.session.commit()
+    url = image.url()
+    current_app.logger.info(f'Upload file url: {url}')
+    return upload_success(url=url, filename=filename)
+
+# TODO: return ordered image list
+# @main_bp.route('/images/manage/')
+# @login_required
+# def manage_self_images():
+#     page = request.args.get('page', 1)
+#     pagination = current_user.images.order_by(Image.timestamp.desc()).paginate(
+#         page, per_page=current_app.config['IMAGES_PER_PAGE']
+#     )
+#     images = pagination.items
+#     return render_template('main/manage_images.html', pagination=pagination, images=images)
+
+
+# @main_bp.route('/images/set-private/<int:id>', methods=['POST'])
+# def toggle_image_private(id: int):
+#     image = Image.query.get(id)
+#     image.private = not image.private
+#     db.session.commit()
+#     return make_response(redirect_back())
 
 
 @main_bp.route('/write/', endpoint='write', methods=['GET', 'POST'])

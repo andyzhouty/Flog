@@ -51,6 +51,17 @@ def register_error_handlers(app):
         return render_template('errors/error.html',
                                error_message=_("405 Method Not Allowed")), 405
 
+    @app.errorhandler(413)
+    def payload_to_large(e):
+        if (request.accept_mimetypes.accept_json and
+                not request.accept_mimetypes.accept_html):
+            response = jsonify({'error': 'payload to large'})
+            response.status_code = 413
+            return response
+        return render_template('errors/error.html',
+                               error_message=_("The file you uploaded was TOO"
+                                               "large (larger than 1M)")), 413
+
     @app.errorhandler(500)
     def internal_server_error(e):
         if (request.accept_mimetypes.accept_json and

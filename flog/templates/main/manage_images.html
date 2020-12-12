@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <ul class="list-group">
+        {% for image in images %}
+            <li class="list-group-item">
+                <img src="{{ image.url() }}" onerror="this.src='https://news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg';">
+            </li>
+        {% endfor %}    
+    </ul>
+{% endblock page_content %}
