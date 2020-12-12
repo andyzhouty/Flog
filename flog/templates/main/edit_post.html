@@ -12,5 +12,5 @@ MIT License
 {% block scripts %}
     {{ super() }}
     {{ ckeditor.load() }}
-    {{ ckeditor.configure(name='content') }}
+    {{ ckeditor.config(name='content') }}
 {% endblock %}
