@@ -178,8 +178,6 @@ def edit_post(id):
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     form = EditForm()
-    form.title.data = post.title
-    form.content.data = post.content
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
@@ -188,6 +186,8 @@ def edit_post(id):
         current_app.logger.info(f'Post id {id} editted.')
         flash(_("Edit Succeeded!"), "success")
         return redirect(url_for('main.main'))
+    form.title.data = post.title
+    form.content.data = post.content
     return render_template("main/edit_post.html", form=form)
 
 
