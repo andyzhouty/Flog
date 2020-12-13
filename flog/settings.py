@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import os
-from os.path import  curdir, join, abspath, dirname
+from os.path import join, abspath, dirname
 from flask_babel import lazy_gettext as _l
 
 
@@ -39,13 +39,14 @@ class Base:
     USERS_PER_PAGE = 10
     COMMENTS_PER_PAGE = 10
     NOTIFICATIONS_PER_PAGE = 10
+    IMAGES_PER_PAGE = 5
 
     LOCALES = {
         'en_US': 'English(US)',
         'zh_Hans_CN': '简体中文'
     }
 
-    UPLOAD_DIRECTORY = join(abspath(curdir), 'images/')
+    UPLOAD_DIRECTORY = join(dirname(dirname(abspath(__file__))), 'images/')
     MAX_CONTENT_LENGTH = 1 * 1024 * 1024
 
     CKEDITOR_HEIGHT = 800

@@ -92,7 +92,7 @@ MIT License
                 or current_user.is_administrator()
                 or post.author == current_user
                 and can_delete %}
-                <form class="inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}"
+                <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">

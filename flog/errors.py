@@ -60,7 +60,7 @@ def register_error_handlers(app):
             return response
         return render_template('errors/error.html',
                                error_message=_("The file you uploaded was TOO"
-                                               "large (larger than 1M)")), 413
+                                               " large (larger than 1M)")), 413
 
     @app.errorhandler(500)
     def internal_server_error(e):

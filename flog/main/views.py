@@ -2,6 +2,7 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
+import os
 from os.path import curdir, dirname, abspath, join, exists
 import bleach
 from flask import (
@@ -45,6 +46,8 @@ def main():
     return render_template('main/main.html', pagination=pagination, posts=posts)
 
 # Deal with upload files
+
+
 @main_bp.route('/images/<path:filename>')
 def uploaded_files(filename: str):
     image = Image.query.filter_by(filename=filename).first()
@@ -73,7 +76,7 @@ def upload():
     current_app.logger.info(image_path)
     # deal with duplicated filenames
     while exists(image_path):
-        filename_without_ext += '_' # add underscores after the existed filename
+        filename_without_ext += '_'  # add underscores after the existed filename
         image_path = join(
             current_app.config['UPLOAD_DIRECTORY'],
             filename_without_ext + '.' + extension
@@ -90,24 +93,47 @@ def upload():
     current_app.logger.info(f'Upload file url: {url}')
     return upload_success(url=url, filename=filename)
 
-# TODO: return ordered image list
-# @main_bp.route('/images/manage/')
-# @login_required
-# def manage_self_images():
-#     page = request.args.get('page', 1)
-#     pagination = current_user.images.order_by(Image.timestamp.desc()).paginate(
-#         page, per_page=current_app.config['IMAGES_PER_PAGE']
-#     )
-#     images = pagination.items
-#     return render_template('main/manage_images.html', pagination=pagination, images=images)
+
+@main_bp.route('/images/manage/')
+@login_required
+def manage_self_images():
+    page = request.args.get('page', 1, int)
+    if not current_user.is_administrator():
+        pagination = current_user.images.order_by(Image.timestamp.desc()).paginate(
+            page, per_page=current_app.config['IMAGES_PER_PAGE']
+        )
+    else:
+        pagination = Image.query.order_by(Image.timestamp.desc()).paginate(
+            page, per_page=current_app.config['IMAGES_PER_PAGE']
+        )
+    images = pagination.items
+    return render_template('main/manage_images.html', pagination=pagination, images=images)
 
 
-# @main_bp.route('/images/set-private/<int:id>', methods=['POST'])
-# def toggle_image_private(id: int):
-#     image = Image.query.get(id)
-#     image.private = not image.private
-#     db.session.commit()
-#     return make_response(redirect_back())
+@main_bp.route('/images/set-private/<int:id>/', methods=['POST'])
+@login_required
+def toggle_image_visibility(id: int):
+    image = Image.query.get(id)
+    if image.author != current_user and not current_user.is_administrator():
+        abort(403)
+    image.private = not image.private
+    db.session.commit()
+    flash(_("Image {filename} visibility toggled".format(filename=image.filename)))
+    return make_response(redirect_back())
+
+
+@main_bp.route('/images/delete/<int:id>/', methods=['POST'])
+@login_required
+def delete_image(id: int):
+    image = Image.query.get(id)
+    if image.author != current_user and not current_user.is_administrator():
+        abort(403)
+    filename = image.filename
+    os.remove(image.path())
+    db.session.delete(image)
+    db.session.commit()
+    flash(_("Image {filename} deleted".format(filename=filename)))
+    return make_response(redirect_back())
 
 
 @main_bp.route('/write/', endpoint='write', methods=['GET', 'POST'])
