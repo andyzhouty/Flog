@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-02 22:23+0800\n"
+"POT-Creation-Date: 2020-12-13 10:08+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -35,6 +35,10 @@ msgid "405 Method Not Allowed"
 msgstr "405 访问方法错误"
 
 #: flog/errors.py:62
+msgid "The file you uploaded was TOO large (larger than 1M)"
+msgstr "你上传的文件超过了服务器限制（1M）"
+
+#: flog/errors.py:73
 msgid "500 Internal Server Error"
 msgstr "500 服务器内部错误"
 
@@ -50,15 +54,15 @@ msgstr "<a href=\"{0}\">这篇文章</a>有一个新的评论/评论的回复。
 msgid "User <a href=\"{0}\">{1}</a> collected your <a href=\"{2}\">post</a>"
 msgstr "用户<a href=\"{0}\">{1}</a>收藏了你的<a href=\"{2}\">这篇文章</a>"
 
-#: flog/settings.py:35
+#: flog/settings.py:36
 msgid "Default"
 msgstr "默认"
 
-#: flog/settings.py:35
+#: flog/settings.py:36
 msgid "Lite"
 msgstr "现代"
 
-#: flog/settings.py:35
+#: flog/settings.py:36
 msgid "Dark"
 msgstr "深色"
 
@@ -108,7 +112,7 @@ msgstr "位置"
 msgid "About me"
 msgstr "关于自己"
 
-#: flog/admin/forms.py:31 flog/main/forms.py:20 flog/user/forms.py:20
+#: flog/admin/forms.py:31 flog/main/forms.py:18 flog/user/forms.py:20
 #: flog/user/forms.py:26 flog/user/forms.py:31
 msgid "Submit"
 msgstr "提交"
@@ -231,75 +235,83 @@ msgstr "你的反馈已经发送给管理员了！"
 msgid "Language updated."
 msgstr "语言设置已更新。"
 
-#: flog/main/forms.py:13
+#: flog/main/forms.py:11
 msgid "Please fill out this field with valid values."
 msgstr "请用正确的值填充这个输入框。"
 
-#: flog/main/forms.py:17 flog/main/forms.py:24
+#: flog/main/forms.py:15 flog/main/forms.py:22
 msgid "Title"
 msgstr "标题"
 
-#: flog/main/forms.py:18 flog/main/forms.py:25
+#: flog/main/forms.py:16 flog/main/forms.py:23
 msgid "Content"
 msgstr "内容"
 
-#: flog/main/forms.py:19 flog/main/forms.py:26 flog/templates/main/main.html:31
+#: flog/main/forms.py:17 flog/main/forms.py:24 flog/templates/main/main.html:31
+#: flog/templates/main/manage_images.html:13
 msgid "Private"
 msgstr "个人的"
 
-#: flog/main/forms.py:27
+#: flog/main/forms.py:25
 msgid "Publish"
 msgstr "发表"
 
-#: flog/main/forms.py:32
-#, fuzzy
+#: flog/main/forms.py:30
 msgid "Comment"
 msgstr "评论"
 
-#: flog/main/views.py:68
+#: flog/main/views.py:121
+msgid "Image {filename} visibility toggled"
+msgstr "图片 {filename} 的私有状态已切换"
+
+#: flog/main/views.py:135
+msgid "Image {filename} deleted"
+msgstr "图片 {filename} 已删除"
+
+#: flog/main/views.py:162
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:86 flog/templates/main/full_post.html:94
+#: flog/main/views.py:181 flog/templates/main/_comments.html:70
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
 
-#: flog/main/views.py:100
+#: flog/main/views.py:195
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:105
+#: flog/main/views.py:200
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:146
+#: flog/main/views.py:241
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:165
+#: flog/main/views.py:260
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:184
+#: flog/main/views.py:279
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:186
+#: flog/main/views.py:281
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:188
+#: flog/main/views.py:283
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:190
+#: flog/main/views.py:285
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:199
+#: flog/main/views.py:294
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
@@ -320,7 +332,7 @@ msgid "Account"
 msgstr "账户"
 
 #: flog/templates/admin/users.html:11 flog/templates/base.html:53
-#: flog/templates/macros.html:130 flog/templates/user/all_users.html:24
+#: flog/templates/macros.html:130 flog/templates/user/all_users.html:27
 #: flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
 #: flog/templates/user/user_profile.html:48
@@ -367,7 +379,7 @@ msgstr "协管员"
 msgid "User"
 msgstr "用户"
 
-#: flog/templates/macros.html:31 flog/templates/main/full_post.html:47
+#: flog/templates/macros.html:31 flog/templates/main/_comments.html:23
 msgid "Admin"
 msgstr "管理员"
 
@@ -401,7 +413,9 @@ msgstr "编辑"
 
 #: flog/templates/admin/feedbacks.html:19 flog/templates/admin/users.html:18
 #: flog/templates/macros.html:100 flog/templates/macros.html:137
-#: flog/templates/main/full_post.html:70 flog/templates/user/all_users.html:31
+#: flog/templates/main/_comments.html:46
+#: flog/templates/main/manage_images.html:28
+#: flog/templates/user/all_users.html:36
 msgid "DELETE"
 msgstr "删除"
 
@@ -433,7 +447,7 @@ msgstr "管理反馈"
 msgid "Welcome, Administrator"
 msgstr "欢迎，管理员"
 
-#: flog/templates/admin/users.html:16 flog/templates/user/all_users.html:29
+#: flog/templates/admin/users.html:16 flog/templates/user/all_users.html:34
 msgid "return confirm('Are you sure?');"
 msgstr "return confirm('你确定吗？');"
 
@@ -530,6 +544,28 @@ msgstr "反馈内容"
 msgid "If it is a junk one, please delete it immediately!"
 msgstr "如果这是一则垃圾信息，请马上删除它!"
 
+#: flog/templates/main/_comments.html:4
+#, fuzzy
+msgid "comment"
+msgid_plural "comments"
+msgstr[0] "条评论"
+
+#: flog/templates/main/_comments.html:7
+msgid "latest"
+msgstr "最新的"
+
+#: flog/templates/main/_comments.html:26
+msgid "Author"
+msgstr "作者"
+
+#: flog/templates/main/_comments.html:51
+msgid "Reply"
+msgstr "回复"
+
+#: flog/templates/main/_comments.html:67
+msgid "No comments yet."
+msgstr "这篇文章还没有评论。"
+
 #: flog/templates/main/_post_actions.html:21
 msgid "EDIT [ADMIN]"
 msgstr "以管理员身份编辑账户信息"
@@ -602,31 +638,13 @@ msgstr "日期："
 msgid "Author:"
 msgstr "作者："
 
-#: flog/templates/main/full_post.html:28
-#, fuzzy
-msgid "comment"
-msgid_plural "comments"
-msgstr[0] "条评论"
-
-#: flog/templates/main/full_post.html:31
-msgid "latest"
-msgstr "最新的"
-
-#: flog/templates/main/full_post.html:50
-msgid "Author"
-msgstr "作者"
-
-#: flog/templates/main/full_post.html:75
-msgid "Reply"
-msgstr "回复"
-
-#: flog/templates/main/full_post.html:91
-msgid "No comments yet."
-msgstr "这篇文章还没有评论。"
-
 #: flog/templates/main/main.html:12
 msgid "Welcome,"
 msgstr "欢迎，"
+
+#: flog/templates/main/manage_images.html:20
+msgid "Toggle Visibility"
+msgstr ""
 
 #: flog/templates/main/new_post.html:7
 msgid "Create Post"
@@ -677,8 +695,8 @@ msgid "About us"
 msgstr "关于我们"
 
 #: flog/templates/user/all_users.html:8
-msgid "Manage users"
-msgstr "管理用户"
+msgid "All users"
+msgstr "查看所有Flog用户"
 
 #: flog/templates/user/followers.html:9
 msgid "Your"
@@ -698,7 +716,6 @@ msgid "You have no followers"
 msgstr "你没有关注者:("
 
 #: flog/templates/user/forget_password.html:4
-#, fuzzy
 msgid "Forget password"
 msgstr "忘记密码"
 
@@ -744,7 +761,6 @@ msgstr "重置你的密码"
 
 #: flog/templates/user/email/reset_password.html:3
 #: flog/templates/user/email/reset_password.txt:2
-#, fuzzy
 msgid "Dear User"
 msgstr "新用户？"
 
@@ -761,7 +777,6 @@ msgstr "这是链接："
 
 #: flog/templates/user/email/reset_password.html:10
 #: flog/templates/user/email/reset_password.txt:4
-#, fuzzy
 msgid "or enter the following link to your browser"
 msgstr "为了验证你的账户，请复制下方的链接到浏览器"
 
@@ -797,12 +812,11 @@ msgstr "你还没有关注该用户。"
 msgid "User unfollowed."
 msgstr "你取消关注了这个用户。"
 
-#: flog/user/views.py:99 flog/user/views.py:124
+#: flog/user/views.py:100 flog/user/views.py:124
 msgid "Password Changed"
 msgstr "你的密码已更改"
 
 #: flog/user/views.py:112
-#, fuzzy
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
 
@@ -841,4 +855,13 @@ msgstr "一个新的验证邮件已经发送，请查收"
 
 #~ msgid "You can't view this page!"
 #~ msgstr "你没有权限查看这个页面！"
+
+#~ msgid "Manage users"
+#~ msgstr "管理用户"
+
+#~ msgid "The file you uploaded was TOOlarge (larger than 1M)"
+#~ msgstr ""
+
+#~ msgid "Image visibility toggled"
+#~ msgstr ""
 

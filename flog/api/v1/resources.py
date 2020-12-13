@@ -108,7 +108,8 @@ class PostAPI(MethodView):
         cleaned_content = bleach.clean(
             content,
             tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
-                  'strong', 'em', 'div', 'span'],
+                  'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
+                  'br /', 's'],
             attributes=['href', 'src', 'style'],
             strip_comments=True
         )

@@ -46,7 +46,6 @@ def register_commands(app: Flask, db):
         fake.posts(posts)
         fake.comments(comments)
         fake.feedbacks(feedbacks)
-        fake.notifications()
         fake.follows(follows)
 
     @app.cli.command()

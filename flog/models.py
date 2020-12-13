@@ -2,6 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
+import os
 import hashlib
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -114,6 +115,21 @@ class Notification(db.Model):
     receiver = db.relationship('User', back_populates='notifications')
 
 
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(512), unique=True)
+
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    author = db.relationship('User', back_populates='images')
+    private = db.Column(db.Boolean, default=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def url(self) -> str:
+        return url_for('main.uploaded_files', filename=self.filename)
+
+    def path(self) -> str:
+        return os.path.join(current_app.config['UPLOAD_DIRECTORY'], self.filename)
+
 class Permission:
     FOLLOW = 1
     COMMENT = 2
@@ -210,6 +226,7 @@ class User(db.Model, UserMixin):
 
     comments = db.relationship('Comment', back_populates='author')
     notifications = db.relationship('Notification', back_populates='receiver', cascade='all')
+    images = db.relationship('Image', back_populates='author', cascade='all')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

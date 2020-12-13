@@ -39,7 +39,7 @@
             <p class="mb-1">{{ comment.body }}</p>
             <div class="float-right">
                 {% if current_user.is_administrator() or current_user == comment.author %}
-                <form class="inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}"
+                <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
