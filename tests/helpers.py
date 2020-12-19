@@ -76,9 +76,9 @@ def get_api_v1_headers(username: str, password: str) -> dict:
     }
 
 
-def get_api_v2_headers(client: RequestContext, username, password):
+def get_api_v2_headers(client, username, password):
     """Returns auth headers for api v2"""
-    response = client.post(url_for('api_v2.oauth_token'), data=dict(
+    response = client.post("/api/v2/oauth/token/", data=dict(
         grant_type='password',
         username=username,
         password=password
@@ -92,9 +92,9 @@ def get_api_v2_headers(client: RequestContext, username, password):
     }
 
 
-def get_response_and_data_of_post(client: RequestContext, post_id: int) -> list:
+def get_response_and_data_of_post(client, post_id: int) -> list:
     response = client.get(
-        url_for('main.full_post', id=post_id), 
+        f"/post/{post_id}",
         follow_redirects=True
     )
     data = response.get_data(as_text=True)

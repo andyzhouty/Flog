@@ -7,15 +7,20 @@ MIT License
     <div class="nav nav-pills" role="tablist">
         <a class="nav-item nav-link {% if request.args.get('filter') != 'unread' %}active{% endif %}"
            href="{{ url_for('notification.show', filter='all') }}">
-            {{ _('All') }}
+           <i class="fa fa-inbox"></i> 
+           {{ _('All') }}
         </a>
         <a class="nav-item nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
             href="{{ url_for('notification.show', filter='unread') }}" style="margin-right: 50px">
+            <i class="fa fa-envelope"></i>
             {{ _('Unread') }}
         </a>
         <form method="POST" action="{{ url_for('notification.read_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="submit" class="btn btn-sm btn-light" value="{{ _('Mark all notifications as read') }}">
+            <button class="btn btn-sm btn-light">
+                <i class="fa fa-envelope-open"></i>
+                {{ _('Mark all notifications as read') }}
+            </button>
         </form>
     </div>
     <ul class="list-group">
@@ -25,7 +30,10 @@ MIT License
                 {% if not notification.is_read %}
                     <form method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <input type="submit" class="btn btn-light" value="{{ _('Mark this notification as read') }}">
+                        <button class="btn btn-sm btn-light">
+                            <i class="fa fa-envelope-open-o"></i>
+                            {{ _('Mark this notification as read') }}
+                        </button>
                     </form>
                 {% else %}
                     <span class="fa fa-check-square-o text-success"></span>

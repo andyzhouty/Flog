@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-13 16:28+0800\n"
+"POT-Creation-Date: 2020-12-14 22:27+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -248,7 +248,7 @@ msgid "Content"
 msgstr "内容"
 
 #: flog/main/forms.py:17 flog/main/forms.py:24 flog/templates/main/main.html:31
-#: flog/templates/main/manage_images.html:13
+#: flog/templates/main/manage_images.html:15
 msgid "Private"
 msgstr "个人的"
 
@@ -272,7 +272,7 @@ msgstr "图片 {filename} 已删除"
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:181 flog/templates/main/_comments.html:70
+#: flog/main/views.py:181 flog/templates/main/_comments.html:73
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
 
@@ -414,7 +414,7 @@ msgstr "编辑"
 #: flog/templates/admin/feedbacks.html:19 flog/templates/admin/users.html:18
 #: flog/templates/macros.html:100 flog/templates/macros.html:137
 #: flog/templates/main/_comments.html:46
-#: flog/templates/main/manage_images.html:28
+#: flog/templates/main/manage_images.html:35
 #: flog/templates/user/all_users.html:36
 msgid "DELETE"
 msgstr "删除"
@@ -473,7 +473,6 @@ msgid "Click here to register"
 msgstr "点击这里以注册"
 
 #: flog/templates/auth/login.html:32
-#, fuzzy
 msgid "Forget your password?"
 msgstr "忘记密码？"
 
@@ -545,7 +544,6 @@ msgid "If it is a junk one, please delete it immediately!"
 msgstr "如果这是一则垃圾信息，请马上删除它!"
 
 #: flog/templates/main/_comments.html:4
-#, fuzzy
 msgid "comment"
 msgid_plural "comments"
 msgstr[0] "条评论"
@@ -558,11 +556,20 @@ msgstr "最新的"
 msgid "Author"
 msgstr "作者"
 
-#: flog/templates/main/_comments.html:51
+#: flog/templates/main/_comments.html:52
 msgid "Reply"
 msgstr "回复"
 
-#: flog/templates/main/_comments.html:67
+#: flog/templates/main/_comments.html:60
+#, fuzzy
+msgid "Reply to"
+msgstr "回复"
+
+#: flog/templates/main/_comments.html:64
+msgid "Cancel"
+msgstr ""
+
+#: flog/templates/main/_comments.html:70
 msgid "No comments yet."
 msgstr "这篇文章还没有评论。"
 
@@ -646,9 +653,19 @@ msgstr "作者："
 msgid "Welcome,"
 msgstr "欢迎，"
 
-#: flog/templates/main/manage_images.html:20
-msgid "Toggle Visibility"
-msgstr "更改图片是否可见"
+#: flog/templates/main/manage_images.html:17
+#, fuzzy
+msgid "Public"
+msgstr "发表"
+
+#: flog/templates/main/manage_images.html:24
+msgid "Make Public"
+msgstr ""
+
+#: flog/templates/main/manage_images.html:26
+#, fuzzy
+msgid "Make Private"
+msgstr "个人的"
 
 #: flog/templates/main/new_post.html:7
 msgid "Create Post"
@@ -674,19 +691,19 @@ msgstr "或者"
 msgid "View Posts Directly"
 msgstr "直接查看用户的博客"
 
-#: flog/templates/main/notifications.html:10
+#: flog/templates/main/notifications.html:11
 msgid "All"
 msgstr "全部"
 
-#: flog/templates/main/notifications.html:14
+#: flog/templates/main/notifications.html:16
 msgid "Unread"
 msgstr "未读"
 
-#: flog/templates/main/notifications.html:18
+#: flog/templates/main/notifications.html:22
 msgid "Mark all notifications as read"
 msgstr "把所有消息标记为已读"
 
-#: flog/templates/main/notifications.html:28
+#: flog/templates/main/notifications.html:35
 msgid "Mark this notification as read"
 msgstr "把这条消息标记为已读"
 
@@ -823,49 +840,3 @@ msgstr "你的密码已更改"
 #: flog/user/views.py:112
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
-
-#~ msgid "(Date(yyyy-mm-dd like 2020-01-01)"
-#~ msgstr "（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
-
-#~ msgid "(Date(yyyy-mm-dd)(2020-01-01)"
-#~ msgstr "（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
-
-#~ msgid "Date(yyyy-mm-dd)(2020-01-01)"
-#~ msgstr "日期（4位数年份-2位数月份-2位数日期 如 2020-01-01）"
-
-#~ msgid "Can be seen by other users"
-#~ msgstr "其他用户可见"
-
-#~ msgid "User followed"
-#~ msgstr "你关注了该用户"
-
-#~ msgid "The slug is duplicated. Please Change the title"
-#~ msgstr "这篇文章的缩略小标题和你的另外一篇文章重复了，请更换这篇文章的标题"
-
-#~ msgid "The slug is duplicated. Please change the title"
-#~ msgstr "这篇文章的缩略小标题和你的另外一篇文章重复了，请更换这篇文章的标题。"
-
-#~ msgid "The slug is duplicated. Please change the title."
-#~ msgstr "这篇文章的缩略小标题和你的另外一篇文章重复了，请更换这篇文章的标题"
-
-#~ msgid ""
-#~ "The slug is duplicated with another "
-#~ "post posted by you. Please change "
-#~ "the title."
-#~ msgstr "这篇文章的别名和你的另外一篇文章重复了，请更换这篇文章的标题。"
-
-#~ msgid "You cannot comment a private post."
-#~ msgstr "你不能收藏你自己的文章!"
-
-#~ msgid "You can't view this page!"
-#~ msgstr "你没有权限查看这个页面！"
-
-#~ msgid "Manage users"
-#~ msgstr "管理用户"
-
-#~ msgid "The file you uploaded was TOOlarge (larger than 1M)"
-#~ msgstr ""
-
-#~ msgid "Image visibility toggled"
-#~ msgstr ""
-

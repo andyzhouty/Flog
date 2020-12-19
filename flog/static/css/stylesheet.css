@@ -12,3 +12,29 @@
     left: 50%;
     bottom:30px
 }
+
+#image-large {
+    width: 50%;
+    left: 25%;
+    height: auto;
+    top: 10px;
+    text-align: center;
+    position: absolute;
+    z-index: 100;
+    opacity: 1;
+}
+
+#image-large:hover {
+    cursor: zoom-out;
+}
+
+.image-normal {
+    height: 100px;
+    width: auto;
+}
+.image-normal:hover {
+    cursor: zoom-in;
+}
+.shadow {
+    opacity: 0.3;
+}

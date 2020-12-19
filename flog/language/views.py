@@ -10,7 +10,7 @@ from ..utils import redirect_back
 from . import language_bp
 
 
-@language_bp.route('/set-locale/<locale>')
+@language_bp.route('/set-locale/<locale>/')
 def set_locale(locale):
     if locale not in current_app.config['LOCALES'].keys():
         abort(404)

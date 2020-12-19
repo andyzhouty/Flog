@@ -4,24 +4,26 @@
     <ul class="list-group">
         {% for image in images %}
             <li class="list-group-item">
-                <img src="{{ image.url() }}"
-                     height="100px" width="auto"
-                     onerror="src='https:\/\/news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg';">
+                <img src="{{ image.url() }}" class="image-normal"
+                     onerror="this.src='https:\/\/news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg';">
                 <br>
                 {% if image.private %}
-                <span class="badge badge-dark">
-                    {{ _("Private") }}
-                </span>
+                    <i class="fa fa-eye-slash"></i>{{ _("Private") }}
+                {% else %}
+                    <i class="fa fa-eye"></i>{{ _("Public") }}
                 {% endif %}
                 <form class="form-inline" style="margin-bottom: 5px" method="POST"
                       action="{{ url_for('.toggle_image_visibility', id=image.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-primary">
-                        {{ _("Toggle Visibility") }}
+                        {% if image.private %}
+                            <i class="fa fa-eye"></i>{{ _("Make Public") }}
+                        {% else %}
+                            <i class="fa fa-eye-slash"></i>{{ _("Make Private") }}
+                        {% endif %}
                     </button>
                 </form>
-                <form class="form-inline" method="POST"
-                      action="{{ url_for('.delete_image', id=image.id) }}">
+                <form class="form-inline" method="POST" action="{{ url_for('.delete_image', id=image.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger">
                         <span class="fa fa-trash"></span>

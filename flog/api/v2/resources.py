@@ -15,7 +15,7 @@ from .errors import (  # noqa
     forbidden
 )
 from .authentication import auth_required
-from .schemas import user_schema, post_schema
+from .schemas import user_schema, post_schema, comment_schema
 from flog.models import db, User, Post, Comment, Notification
 import bleach
 
@@ -193,11 +193,7 @@ class CommentAPI(MethodView):
 
     def get(self, comment_id: int) -> dict:
         comment = Comment.query.get_or_404(comment_id)
-        return jsonify(dict(
-            author=user_schema(comment.author),
-            body=comment.body,
-            post=post_schema(comment.post)
-        ))
+        return jsonify(comment_schema(comment))
 
     def post(self) -> '201':
         data = request.get_json()
@@ -214,7 +210,7 @@ class CommentAPI(MethodView):
         )
         db.session.add(comment)
         db.session.commit()
-        return '', 201
+        return jsonify(comment_schema(comment))
 
     def delete(self, comment_id: int) -> '204' or '403':
         comment = Comment.query.get_or_404(comment_id)

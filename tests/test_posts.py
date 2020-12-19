@@ -1,4 +1,3 @@
-from flask import url_for
 from flog import fakes
 from flog.models import User, Role, Post
 from .helpers import login, create_article, get_response_and_data_of_post, logout, register
@@ -29,15 +28,15 @@ def test_collect_uncollect(client):
         fakes.posts(2)
         post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
     post_id = post_not_private.id
-    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True)\
+    data = client.get(f"/post/collect/{post_id}", follow_redirects=True)\
                  .get_data(as_text=True)
     assert admin.is_collecting(post_not_private)
 
-    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True)\
+    data = client.get(f"/post/collect/{post_id}", follow_redirects=True)\
                  .get_data(as_text=True)
     assert 'Already collected.' in data
 
-    data = client.get(url_for('main.uncollect_post', id=post_id), follow_redirects=True)\
+    data = client.get(f"/post/uncollect/{post_id}", follow_redirects=True)\
                  .get_data(as_text=True)
     assert 'Post uncollected.' in data
     assert not admin.is_collecting(post_not_private)
@@ -47,7 +46,7 @@ def test_collect_uncollect(client):
         fakes.posts(2)
         private_post = Post.query.filter(Post.author != admin, Post.private).first()
     post_id = private_post.id
-    data = client.get(url_for('main.collect_post', id=post_id), follow_redirects=True)\
+    data = client.get(f"/post/collect/{post_id}", follow_redirects=True)\
                  .get_data(as_text=True)
     assert 'The author has set this post to invisible. So you cannot collect this post.' in data
     assert not admin.is_collecting(private_post)
@@ -55,7 +54,7 @@ def test_collect_uncollect(client):
     title = create_article(client)['post']['title']
     post_id = Post.query.filter_by(title=title).first().id
     data = client.get(
-        url_for('main.collect_post', id=post_id),
+        f"/post/collect/{post_id}",
         follow_redirects=True
     ).get_data(as_text=True)
     assert 'You cannot collect your own post.' in data

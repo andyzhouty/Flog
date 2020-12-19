@@ -18,17 +18,9 @@ The document for comment web api.
         "username": "charles-gutierrez"
       },
       "body": "They pattern image yard. Remember sort star call paper. Character imagine yeahminute.\nAgain participant official grow collection. Value positive explain.",
+      "id": 1,
+      "kind": "Comments",
       "post": {
-        "comments": [
-          {
-            "author": "charles-gutierrez",
-            "body": "They pattern image yard. Remember sort star call paper. Character imagine yeah minute.\nAgain participant official grow collection. Value positive explain."
-          },
-          {
-            "author": "stephen-james",
-            "body": "Fall from hard six general one. Effect enough these clearly. Position measure model reality else if. Window hour those store."
-          }
-        ],
         "comments_count": 3,
         "content": "Ok body unit past. Cover general reach build source actually husband.",
         "id": 11,
@@ -44,11 +36,29 @@ The document for comment web api.
 - /api/v1/comment/new/
   - **POST** Creates a comment from input json  
     Accept: *application/json*  
-    Status: *201*  
-    Example:
+    Status: *200*  
+    Example Return Value:
     ```json
     {
-      "body": "The body of the comment",
-      "post_id": 1
+      "author": {
+        "id": 11,
+        "kind": "User",
+        "last_seen": "Sun, 08 Nov 2020 02:04:42 GMT",
+        "member_since": "Sun, 08 Nov 2020 02:04:42 GMT",
+        "name": "Charles Gutierrez",
+        "url": "http://127.0.0.1:5000/api/v1/user/11/",
+        "username": "charles-gutierrez"
+      },
+      "body": "They pattern image yard. Remember sort star call paper. Character imagine yeahminute.\nAgain participant official grow collection. Value positive explain.",
+      "id": 1,
+      "kind": "Comments",
+      "post": {
+        "comments_count": 3,
+        "content": "Ok body unit past. Cover general reach build source actually husband.",
+        "id": 11,
+        "slug": "eight-simple",
+        "title": "eight simple",
+        "url": "http://127.0.0.1:5000/api/v1/post/11/"
+      }
     }
     ```

@@ -97,13 +97,15 @@ def resend_confirmation():
     return redirect(url_for('main.main'))
 
 
-@auth_bp.route('/delete-account/', methods=['GET', 'POST'])
+@auth_bp.route('/account/delete/', methods=['GET', 'POST'])
 @login_required
 def delete_account():
     form = DeleteAccountForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.password.data):
+            username = current_user.username
             current_user.delete()
+            current_app.logger.info(f'User {username} deleted.')
             flash(_('Your account has been deleted'),  'info')
         else:
             flash(_('Your password is invalid!'),  'warning')

@@ -1,3 +1,2 @@
-static/css linguist-vendored
+static/*.min.css linguist-vendored
 static/favicon linguist-vendored
-templates/* linguist-vendored

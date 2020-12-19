@@ -48,6 +48,7 @@
                 </form>
                 {% endif %}
                 <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id) }}">
+                    <i class="fa fa-mail-reply"></i>
                     {{ _('Reply') }}
                 </a>
             </div>
@@ -56,9 +57,11 @@
         </ul>
         {% if request.args.get('reply') %}
         <div class="alert alert-dark" id="reply-comment-form">
-            Reply to <b>{{ request.args.get('author') }}</b>:
+            <i class="fa fa-mail-reply"></i>{{ _("Reply to") }}
+            <b>{{ request.args.get('author') }}</b>:
             <a class="float-right btn btn-light btn-sm" href="{{ post.url() }}">
-                Cancel
+                <i class="fa fa-window-close-o"></i>
+                {{ _("Cancel") }}
             </a>
             {{ render_form(form) }}
         </div>

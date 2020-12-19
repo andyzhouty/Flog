@@ -47,6 +47,7 @@ def register_commands(app: Flask, db):
         fake.comments(comments)
         fake.feedbacks(feedbacks)
         fake.follows(follows)
+        fake.notifications(notifications)
 
     @app.cli.command()
     @click.option('--drop/--no-drop', help='Drop database or not')
@@ -60,7 +61,6 @@ def register_commands(app: Flask, db):
     @app.cli.command()
     def deploy():
         """Run deployment tasks"""
-        from .models import User, Role
         from flask_migrate import upgrade, stamp
         try:
             # upgrade the database.
@@ -70,6 +70,7 @@ def register_commands(app: Flask, db):
             # so I have to init the database like this.
             db.create_all()
             stamp()
+        from .models import User, Role
         # insert roles
         Role.insert_roles()
         # add self-follows

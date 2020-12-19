@@ -25,7 +25,7 @@ def register():
 def login():
     return redirect(url_for('auth.login'))
 
-@others_bp.route('/about-us')
+@others_bp.route('/about/')
 def about_us():
     try:
         if request.cookies.get('locale') == 'zh_Hans_CN' or current_user.locale == "zh_Hans_CN":

@@ -35,7 +35,7 @@ def delete_feedback(id):
     return redirect(url_for('admin.manage_feedback'))
 
 
-@admin_bp.route('/users/')
+@admin_bp.route('/user/all/')
 @admin_required
 def manage_users():
     page = request.args.get('page', default=1, type=int)
@@ -45,7 +45,7 @@ def manage_users():
     return render_template("user/all_users.html", pagination=pagination)
 
 
-@admin_bp.route('/users/<int:id>/edit-profile/', methods=['GET', 'POST'])
+@admin_bp.route('/user/<int:id>/profile/edit/', methods=['GET', 'POST'])
 @admin_required
 def edit_user_profile(id):
     user = User.query.get_or_404(id)

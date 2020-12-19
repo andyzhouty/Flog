@@ -58,3 +58,18 @@ function update_notifications_count() {
         }
     })
 }
+function largeImage(e) {
+    let element = $(e.target);
+    $('#image-large').attr('src', element.attr('src'));
+    $('#image-large').show()
+    $('.content').addClass('shadow');
+}
+$(function () {
+    $('img').addClass('image-normal');
+    $("img[alt='identicon']").removeClass('image-normal');
+    $('.image-normal').click(largeImage.bind(this));
+    $('#image-large').click(function() {
+        $('.content').removeClass('shadow');
+        $('#image-large').hide();
+    })
+})

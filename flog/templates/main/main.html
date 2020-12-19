@@ -6,6 +6,14 @@ MIT License
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import post_actions, role_of with context %}
 {% block title %}{{ _('Main') }}{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script>
+        $(document).ready(function () {
+            $('.profile-popover').hover(show_profile_popover.bind(this), hide_profile_popover.bind(this));
+        })
+    </script>
+{% endblock scripts %}
 {% block page_content %}
     {% if current_user.is_authenticated %}
     <div class="page-header">

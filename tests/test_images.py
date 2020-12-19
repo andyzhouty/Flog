@@ -7,7 +7,8 @@ from flog.models import Image
 from .helpers import login
 
 
-def test_image(client):
+def test_image(client_with_request_ctx):
+    client = client_with_request_ctx
     login(client)
     filename = current_app.config['FLOG_ADMIN'] + '_test.png'
     uploaded_path = os.path.join(
@@ -21,7 +22,7 @@ def test_image(client):
     image_obj = open('test.png', 'rb')
     data = {'upload': image_obj}
     response = client.post(
-        url_for('main.upload'),
+        "/image/upload/",
         data=data,
         follow_redirects=True
     )
@@ -30,21 +31,15 @@ def test_image(client):
     image = Image.query.filter_by(filename=filename).first()
     assert image is not None
     assert image.path() == uploaded_path
-    assert image.url() == url_for('main.uploaded_files', filename=filename)
+    assert image.url() == f"/image/{image.filename}"
     assert not image.private
     response = client.post(
-        url_for(
-            'main.toggle_image_visibility',
-            id=image.id
-        ), follow_redirects=True
+        f"/image/toggle/{image.id}/", follow_redirects=True
     )
     assert response.status_code == 200
     assert image.private
     response = client.post(
-        url_for(
-            'main.delete_image',
-            id=image.id
-        ), follow_redirects=True
+        f"/image/delete/{image.id}/", follow_redirects=True
     )
     assert response.status_code == 200
     assert Image.query.filter_by(filename=filename).first() is None

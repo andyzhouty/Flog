@@ -15,12 +15,12 @@ def test_lower_username():
     assert lower_username(username) == 'testuser'
 
 
-def test_is_safe_url(client):
+def test_is_safe_url(client_with_request_ctx):
     target = url_for('main.main', _external=True)
     assert is_safe_url(target)
 
 
-def test_push_notifications(client):
+def test_push_notifications(client_with_request_ctx):
     assert Notification.query.count() == 0
     random_user_id = randint(1, User.query.count() - 1)
     random_post_id = randint(1, Post.query.count())
@@ -52,13 +52,13 @@ def test_notifications(client):
     ).first()
     assert len(admin.notifications) == 5
     assert Notification.query.filter_by(is_read=False).count() == 5
-    str_data = client.get(url_for('ajax.notification_count')).get_data(as_text=True).strip()
+    str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=5) == data
-    client.post(url_for('notification.read', id=1))
+    client.post("/notification/read/1/")
     assert Notification.query.filter_by(is_read=False).count() == 4
-    client.post(url_for('notification.read_all'))
+    client.post("/notification/read/all/")
     assert Notification.query.filter_by(is_read=False).count() == 0
-    str_data = client.get(url_for('ajax.notification_count')).get_data(as_text=True).strip()
+    str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=0) == data

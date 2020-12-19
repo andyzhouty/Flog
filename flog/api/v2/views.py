@@ -32,13 +32,13 @@ api_v2.add_url_rule('/comment/<int:comment_id>/',
                     view_func=CommentAPI.as_view('comment'),
                     methods=['GET', 'DELETE'])
 api_v2.add_url_rule('/comment/new/',
-                    view_func=CollectionAPI.as_view('new_comment'),
+                    view_func=CommentAPI.as_view('new_comment'),
                     methods=['POST'])
 # auth token
 api_v2.add_url_rule('/oauth/token/',
                     view_func=TokenAPI.as_view('oauth_token'),
                     methods=['POST'])
 # notification
-api_v2.add_url_rule('/notifications/unread',
+api_v2.add_url_rule('/notifications/unread/',
                     view_func=NotificationAPI.as_view('notification'),
                     methods=['GET'])

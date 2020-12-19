@@ -57,19 +57,6 @@ def comments(count: int = 2) -> None:
     db.session.commit()
 
 
-def notifications(count: int = 2) -> None:
-    admin_role = Role.query.filter_by(name='Administrator').first()
-    admin = User.query.filter_by(role=admin_role).first()
-    for i in range(count):
-        notification = Notification(
-            is_read=False,
-            message=fake.sentence(),
-            receiver=admin
-        )
-        db.session.add(notification)
-    db.session.commit()
-
-
 def feedbacks(count: int = 2) -> None:
     """Generates fake feedbacks"""
     for i in range(count):
@@ -97,14 +84,13 @@ def follows(count: int = 20) -> None:
             user1.follow(user2)
 
 
-def notifications(receiver: User, count: int) -> None:
+def notifications(count: int, receiver: User = None) -> None:
     """Generates fake notifications"""
     for i in range(count):
         if receiver is None:
-            receiver = User.query.get(randint(1, User.query.count()))
-            if receiver is None:
-                click.echo('There are no users!')
-                break
+            admin_role = Role.query.filter_by(name='Administrator').first()
+            admin = User.query.filter_by(role=admin_role).first()
+            receiver = admin
         notification = Notification(
             message=fake.sentence(),
             receiver=receiver,

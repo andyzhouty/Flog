@@ -39,82 +39,82 @@ MIT License
 
 {% macro follow_area(user) %}
     {% if current_user.is_authenticated -%}
-        {% if user != current_user %}
-            {% if current_user.is_following(user) %}
+        {% if user != current_user -%}
+            {% if current_user.is_following(user) -%}
                 <form class="form-inline" method="POST"
                       action="{{ url_for('user.unfollow', username=user.username) }}"
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-dark btn-sm">{{ _('Unfollow') }}</button>
-                    {% if user.is_following(current_user) and current_user.is_following(user) %}
+                    {% if user.is_following(current_user) and current_user.is_following(user) -%}
                         <p class="badge badge-light">{{ _('Follow each other') }}</p>
-                    {% endif %}
+                    {%- endif %}
                 </form>
-            {% else %}
+            {% else -%}
                 <form class="form-inline" method="POST"
                       action="{{ url_for('user.follow', username=user.username) }}"
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-primary btn-sm">{{ _('Follow') }}</button>
-                    {% if user.is_following(current_user) %}
+                    {% if user.is_following(current_user) -%}
                         <p class="badge badge-light">{{ _('Follows you') }}</p>
-                    {% endif %}
+                    {%- endif %}
                 </form>
-            {% endif %}
-       {% endif %}
+            {%- endif %}
+       {%- endif %}
     {%- endif %}
 {% endmacro %}
 
 {% macro post_actions(post, can_edit=True, can_delete=True, can_collect=True, show_collectors=None, collectors=0) %}
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated -%}
         <div>
-            {% if can_collect and post.author != current_user %}
-                {% if not current_user.is_collecting(post) %}
+            {% if can_collect and post.author != current_user -%}
+                {% if not current_user.is_collecting(post) -%}
                 <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
                     <i class="fa fa-star"></i>
                     {{ _('Collect') }}
                 </a>
-                {% else %}
+                {% else -%}
                     <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
                         <i class="fa fa-ban"></i>
                         {{ _('Uncollect') }}
                     </a>
-                {% endif %}
-            {% endif %}
+                {%- endif %}
+            {%- endif %}
             {% if current_user.is_administrator() or post.author == current_user
-                  and can_edit %}
+                  and can_edit -%}
                 <a class="btn btn-sm btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
                     <i class="fa fa-edit"></i>
                     {{ _('EDIT') }}
                 </a>
-            {% endif %}
+            {%- endif %}
             {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
                 or current_user.is_administrator()
                 or post.author == current_user
-                and can_delete %}
+                and can_delete -%}
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
-                        <i class="fa fa-trash"></i>   
+                        <i class="fa fa-trash"></i>
                         {{ _('DELETE') }}
                     </button>
                 </form>
-            {% endif %}
-            {% if show_collectors %}
+            {%- endif %}
+            {% if show_collectors -%}
                 <br><br>
                 {% set collectors = post.collectors | length %}
                 <p class="text-muted">
                 <i class="fa fa-star"></i>
-                {% if collectors == 1 %}
+                {% if collectors == 1 -%}
                     {{ _('Collected by 1 person') }}
-                {% else %}
+                {% else -%}
                     {{ _('Collected by %d people' % collectors) }}
-                {% endif %}
+                {%- endif %}
                 </p>
-            {% endif %}
+            {%- endif %}
         </div>
-    {% endif %}
+    {%- endif %}
 {% endmacro %}
 {% macro user_card(user) %}
     <li class="list-group-item">
@@ -122,7 +122,7 @@ MIT License
         <img src="{{ user.gravatar() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
     <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
     {{ role_label_of(user) }}
-    {% if current_user.is_administrator() %}
+    {% if current_user.is_administrator() -%}
     <br><br>
     <span class="text-white">
         <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
@@ -138,6 +138,6 @@ MIT License
             </button>
         </form>
     </span>
-    {% endif %}
+    {%- endif %}
     </li>
 {% endmacro %}

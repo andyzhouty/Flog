@@ -48,7 +48,7 @@ def main():
 # Deal with upload files
 
 
-@main_bp.route('/images/<path:filename>')
+@main_bp.route('/image/<path:filename>')
 def uploaded_files(filename: str):
     image = Image.query.filter_by(filename=filename).first()
     if image.private:
@@ -57,7 +57,7 @@ def uploaded_files(filename: str):
     return send_from_directory(image_path, filename=filename)
 
 
-@main_bp.route('/upload/', methods=['POST'])
+@main_bp.route('/image/upload/', methods=['POST'])
 @login_required
 def upload():
     fileobj = request.files.get('upload')
@@ -94,7 +94,7 @@ def upload():
     return upload_success(url=url, filename=filename)
 
 
-@main_bp.route('/images/manage/')
+@main_bp.route('/image/manage/')
 @login_required
 def manage_images():
     page = request.args.get('page', 1, int)
@@ -110,7 +110,7 @@ def manage_images():
     return render_template('main/manage_images.html', pagination=pagination, images=images)
 
 
-@main_bp.route('/images/set-private/<int:id>/', methods=['POST'])
+@main_bp.route('/image/toggle/<int:id>/', methods=['POST'])
 @login_required
 def toggle_image_visibility(id: int):
     image = Image.query.get(id)
@@ -122,7 +122,7 @@ def toggle_image_visibility(id: int):
     return make_response(redirect_back())
 
 
-@main_bp.route('/images/delete/<int:id>/', methods=['POST'])
+@main_bp.route('/image/delete/<int:id>/', methods=['POST'])
 @login_required
 def delete_image(id: int):
     image = Image.query.get(id)
@@ -216,7 +216,7 @@ def delete_comment(comment_id):
     return make_response(redirect_back())
 
 
-@main_bp.route('/manage-post')
+@main_bp.route('/post/manage/')
 @login_required
 def manage_posts():
     page = request.args.get('page', 1, type=int)
@@ -231,7 +231,7 @@ def manage_posts():
     return render_template('main/personal_posts.html', pagination=pagination)
 
 
-@main_bp.route('/posts/delete/<int:id>/', methods=['POST'])
+@main_bp.route('/post/delete/<int:id>/', methods=['POST'])
 @login_required
 def delete_post(id):
     post = Post.query.get(id)
@@ -244,7 +244,7 @@ def delete_post(id):
     return redirect(url_for('main.main'))
 
 
-@main_bp.route('/posts/edit/<int:id>/', methods=['GET', 'POST'])
+@main_bp.route('/post/edit/<int:id>/', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
     post = Post.query.get(id)
@@ -264,7 +264,7 @@ def edit_post(id):
     return render_template("main/edit_post.html", form=form)
 
 
-@main_bp.route('/posts/collect/<int:id>/')
+@main_bp.route('/post/collect/<int:id>/')
 @login_required
 def collect_post(id):
     post = Post.query.get(id)
@@ -286,7 +286,7 @@ def collect_post(id):
     return make_response(redirect_back())
 
 
-@main_bp.route('/posts/uncollect/<int:id>/')
+@main_bp.route('/post/uncollect/<int:id>/')
 @login_required
 def uncollect_post(id):
     post = Post.query.get(id)
@@ -295,7 +295,7 @@ def uncollect_post(id):
     return make_response(redirect_back())
 
 
-@main_bp.route('/collected-posts/')
+@main_bp.route('/post/collected/')
 @login_required
 def collected_posts():
     # Get current user's collection

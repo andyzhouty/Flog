@@ -15,7 +15,7 @@ def get_profile(user_id):
     return render_template('ajax/profile_popup.html', user=user)
 
 
-@ajax_bp.route('/notifications-count/')
+@ajax_bp.route('/notification/count/')
 def notification_count():
     if not current_user.is_authenticated:
         return jsonify(message='Login required.'), 403
