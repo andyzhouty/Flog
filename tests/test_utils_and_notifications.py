@@ -10,6 +10,7 @@ from flog.notifications import push_collect_notification, push_comment_notificat
 from flog.utils import lower_username, is_safe_url
 from .helpers import send_notification, login
 
+
 def test_lower_username():
     username = 'Test User'
     assert lower_username(username) == 'testuser'

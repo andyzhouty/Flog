@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import os
 from os.path import abspath, dirname
 from flask.globals import current_app

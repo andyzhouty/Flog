@@ -3,13 +3,13 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from random import randint
-from flask import url_for
 from faker import Faker
 from flog.models import Post
 from flog.utils import lower_username
 from .helpers import create_article, login
 
 fake = Faker()
+
 
 def test_admin_edit_article(client):
     login(client)

@@ -1,4 +1,7 @@
-import os
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import pytest
 from flog import create_app, db, fakes
 from flog.models import Role, User

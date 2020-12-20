@@ -3,7 +3,6 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import json
-from flask import url_for
 from flask.globals import current_app
 from flog.models import User
 from tests.helpers import register, get_api_v1_headers

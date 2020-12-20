@@ -1,8 +1,11 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 import os
 from faker import Faker
 from base64 import b64encode
 from flog.models import db, Notification, User, Role
-from flask import url_for
 
 fake = Faker()
 

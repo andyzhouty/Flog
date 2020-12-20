@@ -1,3 +1,7 @@
+"""
+MIT License
+Copyright (c) 2020 Andy Zhou
+"""
 from flog import fakes
 from flog.models import User, Role, Post
 from .helpers import login, create_article, get_response_and_data_of_post, logout, register

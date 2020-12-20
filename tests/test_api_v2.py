@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import json
-from flask import url_for, current_app
+from flask import current_app
 from flog.models import User
 from tests.helpers import register, get_api_v2_headers
 from flog import fakes as fake

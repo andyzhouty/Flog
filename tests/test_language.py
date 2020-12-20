@@ -5,6 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from .helpers import login
 from flog.models import User, Role
 
+
 def test_language_selection(client):
     login(client)
     admin = User.query.filter_by(
