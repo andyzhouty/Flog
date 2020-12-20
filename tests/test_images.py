@@ -1,10 +1,8 @@
-from flog.main.views import upload
 import os
-from os.path import abspath, dirname, join
-from flask import url_for
+from os.path import abspath, dirname
 from flask.globals import current_app
 from flog.models import Image
-from .helpers import login
+from .helpers import login, logout, upload_image, delete_image
 
 
 def test_image(client_with_request_ctx):
@@ -19,13 +17,7 @@ def test_image(client_with_request_ctx):
         os.remove(uploaded_path)
     assert not os.path.exists(uploaded_path)
     os.chdir(dirname(abspath(__file__)))
-    image_obj = open('test.png', 'rb')
-    data = {'upload': image_obj}
-    response = client.post(
-        "/image/upload/",
-        data=data,
-        follow_redirects=True
-    )
+    response = upload_image(client)
     assert response.status_code == 200
     assert os.path.exists(uploaded_path)
     image = Image.query.filter_by(filename=filename).first()
@@ -38,9 +30,32 @@ def test_image(client_with_request_ctx):
     )
     assert response.status_code == 200
     assert image.private
-    response = client.post(
-        f"/image/delete/{image.id}/", follow_redirects=True
-    )
+    response = delete_image(client, image.id)
     assert response.status_code == 200
     assert Image.query.filter_by(filename=filename).first() is None
     assert not os.path.exists(uploaded_path)
+
+
+def test_get_image(client):
+    login(client)
+    upload_image(client)
+    logout(client)
+    # test if the image can be got without authentication
+    filename = current_app.config['FLOG_ADMIN'] + '_' + 'test.png'
+    response = client.get(f'/image/{filename}')
+    assert response.status_code == 200
+    login(client)
+    image = Image.query.filter_by(filename=filename).first()
+    delete_image(client, image.id)
+
+
+def test_manage_images(client):
+    login(client)
+    upload_image(client)
+    response = client.get('/image/manage/')
+    data = response.get_data(as_text=True)
+    print(data)
+    filename = current_app.config['FLOG_ADMIN'] + '_' + 'test.png'
+    assert f'src="/image/{filename}"' in data
+    image = Image.query.filter_by(filename=filename).first()
+    delete_image(client, image.id)

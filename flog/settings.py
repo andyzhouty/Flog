@@ -51,7 +51,7 @@ class Base:
 
     CKEDITOR_HEIGHT = 800
     CKEDITOR_WIDTH = 1024
-    CKEDITOR_FILE_UPLOADER = 'main.upload'
+    CKEDITOR_FILE_UPLOADER = 'image.upload'
     CKEDITOR_ENABLE_CSRF = True
 
     # Specially configured for pythonanywhere

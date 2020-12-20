@@ -3,12 +3,11 @@ from faker import Faker
 from base64 import b64encode
 from flog.models import db, Notification, User, Role
 from flask import url_for
-from flask.ctx import AppContext, RequestContext
 
 fake = Faker()
 
 
-def login(client: RequestContext, username=os.getenv('FLOG_ADMIN'),
+def login(client, username=os.getenv('FLOG_ADMIN'),
           password=os.getenv('FLOG_ADMIN_PASSWORD')):
     """Login helper function"""
     return client.post(
@@ -18,12 +17,12 @@ def login(client: RequestContext, username=os.getenv('FLOG_ADMIN'),
     )
 
 
-def logout(client: RequestContext):
+def logout(client):
     """Logout helper function"""
     return client.get('/auth/logout/', follow_redirects=True)
 
 
-def register(client: RequestContext, name: str = 'Test', username: str = 'test',
+def register(client, name: str = 'Test', username: str = 'test',
              password: str = 'password', email: str = 'test@example.com'):
     """Register helper function"""
     return client.post('/auth/register/', data=dict(
@@ -35,7 +34,7 @@ def register(client: RequestContext, name: str = 'Test', username: str = 'test',
     ), follow_redirects=True)
 
 
-def create_article(client: AppContext) -> dict:
+def create_article(client) -> dict:
     """Create a post for test use"""
     login(client)
     text = fake.text()
@@ -50,7 +49,7 @@ def create_article(client: AppContext) -> dict:
     }
 
 
-def send_notification(client: RequestContext) -> None:
+def send_notification(client) -> None:
     """Send notifications for test user"""
     login(client)
     admin = User.query.filter_by(
@@ -99,3 +98,21 @@ def get_response_and_data_of_post(client, post_id: int) -> list:
     )
     data = response.get_data(as_text=True)
     return response, data
+
+
+def upload_image(client):
+    image_obj = open('test.png', 'rb')
+    data = {'upload': image_obj}
+    response = client.post(
+        "/image/upload/",
+        data=data,
+        follow_redirects=True
+    )
+    return response
+
+
+def delete_image(client, image_id):
+    response = client.post(
+        f"/image/delete/{image_id}/", follow_redirects=True
+    )
+    return response

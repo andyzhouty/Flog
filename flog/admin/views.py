@@ -18,13 +18,13 @@ def admin():
     return redirect(url_for('main.main'))
 
 
-@admin_bp.route('/feedbacks/')
+@admin_bp.route('/feedback/')
 @admin_required
 def manage_feedback():
     return render_template("admin/feedbacks.html")
 
 
-@admin_bp.route('/feedbacks/delete/<int:id>', methods=['POST'])
+@admin_bp.route('/feedback/delete/<int:id>/', methods=['POST'])
 @admin_required
 def delete_feedback(id):
     feedback = Feedback.query.get(id)

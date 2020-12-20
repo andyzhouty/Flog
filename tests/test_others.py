@@ -2,19 +2,6 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from flask import url_for
-from faker import Faker
-from .helpers import login
-
-fake = Faker()
-
-
-def test_send_feedback(client):
-    login(client)
-    data = {'body': fake.text(), }
-    response = client.post("/feedback/", data=data, follow_redirects=True)
-    response_data = response.get_data(as_text=True)
-    assert data['body'] in response_data
 
 
 def test_change_theme(client):

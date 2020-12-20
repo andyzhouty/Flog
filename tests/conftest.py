@@ -1,3 +1,4 @@
+import os
 import pytest
 from flog import create_app, db, fakes
 from flog.models import Role, User

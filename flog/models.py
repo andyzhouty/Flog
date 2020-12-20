@@ -125,10 +125,11 @@ class Image(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def url(self) -> str:
-        return url_for('main.uploaded_files', filename=self.filename)
+        return url_for('image.uploaded_files', filename=self.filename)
 
     def path(self) -> str:
         return os.path.join(current_app.config['UPLOAD_DIRECTORY'], self.filename)
+
 
 class Permission:
     FOLLOW = 1

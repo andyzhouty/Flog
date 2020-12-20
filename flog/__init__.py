@@ -22,6 +22,7 @@ from .api.v1 import api_v1
 from .api.v2 import api_v2
 from .auth import auth_bp
 from .feedback import feedback_bp
+from .image import image_bp
 from .language import language_bp
 from .main import main_bp
 from .notification import notification_bp
@@ -99,6 +100,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(api_v1, url_prefix="/api/v1")
     app.register_blueprint(api_v2, url_prefix="/api/v2")
     app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(image_bp, url_prefix="/image")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(language_bp, url_prefix="/language")
     app.register_blueprint(notification_bp, url_prefix="/notification")

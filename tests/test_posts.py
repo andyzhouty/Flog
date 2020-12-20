@@ -97,4 +97,13 @@ def test_view_post(client):
     register(client, 'john', 'john', '123456', 'john@example.com')
     login(client, 'john', '123456')
     data = get_response_and_data_of_post(client, post_private.id)[1]
-    assert  'The author has set this post to invisible.' in data
+    assert 'The author has set this post to invisible.' in data
+
+
+def test_delete_post(client):
+    login(client)
+    title = create_article(client)['post']['title']
+    post = Post.query.filter_by(title=title).first()
+    response = client.post(f'/post/delete/{post.id}/', follow_redirects=True)
+    assert response.status_code == 200
+    assert Post.query.filter_by(title=title).first() is None
