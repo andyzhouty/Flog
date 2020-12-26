@@ -15,7 +15,7 @@ jobs:
       - checkout
       - run: mkdir test-reports
       - restore_cache:
-        key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
+          key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
       - run:
           name: Install Python deps in a venv
           command: |
