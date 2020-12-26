@@ -57,6 +57,13 @@ class Base:
     # Specially configured for pythonanywhere
     SQLALCHEMY_ENGINE_OPTIONS = {'pool_recycle': 280}
 
+    # Allowed tags for posts
+    FLOG_ALLOWED_TAGS = [
+        'p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
+        'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
+        'br /', 's', 'table', 'thead', 'tbody', 'th', 'td', 'tr',
+    ]
+
     @classmethod
     def init_app(cls, app):
         pass

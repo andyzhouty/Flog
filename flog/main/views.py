@@ -52,9 +52,7 @@ def create_post():
     if form.validate_on_submit():
         cleaned_content = bleach.clean(
             form.content.data,
-            tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
-                  'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
-                  'br /', 's'],
+            tags=current_app.config['FLOG_ALLOWED_TAGS'],
             attributes=['href', 'src', 'style'],
             strip_comments=True
         )

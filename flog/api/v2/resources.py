@@ -7,7 +7,7 @@
     :license: MIT License
 """
 
-from flask import g, jsonify, request, url_for
+from flask import g, request, current_app, jsonify, url_for
 from flask.views import MethodView
 from .errors import (  # noqa
     ValidationError,
@@ -104,9 +104,7 @@ class PostAPI(MethodView):
         # remove javascript and css from the content
         cleaned_content = bleach.clean(
             content,
-            tags=['p', 'i', 'b', 'hr', 'h1', 'h2', 'h3', 'h4', 'a', 'img',
-                  'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
-                  'br /', 's'],
+            tags=current_app.config['FLOG_ALLOWED_TAGS'],
             attributes=['href', 'src', 'style'],
             strip_comments=True
         )
