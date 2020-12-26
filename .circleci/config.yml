@@ -41,3 +41,7 @@ jobs:
           destination: tr1
       - store_test_results:
           path: test-reports/
+      - run:
+          name: Submit coverage status to coveralls
+          command: |
+            coveralls

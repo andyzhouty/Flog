@@ -1,6 +1,7 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
 [中文版 README](./README_zh.md)   
-[![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)  
+[![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)
+[![CircleCI Status](https://circleci.com/gh/z-t-y/Flog.svg?style=svg)](https://circleci.com/gh/z-t-y/Flog)
 [![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)
 
 Icons made by
@@ -112,10 +113,6 @@ sqlite3.InterfaceError Error binding parameter 0.
 
 It should be caused by sqlite3 and you should set another database in env variable `DATABASE_TEST` for unittesting such as mysql or postgresql.
 
-Tests succeeded on:
-OS: Ubuntu 20.04
-Python Version: 3.8.5
-Database: MariaDB 10.3
 
 ## FAQ
 

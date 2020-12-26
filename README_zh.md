@@ -1,6 +1,7 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
 [英文版](./README.md)  
-[![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)   
+[![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)
+[![CircleCI Status](https://circleci.com/gh/z-t-y/Flog.svg?style=svg)](https://circleci.com/gh/z-t-y/Flog)
 [![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)
 
 由[Freepik]("https://www.flaticon.com/authors/freepik")制作的图标
@@ -108,10 +109,6 @@ sqlite3.InterfaceError Error binding parameter 0
 
 这应该是由sqlite3对某些数据类型的不支持引起的,你应该指定`DATABASE_TEST`环境变量来更该默认的sqlite内存数据库。
 
-测试环境：
-系统：Ubuntu 20.04
-Python版本：Python 3.8.5
-测试用数据库：MariaDB 10.3
 
 ## 关于一些小问题
 
