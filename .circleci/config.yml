@@ -5,9 +5,10 @@ jobs:
       - image: circleci/python:3.8.0
         environment:
           FLASK_CONFIG: testing
-          DATABASE_TEST: postgresql://root@localhost/flog_test?sslmode=disable
+          DATABASE_TEST: postgresql://root@localhost/flog_test
       - image: circleci/postgres:12
         environment:
+          POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_USER: root
           POSTGRES_DB: flog_test
           POSTGRES_PASSWORD: ""
