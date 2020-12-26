@@ -14,9 +14,13 @@ jobs:
           POSTGRES_PASSWORD: ""
     steps:
       - checkout
-      - run: mkdir test-reports
+      - run: mkdir test-reports/
       - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
+      - run:
+          name: Create image upload directory
+          command: |
+            mkdir images/
       - run:
           name: Install Python deps in a venv
           command: |

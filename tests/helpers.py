@@ -104,6 +104,7 @@ def get_response_and_data_of_post(client, post_id: int) -> list:
 
 
 def upload_image(client):
+    os.chdir(os.path.dirname(__file__))
     image_obj = open('test.png', 'rb')
     data = {'upload': image_obj}
     response = client.post(
