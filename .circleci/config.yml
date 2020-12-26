@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8.0
+        environment:
+          FLASK_CONFIG: testing
+          DATABASE_TEST: postgresql://root@localhost/flog_test?sslmode=disable
+      - image: circleci/postgres:12
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: flog_test
+          POSTGRES_PASSWORD: ""
+    steps:
+      - checkout
+      - run: mkdir test-reports
+      - restore_cache:
+        key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
+      - run:
+          name: Install Python deps in a venv
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements-dev.txt
+            pip install psycopg2-binary
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
+          paths:
+            - "venv"
+      - run:
+          command: |
+            . venv/bin/activate
+            py.test
+      - store_artifacts:
+          path: test-reports/
+          destination: tr1
+      - store_test_results:
+          path: test-reports/
