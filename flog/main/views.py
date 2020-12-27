@@ -100,7 +100,7 @@ def full_post(id: int):
             db.session.commit()
             push_comment_notification(comment=comment, receiver=post.author)
             flash(_('Comment published!'), 'success')
-            return make_response(redirect_back())
+            return redirect(url_for('main.full_post', id=post.id))
         return render_template('main/full_post.html', post=post, pagination=pagination,
                                comments=comments, form=form)
     else:

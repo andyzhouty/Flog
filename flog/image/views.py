@@ -17,8 +17,8 @@ def uploaded_files(filename: str):
     image = Image.query.filter_by(filename=filename).first_or_404()
     if image.private:
         abort(403)
-    image_path = current_app.config['UPLOAD_DIRECTORY']
-    return send_from_directory(image_path, filename=filename)
+    image_directory = current_app.config['UPLOAD_DIRECTORY']
+    return send_from_directory(image_directory, filename=filename)
 
 
 @image_bp.route('/upload/', methods=['POST'])

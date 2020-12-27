@@ -2,6 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
+import os
 import pytest
 from flog import create_app, db, fakes
 from flog.models import Role, User
@@ -59,6 +60,10 @@ def client():
     fakes.posts(10)
     fakes.comments(10)
     yield client
+    filename = app.config['FLOG_ADMIN'] + '_' + 'test.png'
+    test_image_path = os.path.join(app.config['UPLOAD_DIRECTORY'], filename)
+    if os.path.exists(test_image_path):
+        os.remove(test_image_path)
     db.session.remove()
     db.drop_all()
     context.pop()

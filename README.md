@@ -1,8 +1,9 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
 [中文版 README](./README_zh.md)   
-[![Documentation Status](https://readthedocs.org/projects/flog/badge/?version=latest)](https://flog.readthedocs.io/en/latest/?badge=latest)
-[![CircleCI Status](https://circleci.com/gh/z-t-y/Flog.svg?style=svg)](https://circleci.com/gh/z-t-y/Flog)
-[![Coverage Status](https://coveralls.io/repos/github/z-t-y/Flog/badge.svg?branch=master)](https://coveralls.io/github/z-t-y/Flog?branch=master)
+[![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs&style=for-the-badge)](https://flog.readthedocs.io/en/latest/?badge=latest)
+[![CircleCI Status](https://img.shields.io/circleci/build/github/z-t-y/Flog?logo=circleci&style=for-the-badge)](https://circleci.com/gh/z-t-y/Flog)
+[![Coverage Status](https://img.shields.io/coveralls/github/z-t-y/Flog?logo=coveralls&style=for-the-badge)](https://coveralls.io/github/z-t-y/Flog?branch=master)
+
 
 Icons made by
 [Freepik]("https://www.flaticon.com/authors/freepik") from

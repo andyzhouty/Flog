@@ -15,11 +15,9 @@ MIT License
         {% endblock metas %}
         {% block styles %}
             {{ static_file('icon', 'favicon/favicon.svg') }}
-            {{ static_file('css', 'css/%s.min.css' % request.cookies.get('theme', 'default')) }}
+            {{ static_file('css', 'https://cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' % request.cookies.get('theme', 'cosmo'), local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css', local=False) }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css', local=False) }}
             {{ static_file('css', 'css/stylesheet.css') }}
         {% endblock styles %}
     {% endblock head %}

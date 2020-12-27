@@ -32,8 +32,29 @@ class Base:
     FLOG_ADMIN_EMAIL = os.getenv('FLOG_ADMIN_EMAIL', MAIL_USERNAME)
     FLOG_ADMIN_PASSWORD = os.getenv('FLOG_ADMIN_PASSWORD', 'flog_admin_password')
 
-    # ('theme name': 'display name')
-    BOOTSTRAP_THEMES = {'default': _l('Default'), 'lite': _l('Lite'), 'dark': _l('Dark')}
+    # {'theme name': 'display name'}
+    BOOTSTRAP_THEMES = {
+        'cosmo': 'Lite',
+        'darkly': 'Darkly',
+        'cyborg': 'Cyborg',
+        'flatly': 'Flatly',
+        'journal': 'Journal',
+        'litera': 'Litera',
+        'lumen': 'Lumen',
+        'lux': 'Lux',
+        'materia': 'Materia',
+        'minty': 'Minty',
+        'pulse': 'Pulse',
+        'sandstone': 'Sandstone',
+        'simplex': 'Simplex',
+        'sketchy': 'Sketchy',
+        'slate': 'Slate',
+        'solar': 'Solar',
+        'spacelab': 'Spacelab',
+        'superhero': 'Superhero',
+        'united': 'Ubuntu',
+        'yeti': 'Yeti'
+    }
 
     POSTS_PER_PAGE = 8
     USERS_PER_PAGE = 10

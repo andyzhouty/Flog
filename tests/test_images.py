@@ -6,10 +6,10 @@ import os
 from os.path import abspath, dirname
 from flask.globals import current_app
 from flog.models import Image
-from .helpers import login, logout, upload_image, delete_image
+from .helpers import login, logout, register, upload_image, delete_image
 
 
-def test_image(client_with_request_ctx):
+def test_basic_operations(client_with_request_ctx):
     client = client_with_request_ctx
     login(client)
     filename = current_app.config['FLOG_ADMIN'] + '_test.png'
@@ -62,4 +62,25 @@ def test_manage_images(client):
     filename = current_app.config['FLOG_ADMIN'] + '_' + 'test.png'
     assert f'src="/image/{filename}"' in data
     image = Image.query.filter_by(filename=filename).first()
+    delete_image(client, image.id)
+
+
+def test_image_errors(client):
+    login(client)
+    upload_image(client)
+    filename = current_app.config['FLOG_ADMIN'] + '_' + 'test.png'
+    image = Image.query.filter_by(filename=filename).first()
+    image.toggle_visibility()
+    assert image.private
+    logout(client)
+    register(client)
+    login(client, 'test', 'password')
+    response = client.get(f'/image/{filename}')
+    assert response.status_code == 403
+    response = client.post(f"/image/toggle/{image.id}/", follow_redirects=True)
+    assert response.status_code == 403
+    response = delete_image(client, image.id)
+    assert response.status_code == 403
+    logout(client)
+    login(client)
     delete_image(client, image.id)

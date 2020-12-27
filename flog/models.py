@@ -130,6 +130,10 @@ class Image(db.Model):
     def path(self) -> str:
         return os.path.join(current_app.config['UPLOAD_DIRECTORY'], self.filename)
 
+    def toggle_visibility(self) -> None:
+        self.private = not self.private
+        db.session.commit()
+
 
 class Permission:
     FOLLOW = 1

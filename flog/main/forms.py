@@ -8,6 +8,8 @@ from wtforms import StringField, SubmitField, TextAreaField, BooleanField
 from wtforms.validators import DataRequired
 from flask_ckeditor import CKEditorField
 
+
+# dr_message means data_required_message
 dr_message = _l('Please fill out this field with valid values.')
 
 

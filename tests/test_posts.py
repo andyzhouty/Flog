@@ -111,3 +111,29 @@ def test_delete_post(client):
     response = client.post(f'/post/delete/{post.id}/', follow_redirects=True)
     assert response.status_code == 200
     assert Post.query.filter_by(title=title).first() is None
+
+
+def test_get_urls(client):
+    """Test if the user can GET the urls withour displaying a 500 page."""
+    login(client)
+    title = create_article(client)['post']['title']
+    post = Post.query.filter_by(title=title).first()
+    response = client.get(f'/post/{post.id}/')
+    assert response.status_code == 200
+    response = client.get('/write/')
+    assert response.status_code == 200
+    response = client.get(f'/post/edit/{post.id}/')
+    assert response.status_code == 200
+
+
+def test_comments(client):
+    login(client)
+    title = create_article(client)['post']['title']
+    post = Post.query.filter_by(title=title).first()
+    data = {
+        'body': 'comment content'
+    }
+    response = client.post(f'/post/{post.id}/', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    response = client.get(f'/post/{post.id}/')
+    assert data['body'] in response.get_data(as_text=True)
