@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run: mkdir test-reports/
       - restore_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
+          key: deps2-{{ .Branch }}-{{ checksum "requirements/ci.txt" }}
       - run:
           name: Create image upload directory
           command: |
@@ -26,13 +26,13 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install -r requirements-dev.txt
-            pip install psycopg2-binary
+            pip install -r requirements/ci.txt
       - save_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "requirements-dev.txt" }}
+          key: deps2-{{ .Branch }}-{{ checksum "requirements/ci.txt" }}
           paths:
             - "venv"
       - run:
+          name: Compile tranlation file and run tests
           command: |
             . venv/bin/activate
             flask translate compile && py.test

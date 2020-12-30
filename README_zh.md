@@ -56,9 +56,10 @@
 ```shell
 git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.com/andyzhouty/Flog.git ./flog
 cd flog/
-python3 -m venv venv # 如果你使用Windows,请使用 python -m venv venv
-source ./venv/bin/activate # 如果你使用Windows，请使用 ./venv/Scripts/activate
-pip3 install -r requirements.txt
+python3 -m venv venv # 如果你使用Windows,请替换为 python -m venv venv
+source ./venv/bin/activate # 如果你使用Windows，请替换为 ./venv/Scripts/activate
+pip3 install -r requirements/dev.txt # 安装相关依赖
+flask deploy # 初始化数据库
 flask forge # 生成虚拟数据
 flask create-admin
 flask run
@@ -68,8 +69,9 @@ flask run
 
 ```shell
 # 克隆项目并切换到相应目录（如上）
-pipenv install
+pipenv install # 使用pipenv安装相关依赖
 pipenv shell
+flask deploy # 初始化数据库
 flask forge
 flask create-admin
 flask run
@@ -88,7 +90,7 @@ pip+requirements.txt
 
 ```shell
 # 假设已经激活了虚拟环境
-pip3 install -r requirements-dev.txt
+pip3 install -r requirements/dev.txt
 flask test
 ```
 
@@ -104,11 +106,11 @@ pytest
 如果`test_push_notification`测试运行报错且报错信息如下
 
 ```text
-sqlite3.InterfaceError Error binding parameter 0
+sqlite3.InterfaceError Error binding parameter 0...
 ```
 
-这应该是由sqlite3对某些数据类型的不支持引起的,你应该指定`DATABASE_TEST`环境变量来更该默认的sqlite内存数据库。
-
+这应该是由sqlite3对某些数据类型的不支持引起的,你应该指定`DATABASE_TEST`环境变量来
+把默认的sqlite内存型数据库替换为PostgreSQL或MySQL等数据库。
 
 ## 关于一些小问题
 

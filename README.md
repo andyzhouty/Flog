@@ -1,15 +1,15 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
-[中文版 README](./README_zh.md)   
+[中文版 README](./README_zh.md)
+
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs&style=for-the-badge)](https://flog.readthedocs.io/en/latest/?badge=latest)
 [![CircleCI Status](https://img.shields.io/circleci/build/github/z-t-y/Flog?logo=circleci&style=for-the-badge)](https://circleci.com/gh/z-t-y/Flog)
 [![Coverage Status](https://img.shields.io/coveralls/github/z-t-y/Flog?logo=coveralls&style=for-the-badge)](https://coveralls.io/github/z-t-y/Flog?branch=master)
-
 
 Icons made by
 [Freepik]("https://www.flaticon.com/authors/freepik") from
 [www.flaticon.com](www.flaticon.com)
 
-The blog website created during learning flask.  
+The blog website is created when I'm learning flask.
 
 ## Contributors
 
@@ -63,7 +63,8 @@ git clone https://github.com/z-t-y/Flog.git ./flog
 cd flog/
 python3 -m venv venv # or `python -m venv venv` on windows
 source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
-pip3 install -r requirements.txt
+pip3 install -r requirements/dev.txt
+flask deploy # initialize database
 flask forge # generates fake data
 flask create-admin
 flask run
@@ -75,6 +76,7 @@ Or if you prefer to use pipenv, then:
 # clone the project and change to that directory
 pipenv install
 pipenv shell
+flask deploy # initialize database
 flask forge # generates fake data
 flask create-admin
 flask run
@@ -93,7 +95,7 @@ pip+requirements.txt
 
 ```shell
 source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
-pip3 install -r requirements-dev.txt
+pip3 install -r requirements/dev.txt
 flask test
 ```
 
@@ -112,8 +114,7 @@ If the `test_push_notification` test failed to run and the error message is like
 sqlite3.InterfaceError Error binding parameter 0.
 ```
 
-It should be caused by sqlite3 and you should set another database in env variable `DATABASE_TEST` for unittesting such as mysql or postgresql.
-
+It should be caused by sqlite3 and you should set another database by settings env variable `DATABASE_TEST` such as mysql or postgresql.
 
 ## FAQ
 
