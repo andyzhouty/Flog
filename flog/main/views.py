@@ -2,22 +2,19 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
-import os
-from os.path import curdir, dirname, abspath, join, exists
 import bleach
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
     request, current_app
 )
-from flask.helpers import send_from_directory
 from flask_babel import _
 from flask_login import current_user, login_required
-from flask_ckeditor import upload_fail, upload_success
-from ..models import Image, db, Post, Comment
+from ..models import db, Post, Comment
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
 from . import main_bp
+
 
 @main_bp.before_app_request
 def before_app_request():

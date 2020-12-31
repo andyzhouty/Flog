@@ -13,6 +13,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
 
+group_user_table = db.Table(
+    'group_user',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
+)
+
+
 class Collect(db.Model):
     """Collect Model"""
     collector_id = db.Column(db.Integer(), db.ForeignKey('user.id'), primary_key=True)
@@ -143,6 +150,16 @@ class Permission:
     ADMIN = 16
 
 
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    members = db.relationship(
+        'User',
+        secondary=group_user_table,
+        back_populates='groups'
+    )
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -232,6 +249,12 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', back_populates='author')
     notifications = db.relationship('Notification', back_populates='receiver', cascade='all')
     images = db.relationship('Image', back_populates='author', cascade='all')
+
+    groups = db.relationship(
+        'Group',
+        secondary=group_user_table,
+        back_populates='members'
+    )
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -339,6 +362,15 @@ class User(db.Model, UserMixin):
 
     def profile_url(self):
         return url_for('user.user_profile', username=self.username)
+
+    def join_group(self, group) -> None:
+        self.groups.append(group)
+        db.session.add(self)
+        db.session.add(group)
+        db.session.commit()
+
+    def in_group(self, group) -> bool:
+        return (self in group.members)
 
 
 class AnonymousUser(AnonymousUserMixin):

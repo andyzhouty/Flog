@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import db
-from flog.models import Post, User, Notification
+from flog.models import Post, User, Notification, Group
 
 
 def test_password_setter(client):
@@ -53,3 +53,10 @@ def test_notification(client):
     db.session.add(notification)
     db.session.commit()
     assert notification in user.notifications
+
+
+def test_group(client):
+    user = User()
+    group = Group()
+    user.join_group(group)
+    assert user.in_group(group)
