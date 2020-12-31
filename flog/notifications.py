@@ -34,11 +34,22 @@ def push_comment_notification(comment, receiver, page=1):
 
 
 def push_collect_notification(collector, post, receiver):
-    """Push a notifications when a post is collected."""
+    """Push a notification when a post is collected."""
     message = _("""User <a href="{0}">{1}</a> collected your <a href="{2}">post</a>"""
                  .format(url_for('user.user_profile', username=collector.username),
                          collector.username, post.url())
                  )
+    notification = Notification(message=message, receiver=receiver, is_read=False)
+    db.session.add(notification)
+    db.session.commit()
+
+
+def push_group_join_notification(joiner, group, receiver):
+    """Push a notification to the manager of a group when another user wants to join it."""
+    message = _("""User <a href="{0}">{1}</a> wants to join your group {2}.
+                    Click <a href="{3}">Here</a> to approve."""
+                .format(joiner.profile_url(), joiner.username, group.name,
+                        group.join_url()))
     notification = Notification(message=message, receiver=receiver, is_read=False)
     db.session.add(notification)
     db.session.commit()

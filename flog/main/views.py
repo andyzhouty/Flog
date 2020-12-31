@@ -2,6 +2,7 @@
 MIT License
 Copyright(c) 2020 Andy Zhou
 """
+from datetime import datetime
 import bleach
 from flask import (
     render_template, redirect, url_for, flash, abort, make_response,
@@ -158,6 +159,7 @@ def edit_post(id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        post.timestamp = datetime.utcnow()
         db.session.add(post)
         db.session.commit()
         current_app.logger.info(f'Post id {id} editted.')

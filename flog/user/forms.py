@@ -6,7 +6,7 @@ from flask_wtf import FlaskForm
 from flask_babel import lazy_gettext as _l
 from wtforms import StringField, TextAreaField, SubmitField, PasswordField
 from wtforms.validators import Length, EqualTo, Email, ValidationError
-from ..models import User
+from ..models import User, Group
 
 # l_message is short for 'length_message'
 l_message = _l('Field must be between %(min)d and %(max)d characters long.')
@@ -33,3 +33,17 @@ class ValidateEmailForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).count() == 0:
             raise ValidationError(e_message)
+
+
+class GroupCreationForm(FlaskForm):
+    name = StringField(_l('Group Name'), validators=[Length(max=128, message=l_message)])
+    submit = SubmitField(_l('Submit'))
+
+
+class ExploreGroupForm(FlaskForm):
+    name = StringField(_l('Group Name'))
+    submit = SubmitField(_l('Submit'))
+
+    def validate_name(self, field):
+        if Group.query.filter_by(name=field.data).count() == 0:
+            raise ValidationError(_l('No such group'))

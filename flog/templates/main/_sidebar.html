@@ -22,6 +22,12 @@ MIT License
                 <a class="list-group-item" href="{{ url_for('user.show_followers', username=current_user.username) }}">
                     {{ _('Show your followers') }}
                 </a>
+                <a class="list-group-item" href="{{ url_for('user.explore_group') }}">
+                    {{ _('Join new groups') }}
+                </a>
+                <a class="list-group-item" href="{{ url_for('user.create_group') }}">
+                    {{ _('Create a new group') }}
+                </a>
             </ul>
         </div>
         <div class="card mb-3">

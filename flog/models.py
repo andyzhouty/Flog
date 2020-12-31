@@ -158,6 +158,24 @@ class Group(db.Model):
         secondary=group_user_table,
         back_populates='groups'
     )
+    manager = db.relationship('User', back_populates='managed_groups')
+    manager_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def generate_join_token(self, expiration: int=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'group_id': self.id}).decode('utf-8')
+
+    def join_url(self):
+        return url_for('user.join_group', token=self.generate_join_token())
+
+    @staticmethod
+    def verify_join_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return None
+        return Group.query.get(data.get('group_id'))
 
 
 class Role(db.Model):
@@ -255,6 +273,7 @@ class User(db.Model, UserMixin):
         secondary=group_user_table,
         back_populates='members'
     )
+    managed_groups = db.relationship('Group', back_populates='manager')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

@@ -5,13 +5,12 @@ Copyright (c) 2020 Andy Zhou
 from flask import abort, render_template, redirect, make_response, url_for, flash, request, current_app
 from flask_login import current_user, login_required, login_user
 from flask_babel import _
-from itsdangerous import Serializer
 from . import user_bp
-from .forms import EditProfileForm, PasswordChangeForm, ValidateEmailForm
-from ..models import db, User, Permission
+from .forms import EditProfileForm, GroupCreationForm, ExploreGroupForm, PasswordChangeForm, ValidateEmailForm
+from ..models import Group, db, User, Permission
 from ..decorators import permission_required
 from ..utils import redirect_back
-from ..notifications import push_follow_notification
+from ..notifications import push_follow_notification, push_group_join_notification
 from ..emails import send_email
 
 
@@ -124,3 +123,41 @@ def reset_password(token):
         flash(_("Password Changed"))
         return redirect(url_for('main.main'))
     return render_template('user/change_password.html', form=form)
+
+
+@user_bp.route('/group/create/', methods=['GET', 'POST'])
+@login_required
+def create_group():
+    form = GroupCreationForm()
+    if form.validate_on_submit():
+        group = Group(name=form.name.data)
+        current_user.join_group(group)
+        db.session.commit()
+        flash(_("Created group {0}.".format(group.name)))
+        return make_response(redirect_back())
+    return render_template('user/create_group.html', form=form)
+
+
+@user_bp.route('/group/explore/', methods=['GET', 'POST'])
+@login_required
+def explore_group():
+    form = ExploreGroupForm()
+    if form.validate_on_submit():
+        group = Group.query.filter_by(name=form.name.data).first_or_404()
+        push_group_join_notification(joiner=current_user, group=group, receiver=group.manager)
+        flash(_("""We have sent a notification to the manager of the group.
+                All you should do is to wait the manager's reply."""))
+        return make_response(redirect_back())
+    return render_template('user/explore_group.html', form=form)
+
+
+@user_bp.route('/group/join/<token>/', methods=['POST'])
+@login_required
+def join_group(token):
+    group = Group.verify_join_token(token)
+    if group is None:
+        abort(404)
+    else:
+        current_user.join_group(group)
+        flash(_("Joined group {0}".format(group.name)))
+        return make_response(redirect_back())

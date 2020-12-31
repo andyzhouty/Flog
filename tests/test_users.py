@@ -6,7 +6,8 @@ import os
 from random import randint
 from faker import Faker
 from flask import current_app, request
-from flog.models import db, Role, User
+from werkzeug.utils import escape
+from flog.models import db, Role, User, Group
 from flog.extensions import mail
 from .helpers import *
 
@@ -148,3 +149,75 @@ def test_reset_password_without_auth(client_with_request_ctx):
     assert "Password Changed" in data
     assert request.path == '/'
     assert user.verify_password('abcd1234')
+
+
+def test_create_group(client):
+    login(client)
+    admin = User.query.filter_by(
+        role=Role.query.filter_by(
+            name='Administrator'
+        ).first()
+    ).first()
+    response = client.get('/group/create/')
+    assert response.status_code == 200
+    data = {
+        'name': 'test_group'
+    }
+    response = client.post('/group/create/', data=data, follow_redirects=True)
+    assert response.status_code == 200
+    group = Group.query.filter_by(name=data['name']).first()
+    assert group is not None
+    assert admin.in_group(group)
+
+
+def test_join_group(client):
+    register(client)
+    login(client, 'test', 'password')
+    admin = User.query.filter_by(
+        role=Role.query.filter_by(
+            name='Administrator'
+        ).first()
+    ).first()
+    data = {
+        'name': 'test_group'
+    }
+    client.post('/group/create/', data=data, follow_redirects=True)
+    group = Group.query.filter_by(name=data['name']).first()
+    logout(client)
+    login(client)
+    assert not admin.in_group(group)
+    token = group.generate_join_token()
+    response = client.post(f'/group/join/{token}/', follow_redirects=True)
+    assert response.status_code == 200
+    assert admin.in_group(group)
+
+
+def test_explore_group(client):
+    register(client)
+    login(client, 'test', 'password')
+    admin = User.query.filter_by(
+        role=Role.query.filter_by(
+            name='Administrator'
+        ).first()
+    ).first()
+    data = {
+        'name': 'test_group'
+    }
+    client.post('/group/create/', data=data, follow_redirects=True)
+    group = Group.query.filter_by(name=data['name']).first()
+    logout(client)
+    login(client)
+    notifaction_count = Notification.query.count()
+    response = client.get('/group/explore/')
+    assert response.status_code == 200
+    fake_data = {
+        'name': 'not existing'
+    }
+    response = client.post('/group/explore/', data=fake_data, follow_redirects=True)
+    response_data = response.get_data(as_text=True)
+    assert 'No such group' in response_data
+    response = client.post('/group/explore/', data=data, follow_redirects=True)
+    response_data = response.get_data(as_text=True)
+    assert response.status_code == 200
+    assert "We have sent a notification to the manager of the group." in response_data
+    assert Notification.query.count() == notifaction_count + 1

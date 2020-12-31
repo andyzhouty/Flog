@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-27 21:06+0800\n"
+"POT-Creation-Date: 2020-12-31 21:41+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -53,6 +53,12 @@ msgstr "<a href=\"{0}\">这篇文章</a>有一个新的评论/评论的回复。
 #: flog/notifications.py:40
 msgid "User <a href=\"{0}\">{1}</a> collected your <a href=\"{2}\">post</a>"
 msgstr "用户<a href=\"{0}\">{1}</a>收藏了你的<a href=\"{2}\">这篇文章</a>"
+
+#: flog/notifications.py:52
+msgid ""
+"User <a href=\"{0}\">{1}</a> wants to join your group {2}.\n"
+"                    Click <a href=\"{3}\">Here</a> to approve."
+msgstr ""
 
 #: flog/admin/forms.py:14 flog/auth/forms.py:14 flog/feedback/forms.py:11
 msgid "Please fill out this field."
@@ -101,7 +107,8 @@ msgid "About me"
 msgstr "关于自己"
 
 #: flog/admin/forms.py:31 flog/main/forms.py:20 flog/user/forms.py:20
-#: flog/user/forms.py:26 flog/user/forms.py:31
+#: flog/user/forms.py:26 flog/user/forms.py:31 flog/user/forms.py:40
+#: flog/user/forms.py:45
 msgid "Submit"
 msgstr "提交"
 
@@ -256,50 +263,50 @@ msgstr "发表"
 msgid "Comment"
 msgstr "评论"
 
-#: flog/main/views.py:69
+#: flog/main/views.py:67
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:88 flog/templates/main/_comments.html:73
+#: flog/main/views.py:86 flog/templates/main/_comments.html:73
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
 
-#: flog/main/views.py:102
+#: flog/main/views.py:100
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:107
+#: flog/main/views.py:105
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:148
+#: flog/main/views.py:146
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:167
+#: flog/main/views.py:166
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:186
+#: flog/main/views.py:185
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:188
+#: flog/main/views.py:187
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:190
+#: flog/main/views.py:189
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:192
+#: flog/main/views.py:191
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:201
+#: flog/main/views.py:200
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
@@ -602,23 +609,31 @@ msgstr "显示你的收藏"
 msgid "Show your followers"
 msgstr "显示关注你的人"
 
-#: flog/templates/main/_sidebar.html:28
+#: flog/templates/main/_sidebar.html:26
+msgid "Join new groups"
+msgstr ""
+
+#: flog/templates/main/_sidebar.html:29
+msgid "Create a new group"
+msgstr ""
+
+#: flog/templates/main/_sidebar.html:34
 msgid "Explore"
 msgstr "发现"
 
-#: flog/templates/main/_sidebar.html:31
+#: flog/templates/main/_sidebar.html:37
 msgid "View all users"
 msgstr "查看所有Flog用户"
 
-#: flog/templates/main/_sidebar.html:37
+#: flog/templates/main/_sidebar.html:43
 msgid "Admin Actions"
 msgstr "管理员操作"
 
-#: flog/templates/main/_sidebar.html:40
+#: flog/templates/main/_sidebar.html:46
 msgid "Manage Users"
 msgstr "管理用户"
 
-#: flog/templates/main/_sidebar.html:43
+#: flog/templates/main/_sidebar.html:49
 msgid "Manage Posts"
 msgstr "管理文章"
 
@@ -701,6 +716,14 @@ msgstr "查看所有Flog用户"
 #: flog/templates/user/all_users.html:34
 msgid "return confirm('Are you sure?');"
 msgstr "return confirm('你确定吗？');"
+
+#: flog/templates/user/create_group.html:4
+msgid "Create a group"
+msgstr "新建一个群"
+
+#: flog/templates/user/explore_group.html:4
+msgid "Which group do you want to join?"
+msgstr "你想加入那个群？"
 
 #: flog/templates/user/followers.html:9
 msgid "Your"
@@ -792,34 +815,57 @@ msgstr "新密码"
 msgid "Again"
 msgstr "确认密码"
 
-#: flog/user/views.py:31
+#: flog/user/forms.py:39 flog/user/forms.py:44
+msgid "Group Name"
+msgstr "群的名字"
+
+#: flog/user/forms.py:49
+msgid "No such group"
+msgstr "没有叫这个名字的群"
+
+#: flog/user/views.py:30
 msgid "Your profile has been updated!"
 msgstr "你的个人信息已经被更新了！"
 
-#: flog/user/views.py:37
+#: flog/user/views.py:36
 msgid "Your email has not been confirmed yet!"
 msgstr "你的邮箱还没有被验证呢！"
 
-#: flog/user/views.py:47
+#: flog/user/views.py:46
 msgid "Already followed."
 msgstr "你已经关注了该用户。"
 
-#: flog/user/views.py:52
+#: flog/user/views.py:51
 msgid "User followed."
 msgstr "你关注了该用户。"
 
-#: flog/user/views.py:61
+#: flog/user/views.py:60
 msgid "Not following yet."
 msgstr "你还没有关注该用户。"
 
-#: flog/user/views.py:64
+#: flog/user/views.py:63
 msgid "User unfollowed."
 msgstr "你取消关注了这个用户。"
 
-#: flog/user/views.py:100 flog/user/views.py:124
+#: flog/user/views.py:99 flog/user/views.py:123
 msgid "Password Changed"
 msgstr "你的密码已更改"
 
-#: flog/user/views.py:112
+#: flog/user/views.py:111
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
+
+#: flog/user/views.py:136
+msgid "Created group {0}."
+msgstr ""
+
+#: flog/user/views.py:148
+msgid ""
+"We have sent a notification to the manager of the group.\n"
+"                All you should do is to wait the manager's reply."
+msgstr "我们已经向这个群的管理者发了一个通知，你只需等待回复即可。"
+
+#: flog/user/views.py:162
+msgid "Joined group {0}"
+msgstr "加入了群{0}"
+
