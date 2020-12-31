@@ -10,6 +10,8 @@ from flog.models import Role, User
 
 def common_setup(app, context):
     context.push()
+    if not os.path.exists(app.config['UPLOAD_DIRECTORY']):
+        os.mkdir(app.config['UPLOAD_DIRECTORY'])
     db.drop_all()
     db.create_all()
     Role.insert_roles()
