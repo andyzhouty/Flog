@@ -93,9 +93,13 @@ def delete_image(id: int):
     if image.author != current_user and not current_user.is_administrator():
         abort(403)
     filename = image.filename
-    os.remove(image.path())
-    db.session.delete(image)
-    db.session.commit()
-    flash(_("Image {filename} deleted".format(filename=filename)))
-    return make_response(redirect_back())
+    try:
+        os.remove(image.path())
+    except FileNotFoundError:
+        pass
+    finally:
+        db.session.delete(image)
+        db.session.commit()
+        flash(_("Image {filename} deleted".format(filename=filename)))
+        return make_response(redirect_back())
 
