@@ -2,6 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
+from enum import unique
 import os
 import hashlib
 from datetime import datetime
@@ -152,7 +153,7 @@ class Permission:
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
+    name = db.Column(db.String(128), unique=True)
     members = db.relationship(
         'User',
         secondary=group_user_table,
