@@ -26,7 +26,7 @@ MIT License
     <ul class="list-group">
         {% for notification in notifications %}
             <li class="list-group-item">
-                {{ notification.message | safe }}
+                {{ _(notification.message) | safe }}
                 {% if not notification.is_read %}
                     <form method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

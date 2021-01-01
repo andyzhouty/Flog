@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-12-31 21:41+0800\n"
+"POT-Creation-Date: 2021-01-01 10:19+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -59,6 +59,8 @@ msgid ""
 "User <a href=\"{0}\">{1}</a> wants to join your group {2}.\n"
 "                    Click <a href=\"{3}\">Here</a> to approve."
 msgstr ""
+"用户<a href=\"{0}\">{1}</a>要加入您的群{2}。\n"
+"点击<a href=\"{3}\">此处</a>进行批准。"
 
 #: flog/admin/forms.py:14 flog/auth/forms.py:14 flog/feedback/forms.py:11
 msgid "Please fill out this field."
@@ -540,7 +542,7 @@ msgstr "发表"
 
 #: flog/templates/image/manage_images.html:24
 msgid "Make Public"
-msgstr ""
+msgstr "公开"
 
 #: flog/templates/image/manage_images.html:26
 #, fuzzy
@@ -571,7 +573,7 @@ msgstr "回复"
 
 #: flog/templates/main/_comments.html:64
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: flog/templates/main/_comments.html:70
 msgid "No comments yet."
@@ -611,11 +613,11 @@ msgstr "显示关注你的人"
 
 #: flog/templates/main/_sidebar.html:26
 msgid "Join new groups"
-msgstr ""
+msgstr "加入新的群"
 
 #: flog/templates/main/_sidebar.html:29
 msgid "Create a new group"
-msgstr ""
+msgstr "创建一个群"
 
 #: flog/templates/main/_sidebar.html:34
 msgid "Explore"
@@ -721,7 +723,12 @@ msgstr "return confirm('你确定吗？');"
 msgid "Create a group"
 msgstr "新建一个群"
 
-#: flog/templates/user/explore_group.html:4
+#: flog/templates/user/explore_group.html:8
+#: flog/templates/user/explore_group.html:14
+msgid "Hint"
+msgstr "提示"
+
+#: flog/templates/user/explore_group.html:25
 msgid "Which group do you want to join?"
 msgstr "你想加入那个群？"
 
@@ -855,17 +862,17 @@ msgstr "你的密码已更改"
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
 
-#: flog/user/views.py:136
+#: flog/user/views.py:137
 msgid "Created group {0}."
-msgstr ""
+msgstr "创建了群{0}"
 
-#: flog/user/views.py:148
+#: flog/user/views.py:149
 msgid ""
 "We have sent a notification to the manager of the group.\n"
 "                All you should do is to wait the manager's reply."
 msgstr "我们已经向这个群的管理者发了一个通知，你只需等待回复即可。"
 
-#: flog/user/views.py:162
+#: flog/user/views.py:163
 msgid "Joined group {0}"
 msgstr "加入了群{0}"
 

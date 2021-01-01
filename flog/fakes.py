@@ -6,7 +6,7 @@ from random import randint
 import click
 from faker import Faker
 from .utils import lower_username
-from .models import db, Post, Feedback, User, Role, Comment, Notification
+from .models import db, Post, Feedback, User, Role, Comment, Notification, Group
 
 fake = Faker()
 
@@ -96,4 +96,17 @@ def notifications(count: int, receiver: User = None) -> None:
             receiver=receiver,
         )
         db.session.add(notification)
+    db.session.commit()
+
+
+def groups(count: int) -> None:
+    """Generates fake user groups"""
+    for i in range(count):
+        manager = User.query.get(randint(1, User.query.count()))
+        group = Group(
+            name=fake.sentence(),
+            manager=manager
+        )
+        manager.join_group(group)
+        db.session.add(group)
     db.session.commit()

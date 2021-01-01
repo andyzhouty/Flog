@@ -14,6 +14,7 @@ def test_create_article(client):
     post = data['post']
     response = client.get('/')
     response_data = response.get_data(as_text=True)
+    print(response_data)
     assert post['title'] in response_data
     # test if filter 'striptag' work
     assert not(post['content'] in response_data)

@@ -10,7 +10,7 @@ from .forms import EditProfileForm, GroupCreationForm, ExploreGroupForm, Passwor
 from ..models import Group, db, User, Permission
 from ..decorators import permission_required
 from ..utils import redirect_back
-from ..notifications import push_follow_notification, push_group_join_notification
+from ..notifications import push_follow_notification, push_group_invite_notification, push_group_join_notification
 from ..emails import send_email
 
 
@@ -132,6 +132,7 @@ def create_group():
     if form.validate_on_submit():
         group = Group(name=form.name.data)
         current_user.join_group(group)
+        group.manager = current_user
         db.session.commit()
         flash(_("Created group {0}.".format(group.name)))
         return make_response(redirect_back())
@@ -151,13 +152,29 @@ def explore_group():
     return render_template('user/explore_group.html', form=form)
 
 
-@user_bp.route('/group/join/<token>/', methods=['POST'])
+@user_bp.route('/group/join/<token>/')
 @login_required
 def join_group(token):
     group = Group.verify_join_token(token)
     if group is None:
         abort(404)
     else:
-        current_user.join_group(group)
+        user_id = request.args.get('user_id', type=int)
+        if user_id is None:
+            user = current_user
+        else:
+            user = User.query.get(user_id)
+        user.join_group(group)
         flash(_("Joined group {0}".format(group.name)))
         return make_response(redirect_back())
+
+
+@user_bp.route('/group/invite/<int:user_id>/')
+@login_required
+def invite_user(user_id: int):
+    group_id = request.args.get('group_id', type=int)
+    group = Group.query.get_or_404(group_id)
+    invited_user = User.query.get_or_404(user_id)
+    push_group_invite_notification(current_user, group, invited_user)
+    flash(_("Notification sent to user {0}".format(invited_user.username)))
+    return make_response(redirect_back())

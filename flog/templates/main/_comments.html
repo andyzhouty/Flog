@@ -32,7 +32,7 @@
             </div>
             {% if comment.replied %}
             <p class="alert alert-dark reply-body">
-                {{ comment.replied.author.name }}:<br>
+                {{ comment.replied.author.username }}:<br>
                 {{ comment.replied.body }}
             </p>
             {% endif %}
@@ -47,7 +47,7 @@
                     </button>
                 </form>
                 {% endif %}
-                <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id) }}">
+                <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
                     <i class="fa fa-mail-reply"></i>
                     {{ _('Reply') }}
                 </a>

@@ -165,8 +165,8 @@ class Group(db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'group_id': self.id}).decode('utf-8')
 
-    def join_url(self):
-        return url_for('user.join_group', token=self.generate_join_token())
+    def join_url(self, **kwargs):
+        return url_for('user.join_group', token=self.generate_join_token(), **kwargs)
 
     @staticmethod
     def verify_join_token(token):

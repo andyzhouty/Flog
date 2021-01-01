@@ -49,7 +49,19 @@ def push_group_join_notification(joiner, group, receiver):
     message = _("""User <a href="{0}">{1}</a> wants to join your group {2}.
                     Click <a href="{3}">Here</a> to approve."""
                 .format(joiner.profile_url(), joiner.username, group.name,
-                        group.join_url()))
+                        group.join_url(user_id=joiner.id)))
+    notification = Notification(message=message, receiver=receiver, is_read=False)
+    db.session.add(notification)
+    db.session.commit()
+
+
+def push_group_invite_notification(inviter, group, receiver):
+    """Push a notfication to the invited user."""
+    message = _(
+        """User <a href="{0}">{1}</a> invited you to group {2}.
+           Click <a href="{3}">Here</a> to join it.""".format(
+               inviter.profile_url(), inviter.username, group.name, group.join_url()
+           ))
     notification = Notification(message=message, receiver=receiver, is_read=False)
     db.session.add(notification)
     db.session.commit()

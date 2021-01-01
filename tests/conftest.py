@@ -26,9 +26,9 @@ def common_setup(app, context):
     db.session.add(admin)
     db.session.commit()
     Role.insert_roles()
-    fakes.users(10)
-    fakes.posts(10)
-    fakes.comments(10)
+    fakes.users(5)
+    fakes.posts(5)
+    fakes.comments(5)
 
 
 def clean_up(app, context):
