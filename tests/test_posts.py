@@ -68,10 +68,16 @@ def test_collect_uncollect(client):
 
 def test_view_post(client):
     post = Post.query.filter(~Post.private).first()
+    while post is None:
+        fakes.posts(1)
+        post = Post.query.filter(~Post.private).first()
     data = get_response_and_data_of_post(client, post.id)[1]
     assert post.content in data
 
     post_private = Post.query.filter(Post.private).first()
+    while post_private is None:
+        fakes.posts(1)
+        post_private = Post.query.filter(Post.private).first()
     data = get_response_and_data_of_post(client, post_private.id)[1]
     assert 'The author has set this post to invisible.' in data
 
