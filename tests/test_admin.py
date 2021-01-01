@@ -35,7 +35,7 @@ def test_admin_edit_user_profile(client):
     login(client)
     response = client.get("/admin/user/all/")
     assert response.status_code == 200
-    user_id = randint(2, 11)
+    user_id = randint(2, 5)
     data = {
         'email': fake.email(),
         'username': lower_username(fake.name()),
