@@ -2,6 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
+import os
 from .helpers import login
 from flog.models import User, Role
 

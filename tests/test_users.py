@@ -2,7 +2,6 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-import os
 from random import randint
 from faker import Faker
 from flask import current_app, request
@@ -64,7 +63,7 @@ def test_delete_account(client):
     login(client)
     user_count = User.query.count()
     response = client.post('/auth/account/delete/',
-                data={'password': os.getenv('FLOG_ADMIN_PASSWORD')},
+                data={'password': current_app.config['FLOG_ADMIN_PASSWORD']},
                 follow_redirects=True)
     assert response.status_code == 200
     assert User.query.count() == user_count - 1
