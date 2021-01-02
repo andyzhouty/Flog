@@ -147,22 +147,3 @@ def test_reset_password_without_auth(client_with_request_ctx):
     assert "Password Changed" in data
     assert request.path == '/'
     assert user.verify_password('abcd1234')
-
-
-def test_create_group(client):
-    login(client)
-    admin = User.query.filter_by(
-        role=Role.query.filter_by(
-            name='Administrator'
-        ).first()
-    ).first()
-    response = client.get('/group/create/')
-    assert response.status_code == 200
-    data = {
-        'name': 'test_group'
-    }
-    response = client.post('/group/create/', data=data, follow_redirects=True)
-    assert response.status_code == 200
-    group = Group.query.filter_by(name=data['name']).first()
-    assert group is not None
-    assert admin.in_group(group)

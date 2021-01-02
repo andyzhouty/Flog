@@ -77,4 +77,4 @@ def edit_user_profile(id):
 def delete_user_account(id):
     User.query.get(id).delete()
     flash(_('User Deleted'),  'info')
-    return make_response(redirect_back())
+    return redirect_back()

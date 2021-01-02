@@ -6,8 +6,7 @@ MIT License
 <div class="popup-card">
     <img class="img-circle img-fluid popup-avatar" src="{{ user.gravatar() }}">
     <div class="popup-profile">
-        <h6>{{ user.name }}</h6>
-        <p class="text-muted">{{ user.username }}</p>
+        <h6>{{ user.username }}</h6>
     </div>
     <a href="{{ url_for('user.user_profile', username=user.username) }}"
        class="btn btn-light btn-sm">{{ _('Homepage') }}</a>

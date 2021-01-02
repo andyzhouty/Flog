@@ -83,7 +83,7 @@ def toggle_image_visibility(id: int):
     image.private = not image.private
     db.session.commit()
     flash(_("Image {filename} visibility toggled".format(filename=image.filename)))
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @image_bp.route('/delete/<int:id>/', methods=['POST'])
@@ -101,5 +101,5 @@ def delete_image(id: int):
         db.session.delete(image)
         db.session.commit()
         flash(_("Image {filename} deleted".format(filename=filename)))
-        return make_response(redirect_back())
+        return redirect_back()
 

@@ -6,7 +6,7 @@ from flask import abort, render_template, redirect, make_response, url_for, flas
 from flask_login import current_user, login_required, login_user
 from flask_babel import _
 from . import user_bp
-from .forms import EditProfileForm, GroupCreationForm, ExploreGroupForm, PasswordChangeForm, ValidateEmailForm
+from .forms import EditProfileForm, GroupCreationForm, GroupFindForm, GroupInviteForm, PasswordChangeForm, ValidateEmailForm
 from ..models import Group, db, User, Permission
 from ..decorators import permission_required
 from ..utils import redirect_back
@@ -44,12 +44,12 @@ def follow(username):
     user = User.query.filter_by(username=username).first_or_404()
     if current_user.is_following(user):
         flash(_('Already followed.'),  'info')
-        return make_response(redirect_back())
+        return redirect_back()
     current_user.follow(user)
     if not current_app.testing:
         push_follow_notification(follower=current_user, receiver=user)
     flash(_('User followed.'),  'success')
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @user_bp.route('/unfollow/<username>/', methods=['POST'])
@@ -58,10 +58,10 @@ def unfollow(username):
     user = User.query.filter_by(username=username).first()
     if not current_user.is_following(user):
         flash(_('Not following yet.'),  'info')
-        return make_response(redirect_back())
+        return redirect_back()
     current_user.unfollow(user)
     flash(_('User unfollowed.'),  'info')
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @user_bp.route('/user/<username>/')
@@ -130,25 +130,25 @@ def reset_password(token):
 def create_group():
     form = GroupCreationForm()
     if form.validate_on_submit():
-        group = Group(name=form.name.data)
+        group = Group(name=form.group_name.data)
         current_user.join_group(group)
         group.manager = current_user
         db.session.commit()
         flash(_("Created group {0}.".format(group.name)))
-        return make_response(redirect_back())
+        return redirect_back()
     return render_template('user/create_group.html', form=form)
 
 
-@user_bp.route('/group/explore/', methods=['GET', 'POST'])
+@user_bp.route('/group/find/', methods=['GET', 'POST'])
 @login_required
 def explore_group():
-    form = ExploreGroupForm()
+    form = GroupFindForm()
     if form.validate_on_submit():
-        group = Group.query.filter_by(name=form.name.data).first_or_404()
+        group = Group.query.filter_by(name=form.group_name.data).first_or_404()
         push_group_join_notification(joiner=current_user, group=group, receiver=group.manager)
         flash(_("""We have sent a notification to the manager of the group.
                 All you should do is to wait the manager's reply."""))
-        return make_response(redirect_back())
+        return redirect_back()
     return render_template('user/explore_group.html', form=form)
 
 
@@ -166,15 +166,28 @@ def join_group(token):
             user = User.query.get(user_id)
         user.join_group(group)
         flash(_("Joined group {0}".format(group.name)))
-        return make_response(redirect_back())
+        return redirect_back()
 
 
-@user_bp.route('/group/invite/<int:user_id>/')
+@user_bp.route('/group/invite/<int:user_id>/', methods=['GET', 'POST'])
 @login_required
 def invite_user(user_id: int):
-    group_id = request.args.get('group_id', type=int)
-    group = Group.query.get_or_404(group_id)
-    invited_user = User.query.get_or_404(user_id)
-    push_group_invite_notification(current_user, group, invited_user)
-    flash(_("Notification sent to user {0}".format(invited_user.username)))
-    return make_response(redirect_back())
+    form = GroupInviteForm()
+    form.group_id.choices = [
+        (g.id, g.name)
+        for g in Group.query.filter_by(manager=current_user).order_by('name')
+    ]
+    print(len(form.group_id.choices))
+    if len(form.group_id.choices) == 0:
+        flash(_("""
+            You are not managing any groups.
+            Please create a group first to invite other users.
+        """))
+        return redirect_back()
+    if form.validate_on_submit():
+        group = Group.query.get_or_404(form.group_id.data)
+        invited_user = User.query.get_or_404(user_id)
+        push_group_invite_notification(current_user, group, invited_user)
+        flash(_("Notification sent to user {0}".format(invited_user.username)))
+        return redirect_back()
+    return render_template('user/group_invite.html', form=form)

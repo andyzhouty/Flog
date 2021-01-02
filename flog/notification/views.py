@@ -35,7 +35,7 @@ def read(id):
     notification.is_read = True
     db.session.add(notification)
     db.session.commit()
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @notification_bp.route('/read/all/', methods=['POST'])
@@ -46,4 +46,4 @@ def read_all():
         db.session.add(notification)
     db.session.commit()
     flash(_('All notifications are read.'),  "success")
-    return make_response(redirect_back())
+    return redirect_back()

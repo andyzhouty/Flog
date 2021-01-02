@@ -14,7 +14,7 @@ from . import language_bp
 def set_locale(locale):
     if locale not in current_app.config['LOCALES'].keys():
         abort(404)
-    response = make_response(redirect_back())
+    response = redirect_back()
     if current_user.is_authenticated:
         current_user.locale = locale
         db.session.add(current_user)

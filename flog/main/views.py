@@ -84,7 +84,7 @@ def full_post(id: int):
         if form.validate_on_submit():
             if post.private:
                 flash(_('You cannot comment a private post!'))
-                return make_response(redirect_back())
+                return redirect_back()
             comment = Comment(
                 author=current_user,
                 post=post,
@@ -103,7 +103,7 @@ def full_post(id: int):
                                comments=comments, form=form)
     else:
         flash(_('The author has set this post to invisible.'))
-        return make_response(redirect_back())
+        return redirect_back()
 
 
 @main_bp.route('/reply/comment/<int:comment_id>')
@@ -118,7 +118,7 @@ def reply_comment(comment_id):
 def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     comment.delete()
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @main_bp.route('/post/manage/')
@@ -189,7 +189,7 @@ def collect_post(id):
         flash(_('You cannot collect your own post.'))
     else:
         flash(_('The author has set this post to invisible. So you cannot collect this post.'))
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @main_bp.route('/post/uncollect/<int:id>/')
@@ -198,7 +198,7 @@ def uncollect_post(id):
     post = Post.query.get(id)
     current_user.uncollect(post)
     flash(_('Post uncollected.'), 'info')
-    return make_response(redirect_back())
+    return redirect_back()
 
 
 @main_bp.route('/post/collected/')

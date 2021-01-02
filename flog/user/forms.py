@@ -5,6 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from flask_wtf import FlaskForm
 from flask_babel import lazy_gettext as _l
 from wtforms import StringField, TextAreaField, SubmitField, PasswordField
+from wtforms.fields.core import SelectField
 from wtforms.validators import Length, EqualTo, Email, ValidationError
 from ..models import User, Group
 
@@ -36,14 +37,23 @@ class ValidateEmailForm(FlaskForm):
 
 
 class GroupCreationForm(FlaskForm):
-    name = StringField(_l('Group Name'), validators=[Length(max=128, message=l_message)])
+    group_name = StringField(_l('Group Name'), validators=[Length(max=128, message=l_message)])
     submit = SubmitField(_l('Submit'))
 
 
-class ExploreGroupForm(FlaskForm):
-    name = StringField(_l('Group Name'))
+class GroupFindForm(FlaskForm):
+    group_name = StringField(_l('Group Name'))
     submit = SubmitField(_l('Submit'))
 
-    def validate_name(self, field):
+    def validate_group_name(self, field):
         if Group.query.filter_by(name=field.data).count() == 0:
+            raise ValidationError(_l('No such group'))
+
+
+class GroupInviteForm(FlaskForm):
+    group_id = SelectField(_l('Group Name'), coerce=int)
+    submit = SubmitField(_l('Submit'))
+
+    def validate_group_id(self, field):
+        if Group.query.get(field.data) is None:
             raise ValidationError(_l('No such group'))
