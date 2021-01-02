@@ -1,8 +1,7 @@
 # <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
 [英文版](./README.md)  
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs&style=for-the-badge)](https://flog.readthedocs.io/en/latest/?badge=latest)
-[![CircleCI Status](https://img.shields.io/circleci/build/github/z-t-y/Flog?logo=circleci&style=for-the-badge)](https://circleci.com/gh/z-t-y/Flog)
-[![TravisCI Status](https://img.shields.io/travis/z-t-y/Flog?logo=travis&style=for-the-badge)](https://travis-ci.com/github/z-t-y/Flog)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fz-t-y%2FFlog%2Fbadge&style=for-the-badge)](https://actions-badge.atrox.dev/z-t-y/Flog/goto)
 [![Coverage Status](https://img.shields.io/coveralls/github/z-t-y/Flog?logo=coveralls&style=for-the-badge)](https://coveralls.io/github/z-t-y/Flog?branch=master)
 
 由[Freepik]("https://www.flaticon.com/authors/freepik")制作的图标
