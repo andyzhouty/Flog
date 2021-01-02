@@ -40,12 +40,3 @@ jobs:
         . venv/bin/activate
         flask translate compile
         pytest
-
-  coveralls_finish:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Coveralls Finished
-      uses: AndreMiras/coveralls-python-action@develop
-      with:
-        parallel-finished: true

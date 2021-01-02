@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8.0
+        environment:
+          FLASK_CONFIG: testing
+    steps:
+      - checkout
+      - run: mkdir test-reports/
+      - restore_cache:
+          key: deps2-{{ .Branch }}-{{ checksum "requirements/ci.txt" }}
+      - run:
+          name: Install Python deps in a venv
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/ci.txt
+      - save_cache:
+          key: deps2-{{ .Branch }}-{{ checksum "requirements/ci.txt" }}
+          paths:
+            - "venv"
+      - run:
+          name: Compile tranlation file and run tests
+          command: |
+            . venv/bin/activate
+            flask translate compile
+            pytest
+      - store_artifacts:
+          path: test-reports/
+          destination: tr1
+      - store_test_results:
+          path: test-reports/
+      - run:
+          name: Submit coverage status to coveralls
+          command: |
+            . venv/bin/activate
+            coveralls

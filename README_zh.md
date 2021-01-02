@@ -2,6 +2,7 @@
 [英文版](./README.md)  
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs&style=for-the-badge)](https://flog.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fz-t-y%2FFlog%2Fbadge&style=for-the-badge)](https://actions-badge.atrox.dev/z-t-y/Flog/goto)
+[![CircleCI Status](https://img.shields.io/circleci/build/gh/z-t-y/Flog?label=circleci&logo=circleci&style=for-the-badge)](https://circleci.com/gh/z-t-y/Flog)
 [![Coverage Status](https://img.shields.io/coveralls/github/z-t-y/Flog?logo=coveralls&style=for-the-badge)](https://coveralls.io/github/z-t-y/Flog?branch=master)
 
 由[Freepik]("https://www.flaticon.com/authors/freepik")制作的图标
