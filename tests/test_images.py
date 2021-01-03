@@ -20,7 +20,6 @@ def test_basic_operations(client_with_request_ctx):
     if os.path.exists(uploaded_path):
         os.remove(uploaded_path)
     assert not os.path.exists(uploaded_path)
-    os.chdir(dirname(abspath(__file__)))
     response = upload_image(client)
     assert response.status_code == 200
     assert os.path.exists(uploaded_path)
