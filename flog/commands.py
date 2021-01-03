@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import os
 import click
 from flask import Flask
-from .extensions import whooshee
+
 
 def register_commands(app: Flask, db):
     @app.cli.command()
@@ -53,12 +53,11 @@ def register_commands(app: Flask, db):
 
     @app.cli.command()
     @click.option('--drop/--no-drop', help='Drop database or not')
-    def init_db(drop: bool=False) -> None:
+    def init_db(drop: bool = False) -> None:
         """Initialize database on a new machine."""
         if drop:
             db.drop_all(app=app)
         db.create_all(app=app)
-
 
     @app.cli.command()
     def deploy():
@@ -78,11 +77,8 @@ def register_commands(app: Flask, db):
         # add self-follows
         for user in User.query.all():
             user.follow(user)
-        whooshee.reindex()
         if os.system('pybabel compile -d flog/translations'):
             raise RuntimeError('Error: Compiling failed.')
-
-
 
     @app.cli.group()
     def translate():
@@ -96,7 +92,7 @@ def register_commands(app: Flask, db):
         if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
             raise RuntimeError('Error: Extracting the config file failed.')
         if os.system(
-            'pybabel init -i messages.pot -d flog`/translations -l ' + locale):
+                'pybabel init -i messages.pot -d flog`/translations -l ' + locale):
             raise RuntimeError(f'Error: Initing the new language {locale} failed.')
         os.remove('messages.pot')
 
@@ -114,7 +110,3 @@ def register_commands(app: Flask, db):
         """Compile all languages to .mo file."""
         if os.system('pybabel compile -d flog/translations'):
             raise RuntimeError('Error: Compiling failed.')
-
-    @app.cli.command()
-    def update_whooshee():
-        whooshee.reindex()

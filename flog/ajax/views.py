@@ -28,7 +28,8 @@ def get_group_hint():
     if not current_user.is_authenticated:
         return jsonify(message='Login required.'), 401
     user_input = request.args.get('q')
-    if user_input == '':
-        return jsonify(hint=[])
-    hint = [group.name for group in Group.query.whooshee_search(user_input).all()]
+    hint = []
+    for group in Group.query.all():
+        if user_input.lower() in group.name.lower() and user_input != '':
+            hint.append(group.name)
     return jsonify(hint=hint[:5])

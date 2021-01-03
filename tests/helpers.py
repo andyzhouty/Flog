@@ -5,7 +5,6 @@ Copyright (c) 2020 Andy Zhou
 import os
 from faker import Faker
 from flask import current_app
-from flog.extensions import whooshee
 from base64 import b64encode
 from flog.models import db, Notification, User, Role
 

@@ -17,6 +17,7 @@ Sphinx = "*"
 sphinx-autobuild = "*"
 docutils = "*"
 pytest-cov = "*"
+pymysql = "*"
 
 [packages]
 alembic = "*"
@@ -66,7 +67,6 @@ WTForms = "*"
 Flask-Cors = "*"
 flask-httpauth = "*"
 bleach = "*"
-flask-whooshee = "*"
 
 [requires]
 python_version = "3.8"

@@ -212,6 +212,8 @@ def collected_posts():
 @login_required
 def search():
     q = request.args.get('q', '')
+    q = q.lower()
+    print(q)
     if q == '':
         flash(_('Enter keyword about post or user.'), 'warning')
         return redirect_back()
@@ -220,15 +222,19 @@ def search():
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['SEARCH_RESULT_PER_PAGE']
     if category == 'user':
-        pagination = User.query.whooshee_search(q).paginate(page, per_page)
-        results_count = User.query.whooshee_search(q).count()
+        query = User.query.filter(User.username.ilike(f"%{q}%"))
+        pagination = query.paginate(page, per_page)
+        results_count = query.count()
     elif category == 'group':
-        pagination = Group.query.whooshee_search(q).paginate(page, per_page)
-        results_count = Group.query.whooshee_search(q).count()
+        query = Group.query.filter(Group.name.ilike(f"%{q}%"))
+        pagination = query.paginate(page, per_page)
+        results_count = query.count()
     else:
-        pagination = Post.query.whooshee_search(q).paginate(page, per_page)
-        results_count = Post.query.whooshee_search(q).count()
+        query = Post.query.filter(Post.title.ilike(f"%{q}%"))
+        pagination = query.paginate(page, per_page)
+        results_count = query.count()
     results = pagination.items
+    print(results)
     return render_template('main/search.html', q=q,
                            results=results, results_count=results_count,
                            pagination=pagination, category=category)

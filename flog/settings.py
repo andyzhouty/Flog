@@ -86,7 +86,6 @@ class Base:
         'br /', 's', 'table', 'thead', 'tbody', 'th', 'td', 'tr',
     ]
 
-    WHOOSHEE_MIN_STRING_LEN = 1
 
     @classmethod
     def init_app(cls, app):

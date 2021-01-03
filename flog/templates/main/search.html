@@ -3,7 +3,17 @@
 {% from 'macros.html' import user_card, post_card, group_card with context %}
 
 {% block title %}Flog - Seach: {{ q }}{% endblock %}
-
+{% block search_bar %}
+    <form class="form-inline my-2 my-lg-0" action="{{ url_for('main.search', category=category) }}">
+        <input type="text" name="q" class="form-control mr-sm-1"
+                placeholder="{{ _('Search user, post or group') }}"
+            required>
+        <input type="hidden" name="category" value="{{ category }}">
+        <button class="btn btn-light my-2 my-sm-0" type="submit">
+            <span class="fa fa-search"></span>
+        </button>
+    </form>
+{% endblock %}
 {% block page_content %}
     <div class="page-header">
         <h1 class="display-4">Search: <em>{{ q }}</em></h1>
