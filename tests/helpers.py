@@ -5,6 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import os
 from faker import Faker
 from flask import current_app
+from flog.extensions import whooshee
 from base64 import b64encode
 from flog.models import db, Notification, User, Role
 
@@ -111,6 +112,7 @@ def upload_image(client):
     os.chdir(os.path.dirname(__file__))
     image_obj = open('test.png', 'rb')
     data = {'upload': image_obj}
+    os.chdir(os.path.dirname(os.path.dirname(__file__)))
     response = client.post(
         "/image/upload/",
         data=data,
