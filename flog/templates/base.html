@@ -41,6 +41,13 @@ MIT License
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
+                    <form class="form-inline my-2 my-lg-0" action="{{ url_for('main.search') }}">
+                        <input type="text" name="q" class="form-control mr-sm-1" placeholder="Search user, post"
+                            required>
+                        <button class="btn btn-light my-2 my-sm-0" type="submit">
+                            <span class="fa fa-search"></span>
+                        </button>
+                    </form>
                     <li class="nav-item">
                         <a href="{{ url_for('user.user_profile', username=current_user.username) }}" class="nav-link">
                             {# Display user identicon as a circle here #}

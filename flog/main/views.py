@@ -10,7 +10,7 @@ from flask import (
 )
 from flask_babel import _
 from flask_login import current_user, login_required
-from ..models import db, Post, Comment
+from ..models import db, Post, Comment, User
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
@@ -206,3 +206,26 @@ def collected_posts():
     # Get current user's collection
     posts = [post for post in Post.query.all() if current_user.is_collecting(post)]
     return render_template('main/collections.html', posts=posts)
+
+
+@main_bp.route('/search/')
+@login_required
+def search():
+    q = request.args.get('q', '')
+    if q == '':
+        flash(_('Enter keyword about post or user.'), 'warning')
+        return redirect_back()
+
+    category = request.args.get('category', 'post')
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['SEARCH_RESULT_PER_PAGE']
+    if category == 'user':
+        pagination = User.query.whooshee_search(q).paginate(page, per_page)
+        results_count = User.query.whooshee_search(q).count()
+    else:
+        pagination = Post.query.whooshee_search(q).paginate(page, per_page)
+        results_count = Post.query.whooshee_search(q).count()
+    results = pagination.items
+    return render_template('main/search.html', q=q,
+                           results=results, results_count=results_count,
+                           pagination=pagination, category=category)

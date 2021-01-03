@@ -61,6 +61,7 @@ class Base:
     COMMENTS_PER_PAGE = 10
     NOTIFICATIONS_PER_PAGE = 10
     IMAGES_PER_PAGE = 5
+    SEARCH_RESULT_PER_PAGE = 8
 
     LOCALES = {
         'en_US': 'English(US)',
@@ -84,6 +85,8 @@ class Base:
         'strong', 'em', 'div', 'span', 'br', 'ol', 'ul', 'li',
         'br /', 's', 'table', 'thead', 'tbody', 'th', 'td', 'tr',
     ]
+
+    WHOOSHEE_MIN_STRING_LEN = 1
 
     @classmethod
     def init_app(cls, app):

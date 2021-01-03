@@ -4,7 +4,7 @@
     {{ super() }}
     <script>
         $(document).ready(function () {
-            let element = $("input[name='name']");
+            let element = $("input[name='group_name']");
             let hint_element = $("<div id='hint'>" + "{{ _("Hint") }}" + ":</div>");
             element.after(hint_element);
             element.keyup(function (){

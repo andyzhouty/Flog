@@ -148,7 +148,7 @@ def explore_group():
         flash(_("""We have sent a notification to the manager of the group.
                 All you should do is to wait the manager's reply."""))
         return redirect_back()
-    return render_template('user/explore_group.html', form=form)
+    return render_template('user/find_group.html', form=form)
 
 
 @user_bp.route('/group/join/<token>/')

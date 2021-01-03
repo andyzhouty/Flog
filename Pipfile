@@ -66,6 +66,7 @@ WTForms = "*"
 Flask-Cors = "*"
 flask-httpauth = "*"
 bleach = "*"
+flask-whooshee = "*"
 
 [requires]
 python_version = "3.8"

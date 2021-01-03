@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import os
 import click
 from flask import Flask
-
+from .extensions import whooshee
 
 def register_commands(app: Flask, db):
     @app.cli.command()
@@ -78,6 +78,10 @@ def register_commands(app: Flask, db):
         # add self-follows
         for user in User.query.all():
             user.follow(user)
+        whooshee.reindex()
+        if os.system('pybabel compile -d flog/translations'):
+            raise RuntimeError('Error: Compiling failed.')
+
 
 
     @app.cli.group()
@@ -110,3 +114,7 @@ def register_commands(app: Flask, db):
         """Compile all languages to .mo file."""
         if os.system('pybabel compile -d flog/translations'):
             raise RuntimeError('Error: Compiling failed.')
+
+    @app.cli.command()
+    def update_whooshee():
+        whooshee.reindex()

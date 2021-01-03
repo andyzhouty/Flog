@@ -11,7 +11,7 @@ from flask import current_app, url_for
 from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from .extensions import db, login_manager
+from .extensions import db, login_manager, whooshee
 
 
 group_user_table = db.Table(
@@ -43,6 +43,7 @@ class Follow(db.Model):
                                back_populates='followers', lazy='joined')
 
 
+@whooshee.register_model('title')
 class Post(db.Model):
     """
     A model for posts
@@ -151,6 +152,7 @@ class Permission:
     ADMIN = 16
 
 
+@whooshee.register_model('name')
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
@@ -235,6 +237,7 @@ class Role(db.Model):
         db.session.commit()
 
 
+@whooshee.register_model('username')
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256))

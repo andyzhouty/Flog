@@ -5,6 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import os
 import pytest
 from flog import create_app, db, fakes
+from flog.extensions import whooshee
 from flog.models import Role, User
 
 
@@ -29,6 +30,7 @@ def common_setup(app, context):
     fakes.users(5)
     fakes.posts(5)
     fakes.comments(5)
+    whooshee.reindex()
 
 
 def clean_up(app, context):

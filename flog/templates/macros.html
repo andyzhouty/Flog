@@ -141,3 +141,29 @@ MIT License
     {%- endif %}
     </li>
 {% endmacro %}
+
+{% macro post_card(post) %}
+    <li class="list-group-item">
+        <h3 style="color: #5050bb">
+            <a href="{{ post.url() }}" title="{{ post.title }}">{{ post.title }}</a>
+        </h3>
+        <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}"
+            class="text-muted profile-popover"
+            data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+            {{ post.author.username }}
+            </a>
+            {% if post.private %}
+                <span class="badge badge-dark">
+                    {{ _('Private') }}
+                </span>
+            {% endif %}
+            </h4>
+        <div>
+            {{ post.content | striptags | truncate(200) }}
+            <small class="text-primary">
+                <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _('Read More') }}</a>
+            </small>
+            {{ post_actions(post) }}
+        </div>
+    </li>
+{% endmacro %}

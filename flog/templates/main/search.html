@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'macros.html' import user_card, post_card with context %}
+
+{% block title %}Flog - Seach: {{ q }}{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1 class="display-4">Search: <em>{{ q }}</em></h1>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="nav nav-pills flex-column" role="tablist" aria-orientation="vertical">
+                <a class="nav-item nav-link {% if category == 'post' %}active{% endif %}"
+                   href="{{ url_for('.search', q=q, category='post') }}">
+                   {{ _("Post") }}
+                </a>
+                <a class="nav-item nav-link {% if category == 'user' %}active{% endif %}"
+                   href="{{ url_for('.search', q=q, category='user') }}">
+                   {{ _("User") }}
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% if results %}
+                <h5>
+                    {{ results_count }}
+                    {{ ngettext('result', 'results', __num=results|length) }}
+                </h5>
+                {% for item in results %}
+                    {% if category == 'user' %}
+                        {{ user_card(item) }}
+                    {% else %}
+                        {{ post_card(item) }}
+                    {% endif %}
+                {% endfor %}
+                {{ render_pagination(pagination) }}
+            {% else %}
+                <h5 class="tip">{{ _("No results") }}</h5>
+            {% endif %}
+        </div>
+    </div>
+{% endblock page_content %}

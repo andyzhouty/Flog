@@ -10,7 +10,8 @@ from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
-    babel, bootstrap, ckeditor, csrf, db, login_manager, mail, migrate, moment, share,
+    babel, bootstrap, ckeditor, csrf, db, login_manager,
+    mail, migrate, moment, share, whooshee
 )
 from .models import Post, Feedback, Role, Permission, User, Notification
 from .settings import config
@@ -85,6 +86,7 @@ def register_extensions(app: Flask) -> None:
     migrate.init_app(app, db)
     moment.init_app(app)
     share.init_app(app)
+    whooshee.init_app(app)
 
     if app.config['SSL_REDIRECT']:
         from flask_sslify import SSLify

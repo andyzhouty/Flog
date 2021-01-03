@@ -131,3 +131,6 @@ doc_deploy.sh
 
 # user uploads
 images/
+
+# whooshee data
+whooshee/

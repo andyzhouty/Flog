@@ -13,6 +13,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_share import Share
 from flask_sqlalchemy import SQLAlchemy
+from flask_whooshee import Whooshee
 from flask_wtf import CSRFProtect
 
 babel = Babel()
@@ -25,6 +26,7 @@ mail = Mail()
 migrate = Migrate()
 moment = Moment()
 share = Share()
+whooshee = Whooshee()
 
 
 @login_manager.user_loader
