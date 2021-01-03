@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import user_card, post_card with context %}
+{% from 'macros.html' import user_card, post_card, group_card with context %}
 
 {% block title %}Flog - Seach: {{ q }}{% endblock %}
 
@@ -19,6 +19,10 @@
                    href="{{ url_for('.search', q=q, category='user') }}">
                    {{ _("User") }}
                 </a>
+                <a class="nav-item nav-link {% if category == 'group' %}active{% endif %}"
+                   href="{{ url_for('.search', q=q, category='group') }}">
+                   {{ _("Group") }}
+                </a>
             </div>
         </div>
         <div class="col-md-9">
@@ -30,6 +34,8 @@
                 {% for item in results %}
                     {% if category == 'user' %}
                         {{ user_card(item) }}
+                    {% elif category == 'group' %}
+                        {{ group_card(item) }}
                     {% else %}
                         {{ post_card(item) }}
                     {% endif %}

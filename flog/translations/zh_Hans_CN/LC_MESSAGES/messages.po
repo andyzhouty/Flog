@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-01-03 13:19+0800\n"
+"POT-Creation-Date: 2021-01-03 14:13+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -337,11 +337,15 @@ msgstr "主页"
 msgid "About Us"
 msgstr "关于我们"
 
-#: flog/templates/base.html:59
+#: flog/templates/base.html:46
+msgid "Search user, post or group"
+msgstr "搜索用户、文章或群"
+
+#: flog/templates/base.html:60
 msgid "Account"
 msgstr "账户"
 
-#: flog/templates/base.html:63 flog/templates/macros.html:130
+#: flog/templates/base.html:64 flog/templates/macros.html:130
 #: flog/templates/user/all_users.html:27
 #: flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
@@ -349,31 +353,31 @@ msgstr "账户"
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
-#: flog/templates/base.html:65
+#: flog/templates/base.html:66
 msgid "Log out"
 msgstr "注销"
 
-#: flog/templates/base.html:69
+#: flog/templates/base.html:70
 msgid "Resend Confirmation Email"
 msgstr "重新发送邮箱验证邮件"
 
-#: flog/templates/base.html:74 flog/templates/user/change_password.html:4
+#: flog/templates/base.html:75 flog/templates/user/change_password.html:4
 msgid "Change Password"
 msgstr "更改密码"
 
-#: flog/templates/base.html:77
+#: flog/templates/base.html:78
 msgid "Delete Your Account"
 msgstr "删除你的账户"
 
-#: flog/templates/base.html:94
+#: flog/templates/base.html:95
 msgid "Log in / Register"
 msgstr "登录 / 注册"
 
-#: flog/templates/base.html:99
+#: flog/templates/base.html:100
 msgid "Theme"
 msgstr "样式选择"
 
-#: flog/templates/base.html:113
+#: flog/templates/base.html:114
 msgid "Language"
 msgstr "语言选择"
 
@@ -436,6 +440,10 @@ msgstr "被1个人收藏"
 #: flog/templates/macros.html:164 flog/templates/main/collections.html:17
 msgid "Read More"
 msgstr "阅读更多"
+
+#: flog/templates/macros.html:174
+msgid "Managed by:"
+msgstr ""
 
 #: flog/templates/admin/edit_user_profile.html:7
 msgid "Admin Edit Profile"
@@ -729,12 +737,16 @@ msgstr "你没有写任何文章:("
 msgid "Post"
 msgstr "文章"
 
-#: flog/templates/main/search.html:28
+#: flog/templates/main/search.html:24
+msgid "Group"
+msgstr ""
+
+#: flog/templates/main/search.html:32
 msgid "result"
 msgid_plural "results"
 msgstr[0] "条结果"
 
-#: flog/templates/main/search.html:39
+#: flog/templates/main/search.html:45
 msgid "No results"
 msgstr "没有结果"
 

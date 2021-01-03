@@ -167,3 +167,15 @@ MIT License
         </div>
     </li>
 {% endmacro %}
+
+{% macro group_card(group) %}
+    <li class="list-group-item">
+        <h3>{{ _("Group name:" ) }} {{ group.name }}</h3>
+        <h4>{{ _("Managed by:") }}
+        <a href="{{ group.manager.profile_url() }}"
+            class="text-muted profile-popover"
+            data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
+            {{ group.manager.username }}
+        </a>
+    </li>
+{% endmacro %}

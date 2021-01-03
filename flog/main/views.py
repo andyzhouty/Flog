@@ -10,7 +10,7 @@ from flask import (
 )
 from flask_babel import _
 from flask_login import current_user, login_required
-from ..models import db, Post, Comment, User
+from ..models import db, Post, Comment, User, Group
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
@@ -222,6 +222,9 @@ def search():
     if category == 'user':
         pagination = User.query.whooshee_search(q).paginate(page, per_page)
         results_count = User.query.whooshee_search(q).count()
+    elif category == 'group':
+        pagination = Group.query.whooshee_search(q).paginate(page, per_page)
+        results_count = Group.query.whooshee_search(q).count()
     else:
         pagination = Post.query.whooshee_search(q).paginate(page, per_page)
         results_count = Post.query.whooshee_search(q).count()

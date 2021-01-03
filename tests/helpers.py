@@ -42,12 +42,11 @@ def register(client, name: str = 'Test', username: str = 'test',
     ), follow_redirects=True)
 
 
-def create_article(client) -> dict:
+def create_article(client, title=fake.sentence(), text=fake.text()) -> dict:
     """Create a post for test use"""
     login(client)
-    text = fake.text()
     data = {
-        'title': fake.sentence(),
+        'title': title,
         'content': f"<p>{text}</p>",
     }
     return {
