@@ -3,8 +3,9 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 import json
+import random
 from flask.globals import current_app
-from flog.models import User
+from flog.models import User, Comment, Post
 from tests.helpers import register, get_api_v1_headers
 from flog import fakes as fake
 
@@ -27,7 +28,7 @@ def test_posts(client):
     # test POST
     response = client.post(
         "/api/v1/post/new/",
-        headers=get_api_v1_headers('user', '1234'),
+        headers=get_api_v1_headers(),
         data=json.dumps(
             {'content': '<p>body of the post</p>',
              'title': 'hello',
@@ -45,7 +46,7 @@ def test_posts(client):
     # test GET
     response = client.get(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     data = response.get_json()
     assert isinstance(data['author'], dict)
@@ -60,38 +61,38 @@ def test_posts(client):
     response = client.put(
         f"/api/v1/post/{post_id}/",
         json=data,
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 204
 
     response = client.get(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 200
     assert response.get_json().get('content') == data['content']
 
     response = client.patch(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 204
 
     response = client.get(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.get_json()['private'] is False
 
     response = client.delete(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 204
 
     response = client.get(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 404
 
@@ -103,7 +104,7 @@ def test_users(client):
     assert user is not None
     response = client.get(
         f"/api/v1/user/{user.id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     data = response.get_json()
     assert data['id'] == user.id
@@ -118,7 +119,7 @@ def test_users(client):
     response = client.put(
         f"/api/v1/user/{user.id}/",
         json=user_data,
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 200
     data = response.get_json()
@@ -129,7 +130,7 @@ def test_users(client):
     # test delete method
     response = client.delete(
         f"/api/v1/user/{user.id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 200
     assert response.get_data(as_text=True) == f'User id {user.id} deleted.'
@@ -157,7 +158,7 @@ def test_comments(client):
     # create a post first
     response = client.post(
         "/api/v1/post/new/",
-        headers=get_api_v1_headers('user', '1234'),
+        headers=get_api_v1_headers(),
         data=json.dumps(
             {'content': '<p>body of the post</p>',
              'title': 'hello',
@@ -176,17 +177,16 @@ def test_comments(client):
     response = client.post(
         "/api/v1/comment/new/",
         data=json.dumps(data),
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     assert response.status_code == 200
     comment_id = response.get_json().get('id')
 
     response = client.get(
         f"/api/v1/post/{post_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     data = response.get_json()
-    print(data)
     comments =  data.get('comments')
     assert isinstance(comments, list)
     assert comments[0]['author'] == 'user'
@@ -194,9 +194,55 @@ def test_comments(client):
 
     response = client.get(
         f"/api/v1/comment/{comment_id}/",
-        headers=get_api_v1_headers('user', '1234')
+        headers=get_api_v1_headers()
     )
     data = response.get_json()
     assert data['author']['username'] == 'user'
     assert data['post']['id'] == post_id
     assert data['body'] == 'comment content'
+
+    response = client.delete(
+        f"/api/v1/comment/{comment_id}/",
+        headers=get_api_v1_headers()
+    )
+    data = response.get_json()
+    assert response.status_code == 204
+    assert Comment.query.get(comment_id) is None
+
+
+def test_follow(client_with_request_ctx):
+    client = client_with_request_ctx
+    register(email='user@example.com', password='1234',
+             username='user', client=client)
+    user = User.query.filter_by(username='user').first()
+    user2 = User.query.filter(User.username!='user').first()
+    response = client.get(
+        f"/api/v1/user/follow/{user2.id}/",
+        headers=get_api_v1_headers()
+    )
+    assert response.status_code == 204
+    assert user.is_following(user2)
+    response = client.get(
+        f"/api/v1/user/unfollow/{user2.id}/",
+        headers=get_api_v1_headers()
+    )
+    assert response.status_code == 204
+    assert not user.is_following(user2)
+
+def test_collect(client):
+    register(email='user@example.com', password='1234',
+             username='user', client=client)
+    user = User.query.filter_by(username='user').first()
+    post = Post.query.get(random.randint(1, Post.query.count()))
+    response = client.get(
+        f"/api/v1/post/collect/{post.id}/",
+        headers=get_api_v1_headers()
+    )
+    assert response.status_code == 200
+    assert user.is_collecting(post)
+    response = client.get(
+        f"/api/v1/post/uncollect/{post.id}/",
+        headers=get_api_v1_headers()
+    )
+    assert response.status_code == 200
+    assert not user.is_collecting(post)

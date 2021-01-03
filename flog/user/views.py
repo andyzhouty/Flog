@@ -2,7 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from flask import abort, render_template, redirect, make_response, url_for, flash, request, current_app
+from flask import abort, render_template, redirect, url_for, flash, request, current_app
 from flask_login import current_user, login_required, login_user
 from flask_babel import _
 from . import user_bp
@@ -46,8 +46,7 @@ def follow(username):
         flash(_('Already followed.'),  'info')
         return redirect_back()
     current_user.follow(user)
-    if not current_app.testing:
-        push_follow_notification(follower=current_user, receiver=user)
+    push_follow_notification(follower=current_user, receiver=user)
     flash(_('User followed.'),  'success')
     return redirect_back()
 

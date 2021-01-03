@@ -21,11 +21,11 @@ api_v1.add_url_rule('/post/<int:post_id>/', view_func=PostAPI.as_view('post'),
 api_v1.add_url_rule('/post/new/', view_func=PostAPI.as_view('new_post'),
                     methods=['POST'])
 # collect
-api_v1.add_url_rule('/post/<any(collect,uncollect):collect_or_uncollect>/<int:post_id>/',
+api_v1.add_url_rule('/post/<any(collect, uncollect):collect_or_uncollect>/<int:post_id>/',
                     view_func=CollectionAPI.as_view('collect'),
                     methods=['GET'])
 # follow
-api_v1.add_url_rule('/user/any(follow,unfollow):follow_or_unfollow/<int:user_id>/',
+api_v1.add_url_rule('/user/<any(follow, unfollow):follow_or_unfollow>/<int:user_id>/',
                     view_func=FollowAPI.as_view('follow'), methods=['GET'])
 # comment
 api_v1.add_url_rule('/comment/<int:comment_id>/',

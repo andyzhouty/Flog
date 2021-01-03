@@ -176,12 +176,11 @@ def collect_post(id):
     post = Post.query.get(id)
     if not post.private and post.author != current_user and not current_user.is_collecting(post):
         current_user.collect(post)
-        if not current_app.testing:
-            push_collect_notification(
-                collector=current_user,
-                post=post,
-                receiver=post.author,
-            )
+        push_collect_notification(
+            collector=current_user,
+            post=post,
+            receiver=post.author,
+        )
         flash(_('Post collected.'), 'success')
     elif current_user.is_collecting(post):
         flash(_('Already collected.'))

@@ -37,6 +37,12 @@ def test_collect_uncollect(client):
                  .get_data(as_text=True)
     assert admin.is_collecting(post_not_private)
 
+    # test if the collected post appears in the collection page
+    response = client.get("/post/collected/")
+    assert response.status_code == 200
+    data = response.get_data(as_text=True)
+    assert post_not_private.title in data
+
     data = client.get(f"/post/collect/{post_id}", follow_redirects=True)\
                  .get_data(as_text=True)
     assert 'Already collected.' in data

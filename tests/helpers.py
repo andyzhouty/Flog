@@ -73,7 +73,7 @@ def send_notification(client) -> None:
     db.session.commit()
 
 
-def get_api_v1_headers(username: str, password: str) -> dict:
+def get_api_v1_headers(username: str='user', password: str='1234') -> dict:
     """Returns auth headers for api v1"""
     return {
         'Authorization': 'Basic ' + b64encode(
@@ -83,7 +83,7 @@ def get_api_v1_headers(username: str, password: str) -> dict:
     }
 
 
-def get_api_v2_headers(client, username, password):
+def get_api_v2_headers(client, username: str='user', password: str='1234'):
     """Returns auth headers for api v2"""
     response = client.post("/api/v2/oauth/token/", data=dict(
         grant_type='password',
