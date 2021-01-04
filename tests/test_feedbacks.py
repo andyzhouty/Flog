@@ -11,13 +11,17 @@ fake = Faker()
 
 def test_feedback(client):
     login(client)
-    data = {'body': fake.text(), }
+    data = {
+        "body": fake.text(),
+    }
     response = client.post("/feedback/", data=data, follow_redirects=True)
     response_data = response.get_data(as_text=True)
     print(response_data)
-    assert data['body'] in response_data
+    assert data["body"] in response_data
     # test delete
-    comment = Feedback.query.filter_by(body=data['body']).first()
-    response = client.post(f"/admin/feedback/delete/{comment.id}/", follow_redirects=True)
+    comment = Feedback.query.filter_by(body=data["body"]).first()
+    response = client.post(
+        f"/admin/feedback/delete/{comment.id}/", follow_redirects=True
+    )
     assert response.status_code == 200
-    assert Feedback.query.filter_by(body=data['body']).count() == 0
+    assert Feedback.query.filter_by(body=data["body"]).count() == 0

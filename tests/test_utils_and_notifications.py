@@ -6,18 +6,22 @@ import json
 from flask import url_for
 from random import randint
 from flog.models import Comment, Notification, Post, User, Role
-from flog.notifications import push_collect_notification, push_comment_notification, push_follow_notification
+from flog.notifications import (
+    push_collect_notification,
+    push_comment_notification,
+    push_follow_notification,
+)
 from flog.utils import lower_username, is_safe_url
 from .helpers import send_notification, login
 
 
 def test_lower_username():
-    username = 'Test User'
-    assert lower_username(username) == 'testuser'
+    username = "Test User"
+    assert lower_username(username) == "testuser"
 
 
 def test_is_safe_url(client_with_request_ctx):
-    target = url_for('main.main', _external=True)
+    target = url_for("main.main", _external=True)
     assert is_safe_url(target)
 
 
@@ -47,9 +51,7 @@ def test_notifications(client):
     for i in range(5):
         send_notification(client)
     admin = User.query.filter_by(
-        role=Role.query.filter_by(
-            name='Administrator'
-        ).first()
+        role=Role.query.filter_by(name="Administrator").first()
     ).first()
     assert len(admin.notifications) == 5
     assert Notification.query.filter_by(is_read=False).count() == 5

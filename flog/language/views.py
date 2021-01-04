@@ -10,9 +10,9 @@ from ..utils import redirect_back
 from . import language_bp
 
 
-@language_bp.route('/set-locale/<locale>/')
+@language_bp.route("/set-locale/<locale>/")
 def set_locale(locale):
-    if locale not in current_app.config['LOCALES'].keys():
+    if locale not in current_app.config["LOCALES"].keys():
         abort(404)
     response = redirect_back()
     if current_user.is_authenticated:
@@ -20,6 +20,6 @@ def set_locale(locale):
         db.session.add(current_user)
         db.session.commit()
     else:
-        response.set_cookie('locale', locale, max_age=60 * 60 * 24 * 30)
-    flash(_('Language updated.'))
+        response.set_cookie("locale", locale, max_age=60 * 60 * 24 * 30)
+    flash(_("Language updated."))
     return response

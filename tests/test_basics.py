@@ -10,10 +10,10 @@ def test_app_exists(client):
 
 
 def test_app_is_testing(client):
-    assert current_app.config['TESTING']
+    assert current_app.config["TESTING"]
 
 
 def test_about_us(client):
     client = client
-    response = client.get('/about/')
+    response = client.get("/about/")
     assert response.status_code == 200

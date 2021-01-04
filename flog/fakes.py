@@ -25,8 +25,8 @@ def users(count: int = 2) -> None:
             email=fake.email(),
             confirmed=True,
         )
-        user.set_password('123456')
-        user.role = Role.query.filter_by(name='User').first()
+        user.set_password("123456")
+        user.role = Role.query.filter_by(name="User").first()
         db.session.add(user)
     db.session.commit()
 
@@ -35,10 +35,10 @@ def posts(count: int = 2) -> None:
     """Generates fake posts"""
     for i in range(count):
         post = Post(
-            title=fake.word() + ' ' + fake.word(),
+            title=fake.word() + " " + fake.word(),
             content=fake.text(randint(100, 300)),
             timestamp=fake.date_time_this_year(),
-            private=bool(randint(0, 1))
+            private=bool(randint(0, 1)),
         )
         post.author = User.query.get(randint(1, User.query.count()))
         db.session.add(post)
@@ -51,7 +51,7 @@ def comments(count: int = 2) -> None:
         comment = Comment(
             author=User.query.get(randint(1, User.query.count())),
             post=Post.query.get(randint(1, User.query.count())),
-            body=fake.text()
+            body=fake.text(),
         )
         db.session.add(comment)
     db.session.commit()
@@ -63,7 +63,7 @@ def feedbacks(count: int = 2) -> None:
         feedback = Feedback(
             author=User.query.get(randint(0, User.query.count())),
             body=fake.sentence(),
-            timestamp=fake.date_time_this_year()
+            timestamp=fake.date_time_this_year(),
         )
         db.session.add(feedback)
     db.session.commit()
@@ -71,7 +71,7 @@ def feedbacks(count: int = 2) -> None:
 
 def follows(count: int = 20) -> None:
     """Generates fake follow relationships"""
-    admin_role = Role.query.filter_by(name='Administrator').first()
+    admin_role = Role.query.filter_by(name="Administrator").first()
     admin = User.query.filter_by(role=admin_role).first()
     for i in range(count):
         user1 = User.query.get(randint(1, User.query.count()))
@@ -88,7 +88,7 @@ def notifications(count: int, receiver: User = None) -> None:
     """Generates fake notifications"""
     for i in range(count):
         if receiver is None:
-            admin_role = Role.query.filter_by(name='Administrator').first()
+            admin_role = Role.query.filter_by(name="Administrator").first()
             admin = User.query.filter_by(role=admin_role).first()
             receiver = admin
         notification = Notification(
@@ -103,10 +103,7 @@ def groups(count: int) -> None:
     """Generates fake user groups"""
     for i in range(count):
         manager = User.query.get(randint(1, User.query.count()))
-        group = Group(
-            name=fake.sentence(),
-            manager=manager
-        )
+        group = Group(name=fake.sentence(), manager=manager)
         manager.join_group(group)
         db.session.add(group)
     db.session.commit()

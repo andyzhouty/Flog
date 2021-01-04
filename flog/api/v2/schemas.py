@@ -20,23 +20,23 @@ def user_schema(user: User) -> dict:
         dict: contains user profile and basic info
     """
     user_dict = dict(
-        kind='User',
+        kind="User",
         id=user.id,
-        url=url_for('api_v2.user', user_id=user.id, _external=True),
+        url=url_for("api_v2.user", user_id=user.id, _external=True),
         username=user.username,
         member_since=user.member_since,
         last_seen=user.last_seen,
     )
     if user.name:
-        user_dict['name'] = user.name
+        user_dict["name"] = user.name
     if user.location:
-        user_dict['location'] = user.location
+        user_dict["location"] = user.location
     if user.about_me:
-        user_dict['about_me'] = user.about_me
+        user_dict["about_me"] = user.about_me
     return user_dict
 
 
-def post_schema(post: Post, include_comments: bool=True) -> dict:
+def post_schema(post: Post, include_comments: bool = True) -> dict:
     """Post schema
 
     Args:
@@ -47,18 +47,20 @@ def post_schema(post: Post, include_comments: bool=True) -> dict:
         dict: contains post data
     """
     post_schema = dict(
-        kind='Post',
+        kind="Post",
         id=post.id,
         author=user_schema(post.author),
         title=post.title,
         content=post.content,
-        url=url_for('api_v2.post', post_id=post.id, _external=True),
+        url=url_for("api_v2.post", post_id=post.id, _external=True),
         comments_count=len(post.comments),
-        private=post.private
+        private=post.private,
     )
     if len(post.comments) > 0 and include_comments:
-        post_schema['comments'] = [dict(author=comment.author.username, body=comment.body)
-                                   for comment in post.comments]
+        post_schema["comments"] = [
+            dict(author=comment.author.username, body=comment.body)
+            for comment in post.comments
+        ]
     return post_schema
 
 
@@ -72,11 +74,11 @@ def comment_schema(comment: Comment) -> dict:
         dict: comment schema
     """
     comment_schema = dict(
-        kind='Comments',
+        kind="Comments",
         author=user_schema(comment.author),
         post=post_schema(comment.post, False),
         id=comment.id,
         body=comment.body,
-        url=url_for('api_v2.comment', comment_id=comment.id, _external=True)
+        url=url_for("api_v2.comment", comment_id=comment.id, _external=True),
     )
     return comment_schema

@@ -12,40 +12,40 @@ from .forms import EditProfileAdminForm
 from . import admin_bp
 
 
-@admin_bp.route('/')
+@admin_bp.route("/")
 @admin_required
 def admin():
-    return redirect(url_for('main.main'))
+    return redirect(url_for("main.main"))
 
 
-@admin_bp.route('/feedback/')
+@admin_bp.route("/feedback/")
 @admin_required
 def manage_feedback():
     return render_template("admin/feedbacks.html")
 
 
-@admin_bp.route('/feedback/delete/<int:id>/', methods=['POST'])
+@admin_bp.route("/feedback/delete/<int:id>/", methods=["POST"])
 @admin_required
 def delete_feedback(id):
     feedback = Feedback.query.get(id)
     feedback.delete()
     feedback_str = str(feedback)
-    flash(_("%s deleted." % feedback_str),  "success")
+    flash(_("%s deleted." % feedback_str), "success")
     current_app.logger.info(f"Feedback id {id} deleted.")
-    return redirect(url_for('admin.manage_feedback'))
+    return redirect(url_for("admin.manage_feedback"))
 
 
-@admin_bp.route('/user/all/')
+@admin_bp.route("/user/all/")
 @admin_required
 def manage_users():
-    page = request.args.get('page', default=1, type=int)
+    page = request.args.get("page", default=1, type=int)
     pagination = User.query.order_by(User.id.desc()).paginate(
-        page, per_page=current_app.config['USERS_PER_PAGE'], error_out=False
+        page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False
     )
     return render_template("user/all_users.html", pagination=pagination)
 
 
-@admin_bp.route('/user/<int:id>/profile/edit/', methods=['GET', 'POST'])
+@admin_bp.route("/user/<int:id>/profile/edit/", methods=["GET", "POST"])
 @admin_required
 def edit_user_profile(id):
     user = User.query.get_or_404(id)
@@ -60,8 +60,8 @@ def edit_user_profile(id):
         user.about_me = form.about_me.data
         db.session.add(user)
         db.session.commit()
-        flash(_('%s\'s profile has been updated.' % user.username),  'info')
-        return redirect(url_for('user.user_profile', username=user.username))
+        flash(_("%s's profile has been updated." % user.username), "info")
+        return redirect(url_for("user.user_profile", username=user.username))
     form.email.data = user.email
     form.username.data = user.username
     form.confirmed.data = user.confirmed
@@ -69,12 +69,12 @@ def edit_user_profile(id):
     form.name.data = user.name
     form.location.data = user.location
     form.about_me.data = user.about_me
-    return render_template('admin/edit_user_profile.html', form=form, user=user)
+    return render_template("admin/edit_user_profile.html", form=form, user=user)
 
 
-@admin_bp.route('/users/delete/<int:id>', methods=['POST'])
+@admin_bp.route("/users/delete/<int:id>", methods=["POST"])
 @admin_required
 def delete_user_account(id):
     User.query.get(id).delete()
-    flash(_('User Deleted'),  'info')
+    flash(_("User Deleted"), "info")
     return redirect_back()

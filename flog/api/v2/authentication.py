@@ -5,10 +5,10 @@ from flog.models import User
 
 
 def get_token():
-    if 'Authorization' in request.headers:
+    if "Authorization" in request.headers:
         try:
-            token_type, token = request.headers['Authorization'].split(None, 1)
-        except ValueError: # Header authorization is empty or token is empty
+            token_type, token = request.headers["Authorization"].split(None, 1)
+        except ValueError:  # Header authorization is empty or token is empty
             token_type = None
             token = None
     else:
@@ -29,13 +29,14 @@ def auth_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token_type, token = get_token()
-        
-        if request.method != 'OPTIONS':
-            if token_type is None or token_type.lower() != 'bearer':
-                return bad_request('The token type must be bearer')
+
+        if request.method != "OPTIONS":
+            if token_type is None or token_type.lower() != "bearer":
+                return bad_request("The token type must be bearer")
             if token is None:
                 return token_missing()
             if not validate_token(token):
                 return invalid_token()
         return f(*args, **kwargs)
+
     return decorated

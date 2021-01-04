@@ -10,8 +10,16 @@ from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
-    babel, bootstrap, ckeditor, csrf, db, login_manager,
-    mail, migrate, moment, share
+    babel,
+    bootstrap,
+    ckeditor,
+    csrf,
+    db,
+    login_manager,
+    mail,
+    migrate,
+    moment,
+    share,
 )
 from .models import Post, Feedback, Role, Permission, User, Notification
 from .settings import config
@@ -33,8 +41,8 @@ from .user import user_bp
 
 def create_app(config_name=None) -> Flask:
     if config_name is None:
-        config_name = os.getenv('FLASK_CONFIG', 'development')
-    app = Flask('flog')
+        config_name = os.getenv("FLASK_CONFIG", "development")
+    app = Flask("flog")
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
@@ -53,15 +61,14 @@ def register_config(app: Flask, config_name: str):
 
 def register_logger(app: Flask):
     app.logger.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s "
-                                  "%(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s " "%(message)s"
+    )
     if app.debug or app.testing:
-        if not os.path.exists('logs'):
-            os.mkdir('logs')
+        if not os.path.exists("logs"):
+            os.mkdir("logs")
         file_handler = RotatingFileHandler(
-            filename="logs/flog.log",
-            maxBytes=10 * 1024 * 1024,
-            backupCount=10
+            filename="logs/flog.log", maxBytes=10 * 1024 * 1024, backupCount=10
         )
         file_handler.setFormatter(formatter)
         file_handler.setLevel(logging.INFO)
@@ -79,16 +86,17 @@ def register_extensions(app: Flask) -> None:
     csrf.exempt(api_v1)
     csrf.exempt(api_v2)
     db.init_app(app)
-    login_manager.login_view = 'auth.login'
-    login_manager.login_message = u'Please log in to access this page'
+    login_manager.login_view = "auth.login"
+    login_manager.login_message = u"Please log in to access this page"
     login_manager.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
     moment.init_app(app)
     share.init_app(app)
 
-    if app.config['SSL_REDIRECT']:
+    if app.config["SSL_REDIRECT"]:
         from flask_sslify import SSLify
+
         sslify = SSLify(app)
 
 
@@ -113,8 +121,11 @@ def register_context(app: Flask) -> None:
         Role.insert_roles()
         return dict(
             db=db,
-            Post=Post, Feedback=Feedback,
-            Permission=Permission, Role=Role, User=User
+            Post=Post,
+            Feedback=Feedback,
+            Permission=Permission,
+            Role=Role,
+            User=User,
         )
 
     @app.context_processor
@@ -122,7 +133,11 @@ def register_context(app: Flask) -> None:
         posts = Post.query.order_by(Post.timestamp.desc()).all()
         feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
         if current_user.is_authenticated:
-            notification_count = Notification.query.with_parent(current_user).filter_by(is_read=False).count()
+            notification_count = (
+                Notification.query.with_parent(current_user)
+                .filter_by(is_read=False)
+                .count()
+            )
         else:
             notification_count = None
         return dict(
@@ -130,5 +145,5 @@ def register_context(app: Flask) -> None:
             feedbacks=feedbacks,
             Permission=Permission,
             current_app=app,
-            notification_count=notification_count
+            notification_count=notification_count,
         )

@@ -30,6 +30,7 @@ share = Share()
 @login_manager.user_loader
 def load_user(user_id):
     from .models import User
+
     admin = User.query.get(user_id)
     return admin
 
@@ -38,7 +39,7 @@ def load_user(user_id):
 def get_locale():
     if current_user.is_authenticated and current_user.locale is not None:
         return current_user.locale
-    locale = request.cookies.get('locale')
+    locale = request.cookies.get("locale")
     if locale is not None:
         return locale
-    return request.accept_languages.best_match(current_app.config['LOCALES'].keys())
+    return request.accept_languages.best_match(current_app.config["LOCALES"].keys())

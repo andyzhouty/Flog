@@ -4,6 +4,6 @@ Copyright(c) 2020 Andy Zhou
 """
 from flask import Blueprint
 
-others_bp = Blueprint('others', __name__)
+others_bp = Blueprint("others", __name__)
 
 from . import views
