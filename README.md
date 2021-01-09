@@ -76,7 +76,7 @@ Or if you prefer to use pipenv, then:
 
 ```shell
 # clone the project and change to that directory
-pipenv install
+pipenv install --dev --pre
 pipenv shell
 flask deploy # initialize database
 flask forge # generates fake data
@@ -98,13 +98,13 @@ pip+requirements.txt
 ```shell
 source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
 pip3 install -r requirements/dev.txt
-flask test
+pytest
 ```
 
 pipenv
 
 ```shell
-pipenv install --dev
+pipenv install --dev --pre
 pipenv shell
 pytest
 ```

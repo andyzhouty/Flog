@@ -4,7 +4,7 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'macros.html' import post_actions with context %}
-{% block title %}{{ _('Your collections') }}{% endblock %}
+{% block title %}{{ _("Your collections") }}{% endblock %}
 {% block page_content %}
     <ul class="list-group">
         {% if posts | length > 0%}
@@ -14,7 +14,7 @@ MIT License
                 <div>
                     {{ post.content | striptags | truncate(200) }}
                     <small class="text-primary">
-                        <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _('Read More') }}</a>
+                        <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _("Read More") }}</a>
                     </small>
                 </div>
                 {{ post_actions(post) }}

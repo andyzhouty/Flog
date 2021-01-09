@@ -87,7 +87,7 @@ def register_extensions(app: Flask) -> None:
     csrf.exempt(api_v2)
     db.init_app(app)
     login_manager.login_view = "auth.login"
-    login_manager.login_message = u"Please log in to access this page"
+    login_manager.login_message = "Please log in to access this page"
     login_manager.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)

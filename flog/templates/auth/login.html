@@ -4,7 +4,7 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %} Flog - {{ _('Login') }} {% endblock %}
+{% block title %} Flog - {{ _("Login") }} {% endblock %}
 {% block styles %}
     {{ super() }}
     <style>
@@ -18,18 +18,18 @@ MIT License
     </style>
 {% endblock styles %}
 {% block page_content %}
-    <h1 class="display-4">{{ _('Login') }}</h1>
+    <h1 class="display-4">{{ _("Login") }}</h1>
     <p class="highlight">
-        {{ _('New user?') }}
+        {{ _("New user?") }}
         <a href="{{ url_for('auth.register') }}">
-            {{ _('Click here to register') }}</a>
+            {{ _("Click here to register") }}</a>
     </p>
     <div>
         {{ render_form(form, action=request.full_path) }}
     </div>
     <p>
         <a href="{{ url_for('user.forget_password') }}">
-            {{ _('Forget your password?') }}
+            {{ _("Forget your password?") }}
         </a>
     </p>
 {% endblock page_content %}

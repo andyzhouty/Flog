@@ -4,7 +4,7 @@ Copyright(c) 2020 Andy Zhou
 """
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
 
 

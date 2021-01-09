@@ -5,7 +5,7 @@ MIT License
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import post_card, role_of with context %}
-{% block title %}{{ _('Main') }}{% endblock %}
+{% block title %}{{ _("Main") }}{% endblock %}
 {% block scripts %}
     {{ super() }}
     <script>
@@ -17,7 +17,7 @@ MIT License
 {% block page_content %}
     {% if current_user.is_authenticated %}
     <div class="page-header">
-        <h1 class="display-4">{{ _('Welcome,') }} {{ role_of(current_user) }} {{ current_user.username }}</h1>
+        <h1 class="display-4">{{ _("Welcome,") }} {{ role_of(current_user) }} {{ current_user.username }}</h1>
     </div>
     {% endif %}
     <div class="row">

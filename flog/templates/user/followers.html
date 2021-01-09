@@ -6,9 +6,9 @@ MIT License
 {% from 'macros.html' import user_card with context %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block title %}
-    {% if user == current_user %} {{ _('Your') }}
-    {% else %} {{ _('His or her') }}
-    {% endif %} {{ _('followers') }}
+    {% if user == current_user %} {{ _("Your") }}
+    {% else %} {{ _("His or her") }}
+    {% endif %} {{ _("followers") }}
 {% endblock %}
 {% block page_content %}
     <ul class="list-group">
@@ -21,7 +21,7 @@ MIT License
         {% else %}
             <div class="tip">
                 {% if user == current_user %}
-                    <h3>{{ _('You have no followers') }}</h3>
+                    <h3>{{ _("You have no followers") }}</h3>
                 {% else %}
                     <h3>{{ _('User %s has no followers' % user.username) }}</h3>
                 {% endif %}

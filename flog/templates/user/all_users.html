@@ -5,7 +5,7 @@ MIT License
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import role_label_of, static_file with context %}
-{% block title %}{{ _('All users') }} {% endblock %}
+{% block title %}{{ _("All users") }} {% endblock %}
 {% block page_content %}
 <div class="row">
     <div class="col-lg-8">
@@ -24,7 +24,7 @@ MIT License
                     <a class="btn btn-sm btn-outline-secondary"
                         href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
                         <i class="fa fa-edit"></i>
-                        {{ _('Edit Profile') }}
+                        {{ _("Edit Profile") }}
                     </a>
                     <form class="form-inline" method="POST"
                         action="{{ url_for('admin.delete_user_account', id=user.id) }}"
@@ -33,7 +33,7 @@ MIT License
                         <button class="btn btn-sm btn-outline-danger"
                             onclick="{{ _('return confirm(\'Are you sure?\');') }}">
                             <i class="fa fa-trash"></i>
-                            {{ _('DELETE') }}
+                            {{ _("DELETE") }}
                         </button>
                     </form>
                 </span>

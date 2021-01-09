@@ -7,18 +7,18 @@ MIT License
     {% if not current_user.is_collecting(post) %}
     <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
         <i class="fa fa-heart"></i>
-        {{ _('Collect') }}
+        {{ _("Collect") }}
     </a>
     {% else %}
         <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
             <i class="fa fa-ban"></i>
-            {{ _('Uncollect') }}
+            {{ _("Uncollect") }}
          </a>
     {% endif %}
     {% if current_user.is_administrator() or post.author == current_user %}
         <a class="btn btn-sm btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
             <i class="fa fa-edit"></i>
-            {{ _('EDIT [ADMIN]') }}
+            {{ _("EDIT [ADMIN]") }}
         </a>
     {% endif %}
     {# 如果当前用户是协管员，并且文章作者没有协管员权限时，抑或当前用户是该文章作者时，显示删除按钮 #}
@@ -29,7 +29,7 @@ MIT License
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
                 <i class="fa fa-trash"></i>   
-                {{ _('DELETE [ADMIN]') }}
+                {{ _("DELETE [ADMIN]") }}
                 </button>
             </form>
     {% endif %}

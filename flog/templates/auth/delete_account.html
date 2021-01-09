@@ -4,8 +4,8 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %}{{ _('Delete account') }}{% endblock %}
+{% block title %}{{ _("Delete account") }}{% endblock %}
 {% block page_content %}
-    <h1>{{ _('Before deleting your account, we need to confirm your password.') }}</h1>
+    <h1>{{ _("Before deleting your account, we need to confirm your password.") }}</h1>
     {{ render_form(form) }}
 {% endblock page_content %}

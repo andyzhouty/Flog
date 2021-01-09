@@ -27,7 +27,8 @@ def feedback():
             recipients=recipients,
             subject="A new feedback was added!",
             template="feedback/feedback_notification",
-            **dict(author=current_user.username, content=body)
+            author=current_user.username,
+            content=body,
         )
         flash(_("Your feedback has been sent to the admins!"), "success")
         return redirect(url_for("feedback.feedback"))

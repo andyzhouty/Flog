@@ -4,7 +4,7 @@
         {{ ngettext('comment', 'comments', __num=comments|length) }}
         <small>
             <a href="{{ url_for('main.full_post', id=post.id, page=pagination.pages or 1) }}#comments">
-                {{ _('latest') }}
+                {{ _("latest") }}
             </a>
         </small>
     </h3>
@@ -20,10 +20,10 @@
                     </a>
                 </h5>
                 {% if comment.author.is_administrator() %}
-                <span class="badge badge-danger">{{ _('Admin') }}</span>
+                <span class="badge badge-danger">{{ _("Admin") }}</span>
                 {% endif %}
                 {% if comment.author == post.author %}
-                <span class="badge badge-primary">{{ _('Author') }}</span>
+                <span class="badge badge-primary">{{ _("Author") }}</span>
                 {% endif %}
                 <small data-toggle="tooltip" data-placement="top" data-delag="500"
                     data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
@@ -43,13 +43,13 @@
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
-                        {{ _('DELETE') }}
+                        {{ _("DELETE") }}
                     </button>
                 </form>
                 {% endif %}
                 <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
                     <i class="fa fa-mail-reply"></i>
-                    {{ _('Reply') }}
+                    {{ _("Reply") }}
                 </a>
             </div>
             </li>

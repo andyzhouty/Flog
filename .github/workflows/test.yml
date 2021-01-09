@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -26,7 +26,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements/ci.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements/dev.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
@@ -34,7 +34,7 @@ jobs:
       run: |
         python -m venv venv
         . venv/bin/activate
-        pip3 install -r requirements/ci.txt
+        pip3 install -r requirements/dev.txt
     - name: Test with pytest
       run: |
         . venv/bin/activate

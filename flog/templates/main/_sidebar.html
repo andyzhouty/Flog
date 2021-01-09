@@ -5,48 +5,48 @@ MIT License
 <div class="col-md-4 sidebar">
     {% if current_user.is_authenticated %}
         <div class="card mb-3">
-            <div class="card-header">{{ _('Quick Actions') }}</div>
+            <div class="card-header">{{ _("Quick Actions") }}</div>
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('main.write') }}">
-                    {{ _('Write a post') }}
+                    {{ _("Write a post") }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('main.manage_posts') }}">
-                    {{ _('Manage your posts') }}
+                    {{ _("Manage your posts") }}
                 </a>
                 <a class="list-group-item" href=" {{ url_for('image.manage_images') }}">
-                    {{ _('Manage your uploaded images') }}
+                    {{ _("Manage your uploaded images") }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('main.collected_posts') }}">
-                    {{ _('Show your collections') }}
+                    {{ _("Show your collections") }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('user.show_followers', username=current_user.username) }}">
-                    {{ _('Show your followers') }}
+                    {{ _("Show your followers") }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('user.explore_group') }}">
-                    {{ _('Join new groups') }}
+                    {{ _("Join new groups") }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('user.create_group') }}">
-                    {{ _('Create a new group') }}
+                    {{ _("Create a new group") }}
                 </a>
             </ul>
         </div>
         <div class="card mb-3">
-            <div class="card-header">{{ _('Explore') }}</div>
+            <div class="card-header">{{ _("Explore") }}</div>
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('user.all_users') }}">
-                    {{ _('View all users') }}
+                    {{ _("View all users") }}
                 </a>
             </ul>
         </div>
         {% if current_user.is_administrator() %}
         <div class="card mb-3">
-            <div class="card-header">{{ _('Admin Actions') }}</div>
+            <div class="card-header">{{ _("Admin Actions") }}</div>
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('admin.manage_users') }}">
-                    {{ _('Manage Users') }}
+                    {{ _("Manage Users") }}
                 </a>
                 <a class="list-group-item" href="{{ url_for('main.main') }}">
-                    {{ _('Manage Posts') }}
+                    {{ _("Manage Posts") }}
                 </a>
             </ul>
         </div>

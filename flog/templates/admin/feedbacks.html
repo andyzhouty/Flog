@@ -3,9 +3,9 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 {% extends 'base.html' %}
-{% block title %}{{ _('Manage Feedbacks') }}{% endblock %}
+{% block title %}{{ _("Manage Feedbacks") }}{% endblock %}
 {% block page_content %}
-    <h1>{{ _('Welcome, Administrator') }} {{ current_user.name }}</h1>
+    <h1>{{ _("Welcome, Administrator") }} {{ current_user.name }}</h1>
     <ul class="list-group">
         {% for feedback in feedbacks %}
             <li class="list-group-item">
@@ -16,7 +16,7 @@ MIT License
                         style="float: right">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
-                            {{ _('DELETE') }}
+                            {{ _("DELETE") }}
                         </button>
                     </form>
                 <p style="text-indent: 2em">

@@ -59,25 +59,25 @@ MIT License
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="account">
-                            {{ _('Account') }}
+                            {{ _("Account") }}
                         </a>
                         <div class="dropdown-menu">
                             <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item"
-                               id="edit-profile-link">{{ _('Edit Profile') }}</a>
+                               id="edit-profile-link">{{ _("Edit Profile") }}</a>
                             <a href="{{ url_for('auth.logout') }}" class="dropdown-item"
-                               id="logout-link">{{ _('Log out') }}</a>
+                               id="logout-link">{{ _("Log out") }}</a>
                             {% if not current_user.confirmed %}
                                 <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item"
                                    id="resend-confirmation-link">
-                                    {{ _('Resend Confirmation Email') }}
+                                    {{ _("Resend Confirmation Email") }}
                                 </a>
                             {% endif %}
                             <a href="{{ url_for('user.change_password') }}" class="dropdown-item"
                                id="change-password-link">
-                                {{ _('Change Password') }}
+                                {{ _("Change Password") }}
                             </a>
                             <a href="{{ url_for('auth.delete_account') }}" class="dropdown-item text-white bg-danger">
-                                {{ _('Delete Your Account') }}
+                                {{ _("Delete Your Account") }}
                             </a>
                         </div>
                     </li>
@@ -94,12 +94,12 @@ MIT License
                 {% else %}
                     <li class="nav-item">
                         <a href="{{ url_for('auth.login') }}"
-                           class="nav-link btn btn-success text-light">{{ _('Log in / Register') }}</a>
+                           class="nav-link btn btn-success text-light">{{ _("Log in / Register") }}</a>
                     </li>
                 {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        {{ _('Theme') }}
+                        {{ _("Theme") }}
                     </a>
                     <div class="dropdown-menu">
                         {% for theme_name, display_name in config.BOOTSTRAP_THEMES.items() %}
@@ -113,7 +113,7 @@ MIT License
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                         <span class="fa fa-language"></span>
-                        {{ _('Language') }}
+                        {{ _("Language") }}
                     </a>
                     <div class="dropdown-menu">
                         {% for language, display_name in config.LOCALES.items() %}

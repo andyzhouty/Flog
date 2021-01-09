@@ -3,15 +3,15 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 <div style="width: 580px; padding: 20px">
-    <h1>{{ _('Hello, Admin!') }}</h1>
-    <p>{{ _('A new feedback was added just now!') }}</p>
-    <p>{{ _('Feedbacker') }}: {{ author|capitalize }}</p>
-    <p>{{ _('Feedback Content') }}
+    <h1>{{ _("Hello, Admin!") }}</h1>
+    <p>{{ _("A new feedback was added just now!") }}</p>
+    <p>{{ _("Feedbacker") }}: {{ author|capitalize }}</p>
+    <p>{{ _("Feedback Content") }}
         {% if content|length > 50 %}
             {{ content[:50]|striptags }}...
         {% else %}
             {{ content }}
         {% endif %}
     </p>
-    <p>{{ _('If it is a junk one, please delete it immediately!') }}</p>
+    <p>{{ _("If it is a junk one, please delete it immediately!") }}</p>
 </div>

@@ -17,22 +17,22 @@ MIT License
 
 {% macro role_of(user) %}
     {% if user.is_administrator() -%}
-        {{ _('Administrator') }}
+        {{ _("Administrator") }}
     {% elif user.can(Permission.MODERATE) -%}
-        {{ _('Moderator') }}
+        {{ _("Moderator") }}
     {% else -%}
-        {{ _('User') }}
+        {{ _("User") }}
     {%- endif %}
 {% endmacro %}
 
 {% macro role_label_of(user) %}
     <span class="text-white">
     {% if user.is_administrator() -%}
-        <span class="badge badge-danger">{{ _('Admin') }}</span>
+        <span class="badge badge-danger">{{ _("Admin") }}</span>
     {% elif user.can(Permission.MODERATE) -%}
-        <span class="badge badge-warning">{{ _('Moderator') }}</span>
+        <span class="badge badge-warning">{{ _("Moderator") }}</span>
     {% else -%}
-        <span class="badge badge-primary">{{ _('User') }}</span>
+        <span class="badge badge-primary">{{ _("User") }}</span>
     {%- endif %}
     </span>
 {% endmacro %}
@@ -45,9 +45,9 @@ MIT License
                       action="{{ url_for('user.unfollow', username=user.username) }}"
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-dark btn-sm">{{ _('Unfollow') }}</button>
+                    <button type="submit" class="btn btn-dark btn-sm">{{ _("Unfollow") }}</button>
                     {% if user.is_following(current_user) and current_user.is_following(user) -%}
-                        <p class="badge badge-light">{{ _('Follow each other') }}</p>
+                        <p class="badge badge-light">{{ _("Follow each other") }}</p>
                     {%- endif %}
                 </form>
             {% else -%}
@@ -55,9 +55,9 @@ MIT License
                       action="{{ url_for('user.follow', username=user.username) }}"
                       next="{{ request.full_path }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-primary btn-sm">{{ _('Follow') }}</button>
+                    <button type="submit" class="btn btn-primary btn-sm">{{ _("Follow") }}</button>
                     {% if user.is_following(current_user) -%}
-                        <p class="badge badge-light">{{ _('Follows you') }}</p>
+                        <p class="badge badge-light">{{ _("Follows you") }}</p>
                     {%- endif %}
                 </form>
             {%- endif %}
@@ -72,12 +72,12 @@ MIT License
                 {% if not current_user.is_collecting(post) -%}
                 <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
                     <i class="fa fa-star"></i>
-                    {{ _('Collect') }}
+                    {{ _("Collect") }}
                 </a>
                 {% else -%}
                     <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
                         <i class="fa fa-ban"></i>
-                        {{ _('Uncollect') }}
+                        {{ _("Uncollect") }}
                     </a>
                 {%- endif %}
             {%- endif %}
@@ -85,7 +85,7 @@ MIT License
                   and can_edit -%}
                 <a class="btn btn-sm btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
                     <i class="fa fa-edit"></i>
-                    {{ _('EDIT') }}
+                    {{ _("EDIT") }}
                 </a>
             {%- endif %}
             {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
@@ -97,7 +97,7 @@ MIT License
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
                         <i class="fa fa-trash"></i>
-                        {{ _('DELETE') }}
+                        {{ _("DELETE") }}
                     </button>
                 </form>
             {%- endif %}
@@ -107,7 +107,7 @@ MIT License
                 <p class="text-muted">
                 <i class="fa fa-star"></i>
                 {% if collectors == 1 -%}
-                    {{ _('Collected by 1 person') }}
+                    {{ _("Collected by 1 person") }}
                 {% else -%}
                     {{ _('Collected by %d people' % collectors) }}
                 {%- endif %}
@@ -127,14 +127,14 @@ MIT License
     <span class="text-white">
         <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
             <i class="fa fa-edit"></i>
-            {{ _('Edit Profile') }}
+            {{ _("Edit Profile") }}
         </a>
         <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
             style="display: inline !important">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
                 <i class="fa fa-trash"></i>
-                {{ _('DELETE') }}
+                {{ _("DELETE") }}
             </button>
         </form>
     </span>
@@ -154,14 +154,14 @@ MIT License
             </a>
             {% if post.private %}
                 <span class="badge badge-dark">
-                    {{ _('Private') }}
+                    {{ _("Private") }}
                 </span>
             {% endif %}
             </h4>
         <div>
             {{ post.content | striptags | truncate(200) }}
             <small class="text-primary">
-                <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _('Read More') }}</a>
+                <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _("Read More") }}</a>
             </small>
             {{ post_actions(post) }}
         </div>
