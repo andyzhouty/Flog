@@ -18,7 +18,7 @@ def get_token():
 
 
 def validate_token(token):
-    user = User.verify_auth_token(token)
+    user = User.verify_auth_token_api_v2(token)
     if user is None:
         return False
     g.current_user = user

@@ -129,7 +129,7 @@ def test_reset_password_without_auth(client_with_request_ctx):
         data = response.get_data(as_text=True)
         assert len(outbox) == 1
         assert "A confirmation email has been sent." in data
-    token = user.gen_auth_token()
+    token = user.generate_confirmation_token()
     response = client.post(
         f"/password/reset/{token}/",
         data=dict(password="abcd1234", password_again="abcd1234"),

@@ -38,6 +38,14 @@ MIT License
                 </a>
             </ul>
         </div>
+        <div class="card mb-3">
+            <div class="card-header">{{ _("User Actions") }}</div>
+            <ul class="list-group list-group-flush">
+                <a class="list-group-item" href="{{ url_for('user.edit_profile') }}">
+                    {{ _("Edit profile") }}
+                </a>
+            </ul>
+        </div>
         {% if current_user.is_administrator() %}
         <div class="card mb-3">
             <div class="card-header">{{ _("Admin Actions") }}</div>

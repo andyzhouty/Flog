@@ -51,9 +51,9 @@
 
 ## 在本地运行这个网站
 
-### 部署网站到本地
+### venv + pip
 
-如果你使用pip+requirements.txt，命令如下：
+如果你使用venv和pip来管理虚拟环境，命令如下：
 
 ```shell
 git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.com/andyzhouty/Flog.git ./flog
@@ -67,6 +67,8 @@ flask create-admin
 flask run
 ```
 
+### Pipenv
+
 如果你使用pipenv，命令如下：
 
 ```shell
@@ -75,44 +77,36 @@ pipenv install # 使用pipenv安装相关依赖
 pipenv shell
 flask deploy # 初始化数据库
 flask forge
-flask create-admin
+flask create-admin # 生成管理员账号
 flask run
 ```
 
-应用配置默认值：
+### Docker
 
-| 配置名            |  FLOG_EMAIL | FLOG_EMAIL_PASSWORD | FLOG_ADMIN | FLOG_ADMIN_EMAIL | FLOG_ADMIN_PASSWORD |
-| ---           | ----------- | ------------------- | ---------- | ---------------- | ------------------- |
-| 默认值 | flog_admin@example.com | flog_email_password | flog_admin | flog_admin@example.com | flog_admin_password |
-| 描述 | flog部署服务器的邮箱（可以使用个人邮箱） | `FLOG_EMAIL`的密码 | 管理员用户的用户名 | 管理员邮箱账号 | 管理员密码
+Flog使用sqlite3作为Docker容器的数据库，容器关闭后数据库的所有内容会被清除。
+如果不需要数据永久保存，那么放心使用，否则不推荐。
+
+```shell
+docker pull andyzhouty/flog
+docker run andyzhouty/flog -d -p 5000:5000
+```
 
 ### 运行单元测试
 
-pip+requirements.txt
-
 ```shell
 # 假设已经激活了虚拟环境
-pip3 install -r requirements/dev.txt
-flask test
-```
-
-pipenv
-
-```shell
-pipenv install --dev
-pipenv shell
 pytest
 ```
 
-注意:
-如果`test_push_notification`测试运行报错且报错信息如下
+## Flog可选设置
 
-```text
-sqlite3.InterfaceError Error binding parameter 0...
-```
-
-这应该是由sqlite3对某些数据类型的不支持引起的,你应该指定`DATABASE_TEST`环境变量来
-把默认的sqlite内存型数据库替换为PostgreSQL或MySQL等数据库。
+| 配置名              | 默认值                 | 描述                                       |
+| ------------------- | ---------------------- | ------------------------------------------ |
+| FLOG_EMAIL          | flog_admin@example.com | 部署Flog时所用的邮箱（推荐使用自建服务器） |
+| FLOG_EMAIL_PASSWORD | flog_email_password    | FLOG_EMAIL的邮箱密码                       |
+| FLOG_ADMIN          | flog_admin             | Flog管理员的用户名                         |
+| FLOG_ADMIN_EMAIL    | flog_admin@example.com | Flog管理员的邮箱                           |
+| FLOG_ADMIN_PASSWORD | flog_admin_password    | Flog管理员的密码                           |
 
 ## 关于一些小问题
 

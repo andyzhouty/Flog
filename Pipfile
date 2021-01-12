@@ -67,6 +67,11 @@ WTForms = "*"
 Flask-Cors = "*"
 flask-httpauth = "*"
 bleach = "*"
+flask-apispec = "*"
+flask-caching = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true

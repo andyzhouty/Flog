@@ -118,7 +118,7 @@ def forget_password():
     form = ValidateEmailForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        token = user.gen_auth_token()
+        token = user.generate_confirmation_token()
         send_email(
             [user.email],
             "Reset Password",
@@ -133,7 +133,7 @@ def forget_password():
 
 @user_bp.route("/password/reset/<token>/", methods=["GET", "POST"])
 def reset_password(token):
-    user = User.verify_auth_token(token)
+    user = User.from_confirmation_token(token)
     form = PasswordChangeForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)

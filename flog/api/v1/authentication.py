@@ -12,7 +12,7 @@ def verify_password_or_token(username_or_token, password):
         return False
     user = User.query.filter_by(username=username_or_token).first()
     if not user:
-        user = User.verify_auth_token(username_or_token)
+        user = User.verify_auth_token_api_v2(username_or_token)
         g.current_user = user
         return bool(user)
     g.current_user = user

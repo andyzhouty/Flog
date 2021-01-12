@@ -329,6 +329,15 @@ class User(db.Model, UserMixin):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
         return s.dumps({"confirm": self.id}).decode("utf-8")
 
+    @staticmethod
+    def from_confirmation_token(token: str):
+        s = Serializer(current_app.config["SECRET_KEY"])
+        try:
+            data = s.loads(token.encode("utf-8"))
+        except:
+            return None
+        return User.query.get(data.get("confirm"))
+
     def confirm(self, token):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
@@ -341,12 +350,12 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         return True
 
-    def gen_auth_token(self, expiration=3600):
+    def gen_api_auth_token(self, expiration=3600):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
         return s.dumps({"id": self.id}).decode("ascii")
 
     @staticmethod
-    def verify_auth_token(token: str):
+    def verify_auth_token_api_v2(token: str):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token.encode("ascii"))

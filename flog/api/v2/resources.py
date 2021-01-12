@@ -230,7 +230,7 @@ class TokenAPI(MethodView):
         user = User.query.filter_by(username=username).first()
         if user is None or not user.verify_password(password):
             return bad_request("Either the username or the password was invalid.")
-        token = user.gen_auth_token()
+        token = user.gen_api_auth_token()
         response = jsonify(
             {"access_token": token, "expires_in": 3600, "token_type": "Bearer"}
         )

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4db8e70fda4886acb0a24a6c7f260030cf05743c419a3d34a68da678a846abb8"
+            "sha256": "fc2a51cd3c81b49331b6c802069e1e7c71e25e908cf6c088e2584f5e04a57ff5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,14 @@
             ],
             "index": "pypi",
             "version": "==1.4.3"
+        },
+        "apispec": {
+            "hashes": [
+                "sha256:20d271f7c8d130719be223fdb122af391ff8d59fb24958c793f632305b87f8ed",
+                "sha256:360e28e5e84a4d7023b16de2b897327fe3da63ddc8e01f9165b9113b7fe1c48a"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==4.0.0"
         },
         "attrs": {
             "hashes": [
@@ -180,6 +188,14 @@
             "index": "pypi",
             "version": "==1.1.2"
         },
+        "flask-apispec": {
+            "hashes": [
+                "sha256:7e82dabcac4234c1540438daac045e8475804b4dcf7f68898ffc47113ab34da0",
+                "sha256:89e05dd2cb6e91ad999033c59aed4b5036aea9f0794d5ea5d9082be8ad4a99f2"
+            ],
+            "index": "pypi",
+            "version": "==0.11.0"
+        },
         "flask-babel": {
             "hashes": [
                 "sha256:e6820a052a8d344e178cdd36dd4bb8aea09b4bda3d5f9fa9f008df2c7f2f5468",
@@ -187,6 +203,14 @@
             ],
             "index": "pypi",
             "version": "==2.0.0"
+        },
+        "flask-caching": {
+            "hashes": [
+                "sha256:a0356ad868b1d8ec2d0e675a6fe891c41303128f8904d5d79e180d8b3f952aff",
+                "sha256:e6ef2e2af84e13c4fd32c1839c1943a42f11b6b0fbcfdd6bf46547ea5482dbfe"
+            ],
+            "index": "pypi",
+            "version": "==1.9.0"
         },
         "flask-ckeditor": {
             "hashes": [
@@ -352,6 +376,14 @@
             ],
             "index": "pypi",
             "version": "==1.1.1"
+        },
+        "marshmallow": {
+            "hashes": [
+                "sha256:4ab2fdb7f36eb61c3665da67a7ce281c8900db08d72ba6bf0e695828253581f7",
+                "sha256:eca81d53aa4aafbc0e20566973d0d2e50ce8bf0ee15165bb799bec0df1e50177"
+            ],
+            "markers": "python_version >= '3.5'",
+            "version": "==3.10.0"
         },
         "more-itertools": {
             "hashes": [
@@ -550,6 +582,14 @@
             "index": "pypi",
             "version": "==0.2.5"
         },
+        "webargs": {
+            "hashes": [
+                "sha256:2f3d883ce9f348fa884889440fcc1b207e7c67b04be5e90be00a5be73e2cd91d",
+                "sha256:ce8c565789ece1584be7edba41617319eb75de59b2987958bee3f3fdb3669e60"
+            ],
+            "markers": "python_version >= '3.6'",
+            "version": "==7.0.1"
+        },
         "webencodings": {
             "hashes": [
                 "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78",
@@ -731,11 +771,11 @@
         },
         "faker": {
             "hashes": [
-                "sha256:bd56ab94b9ae45df3cdb6ef3ca3c2be2617e6a640699deb74394143d220faf04",
-                "sha256:d70983d5e623976e9e8987e9a39e8d55378e66049f393db35ea9a37b3190085f"
+                "sha256:47ac7d62d5bad8c16422a91f121430ab7656d40ca8fea9c84bcdbdf92e739b03",
+                "sha256:6bc44606d44f711e1d89ad9a5b42394cc6f7eedaffc765ddb5b2d22084c15733"
             ],
             "index": "pypi",
-            "version": "==5.4.0"
+            "version": "==5.5.0"
         },
         "flake8": {
             "hashes": [
@@ -935,11 +975,11 @@
         },
         "pymysql": {
             "hashes": [
-                "sha256:b46be62180008086fa9365a91c39a8853066ea5e8cde3a1e24491fb7de4b9286",
-                "sha256:e651185cc1785c7c9e81a88329664b16c23f2f3d073b9ea6816406b351296ac8"
+                "sha256:41fc3a0c5013d5f039639442321185532e3e2c8924687abe6537de157d403641",
+                "sha256:816927a350f38d56072aeca5dfb10221fe1dc653745853d30a216637f5d7ad36"
             ],
             "index": "pypi",
-            "version": "==1.0.1"
+            "version": "==1.0.2"
         },
         "pyparsing": {
             "hashes": [

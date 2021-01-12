@@ -236,7 +236,7 @@ class TokenAPI(MethodView):
     decorators = [auth.login_required]
 
     def get(self):
-        return g.current_user.gen_auth_token()
+        return g.current_user.gen_api_auth_token()
 
 
 class NotificationAPI(MethodView):

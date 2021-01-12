@@ -50,13 +50,18 @@ that took me into the wonderful world of Flask.
 - Two languages support (zh_CN and en_US)  
 - Web API
 
+## Plans
+
+I'm currently planning to add access tokens and refresh tokens to api v3.
+It might use flask-apispec and flask-jwt-extended.
+
 ## Web API Documents
 
 [ReadTheDocs](https://flog.readthedocs.io/en/latest/)
 
 ## Run Flog locally
 
-### Run the website
+### venv + pip
 
 If you prefer to use pip + requirements.txt, then:
 
@@ -72,6 +77,8 @@ flask create-admin
 flask run
 ```
 
+### pipenv
+
 Or if you prefer to use pipenv, then:
 
 ```shell
@@ -84,39 +91,32 @@ flask create-admin
 flask run
 ```
 
-The default settings for the app:
+### Docker
 
-| Name          |  FLOG_EMAIL | FLOG_EMAIL_PASSWORD | FLOG_ADMIN | FLOG_ADMIN_EMAIL | FLOG_ADMIN_PASSWORD |
-| ---           | ----------- | ------------------- | ---------- | ---------------- | ------------------- |
-| Default Value | flog_admin@example.com | flog_email_password | flog_admin | flog_admin@example.com | flog_admin_password |
-| Description   | the email address used for deploying flog | the password for `FLOG_EMAIL` | the username for the administrator of flog | the administrator's email address | the administrator's password
-
-### Run the unittests
-
-pip+requirements.txt
+Note that Flog uses sqlite3 as the database for the docker container and that means
+the data cannot be stored forever.
 
 ```shell
-source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
-pip3 install -r requirements/dev.txt
-pytest
+docker pull andyzhouty/flog
+docker run andyzhouty/flog -d -p 5000:5000
 ```
 
-pipenv
+### Unittests
 
 ```shell
-pipenv install --dev --pre
-pipenv shell
-pytest
+# activate the virtual environment
+pytest # or `pipenv run pytest`
 ```
 
-Note:
-If the `test_push_notification` test failed to run and the error message is like:
+## Available Settings for Flog
 
-```text
-sqlite3.InterfaceError Error binding parameter 0.
-```
-
-It should be caused by sqlite3 and you should set another database by settings env variable `DATABASE_TEST` such as mysql or postgresql.
+| Config Name         | Default Value          | Description                                |
+| ------------------- | ---------------------- | ------------------------------------------ |
+| FLOG_EMAIL          | flog_admin@example.com | The email address used for deploying flog. |
+| FLOG_EMAIL_PASSWORD | flog_email_password    | The email password for FLOG_EMAIL          |
+| FLOG_ADMIN          | flog_admin             | The username of the administrator of flog. |
+| FLOG_ADMIN_EMAIL    | flog_admin@example.com | The administrator's email address.         |
+| FLOG_ADMIN_PASSWORD | flog_admin_password    | The administrator's password.              |
 
 ## FAQ
 
