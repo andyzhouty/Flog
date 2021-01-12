@@ -36,10 +36,3 @@ jobs:
           command: |
             . venv/bin/activate
             coveralls
-      - run:
-          name: Push docker container to dockerhub
-          command: |
-            docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
-            docker build -t flog:latest .
-            docker tag flog ${DOCKERHUB_USERNAME}/flog
-            docker push ${DOCKERHUB_USERNAME}/flog
