@@ -19,7 +19,6 @@ def test_admin_edit_article(client):
     response = client.get(f"/post/edit/{post_id}/")
     response_data = response.get_data(as_text=True)
     # test if the old content exists in the edit page.
-    print(response_data)
     assert post_data["text"] in response_data
     data = {"title": "new title", "content": "new content"}
     response = client.post(f"/post/edit/{post_id}/", data=data, follow_redirects=True)

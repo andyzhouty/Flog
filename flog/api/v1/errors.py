@@ -1,23 +1,17 @@
-from flask import jsonify
 from . import api_v1
+from flog.errors import api_error_handler
 
 
 def bad_request(message):
-    response = jsonify({"error": "bad request", "message": message})
-    response.status_code = 400
-    return response
+    return api_error_handler(400, "bad request", message)
 
 
 def unauthorized(message):
-    response = jsonify({"error": "unauthorized", "message": message})
-    response.status_code = 401
-    return response
+    return api_error_handler(401, "unauthorized", message)
 
 
 def forbidden(message):
-    response = jsonify({"error": "forbidden", "message": message})
-    response.status_code = 403
-    return response
+    return api_error_handler(403, "forbidden", message)
 
 
 class ValidationError(ValueError):

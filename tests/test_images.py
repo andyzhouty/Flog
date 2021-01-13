@@ -52,7 +52,6 @@ def test_manage_images(client):
     upload_image(client)
     response = client.get("/image/manage/")
     data = response.get_data(as_text=True)
-    print(data)
     filename = current_app.config["FLOG_ADMIN"] + "_" + "test.png"
     assert f'src="/image/{filename}"' in data
     image = Image.query.filter_by(filename=filename).first()

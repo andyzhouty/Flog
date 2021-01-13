@@ -13,11 +13,7 @@ def test_language_selection(client):
         role=Role.query.filter_by(name="Administrator").first()
     ).first()
     admin.locale = "en_US"
-    print(
-        client.get("/language/set-locale/zh_Hans_CN/", follow_redirects=True).get_data(
-            as_text=True
-        )
-    )
+    client.get("/language/set-locale/zh_Hans_CN/", follow_redirects=True)
     assert admin.locale == "zh_Hans_CN"
 
 

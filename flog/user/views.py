@@ -201,7 +201,6 @@ def invite_user(user_id: int):
         (g.id, g.name)
         for g in Group.query.filter_by(manager=current_user).order_by("name")
     ]
-    print(len(form.group_id.choices))
     if len(form.group_id.choices) == 0:
         flash(
             _(

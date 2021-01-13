@@ -25,14 +25,27 @@ def test_posts(client):
     register(email="user@example.com", password="1234", username="user", client=client)
 
     # test POST
+    post = {
+        "content": "<p>body of the post</p>",
+        "title": None,
+        "private": False
+    }
+
     response = client.post(
         "/api/v1/post/new/",
         headers=get_api_v1_headers(),
-        data=json.dumps(
-            {"content": "<p>body of the post</p>", "title": "hello", "private": False}
-        ),
+        data=json.dumps(post),
+    )
+    assert response.status_code == 400
+
+    post["title"] = "hello"
+    response = client.post(
+        "/api/v1/post/new/",
+        headers=get_api_v1_headers(),
+        data=json.dumps(post),
     )
     assert response.status_code == 200
+
     data = response.get_json()
     post_id = data.get("id")
     assert post_id is not None

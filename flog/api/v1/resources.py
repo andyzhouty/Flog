@@ -16,8 +16,7 @@ from flog.models import db, User, Post, Comment, Notification
 import bleach
 
 
-def get_post_data() -> tuple:
-    data = request.get_json()
+def get_post_data(data: dict) -> tuple:
     title = data.get("title")
     content = data.get("content")
     private = data.get("private")
@@ -26,10 +25,13 @@ def get_post_data() -> tuple:
         or str(content).strip() == ""
         or title is None
         or str(title).strip() == ""
-        or not isinstance(private, bool)
     ):
         raise ValidationError("The post is invalid or empty.")
-    return (title, content)
+    if private is not None and private != 0:
+        private = True
+    else:
+        private = False
+    return title, content, private
 
 
 def can_edit_post(post: Post) -> bool:
@@ -108,8 +110,7 @@ class PostAPI(MethodView):
     def post(self) -> "201":
         """Create a post"""
         data = request.get_json()
-        title = data.get("title")
-        content = data.get("content")
+        title, content, private = get_post_data(data)
         # remove javascript and css from the content
         cleaned_content = bleach.clean(
             content,
@@ -117,26 +118,19 @@ class PostAPI(MethodView):
             attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
             strip_comments=True,
         )
-        private = data.get("private")
-        if (
-            isinstance(title, str)
-            and isinstance(content, str)
-            and isinstance(private, bool)
-        ):
-            post = Post(
-                author=g.current_user,
-                title=title,
-                content=cleaned_content,
-                private=private,
-            )
-            db.session.add(post)
-            try:
-                db.session.commit()
-            except:
-                return bad_request("Duplicated title")
-            return jsonify(post_schema(post))
-        else:
-            return bad_request("Data is invalid!")
+
+        post = Post(
+            author=g.current_user,
+            title=title,
+            content=cleaned_content,
+            private=private,
+        )
+        db.session.add(post)
+        try:
+            db.session.commit()
+        except Exception as e:
+            return bad_request(e)
+        return jsonify(post_schema(post))
 
     def put(self, post_id: int) -> "204" or "403" or "404":
         """Edit Post"""
@@ -243,15 +237,20 @@ class NotificationAPI(MethodView):
     decorators = [auth.login_required]
 
     def get(self):
+        # fmt: off
         unread_num = (
-            Notification.query.with_parent(g.current_user)
-            .filter_by(is_read=False)
-            .count()
+            Notification.query
+                        .with_parent(g.current_user)
+                        .filter_by(is_read=False)
+                        .count()
         )
         unread_items = [
             (notification.message, notification.id)
-            for notification in Notification.query.with_parent(g.current_user)
-            .filter_by(is_read=False)
-            .all()
+            for notification in
+            Notification.query
+                        .with_parent(g.current_user)
+                        .filter_by(is_read=False)
+                        .all()
         ]
+        # fmt: on
         return jsonify({"unread_num": unread_num, "unread_items": unread_items})

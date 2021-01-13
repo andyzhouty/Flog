@@ -1,4 +1,4 @@
-from flog.api.v2.errors import bad_request, invalid_token, token_missing
+from flog.api.v2.errors import bad_request, invalid_token
 from functools import wraps
 from flask import g, request
 from flog.models import User
@@ -31,10 +31,10 @@ def auth_required(f):
         token_type, token = get_token()
 
         if request.method != "OPTIONS":
-            if token_type is None or token_type.lower() != "bearer":
-                return bad_request("The token type must be bearer")
-            if token is None:
-                return token_missing()
+            if token_type is None or token is None or token_type.lower() != "bearer":
+                return bad_request(
+                    "The token type must be bearer and the token must not be none."
+                )
             if not validate_token(token):
                 return invalid_token()
         return f(*args, **kwargs)

@@ -17,9 +17,16 @@ def test_api_index(client):
 
 
 def test_no_auth(client):
-    response = client.get(f"/api/v2/post/1/")
+    response = client.get("/api/v2/post/1/")
     data = response.get_json()
-    assert data.get("message") == "The token type must be bearer"
+    assert data.get("message") == "The token type must be bearer and the token must not be none."
+
+    response = client.get(
+        "/api/v2/post/1/",
+        headers=get_api_v2_headers(client, custom_token="fake-token")
+    )
+    data = response.get_json()
+    assert data.get("message") == "invalid token"
 
 
 def test_get_token(client):
@@ -38,12 +45,27 @@ def test_get_token(client):
 
 def test_posts(client):
     register(email="user@example.com", password="1234", username="user", client=client)
+
+    # test POST
+    post = {
+        "content": "<p>body of the post</p>",
+        "title": None,
+        "private": False
+    }
+
     response = client.post(
         "/api/v2/post/new/",
         headers=get_api_v2_headers(client),
-        data=json.dumps(
-            {"content": "<p>body of the post</p>", "title": "hello", "private": False}
-        ),
+        data=json.dumps(post),
+    )
+    assert response.status_code == 400
+
+    post["title"] = "hello"
+
+    response = client.post(
+        "/api/v2/post/new/",
+        headers=get_api_v2_headers(client),
+        data=json.dumps(post),
     )
     assert response.status_code == 200
     data = response.get_json()
@@ -53,6 +75,7 @@ def test_posts(client):
     assert data.get("title") == "hello"
     assert data.get("private") is False
 
+    # test GET
     response = client.get(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
@@ -60,6 +83,7 @@ def test_posts(client):
     assert isinstance(data["author"], dict)
     assert data["author"]["username"] == "user"
 
+    # test PUT
     data = {"title": "a new title", "content": "the new content", "private": True}
     response = client.put(
         f"/api/v2/post/{post_id}/", json=data, headers=get_api_v2_headers(client)
@@ -72,6 +96,7 @@ def test_posts(client):
     assert response.status_code == 200
     assert response.get_json().get("content") == data["content"]
 
+    # test PATCH
     response = client.patch(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
@@ -82,6 +107,7 @@ def test_posts(client):
     )
     assert response.get_json()["private"] is False
 
+    # test DELETE
     response = client.delete(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
@@ -172,7 +198,6 @@ def test_comments(client):
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
     data = response.get_json()
-    print(data)
     comments = data.get("comments")
     assert isinstance(comments, list)
     assert comments[0]["author"] == "user"

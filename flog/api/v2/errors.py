@@ -1,39 +1,22 @@
 from flask import jsonify
 from . import api_v2
+from flog.errors import api_error_handler
 
 
 def bad_request(message):
-    response = jsonify({"error": "bad request", "message": message})
-    response.status_code = 400
-    return response
+    return api_error_handler(400, "bad request", message)
 
 
 def unauthorized(message):
-    response = jsonify({"error": "unauthorized", "message": message})
-    response.status_code = 401
-    return response
+    return api_error_handler(401, "unauthorized", message)
 
 
 def forbidden(message):
-    response = jsonify({"error": "forbidden", "message": message})
-    response.status_code = 403
-    return response
+    return api_error_handler(403, "forbidden", message)
 
 
 def invalid_token():
-    response = jsonify(
-        {
-            "error": "invalid_token",
-            "message": "Either the token was expired or invalid.",
-        }
-    )
-    response.status_code = 401
-    response.headers["WWW-Authenticate"] = "Bearer"
-    return response
-
-
-def token_missing():
-    response = unauthorized("Token missing")
+    response = unauthorized("invalid token")
     response.headers["WWW-Authenticate"] = "Bearer"
     return response
 

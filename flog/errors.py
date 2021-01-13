@@ -8,17 +8,36 @@ from flask_wtf.csrf import CSRFError
 from flask_babel import _
 
 
+def api_error_handler(
+        err_code: int,
+        short_message: str,
+        long_message: str = None,
+        headers: dict = None
+):
+    if (
+        request.accept_mimetypes.accept_json
+        and not request.accept_mimetypes.accept_html
+        or request.blueprint == "api_v1"
+        or request.blueprint == "api_v2"
+    ):
+        response = {"error": short_message}
+        if long_message:
+            response["message"] = long_message
+        response = jsonify(response)
+        response.status_code = err_code
+        if headers:
+            for key, value in headers:
+                response.headers[key] = value
+        return response
+
+
 def register_error_handlers(app):
     @app.errorhandler(400)
     @app.errorhandler(CSRFError)
     def bad_request(e):
-        if (
-            request.accept_mimetypes.accept_json
-            and not request.accept_mimetypes.accept_html
-        ):
-            response = jsonify({"error": "bad request"})
-            response.status_code = 400
-            return response
+        json_response = api_error_handler(400, "bad request")
+        if json_response is not None:
+            return json_response
         return (
             render_template("errors/error.html", error_message=_("400 Bad Request")),
             400,
@@ -26,13 +45,9 @@ def register_error_handlers(app):
 
     @app.errorhandler(403)
     def forbidden(e):
-        if (
-            request.accept_mimetypes.accept_json
-            and not request.accept_mimetypes.accept_html
-        ):
-            response = jsonify({"error": "forbidden"})
-            response.status_code = 403
-            return response
+        json_response = api_error_handler(403, "forbidden")
+        if json_response is not None:
+            return json_response
         return (
             render_template(
                 "errors/error.html",
@@ -45,25 +60,17 @@ def register_error_handlers(app):
 
     @app.errorhandler(404)
     def page_not_found(e):
-        if (
-            request.accept_mimetypes.accept_json
-            and not request.accept_mimetypes.accept_html
-        ):
-            response = jsonify({"error": "not found"})
-            response.status_code = 404
-            return response
+        json_response = api_error_handler(404, "not found")
+        if json_response is not None:
+            return json_response
         # special easter egg :P
         return render_template("errors/404.html", error_message=_("404 Not Found")), 404
 
     @app.errorhandler(405)
     def method_not_allowed(e):
-        if (
-            request.accept_mimetypes.accept_json
-            and not request.accept_mimetypes.accept_html
-        ):
-            response = jsonify({"error": "method not allowed"})
-            response.status_code = 405
-            return response
+        json_response = api_error_handler(405, "method not allowed")
+        if json_response is not None:
+            return json_response
         return (
             render_template(
                 "errors/error.html", error_message=_("405 Method Not Allowed")
@@ -73,32 +80,22 @@ def register_error_handlers(app):
 
     @app.errorhandler(413)
     def payload_to_large(e):
-        if (
-            request.accept_mimetypes.accept_json
-            and not request.accept_mimetypes.accept_html
-        ):
-            response = jsonify({"error": "payload to large"})
-            response.status_code = 413
-            return response
+        json_response = api_error_handler(413, "image file too large")
+        if json_response is not None:
+            return json_response
         return (
             render_template(
                 "errors/error.html",
-                error_message=_(
-                    "The file you uploaded was TOO" " large (larger than 1M)"
-                ),
+                error_message=_("The file you uploaded was larger than the 1M limit"),
             ),
             413,
         )
 
     @app.errorhandler(500)
     def internal_server_error(e):
-        if (
-            request.accept_mimetypes.accept_json
-            and not request.accept_mimetypes.accept_html
-        ):
-            response = jsonify({"error": "internal server error"})
-            response.status_code = 500
-            return response
+        json_response = api_error_handler(500, "internal server error")
+        if json_response is not None:
+            return json_response
         return (
             render_template(
                 "errors/error.html", error_message=_("500 Internal Server Error")

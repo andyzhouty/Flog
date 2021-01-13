@@ -47,9 +47,7 @@ def main():
             .order_by(Post.timestamp.desc())
             .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
         )
-    print(current_app.config["POSTS_PER_PAGE"])
     posts = pagination.items
-    print(len(posts))
     return render_template("main/main.html", pagination=pagination, posts=posts)
 
 
@@ -241,7 +239,6 @@ def collected_posts():
 def search():
     q = request.args.get("q", "")
     q = q.lower()
-    print(q)
     if q == "":
         flash(_("Enter keyword about post or user."), "warning")
         return redirect_back()
@@ -262,7 +259,6 @@ def search():
         pagination = query.paginate(page, per_page)
         results_count = query.count()
     results = pagination.items
-    print(results)
     return render_template(
         "main/search.html",
         q=q,

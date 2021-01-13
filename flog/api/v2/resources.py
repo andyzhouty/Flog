@@ -26,9 +26,12 @@ def get_post_data() -> tuple:
         or str(content).strip() == ""
         or title is None
         or str(title).strip() == ""
-        or not isinstance(private, bool)
     ):
         raise ValidationError("The post is invalid or empty.")
+    if private is not None and private != 0:
+        private = True
+    else:
+        private = False
     return title, content, private
 
 
@@ -101,35 +104,25 @@ class PostAPI(MethodView):
     def post(self) -> "201":
         """Create a post"""
         data = request.get_json()
-        title = data.get("title")
-        content = data.get("content")
-        # remove javascript and css from the content
+        title, content, private = get_post_data()
         cleaned_content = bleach.clean(
             content,
             tags=current_app.config["FLOG_ALLOWED_TAGS"],
             attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
             strip_comments=True,
         )
-        private = data.get("private")
-        if (
-            isinstance(title, str)
-            and isinstance(content, str)
-            and isinstance(private, bool)
-        ):
-            post = Post(
-                author=g.current_user,
-                title=title,
-                content=cleaned_content,
-                private=private,
-            )
-            db.session.add(post)
-            try:
-                db.session.commit()
-            except:
-                return bad_request("Duplicated title")
-            return jsonify(post_schema(post))
-        else:
-            return bad_request("Data is invalid!")
+        post = Post(
+            author=g.current_user,
+            title=title,
+            content=cleaned_content,
+            private=private,
+        )
+        db.session.add(post)
+        try:
+            db.session.commit()
+        except Exception as e:
+            return bad_request(e)
+        return jsonify(post_schema(post))
 
     def put(self, post_id: int) -> "204" or "403" or "404":
         """Edit Post"""
@@ -224,7 +217,6 @@ class CommentAPI(MethodView):
 
 class TokenAPI(MethodView):
     def post(self):
-        print("Here")
         username = request.form.get("username")
         password = request.form.get("password")
         user = User.query.filter_by(username=username).first()

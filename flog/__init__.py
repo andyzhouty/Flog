@@ -24,6 +24,7 @@ from .extensions import (
 from .models import Post, Feedback, Role, Permission, User, Notification
 from .settings import config
 from .errors import register_error_handlers
+from .error_triggers import register_error_triggers
 from .commands import register_commands
 from .admin import admin_bp
 from .ajax import ajax_bp
@@ -49,6 +50,7 @@ def create_app(config_name=None) -> Flask:
     register_blueprints(app)
     register_commands(app, db)
     register_error_handlers(app)
+    register_error_triggers(app)
     register_context(app)
     return app
 

@@ -12,7 +12,7 @@ fake = Faker()
 
 
 def login(
-    client, username=os.getenv("FLOG_ADMIN"), password=os.getenv("FLOG_ADMIN_PASSWORD")
+        client, username=os.getenv("FLOG_ADMIN"), password=os.getenv("FLOG_ADMIN_PASSWORD")
 ):
     """Login helper function"""
     if username is None:
@@ -32,11 +32,11 @@ def logout(client):
 
 
 def register(
-    client,
-    name: str = "Test",
-    username: str = "test",
-    password: str = "password",
-    email: str = "test@example.com",
+        client,
+        name: str = "Test",
+        username: str = "test",
+        password: str = "password",
+        email: str = "test@example.com",
 ):
     """Register helper function"""
     return client.post(
@@ -77,17 +77,25 @@ def send_notification(client) -> None:
     db.session.commit()
 
 
-def get_api_v1_headers(username: str = "user", password: str = "1234") -> dict:
+def get_api_v1_headers(
+    username: str = "user",
+    password: str = "1234"
+) -> dict:
     """Returns auth headers for api v1"""
     return {
         "Authorization": "Basic "
-        + b64encode(f"{username}:{password}".encode("utf-8")).decode("utf-8"),
+                         + b64encode(f"{username}:{password}".encode("utf-8")).decode("utf-8"),
         "Accept": "application/json",
         "Content-Type": "application/json",
     }
 
 
-def get_api_v2_headers(client, username: str = "user", password: str = "1234"):
+def get_api_v2_headers(
+    client,
+    username: str = "user",
+    password: str = "1234",
+    custom_token: str = None
+) -> dict:
     """Returns auth headers for api v2"""
     response = client.post(
         "/api/v2/oauth/token/",
@@ -95,6 +103,8 @@ def get_api_v2_headers(client, username: str = "user", password: str = "1234"):
     )
     data = response.get_json()
     token = data.get("access_token")
+    if custom_token is not None:
+        token = custom_token
     return {
         "Authorization": "Bearer " + token,
         "Accept": "application/json",
@@ -102,7 +112,7 @@ def get_api_v2_headers(client, username: str = "user", password: str = "1234"):
     }
 
 
-def get_response_and_data_of_post(client, post_id: int) -> list:
+def get_response_and_data_of_post(client, post_id: int) -> tuple:
     response = client.get(f"/post/{post_id}", follow_redirects=True)
     data = response.get_data(as_text=True)
     return response, data

@@ -24,7 +24,6 @@ def test_search(client):
     db.session.add(group1)
     db.session.commit()
     response_data = client.get("/search/?q=xyz&category=post").get_data(as_text=True)
-    print(response_data)
     assert "Group name: xyz" not in response_data
     response_data = client.get("/search/?q=xyz&category=group").get_data(as_text=True)
     assert "Group name: xyz" in response_data

@@ -15,7 +15,6 @@ fake = Faker()
 def test_login_logout(client):
     response = login(client)
     response_data = response.get_data(as_text=True)
-    print(response_data)
     assert (
         f'Welcome, Administrator\n {current_app.config["FLOG_ADMIN"]}' in response_data
     )
@@ -54,7 +53,6 @@ def test_edit_profile(client):
         "about_me": fake.sentence(),
     }
     response = client.post("/profile/edit/", data=data, follow_redirects=True)
-    print(response.get_data(as_text=True))
     user = User.query.filter_by(username="abcd").first()
     assert user.name == data["name"]
     assert user.location == data["location"]

@@ -16,7 +16,6 @@ def test_feedback(client):
     }
     response = client.post("/feedback/", data=data, follow_redirects=True)
     response_data = response.get_data(as_text=True)
-    print(response_data)
     assert data["body"] in response_data
     # test delete
     comment = Feedback.query.filter_by(body=data["body"]).first()
