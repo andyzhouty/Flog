@@ -60,3 +60,11 @@ def test_group(client):
     group = Group()
     user.join_group(group)
     assert user.in_group(group)
+
+
+def test_block_user(client):
+    user = User()
+    user.block()
+    assert user.blocked
+    user.unblock()
+    assert not user.blocked

@@ -64,6 +64,7 @@ def follow(username):
 
 @user_bp.route("/unfollow/<username>/", methods=["POST"])
 @login_required
+@permission_required(Permission.FOLLOW)
 def unfollow(username):
     user = User.query.filter_by(username=username).first()
     if not current_user.is_following(user):

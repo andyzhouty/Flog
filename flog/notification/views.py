@@ -1,6 +1,6 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from flask import request, current_app, render_template, make_response, flash, abort
 from flask_babel import _

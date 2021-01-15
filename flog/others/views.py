@@ -1,6 +1,6 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from flask import (
     current_app,

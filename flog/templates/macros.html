@@ -31,8 +31,10 @@ MIT License
         <span class="badge badge-danger">{{ _("Admin") }}</span>
     {% elif user.can(Permission.MODERATE) -%}
         <span class="badge badge-warning">{{ _("Moderator") }}</span>
-    {% else -%}
+    {% elif user.can(Permission.WRITE) -%}
         <span class="badge badge-primary">{{ _("User") }}</span>
+    {% else %}
+        <span class="badge badge-dark">{{ _("Blocked") }}</span>
     {%- endif %}
     </span>
 {% endmacro %}
@@ -116,29 +118,49 @@ MIT License
         </div>
     {%- endif %}
 {% endmacro %}
+
 {% macro user_card(user) %}
-    <li class="list-group-item">
+    <li class="list-group-item d-flex">
+    <div style="float: left">
     <a href="{{ url_for('user.user_profile', username=user.username) }}">
         <img src="{{ user.gravatar() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
     <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
     {{ role_label_of(user) }}
-    {% if current_user.is_administrator() -%}
-    <br><br>
-    <span class="text-white">
-        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
-            <i class="fa fa-edit"></i>
-            {{ _("Edit Profile") }}
-        </a>
-        <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}"
-            style="display: inline !important">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
-                <i class="fa fa-trash"></i>
-                {{ _("DELETE") }}
-            </button>
-        </form>
+    </div>
+    <span class="text-white" style="position: relative; text-align: right; float: right; top: 0px; vertical-align: top; z-index: 100;">
+        {% if current_user.is_administrator() -%}
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                <i class="fa fa-edit"></i>
+                {{ _("Edit Profile") }}
+            </a>
+            <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure?');">
+                    <i class="fa fa-trash"></i>
+                    {{ _("DELETE") }}
+                </button>
+            </form>
+        {%- endif %}
+        {% if current_user.can(Permission.MODERATE) and not user.is_administrator() -%}
+            {% if not user.blocked %}
+            <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-dark" onclick="return confirm('Are you sure?');">
+                    <i class="fa fa-lock"></i>
+                    {{ _("BLOCK") }}
+                </button>
+            </form>
+            {% else %}
+            <form class="form-inline" method="POST" action="{{ url_for('admin.unblock_user', user_id=user.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-dark" onclick="return confirm('Are you sure?');">
+                    <i class="fa fa-lock"></i>
+                    {{ _("UNBLOCK") }}
+                </button>
+            </form>
+            {% endif %}
+        {%- endif %}
     </span>
-    {%- endif %}
     </li>
 {% endmacro %}
 

@@ -1,6 +1,6 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from flask import render_template, request
 from flask.json import jsonify
@@ -9,10 +9,7 @@ from flask_babel import _
 
 
 def api_error_handler(
-        err_code: int,
-        short_message: str,
-        long_message: str = None,
-        headers: dict = None
+    err_code: int, short_message: str, long_message: str = None, headers: dict = None
 ):
     if (
         request.accept_mimetypes.accept_json

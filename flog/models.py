@@ -82,7 +82,7 @@ class Comment(db.Model):
     flag = db.Column(db.Integer, default=0)
 
     replied_id = db.Column(db.Integer, db.ForeignKey("comment.id"))
-    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
 
     post = db.relationship("Post", back_populates="comments")
@@ -225,6 +225,7 @@ class Role(db.Model):
                 Permission.MODERATE,
                 Permission.ADMIN,
             ],
+            "BLOCKED": []
         }
         default_role = "User"
         for r in roles:
@@ -251,6 +252,8 @@ class User(db.Model, UserMixin):
     feedbacks = db.relationship("Feedback", back_populates="author")
     avatar_hash = db.Column(db.String(32))
 
+    blocked = db.Column(db.Boolean, default=False)
+
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
     about_me = db.Column(db.Text)
@@ -275,7 +278,7 @@ class User(db.Model, UserMixin):
         cascade="all",
     )
 
-    comments = db.relationship("Comment", back_populates="author")
+    comments = db.relationship("Comment", back_populates="author", cascade="all")
     notifications = db.relationship(
         "Notification", back_populates="receiver", cascade="all"
     )
@@ -413,6 +416,15 @@ class User(db.Model, UserMixin):
     def in_group(self, group) -> bool:
         return self in group.members
 
+    def block(self) -> bool:
+        self.blocked = True
+        self.role = Role.query.filter_by(name="BLOCKED").first()
+        db.session.commit()
+
+    def unblock(self) -> bool:
+        self.blocked = False
+        self.role = Role.query.filter_by(name="User").first()
+        db.session.commit()
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):

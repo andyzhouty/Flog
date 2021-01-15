@@ -42,6 +42,16 @@ def clean_up(app, context):
 
 
 @pytest.fixture()
+def production():
+    app = create_app("production")
+    context = app.app_context()
+    client = app.test_client()
+    common_setup(app, context)
+    yield client
+    clean_up(app, context)
+
+
+@pytest.fixture()
 def client_with_request_ctx():
     app = create_app("testing")
     context = app.test_request_context()

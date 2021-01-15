@@ -55,6 +55,8 @@ def test_notifications(client):
     ).first()
     assert len(admin.notifications) == 5
     assert Notification.query.filter_by(is_read=False).count() == 5
+
+    data = client.get("/notification/")
     str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=5) == data
@@ -65,3 +67,10 @@ def test_notifications(client):
     str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=0) == data
+
+
+def test_redirections(client):
+    response = client.get("/redirect?next=http://example.com", follow_redirects=True)
+    assert response.status_code == 200
+    data = response.get_data(as_text=True)
+    assert "Flog" in data  # test if is_safe_url() works

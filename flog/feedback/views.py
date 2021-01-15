@@ -1,6 +1,6 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from flask import flash, render_template, current_app, url_for, redirect
 from flask_login import login_required

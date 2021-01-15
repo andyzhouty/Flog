@@ -1,12 +1,12 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from flask import render_template, request, flash, url_for, current_app, make_response
 from werkzeug.utils import redirect
 from flask_babel import _
-from ..models import db, Feedback, User, Role
-from ..decorators import admin_required
+from ..models import db, Feedback, User, Role, Permission
+from ..decorators import admin_required, permission_required
 from ..utils import redirect_back
 from .forms import EditProfileAdminForm
 from . import admin_bp
@@ -16,6 +16,24 @@ from . import admin_bp
 @admin_required
 def admin():
     return redirect(url_for("main.main"))
+
+
+@admin_bp.route("/block/<int:user_id>/", methods=["POST"])
+@permission_required(Permission.MODERATE)
+def unblock_user(user_id: int):
+    user = User.query.get_or_404(user_id)
+    user.block()
+    flash(_("User {0} blocked.".format(user.username)))
+    return redirect_back()
+
+
+@admin_bp.route("/unblock/<int:user_id>/", methods=["POST"])
+@permission_required(Permission.MODERATE)
+def block_user(user_id: int):
+    user = User.query.get_or_404(user_id)
+    user.unblock()
+    flash(_("User {0} unblocked.".format(user.username)))
+    return redirect_back()
 
 
 @admin_bp.route("/feedback/")
@@ -36,7 +54,7 @@ def delete_feedback(id):
 
 
 @admin_bp.route("/user/all/")
-@admin_required
+@permission_required(Permission.MODERATE)
 def manage_users():
     page = request.args.get("page", default=1, type=int)
     pagination = User.query.order_by(User.id.desc()).paginate(

@@ -15,6 +15,7 @@ MIT License
         {% endblock metas %}
         {% block styles %}
             {{ static_file('icon', 'favicon/favicon.svg') }}
+            {{ static_file('icon', 'favicon/favicon.ico') }}
             {{ static_file('css', 'https://cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' % request.cookies.get('theme', 'cosmo'), local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
@@ -158,8 +159,6 @@ MIT License
     {{ static_file('js', '//cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js', local=False) }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
     {{ moment.include_moment(local_js="//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js") }}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js', local=False) }}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js', local=False) }}
     {{ moment.locale(auto_detect=True) }}
     {{ static_file('js', 'js/script.js') }}
     {% if current_app.config['FLASK_CONFIG'] == 'production' %}

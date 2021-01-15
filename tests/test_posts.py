@@ -88,6 +88,7 @@ def test_view_post(client):
         fakes.posts(1)
         post = Post.query.filter(~Post.private).first()
     data = get_response_and_data_of_post(client, post.id)[1]
+    print(data)
     assert post.content in data
 
     post_private = Post.query.filter(Post.private).first()

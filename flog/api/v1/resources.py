@@ -138,13 +138,14 @@ class PostAPI(MethodView):
         if not can_edit_post(post):
             return forbidden("You cannot edit this post.")
         data = request.get_json()
-        if isinstance(data.get("title"), str):
-            post.title = data["title"]
-        if isinstance(data.get("content"), str):
-            post.content = data["content"]
-        if isinstance(data.get("private"), bool):
-            post.private = data["private"]
-        db.session.add(post)
+        title, content, private = get_post_data(data)
+        cleaned_content = bleach.clean(
+            content,
+            tags=current_app.config["FLOG_ALLOWED_TAGS"],
+            attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
+            strip_comments=True,
+        )
+        post.title, post.content, post.private = title, content, private
         db.session.commit()
         return "", 204
 

@@ -3,10 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 
-JSON_HEADERS = {
-    "Accept": "application/json",
-    "Content-Type": "application/json"
-}
+JSON_HEADERS = {"Accept": "application/json", "Content-Type": "application/json"}
 
 
 def test_400(client):
@@ -61,3 +58,10 @@ def test_500(client):
     response = client.get("/500", headers=JSON_HEADERS)
     data = response.get_json()
     assert data["error"] == "internal server error"
+
+
+def test_production_errors(production):
+    """set the testing error pages to 404 when production"""
+    for error in ["/400", "/401", "/403", "/404", "/405", "413", "500"]:
+        response = production.get(error)
+        assert response.status_code == 404

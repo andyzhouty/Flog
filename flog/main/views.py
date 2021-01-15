@@ -1,8 +1,9 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from datetime import datetime
+from flog.decorators import permission_required
 import bleach
 from flask import (
     render_template,
@@ -10,13 +11,12 @@ from flask import (
     url_for,
     flash,
     abort,
-    make_response,
     request,
     current_app,
 )
 from flask_babel import _
 from flask_login import current_user, login_required
-from ..models import db, Post, Comment, User, Group
+from ..models import Permission, db, Post, Comment, User, Group
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import PostForm, EditForm, CommentForm
@@ -28,7 +28,7 @@ def before_app_request():
     ua = request.user_agent.string
     if (
         "spider" in ua or "bot" in ua or "python" in ua
-    ) and "/api/v1/" not in request.url:
+    ) and "/api/" not in request.url:
         return "F**k you, spider!"  # anti-webcrawler :P
 
 
@@ -53,6 +53,7 @@ def main():
 
 @main_bp.route("/write/", endpoint="write", methods=["GET", "POST"])
 @login_required
+@permission_required(Permission.WRITE)
 def create_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -95,6 +96,9 @@ def full_post(id: int):
         comments = pagination.items
         form = CommentForm()
         if form.validate_on_submit():
+            if not current_user.can(Permission.COMMENT):
+                flash(_("Blocked users cannot post a comment!"))
+                return redirect_back() 
             if post.private:
                 flash(_("You cannot comment a private post!"))
                 return redirect_back()
@@ -126,6 +130,7 @@ def full_post(id: int):
 
 @main_bp.route("/reply/comment/<int:comment_id>")
 @login_required
+@permission_required(Permission.COMMENT)
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     return redirect(
@@ -136,6 +141,7 @@ def reply_comment(comment_id):
 
 @main_bp.route("/comment/delete/<int:comment_id>", methods=["POST"])
 @login_required
+@permission_required(Permission.COMMENT)
 def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     comment.delete()
@@ -144,6 +150,7 @@ def delete_comment(comment_id):
 
 @main_bp.route("/post/manage/")
 @login_required
+@permission_required(Permission.WRITE)
 def manage_posts():
     page = request.args.get("page", 1, type=int)
     pagination = (
@@ -156,6 +163,7 @@ def manage_posts():
 
 @main_bp.route("/post/delete/<int:id>/", methods=["POST"])
 @login_required
+@permission_required(Permission.WRITE)
 def delete_post(id):
     post = Post.query.get(id)
     if not (current_user.is_administrator() or current_user == post.author):
@@ -169,6 +177,7 @@ def delete_post(id):
 
 @main_bp.route("/post/edit/<int:id>/", methods=["GET", "POST"])
 @login_required
+@permission_required(Permission.WRITE)
 def edit_post(id):
     post = Post.query.get(id)
     if not (current_user.is_administrator() or current_user == post.author):

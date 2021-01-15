@@ -1,6 +1,6 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
 from flask import url_for, flash, redirect, request, render_template, abort
 from flask.globals import current_app
@@ -32,31 +32,25 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        try:
-            if not current_app.config["TESTING"]:
-                token = user.generate_confirmation_token()
-                send_email(
-                    [user.email],
-                    "Confirm your account",
-                    "auth/email/confirm",
-                    user=user,
-                    token=token,
-                )
-                flash(
-                    _(
-                        "A confirmation email has been sent to you by email! You can now login!"
-                    ),
-                    "info",
-                )
-                return redirect(url_for("auth.login"))
-            else:
-                flash(_("You can now login!"), "success")
-                return redirect(url_for("auth.login"))
-        except Exception as e:
-            db.session.delete(user)
-            db.session.commit()
-            current_app.logger.error(e)
-            abort(500)
+        if not current_app.config["TESTING"]:
+            token = user.generate_confirmation_token()
+            send_email(
+                [user.email],
+                "Confirm your account",
+                "auth/email/confirm",
+                user=user,
+                token=token,
+            )
+            flash(
+                _(
+                    "A confirmation email has been sent to you by email! You can now login!"
+                ),
+                "info",
+            )
+            return redirect(url_for("auth.login"))
+        else:
+            flash(_("You can now login!"), "success")
+            return redirect(url_for("auth.login"))
     return render_template("auth/register.html", form=form)
 
 
@@ -104,7 +98,7 @@ def confirm(token):
     return redirect(url_for("main.main"))
 
 
-@auth_bp.route("/confirm/")
+@auth_bp.route("/confirm/resend/")
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirmation_token()

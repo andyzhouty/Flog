@@ -33,6 +33,8 @@ def test_register_login_and_confirm(client):
     login_response = login(client, username="test", password="password")
     assert "test" in login_response.get_data(as_text=True)
     user = User.query.filter_by(email="test@example.com").first()
+    response = client.get(f"/auth/confirm/resend/", follow_redirects=True)
+    assert response.status_code == 200
     client.get(
         f"/auth/confirm/{user.generate_confirmation_token()}/", follow_redirects=True
     )
@@ -47,6 +49,10 @@ def test_edit_profile(client):
     db.session.add(user)
     db.session.commit()
     login(client, username="abcd", password="123456")
+    response = client.get("/profile/edit/")
+    response_data = response.get_data(as_text=True)
+    assert "abcd" in response_data
+
     data = {
         "name": fake.name(),
         "location": fake.address(),
@@ -57,10 +63,28 @@ def test_edit_profile(client):
     assert user.name == data["name"]
     assert user.location == data["location"]
     assert user.about_me == data["about_me"]
+    logout(client)
+
+    login(client)
+    response = client.get("/profile/edit/")
+    assert response.status_code == 302
+    response = client.get("/profile/edit/", follow_redirects=True)
+    response2 = client.get("/admin/user/1/profile/edit/")
+    assert response.get_data(as_text=True) == response2.get_data(as_text=True)
+    logout(client)
+
+    user = User(name="xyz", username="xyz", email="test@example.com", confirmed=False)
+    user.set_password("secret")
+    db.session.add(user)
+    db.session.commit()
+
+    login(client, "xyz", "secret")
+    response = client.get("/profile/edit/", follow_redirects=True)
+    response_data = response.get_data(as_text=True)
+    assert "Your email has not been confirmed yet!" in response_data
 
 
 def test_delete_account(client):
-
     login(client)
     user_count = User.query.count()
     response = client.post(
@@ -96,7 +120,6 @@ def test_follow(client):
 
 
 def test_all_users(client):
-
     login(client)
     response = client.get("/user/all/")
     data = response.get_data(as_text=True)
@@ -105,7 +128,6 @@ def test_all_users(client):
 
 
 def test_change_password_with_auth(client):
-
     login(client)
     admin = User.query.filter_by(
         role=Role.query.filter_by(name="Administrator").first()
@@ -137,3 +159,34 @@ def test_reset_password_without_auth(client_with_request_ctx):
     assert "Password Changed" in data
     assert request.path == "/"
     assert user.verify_password("abcd1234")
+
+
+def test_block_user(client):
+    user = User(name="xyz", username="xyz", email="test@example.com")
+    user.set_password("secret")
+    db.session.add(user)
+    db.session.commit()
+
+    login(client, "xyz", "secret")
+    response = client.post(f"/admin/block/{user.id}/")
+    assert response.status_code == 403
+    logout(client)
+
+    moderator = User(
+        name="moderator",
+        username="moderator",
+        email="moderator@example.com",
+        confirmed=True,
+        role=Role.query.filter_by(name='Moderator').first()
+    )
+    moderator.set_password("secr3t")
+    db.session.add(moderator)
+    db.session.commit()
+    login(client, "moderator", "secr3t")
+    response = client.post(f"/admin/block/{user.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert user.blocked
+
+    response = client.post(f"/admin/unblock/{user.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert not user.blocked

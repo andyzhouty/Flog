@@ -1,8 +1,7 @@
 """
 MIT License
-Copyright(c) 2020 Andy Zhou
+Copyright(c) 2021 Andy Zhou
 """
-from logging import log
 import os
 import logging
 from logging.handlers import RotatingFileHandler
@@ -24,7 +23,6 @@ from .extensions import (
 from .models import Post, Feedback, Role, Permission, User, Notification
 from .settings import config
 from .errors import register_error_handlers
-from .error_triggers import register_error_triggers
 from .commands import register_commands
 from .admin import admin_bp
 from .ajax import ajax_bp
@@ -37,6 +35,7 @@ from .language import language_bp
 from .main import main_bp
 from .notification import notification_bp
 from .others import others_bp
+from .testing import testing_bp
 from .user import user_bp
 
 
@@ -50,7 +49,6 @@ def create_app(config_name=None) -> Flask:
     register_blueprints(app)
     register_commands(app, db)
     register_error_handlers(app)
-    register_error_triggers(app)
     register_context(app)
     return app
 
@@ -115,6 +113,9 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(language_bp, url_prefix="/language")
     app.register_blueprint(notification_bp, url_prefix="/notification")
+
+    if app.testing:
+        app.register_blueprint(testing_bp)
 
 
 def register_context(app: Flask) -> None:

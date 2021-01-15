@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from urllib.parse import urlparse, urljoin
-from flask import redirect, url_for, request
+from flask import request, redirect, url_for
 
 
 def lower_username(username: str) -> str:

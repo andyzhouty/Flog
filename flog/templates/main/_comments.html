@@ -8,7 +8,9 @@
             </a>
         </small>
     </h3>
-    {{ render_form(form) }}
+    {% if current_user.is_authenticated %}
+        {{ render_form(form) }}
+    {% endif %}
     {% if comments %}
         <ul class="list-group">
         {% for comment in comments %}
