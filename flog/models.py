@@ -225,7 +225,7 @@ class Role(db.Model):
                 Permission.MODERATE,
                 Permission.ADMIN,
             ],
-            "BLOCKED": []
+            "BLOCKED": [],
         }
         default_role = "User"
         for r in roles:
@@ -425,6 +425,7 @@ class User(db.Model, UserMixin):
         self.blocked = False
         self.role = Role.query.filter_by(name="User").first()
         db.session.commit()
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):

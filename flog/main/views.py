@@ -26,9 +26,7 @@ from . import main_bp
 @main_bp.before_app_request
 def before_app_request():
     ua = request.user_agent.string
-    if (
-        "spider" in ua or "bot" in ua or "python" in ua
-    ) and "/api/" not in request.url:
+    if ("spider" in ua or "bot" in ua or "python" in ua) and "/api/" not in request.url:
         return "F**k you, spider!"  # anti-webcrawler :P
 
 
@@ -98,7 +96,7 @@ def full_post(id: int):
         if form.validate_on_submit():
             if not current_user.can(Permission.COMMENT):
                 flash(_("Blocked users cannot post a comment!"))
-                return redirect_back() 
+                return redirect_back()
             if post.private:
                 flash(_("You cannot comment a private post!"))
                 return redirect_back()
