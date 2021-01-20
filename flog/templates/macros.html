@@ -141,7 +141,8 @@ MIT License
                 </button>
             </form>
         {%- endif %}
-        {% if current_user.can(Permission.MODERATE) and not user.can(Permission.MODERATE) -%}
+        {% if current_user.is_administrator() or
+              (current_user.can(Permission.MODERATE) and not user.can(Permission.MODERATE)) -%}
             {% if not user.blocked %}
             <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
