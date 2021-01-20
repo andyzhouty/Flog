@@ -185,8 +185,8 @@ def test_block_user(client):
     login(client, "moderator", "secr3t")
     response = client.post(f"/admin/block/{user.id}/", follow_redirects=True)
     assert response.status_code == 200
-    assert user.blocked
+    assert user.locked
 
     response = client.post(f"/admin/unblock/{user.id}/", follow_redirects=True)
     assert response.status_code == 200
-    assert not user.blocked
+    assert not user.locked

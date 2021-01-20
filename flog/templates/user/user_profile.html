@@ -34,7 +34,7 @@
             {{ _("Member since") }} {{ moment(user.member_since).format('L') }}
             {% endif %}
             {% if user.last_seen %}
-            {{ _('Last seen')　}} {{ moment(user.last_seen).fromNow() }}
+            {{ _('Last seen') }} {{ moment(user.last_seen).fromNow() }}
             {% endif %}
         </p>
         {{ follow_area(user) }}
@@ -44,7 +44,7 @@
             {% endif %}{{ ngettext('%(num)s follower', '%(num)s followers', __num=user.followers.count()-1) }}
         </p>
         {% if user == current_user and not current_user.is_administrator() %}
-            <a class="btn btn-outline-primary" href="{{ url_for('main.edit_profile') }}">
+            <a class="btn btn-outline-primary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
                 {{ _("Edit Profile") }}
             </a>
         {% elif current_user.is_administrator() %}

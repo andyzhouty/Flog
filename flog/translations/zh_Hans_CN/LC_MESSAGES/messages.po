@@ -452,11 +452,11 @@ msgid "Collected by 1 person"
 msgstr "被1个人收藏"
 
 #: flog/templates/macros.html:150
-msgid "BLOCK"
+msgid "LOCK"
 msgstr "封禁"
 
 #: flog/templates/macros.html:158
-msgid "UNBLOCK"
+msgid "UNLOCK"
 msgstr "解除封禁"
 
 #: flog/templates/macros.html:186 flog/templates/main/collections.html:17

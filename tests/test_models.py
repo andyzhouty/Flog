@@ -64,7 +64,7 @@ def test_group(client):
 
 def test_block_user(client):
     user = User()
-    user.block()
-    assert user.blocked
-    user.unblock()
-    assert not user.blocked
+    user.lock()
+    assert user.locked
+    user.unlock()
+    assert not user.locked

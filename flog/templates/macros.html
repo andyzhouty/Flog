@@ -141,21 +141,21 @@ MIT License
                 </button>
             </form>
         {%- endif %}
-        {% if current_user.can(Permission.MODERATE) and not user.is_administrator() -%}
+        {% if current_user.can(Permission.MODERATE) and not user.can(Permission.MODERATE) -%}
             {% if not user.blocked %}
             <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-sm btn-outline-dark" onclick="return confirm('Are you sure?');">
                     <i class="fa fa-lock"></i>
-                    {{ _("BLOCK") }}
+                    {{ _("LOCK") }}
                 </button>
             </form>
             {% else %}
             <form class="form-inline" method="POST" action="{{ url_for('admin.unblock_user', user_id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-sm btn-outline-dark" onclick="return confirm('Are you sure?');">
-                    <i class="fa fa-lock"></i>
-                    {{ _("UNBLOCK") }}
+                    <i class="fa fa-unlock"></i>
+                    {{ _("UNLOCK") }}
                 </button>
             </form>
             {% endif %}

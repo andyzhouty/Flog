@@ -3,10 +3,11 @@
 * Copyright (c) 2020 All rights reserved
 * MIT License
 */
-var hover_timer = null;
-var flash = null;
+let hover_timer = null;
+let flash = null;
+
 function show_profile_popover(e) {
-    var $el = $(e.target);
+    let $el = $(e.target);
 
     hover_timer = setTimeout(function () {
         hover_timer = null;
@@ -21,7 +22,7 @@ function show_profile_popover(e) {
                     animation: false
                 });
                 $el.popover("show");
-                $('.popover').on("mouseleave", function() {
+                $('.popover').on("mouseleave", function () {
                     setTimeout(function () {
                         $el.popover("hide");
                     }, 200);
@@ -33,23 +34,25 @@ function show_profile_popover(e) {
         })
     }, 500);
 }
-function hide_profile_popover(e) {
-    var $el = $(e.target);
 
-    if(hover_timer) {
+function hide_profile_popover(e) {
+    let $el = $(e.target);
+
+    if (hover_timer) {
         clearTimeout(hover_timer);
         hover_timer = null;
     } else {
         setTimeout(function () {
-            if(!$('.popover:hover').length) {
+            if (!$('.popover:hover').length) {
                 $el.popover("hide");
             }
         }, 200)
     }
 }
+
 function update_notifications_count() {
-    var $el = $('#notification-badge')
-    $.get($el.data('href'), function(data) {
+    let $el = $('#notification-badge')
+    $.get($el.data('href'), function (data) {
         if (data.count == 0) {
             $('#notification-badge').hide()
         } else {
@@ -58,17 +61,20 @@ function update_notifications_count() {
         }
     })
 }
+
 function largeImage(e) {
     let element = $(e.target);
-    $('#image-large').attr('src', element.attr('src'));
-    $('#image-large').show()
+    let image_large = $('#image-large')
+    image_large.attr('src', element.attr('src'));
     $('.content').addClass('shadow');
+    image_large.show()
 }
+
 $(function () {
     $('img').addClass('image-normal');
     $("img[alt='identicon']").removeClass('image-normal');
     $('.image-normal').click(largeImage.bind(this));
-    $('#image-large').click(function() {
+    $('#image-large').click(function () {
         $('.content').removeClass('shadow');
         $('#image-large').hide();
     })

@@ -225,7 +225,7 @@ class Role(db.Model):
                 Permission.MODERATE,
                 Permission.ADMIN,
             ],
-            "BLOCKED": [],
+            "LOCKED": [],
         }
         default_role = "User"
         for r in roles:
@@ -252,7 +252,7 @@ class User(db.Model, UserMixin):
     feedbacks = db.relationship("Feedback", back_populates="author")
     avatar_hash = db.Column(db.String(32))
 
-    blocked = db.Column(db.Boolean, default=False)
+    locked = db.Column(db.Boolean, default=False)
 
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
@@ -416,13 +416,13 @@ class User(db.Model, UserMixin):
     def in_group(self, group) -> bool:
         return self in group.members
 
-    def block(self) -> bool:
-        self.blocked = True
-        self.role = Role.query.filter_by(name="BLOCKED").first()
+    def lock(self) -> bool:
+        self.locked = True
+        self.role = Role.query.filter_by(name="LOCKED").first()
         db.session.commit()
 
-    def unblock(self) -> bool:
-        self.blocked = False
+    def unlock(self) -> bool:
+        self.locked = False
         self.role = Role.query.filter_by(name="User").first()
         db.session.commit()
 

@@ -22,7 +22,7 @@ def admin():
 @permission_required(Permission.MODERATE)
 def unblock_user(user_id: int):
     user = User.query.get_or_404(user_id)
-    user.block()
+    user.lock()
     flash(_("User {0} blocked.".format(user.username)))
     return redirect_back()
 
@@ -31,7 +31,7 @@ def unblock_user(user_id: int):
 @permission_required(Permission.MODERATE)
 def block_user(user_id: int):
     user = User.query.get_or_404(user_id)
-    user.unblock()
+    user.unlock()
     flash(_("User {0} unblocked.".format(user.username)))
     return redirect_back()
 
