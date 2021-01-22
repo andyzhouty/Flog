@@ -225,7 +225,9 @@ class Role(db.Model):
                 Permission.MODERATE,
                 Permission.ADMIN,
             ],
-            "LOCKED": [],
+            "LOCKED": [
+                Permission.FOLLOW
+            ],
         }
         default_role = "User"
         for r in roles:

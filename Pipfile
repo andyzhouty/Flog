@@ -69,6 +69,7 @@ flask-httpauth = "*"
 bleach = "*"
 flask-apispec = "*"
 flask-caching = "*"
+flask-compress = "*"
 
 [requires]
 python_version = "3.8"

@@ -65,6 +65,8 @@ class Base:
     IMAGES_PER_PAGE = 5
     SEARCH_RESULT_PER_PAGE = 8
 
+    # COMPRESS_LEVEL = 8
+
     LOCALES = {"en_US": "English(US)", "zh_Hans_CN": "简体中文"}
 
     UPLOAD_DIRECTORY = join(dirname(dirname(abspath(__file__))), "images/")

@@ -7,6 +7,7 @@ from flask.globals import current_app
 from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
+from flask_compress import Compress
 from flask_login import LoginManager, current_user
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -18,6 +19,7 @@ from flask_wtf import CSRFProtect
 babel = Babel()
 bootstrap = Bootstrap()
 ckeditor = CKEditor()
+compress = Compress()
 csrf = CSRFProtect()
 db = SQLAlchemy()
 login_manager = LoginManager()

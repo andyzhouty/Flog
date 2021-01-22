@@ -12,6 +12,7 @@ from .extensions import (
     babel,
     bootstrap,
     ckeditor,
+    compress,
     csrf,
     db,
     login_manager,
@@ -82,6 +83,7 @@ def register_extensions(app: Flask) -> None:
     babel.init_app(app)
     bootstrap.init_app(app)
     ckeditor.init_app(app)
+    compress.init_app(app)
     csrf.init_app(app)
     csrf.exempt(api_v1)
     csrf.exempt(api_v2)
@@ -93,11 +95,6 @@ def register_extensions(app: Flask) -> None:
     migrate.init_app(app, db)
     moment.init_app(app)
     share.init_app(app)
-
-    if app.config["SSL_REDIRECT"]:
-        from flask_sslify import SSLify
-
-        sslify = SSLify(app)
 
 
 def register_blueprints(app: Flask) -> None:
