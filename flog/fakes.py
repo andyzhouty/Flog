@@ -76,7 +76,7 @@ def follows(count: int = 20) -> None:
     for i in range(count):
         user1 = User.query.get(randint(1, User.query.count()))
         user2 = User.query.get(randint(1, User.query.count()))
-        if not (user1 or user2):
+        if not (user1 and user2):
             continue
         if user1.role != admin_role and admin:
             user1.follow(admin)
@@ -104,6 +104,7 @@ def groups(count: int) -> None:
     for i in range(count):
         manager = User.query.get(randint(1, User.query.count()))
         group = Group(name=fake.sentence(), manager=manager)
-        manager.join_group(group)
-        db.session.add(group)
+        if manager:
+            manager.join_group(group)
+            db.session.add(group)
     db.session.commit()

@@ -56,7 +56,8 @@ def test_notifications(client):
     assert len(admin.notifications) == 5
     assert Notification.query.filter_by(is_read=False).count() == 5
 
-    data = client.get("/notification/")
+    response = client.get("/notification/")
+    assert response.status_code == 200
     str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=5) == data
@@ -67,6 +68,15 @@ def test_notifications(client):
     str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=0) == data
+
+
+def test_delete_notification(client):
+    login(client)
+    for i in range(5):
+        send_notification(client)
+    response = client.post("/notification/delete/1/", follow_redirects=True)
+    assert response.status_code == 200
+    assert Notification.query.count() == 4
 
 
 def test_redirections(client):

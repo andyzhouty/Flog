@@ -159,3 +159,18 @@ def test_comments(client):
     assert response.status_code == 200
     response = client.get(f"/post/{post.id}/")
     assert data["body"] in response.get_data(as_text=True)
+
+
+def test_comment_posts_of_deleted_users(client):
+    register(client)
+    login(client, "test", "password")
+    title = create_article(client, username="test", password="password")["post"]["title"]
+    logout(client)
+    post = Post.query.filter_by(title=title).first()
+    user = User.query.filter_by(username="test").first()
+    user.delete()
+    login(client)
+
+    data = {"body": "comment content"}
+    response = client.post(f"/post/{post.id}/", data=data, follow_redirects=True)
+    assert response.status_code == 200

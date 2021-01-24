@@ -2,7 +2,9 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from flask import request, current_app, render_template, make_response, flash, abort
+from flask import (
+    request, current_app, render_template, flash, abort, redirect, url_for
+)
 from flask_babel import _
 from flask_login import login_required, current_user
 from ..models import db, Notification
@@ -31,7 +33,7 @@ def show():
 
 @notification_bp.route("/read/<int:id>/", methods=["POST"])
 @login_required
-def read(id):
+def read(id: int):
     notification = Notification.query.get_or_404(id)
     if notification.receiver != current_user:
         abort(403)
@@ -50,3 +52,13 @@ def read_all():
     db.session.commit()
     flash(_("All notifications are read."), "success")
     return redirect_back()
+
+
+@notification_bp.route("/delete/<int:id>/", methods=["POST"])
+@login_required
+def delete(id: int):
+    notification = Notification.query.get_or_404(id)
+    db.session.delete(notification)
+    db.session.commit()
+    flash(_("Notification Deleted"))
+    return redirect(url_for(".show"))

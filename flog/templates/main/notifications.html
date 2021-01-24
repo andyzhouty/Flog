@@ -28,7 +28,7 @@ MIT License
             <li class="list-group-item">
                 {{ _(notification.message) | safe }}
                 {% if not notification.is_read %}
-                    <form method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
+                    <form class="form-inline" method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="btn btn-sm btn-light">
                             <i class="fa fa-envelope-open-o"></i>
@@ -38,6 +38,13 @@ MIT License
                 {% else %}
                     <span class="fa fa-check-square-o text-success"></span>
                 {% endif %}
+                <form class="form-inline" method="POST" action="{{ url_for('notification.delete', id=notification.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="fa fa-trash"></i>
+                        {{ _("DELETE") }}
+                    </button>
+                </form>
             </li>
         {% endfor %}
     </ul>
