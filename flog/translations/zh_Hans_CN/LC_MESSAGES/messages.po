@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-01-15 14:39+0800\n"
+"POT-Creation-Date: 2021-01-24 12:28+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -270,7 +270,7 @@ msgid "Content"
 msgstr "内容"
 
 #: flog/main/forms.py:19 flog/main/forms.py:26
-#: flog/templates/image/manage_images.html:15 flog/templates/macros.html:179
+#: flog/templates/image/manage_images.html:15 flog/templates/macros.html:189
 msgid "Private"
 msgstr "个人的"
 
@@ -282,58 +282,58 @@ msgstr "发表"
 msgid "Comment"
 msgstr "评论"
 
-#: flog/main/views.py:76
+#: flog/main/views.py:74
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:100
+#: flog/main/views.py:98
 msgid "Blocked users cannot post a comment!"
 msgstr "被封禁的用户不能发评论！"
 
-#: flog/main/views.py:103 flog/templates/main/_comments.html:75
+#: flog/main/views.py:101 flog/templates/main/_comments.html:75
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
 
-#: flog/main/views.py:117
+#: flog/main/views.py:115
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:127
+#: flog/main/views.py:125
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:172
+#: flog/main/views.py:170
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:193
+#: flog/main/views.py:191
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:215
+#: flog/main/views.py:213
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:217
+#: flog/main/views.py:215
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:219
+#: flog/main/views.py:217
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:222
+#: flog/main/views.py:220
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:234
+#: flog/main/views.py:232
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:252
+#: flog/main/views.py:250
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
@@ -357,7 +357,7 @@ msgstr "搜索用户、文章或群"
 msgid "Account"
 msgstr "账户"
 
-#: flog/templates/base.html:67 flog/templates/macros.html:134
+#: flog/templates/base.html:67 flog/templates/macros.html:137
 #: flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
 #: flog/templates/user/user_profile.html:48
@@ -443,7 +443,7 @@ msgstr "编辑"
 
 #: flog/templates/admin/feedbacks.html:19
 #: flog/templates/image/manage_images.html:34 flog/templates/macros.html:102
-#: flog/templates/macros.html:140 flog/templates/main/_comments.html:48
+#: flog/templates/macros.html:143 flog/templates/main/_comments.html:48
 msgid "DELETE"
 msgstr "删除"
 
@@ -451,23 +451,27 @@ msgstr "删除"
 msgid "Collected by 1 person"
 msgstr "被1个人收藏"
 
-#: flog/templates/macros.html:150
+#: flog/templates/macros.html:154
 msgid "LOCK"
 msgstr "封禁"
 
-#: flog/templates/macros.html:158
+#: flog/templates/macros.html:163
 msgid "UNLOCK"
 msgstr "解除封禁"
 
-#: flog/templates/macros.html:186 flog/templates/main/collections.html:17
+#: flog/templates/macros.html:185
+msgid "Deleted Flog User"
+msgstr "已删除的Flog用户"
+
+#: flog/templates/macros.html:196 flog/templates/main/collections.html:17
 msgid "Read More"
 msgstr "阅读更多"
 
-#: flog/templates/macros.html:195
+#: flog/templates/macros.html:205
 msgid "Group name:"
 msgstr "群的名字"
 
-#: flog/templates/macros.html:196
+#: flog/templates/macros.html:206
 msgid "Managed by:"
 msgstr "管理者："
 

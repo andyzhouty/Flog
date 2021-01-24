@@ -63,7 +63,7 @@ MIT License
                     {%- endif %}
                 </form>
             {%- endif %}
-       {%- endif %}
+        {%- endif %}
     {%- endif %}
 {% endmacro %}
 
@@ -72,10 +72,10 @@ MIT License
         <div>
             {% if can_collect and post.author != current_user -%}
                 {% if not current_user.is_collecting(post) -%}
-                <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
-                    <i class="fa fa-star"></i>
-                    {{ _("Collect") }}
-                </a>
+                    <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
+                        <i class="fa fa-star"></i>
+                        {{ _("Collect") }}
+                    </a>
                 {% else -%}
                     <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
                         <i class="fa fa-ban"></i>
@@ -90,12 +90,17 @@ MIT License
                     {{ _("EDIT") }}
                 </a>
             {%- endif %}
-            {% if (current_user.can(Permission.MODERATE)  and not post.author.can(Permission.MODERATE))
+            {% if post.author -%}
+                {% set post_author_can_moderate = post.author.can(Permission.MODERATE) %}
+            {% else -%}
+                {% set post_author_can_moderate = False %}
+            {%- endif %}
+            {% if current_user.can(Permission.MODERATE)  and not post_author_can_moderate
                 or current_user.is_administrator()
                 or post.author == current_user
                 and can_delete -%}
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}"
-                    style="display: inline !important">
+                      style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
                         <i class="fa fa-trash"></i>
@@ -107,12 +112,12 @@ MIT License
                 <br><br>
                 {% set collectors = post.collectors | length %}
                 <p class="text-muted">
-                <i class="fa fa-star"></i>
-                {% if collectors == 1 -%}
-                    {{ _("Collected by 1 person") }}
-                {% else -%}
-                    {{ _('Collected by %d people' % collectors) }}
-                {%- endif %}
+                    <i class="fa fa-star"></i>
+                    {% if collectors == 1 -%}
+                        {{ _("Collected by 1 person") }}
+                    {% else -%}
+                        {{ _('Collected by %d people' % collectors) }}
+                    {%- endif %}
                 </p>
             {%- endif %}
         </div>
@@ -121,13 +126,16 @@ MIT License
 
 {% macro user_card(user) %}
     <li class="list-group-item d-flex">
-    <div style="float: left">
-    <a href="{{ url_for('user.user_profile', username=user.username) }}">
-        <img src="{{ user.gravatar() }}" class="profile-popover" data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
-    <a style="font-size: 2em" href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
-    {{ role_label_of(user) }}
-    </div>
-    <span class="text-white" style="position: relative; text-align: right; float: right; top: 0px; vertical-align: top; z-index: 100;">
+        <div style="float: left">
+            <a href="{{ url_for('user.user_profile', username=user.username) }}">
+                <img src="{{ user.gravatar() }}" class="profile-popover"
+                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
+            <a style="font-size: 2em"
+               href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
+            {{ role_label_of(user) }}
+        </div>
+        <span class="text-white"
+              style="position: relative; text-align: right; float: right; top: 0px; vertical-align: top; z-index: 100;">
         {% if current_user.is_administrator() -%}
             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
                 <i class="fa fa-edit"></i>
@@ -141,26 +149,27 @@ MIT License
                 </button>
             </form>
         {%- endif %}
-        {% if current_user.is_administrator() or
+            {% if current_user.is_administrator() or
               (current_user.can(Permission.MODERATE) and not user.can(Permission.MODERATE)) -%}
-            {% if not user.blocked %}
-            <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
+                {% if not user.blocked %}
+                    <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-sm btn-outline-dark" onclick="return confirm('Are you sure?');">
                     <i class="fa fa-lock"></i>
                     {{ _("LOCK") }}
                 </button>
             </form>
-            {% else %}
-            <form class="form-inline" method="POST" action="{{ url_for('admin.unblock_user', user_id=user.id) }}">
+                {% else %}
+                    <form class="form-inline" method="POST"
+                          action="{{ url_for('admin.unblock_user', user_id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-sm btn-outline-dark" onclick="return confirm('Are you sure?');">
                     <i class="fa fa-unlock"></i>
                     {{ _("UNLOCK") }}
                 </button>
             </form>
-            {% endif %}
-        {%- endif %}
+                {% endif %}
+            {%- endif %}
     </span>
     </li>
 {% endmacro %}
@@ -170,17 +179,22 @@ MIT License
         <h3 style="color: #5050bb">
             <a href="{{ post.url() }}" title="{{ post.title }}">{{ post.title }}</a>
         </h3>
-        <h4><a href="{{ url_for('user.user_profile', username=post.author.username) }}"
-            class="text-muted profile-popover"
-            data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-            {{ post.author.username }}
+        <h4>
+            {% if post.author %}
+            <a href="{{ url_for('user.user_profile', username=post.author.username) }}"
+               class="text-muted profile-popover"
+               data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+                {{ post.author.username }}
             </a>
+            {% else %}
+                {{ _("Deleted Flog User") }}
+            {% endif %}
             {% if post.private %}
                 <span class="badge badge-dark">
                     {{ _("Private") }}
                 </span>
             {% endif %}
-            </h4>
+        </h4>
         <div>
             {{ post.content | striptags | truncate(200) }}
             <small class="text-primary">
@@ -195,10 +209,10 @@ MIT License
     <li class="list-group-item">
         <h3>{{ _("Group name:" ) }} {{ group.name }}</h3>
         <h4>{{ _("Managed by:") }}
-        <a href="{{ group.manager.profile_url() }}"
-            class="text-muted profile-popover"
-            data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
-            {{ group.manager.username }}
-        </a>
+            <a href="{{ group.manager.profile_url() }}"
+               class="text-muted profile-popover"
+               data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
+                {{ group.manager.username }}
+            </a>
     </li>
 {% endmacro %}

@@ -16,18 +16,23 @@ MIT License
                 <small>
                     {{ _("Date:") }} {{ moment(post.timestamp).format('LL') }}<br>
                     {{ _("Author:") }}
-                    <a href="{{ post.author.profile_url() }}" class="profile-popover"
-                       data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                        {{ post.author.username }}
-                    </a>
+                    {% if post.author %}
+                        <a href="{{ post.author.profile_url() }}" class="profile-popover"
+                           data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+                            {{ post.author.username }}
+                        </a>
+                    {% else %}
+                        {{ _("Deleted Flog User") }}
+                    {% endif %}
                 </small>
-            </div><br>
+            </div>
+            <br>
             {{ post.content | safe }}
             {{ post_actions(post, show_collectors=True) }}
             {% if current_user.is_authenticated %}
-            <div class="comments" id="comments">
-                {% include 'main/_comments.html' %}
-            </div>
+                <div class="comments" id="comments">
+                    {% include 'main/_comments.html' %}
+                </div>
             {% endif %}
         </div>
         {% include 'main/_sidebar.html' %}
