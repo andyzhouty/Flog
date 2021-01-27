@@ -21,14 +21,12 @@ def get_post_data(data: dict, validation_error: ValueError()) -> tuple:
 
 
 def can_edit_post(post: Post) -> bool:
-    try:
-        return g.current_user == post.author or g.current_user.is_administrator()
-    except:  # noqa
-        return False
+    return g.current_user is not None and (
+        g.current_user == post.author or g.current_user.is_administrator()
+    )
 
 
 def can_edit_profile(user: User) -> bool:
-    try:
-        return g.current_user == user or g.current_user.is_administrator()
-    except:  # noqa
-        return False
+    return g.current_user is not None and (
+        g.current_user == user or g.current_user.is_administrator()
+    )

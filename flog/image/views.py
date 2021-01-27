@@ -7,14 +7,13 @@ from flask import (
     send_from_directory,
     abort,
     render_template,
-    make_response,
     flash,
 )
 from flask_login import login_required, current_user
 from flask_ckeditor import upload_fail, upload_success
 from flask_babel import _
 
-from ..utils import redirect_back
+from ..utils import get_image_path_and_url, redirect_back
 from ..models import db, Image
 from . import image_bp
 
@@ -31,38 +30,16 @@ def uploaded_files(filename: str):
 @image_bp.route("/upload/", methods=["POST"])
 @login_required
 def upload():
-    fileobj = request.files.get("upload")
-    filename = fileobj.filename
-    # add the current user's username to the filename of the image
-    filename = current_user.username + "_" + filename
-    # find the position of the last dot in the filename
-    last_dot_in_filename = filename.rfind(".")
-    # get the filename(without extension) and the extension
-    filename_without_ext = filename[:last_dot_in_filename]
-    extension = filename[last_dot_in_filename + 1 :]
-    if extension not in ["jpg", "gif", "png", "jpeg", "jpg"]:
-        return upload_fail(message="Images only!")
-    # get the absolute image path for the new image
-    image_path = join(current_app.config["UPLOAD_DIRECTORY"], filename)
-    current_app.logger.info(image_path)
-    # deal with duplicated filenames
-    while exists(image_path):
-        filename_without_ext += "_"  # add underscores after the existed filename
-        image_path = join(
-            current_app.config["UPLOAD_DIRECTORY"],
-            filename_without_ext + "." + extension,
-        )
-    # get final filename
-    filename = filename_without_ext + "." + extension
-    current_app.logger.info(f"Upload file {filename} saved.")
-    fileobj.save(image_path)
-    # commit the image to the db
-    image = Image(filename=filename, author=current_user)
-    db.session.add(image)
-    db.session.commit()
-    url = image.url()
-    current_app.logger.info(f"Upload file url: {url}")
-    return upload_success(url=url, filename=filename)
+    image_obj = request.files.get("upload")
+    if image_obj is None:
+        flash(_("No image uploaded!"))
+        return redirect_back()
+    response = get_image_path_and_url(image_obj, current_user)
+    if response.get("error") is not None:
+        return upload_fail(message=response["error"])
+    image_url = response["image_url"]
+    filename = response["filename"]
+    return upload_success(url=image_url, filename=filename)
 
 
 @image_bp.route("/manage/")

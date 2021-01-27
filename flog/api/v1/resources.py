@@ -13,6 +13,7 @@ from .errors import ValidationError, bad_request, forbidden  # noqa
 from .authentication import auth
 from .schemas import comment_schema, user_schema, post_schema
 from flog.models import db, User, Post, Comment, Notification
+from flog.utils import get_image_path_and_url
 from ..api_utils import get_post_data, can_edit_post, can_edit_profile
 import bleach
 
@@ -224,3 +225,20 @@ class NotificationAPI(MethodView):
         ]
         # fmt: on
         return jsonify({"unread_num": unread_num, "unread_items": unread_items})
+
+
+class ImageAPI(MethodView):
+    decorators = [auth.login_required]
+
+    def post(self):
+        image_obj = request.files.get("upload")
+        if image_obj is None:
+            return bad_request("No file was uploaded!")
+        response = get_image_path_and_url(image_obj, g.current_user)
+        if response.get("error") is not None:
+            return bad_request(response["error"])
+        image_url = response["image_url"]
+        return jsonify(
+            message="Upload Success",
+            image_url=image_url,
+        ), 201

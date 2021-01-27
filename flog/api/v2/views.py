@@ -58,3 +58,8 @@ api_v2.add_url_rule(
     view_func=NotificationAPI.as_view("notification"),
     methods=["GET"],
 )
+api_v2.add_url_rule(
+    "/upload/",
+    view_func=ImageAPI.as_view("image"),
+    methods=["POST"]
+)

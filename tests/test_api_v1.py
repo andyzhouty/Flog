@@ -206,5 +206,16 @@ def test_collect(client):
 
 
 def test_image(client):
-    register(client)
-    response = api_upload_image(client, "/api/v1", headers=get_api_v1_headers())
+    admin_username = current_app.config["FLOG_ADMIN"]
+    admin_password = current_app.config["FLOG_ADMIN_PASSWORD"]
+    image_dict = api_upload_image(client, "/api/v1", headers=get_api_v1_headers(
+        username=admin_username,
+        password=admin_password,
+        content_type="multipart/form-data"
+    ))
+    response = image_dict["response"]
+    data = image_dict["data"]
+    assert response.status_code == 201
+    assert data["image_url"] == f"/image/{admin_username}_test.png"
+    response = client.get(f"/image/{admin_username}_test.png")
+    assert response.status_code == 200

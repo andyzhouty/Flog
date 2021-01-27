@@ -12,7 +12,7 @@ fake = Faker()
 
 
 def login(
-        client, username=os.getenv("FLOG_ADMIN"), password=os.getenv("FLOG_ADMIN_PASSWORD")
+    client, username=os.getenv("FLOG_ADMIN"), password=os.getenv("FLOG_ADMIN_PASSWORD")
 ):
     """Login helper function"""
     if username is None:
@@ -32,11 +32,11 @@ def logout(client):
 
 
 def register(
-        client,
-        name: str = "Test",
-        username: str = "test",
-        password: str = "password",
-        email: str = "test@example.com",
+    client,
+    name: str = "Test",
+    username: str = "test",
+    password: str = "password",
+    email: str = "test@example.com",
 ):
     """Register helper function"""
     return client.post(
@@ -78,23 +78,27 @@ def send_notification(client) -> None:
 
 
 def get_api_v1_headers(
-        username: str = "test",
-        password: str = "password"
+    username: str = "test", password: str = "password", **kwargs
 ) -> dict:
     """Returns auth headers for api v1"""
+    if kwargs.get("content_type"):
+        content_type = kwargs["content_type"]
+    else:
+        content_type = "application/json"
     return {
         "Authorization": "Basic "
-                         + b64encode(f"{username}:{password}".encode("utf-8")).decode("utf-8"),
+        + b64encode(f"{username}:{password}".encode("utf-8")).decode("utf-8"),
         "Accept": "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": content_type
     }
 
 
 def get_api_v2_headers(
-        client,
-        username: str = "test",
-        password: str = "password",
-        custom_token: str = None
+    client,
+    username: str = "test",
+    password: str = "password",
+    custom_token: str = None,
+    **kwargs,
 ) -> dict:
     """Returns auth headers for api v2"""
     response = client.post(
@@ -105,10 +109,14 @@ def get_api_v2_headers(
     token = data.get("access_token")
     if custom_token is not None:
         token = custom_token
+    if kwargs.get("content_type"):
+        content_type = kwargs["content_type"]
+    else:
+        content_type = "application/json"
     return {
         "Authorization": "Bearer " + token,
         "Accept": "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": content_type,
     }
 
 
@@ -135,11 +143,11 @@ def delete_image(client, image_id: int):
 def api_upload_image(client, api_bp_prefix: str, headers: dict) -> dict:
     os.chdir(os.path.dirname(__file__))
     image_obj = open("test.png", "rb")
-    data = {"upload": image_obj}
     os.chdir(os.path.dirname(os.path.dirname(__file__)))
     response = client.post(
-        f"{api_bp_prefix}/upload/", data=data,
-        follow_redirects=True, headers=headers
+        f"{api_bp_prefix}/upload/",
+        headers=headers,
+        data=dict(upload=image_obj),
     )
     return {
         "response": response,

@@ -16,6 +16,7 @@ Welcome to flog's documentation!
    postapi_v2
    commentapi_v1
    commentapi_v2
+   imageapi
 
 
 Indices and tables

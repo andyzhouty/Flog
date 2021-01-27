@@ -17,6 +17,7 @@ from .resources import (
     UserAPI,
     PostAPI,
     NotificationAPI,
+    ImageAPI
 )
 
 # index
@@ -66,4 +67,10 @@ api_v1.add_url_rule(
     "/notifications/unread/",
     view_func=NotificationAPI.as_view("notification"),
     methods=["GET"],
+)
+# image
+api_v1.add_url_rule(
+    "/upload/",
+    view_func=ImageAPI.as_view("image"),
+    methods=["POST"]
 )

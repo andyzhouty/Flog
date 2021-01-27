@@ -6,7 +6,8 @@ The document for comment web api.
   - **GET** Returns a comment schema  
     Status: 200  
     Example Return Value:
-    ``` json
+
+    ```json
     {
       "author": {
         "id": 11,
@@ -38,6 +39,7 @@ The document for comment web api.
       }
     }
     ```
+
   - **DELETE** Deletes a comment  
     Status: 204  
 
@@ -46,6 +48,7 @@ The document for comment web api.
     Accept: *application/json*  
     Status: *201*  
     Example:
+
     ```json
     {
       "body": "The body of the comment",

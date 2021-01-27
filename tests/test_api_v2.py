@@ -6,7 +6,7 @@ import json
 import random
 from flask import current_app
 from flog.models import User, Comment, Post
-from tests.helpers import register, get_api_v2_headers
+from tests.helpers import register, get_api_v2_headers, api_upload_image
 from flog import fakes as fake
 
 
@@ -248,3 +248,20 @@ def test_collect(client):
     )
     assert response.status_code == 200
     assert not user.is_collecting(post)
+
+
+def test_image(client):
+    admin_username = current_app.config["FLOG_ADMIN"]
+    admin_password = current_app.config["FLOG_ADMIN_PASSWORD"]
+    image_dict = api_upload_image(client, "/api/v2", headers=get_api_v2_headers(
+        client=client,
+        username=admin_username,
+        password=admin_password,
+        content_type="multipart/form-data"
+    ))
+    response = image_dict["response"]
+    data = image_dict["data"]
+    assert response.status_code == 201
+    assert data["image_url"] == f"/image/{admin_username}_test.png"
+    response = client.get(f"/image/{admin_username}_test.png")
+    assert response.status_code == 200

@@ -2,8 +2,10 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
+from os.path import join, exists
 from urllib.parse import urlparse, urljoin
-from flask import request, redirect, url_for
+from flask import current_app, request, redirect, url_for
+from .models import db, Image
 
 
 def lower_username(username: str) -> str:
@@ -26,3 +28,36 @@ def redirect_back(default="main.main", **kwargs):
         if is_safe_url(target):
             return redirect(target)
     return redirect(url_for(default, **kwargs))
+
+
+def get_image_path_and_url(image_obj, current_user) -> dict:
+    filename = image_obj.filename
+    # add the current user's username to the filename of the image
+    filename = current_user.username + "_" + filename
+    # find the position of the last dot in the filename
+    last_dot_in_filename = filename.rfind(".")
+    # get the filename(without extension) and the extension
+    filename_without_ext = filename[:last_dot_in_filename]
+    extension = filename[last_dot_in_filename + 1 :]
+    if extension not in ["jpg", "gif", "png", "jpeg", "jpg"]:
+        return dict(error="Images only!")
+    # get the absolute image path for the new image
+    image_path = join(current_app.config["UPLOAD_DIRECTORY"], filename)
+    # deal with duplicated filenames
+    while exists(image_path):
+        filename_without_ext += "_"  # add underscores after the existed filename
+        image_path = join(
+            current_app.config["UPLOAD_DIRECTORY"],
+            filename_without_ext + "." + extension,
+        )
+    # get final filename
+    filename = filename_without_ext + "." + extension
+    current_app.logger.info(f"Upload file {filename} saved.")
+    image_obj.save(image_path)
+    # commit the image to the db
+    image = Image(filename=filename, author=current_user)
+    db.session.add(image)
+    db.session.commit()
+    url = image.url()
+    current_app.logger.info(f"Upload file url: {url}")
+    return {"image_url": url, "filename": image.filename}
