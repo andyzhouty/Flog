@@ -32,25 +32,21 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        if not current_app.config["TESTING"]:
-            token = user.generate_confirmation_token()
-            send_email(
-                [user.email],
-                "Confirm your account",
-                "auth/email/confirm",
-                user=user,
-                token=token,
-            )
-            flash(
-                _(
-                    "A confirmation email has been sent to you by email! You can now login!"
-                ),
-                "info",
-            )
-            return redirect(url_for("auth.login"))
-        else:
-            flash(_("You can now login!"), "success")
-            return redirect(url_for("auth.login"))
+        token = user.generate_confirmation_token()
+        send_email(
+            [user.email],
+            "Confirm your account",
+            "auth/email/confirm",
+            user=user,
+            token=token,
+        )
+        flash(
+            _(
+                "A confirmation email has been sent to you by email! You can now login!"
+            ),
+            "info",
+        )
+        return redirect(url_for("auth.login"))
     return render_template("auth/register.html", form=form)
 
 
@@ -69,10 +65,10 @@ def login():
         user = user_by_username if user_by_username is not None else user_by_email
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
-            next = request.args.get("next")
-            if next is None or next.startswith("/"):
-                next = url_for("main.main")
-            return redirect(next)
+            next_url = request.args.get("next")
+            if next_url is None or next_url.startswith("/"):
+                next_url = url_for("main.main")
+            return redirect(next_url)
         flash(_("Invalid username or password!"), "danger")
     return render_template("auth/login.html", form=form)
 

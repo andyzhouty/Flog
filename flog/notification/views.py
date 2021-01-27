@@ -2,9 +2,7 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from flask import (
-    request, current_app, render_template, flash, abort, redirect, url_for
-)
+from flask import request, current_app, render_template, flash, abort, redirect, url_for
 from flask_babel import _
 from flask_login import login_required, current_user
 from ..models import db, Notification

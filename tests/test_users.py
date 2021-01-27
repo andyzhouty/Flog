@@ -12,18 +12,39 @@ from .helpers import *
 fake = Faker()
 
 
+def test_register(client):
+    response = client.get("/auth/register/")
+    assert response.status_code == 200
+    response = register(client)
+    response_data = response.get_data(as_text=True)
+    assert response.status_code == 200
+    assert "You can now login!" in response_data
+
+    # test if a logined user can be redirected to main page
+    login(client, "test", "password")
+    reg_response = client.get("/auth/register/", follow_redirects=True)
+    main_response = client.get("/")
+    assert reg_response.get_data() == main_response.get_data()
+
+
 def test_login_logout(client):
     response = login(client)
     response_data = response.get_data(as_text=True)
     assert (
         f'Welcome, Administrator\n {current_app.config["FLOG_ADMIN"]}' in response_data
     )
+    # test if the login redirection works
+    login_response = client.get("/auth/login/", follow_redirects=True)
+    main_response = client.get("/")
+    login_res_data = login_response.get_data()
+    main_res_data = main_response.get_data()
+    assert login_res_data == main_res_data
     response = logout(client)
     assert "You have been logged out" in response.get_data(as_text=True)
 
 
 def test_fail_login(client):
-    fail_login_res = login(client, password="wrongpassword")
+    fail_login_res = login(client, password="wrong_password")
     res_data = fail_login_res.get_data(as_text=True)
     assert "Invalid username or password!" in res_data
 

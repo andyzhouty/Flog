@@ -6,7 +6,7 @@ import json
 import random
 from flask.globals import current_app
 from flog.models import User, Comment, Post
-from tests.helpers import register, get_api_v1_headers
+from tests.helpers import register, get_api_v1_headers, api_upload_image
 from flog import fakes as fake
 
 
@@ -22,7 +22,7 @@ def test_no_auth(client):
 
 
 def test_posts(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
+    register(client)
 
     # test POST
     post = {
@@ -57,7 +57,7 @@ def test_posts(client):
     response = client.get(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     data = response.get_json()
     assert isinstance(data["author"], dict)
-    assert data["author"]["username"] == "user"
+    assert data["author"]["username"] == "test"
 
     # test PUT
     data = {"title": "a new title", "content": "the new content", "private": True}
@@ -84,8 +84,8 @@ def test_posts(client):
 
 
 def test_users(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
-    user = User.query.filter_by(username="user").first()
+    register(client)
+    user = User.query.filter_by(username="test").first()
     assert user is not None
     response = client.get(f"/api/v1/user/{user.id}/", headers=get_api_v1_headers())
     data = response.get_json()
@@ -96,7 +96,7 @@ def test_users(client):
     user_data = {
         "name": "Real Name",
         "about_me": "A test user.",
-        "location": "Shanghai",
+        "location": "Nowhere",
     }
     response = client.put(
         f"/api/v1/user/{user.id}/", json=user_data, headers=get_api_v1_headers()
@@ -129,7 +129,7 @@ def test_notifications(client):
 
 
 def test_comments(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
+    register(client)
     # create a post first
     response = client.post(
         "/api/v1/post/new/",
@@ -154,30 +154,29 @@ def test_comments(client):
     data = response.get_json()
     comments = data.get("comments")
     assert isinstance(comments, list)
-    assert comments[0]["author"] == "user"
+    assert comments[0]["author"] == "test"
     assert comments[0]["body"] == "comment content"
 
     response = client.get(
         f"/api/v1/comment/{comment_id}/", headers=get_api_v1_headers()
     )
     data = response.get_json()
-    assert data["author"]["username"] == "user"
+    assert data["author"]["username"] == "test"
     assert data["post"]["id"] == post_id
     assert data["body"] == "comment content"
 
     response = client.delete(
         f"/api/v1/comment/{comment_id}/", headers=get_api_v1_headers()
     )
-    data = response.get_json()
     assert response.status_code == 204
     assert Comment.query.get(comment_id) is None
 
 
 def test_follow(client_with_request_ctx):
     client = client_with_request_ctx
-    register(email="user@example.com", password="1234", username="user", client=client)
-    user = User.query.filter_by(username="user").first()
-    user2 = User.query.filter(User.username != "user").first()
+    register(client)
+    user = User.query.filter_by(username="test").first()
+    user2 = User.query.filter(User.username != "test").first()
     response = client.get(
         f"/api/v1/user/follow/{user2.id}/", headers=get_api_v1_headers()
     )
@@ -191,8 +190,8 @@ def test_follow(client_with_request_ctx):
 
 
 def test_collect(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
-    user = User.query.filter_by(username="user").first()
+    register(client)
+    user = User.query.filter_by(username="test").first()
     post = Post.query.get(random.randint(1, Post.query.count()))
     response = client.get(
         f"/api/v1/post/collect/{post.id}/", headers=get_api_v1_headers()
@@ -204,3 +203,8 @@ def test_collect(client):
     )
     assert response.status_code == 200
     assert not user.is_collecting(post)
+
+
+def test_image(client):
+    register(client)
+    response = api_upload_image(client, "/api/v1", headers=get_api_v1_headers())

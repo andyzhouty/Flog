@@ -13,39 +13,8 @@ from .errors import ValidationError, bad_request, forbidden  # noqa
 from .authentication import auth
 from .schemas import comment_schema, user_schema, post_schema
 from flog.models import db, User, Post, Comment, Notification
+from ..api_utils import get_post_data, can_edit_post, can_edit_profile
 import bleach
-
-
-def get_post_data(data: dict) -> tuple:
-    title = data.get("title")
-    content = data.get("content")
-    private = data.get("private")
-    if (
-        content is None
-        or str(content).strip() == ""
-        or title is None
-        or str(title).strip() == ""
-    ):
-        raise ValidationError("The post is invalid or empty.")
-    if private is not None and private != 0:
-        private = True
-    else:
-        private = False
-    return title, content, private
-
-
-def can_edit_post(post: Post) -> bool:
-    try:
-        return g.current_user == post.author or g.current_user.is_administrator()
-    except:  # noqa
-        return False
-
-
-def can_edit_profile(user: User) -> bool:
-    try:
-        return g.current_user == user or g.current_user.is_administrator()
-    except:  # noqa
-        return False
 
 
 class IndexAPI(MethodView):
@@ -110,7 +79,7 @@ class PostAPI(MethodView):
     def post(self) -> "201":
         """Create a post"""
         data = request.get_json()
-        title, content, private = get_post_data(data)
+        title, content, private = get_post_data(data, ValidationError)
         # remove javascript and css from the content
         cleaned_content = bleach.clean(
             content,
@@ -138,7 +107,7 @@ class PostAPI(MethodView):
         if not can_edit_post(post):
             return forbidden("You cannot edit this post.")
         data = request.get_json()
-        title, content, private = get_post_data(data)
+        title, content, private = get_post_data(data, ValidationError)
         cleaned_content = bleach.clean(
             content,
             tags=current_app.config["FLOG_ALLOWED_TAGS"],
@@ -248,10 +217,10 @@ class NotificationAPI(MethodView):
         unread_items = [
             (notification.message, notification.id)
             for notification in
-            Notification.query
-                        .with_parent(g.current_user)
-                        .filter_by(is_read=False)
-                        .all()
+                Notification.query
+                            .with_parent(g.current_user)
+                            .filter_by(is_read=False)
+                            .all()
         ]
         # fmt: on
         return jsonify({"unread_num": unread_num, "unread_items": unread_items})

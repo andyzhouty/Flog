@@ -80,7 +80,8 @@ def test_delete_notification(client):
 
 
 def test_redirections(client):
+    # test if is_safe_url() works
     response = client.get("/redirect?next=http://example.com", follow_redirects=True)
     assert response.status_code == 200
     data = response.get_data(as_text=True)
-    assert "Flog" in data  # test if is_safe_url() works
+    assert "Flog" in data

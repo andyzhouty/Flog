@@ -44,7 +44,7 @@ def test_get_token(client):
 
 
 def test_posts(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
+    register(client)
 
     # test POST
     post = {
@@ -81,7 +81,7 @@ def test_posts(client):
     )
     data = response.get_json()
     assert isinstance(data["author"], dict)
-    assert data["author"]["username"] == "user"
+    assert data["author"]["username"] == "test"
 
     # test PUT
     data = {"title": "a new title", "content": "the new content", "private": True}
@@ -120,8 +120,8 @@ def test_posts(client):
 
 
 def test_users(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
-    user = User.query.filter_by(username="user").first()
+    register(client)
+    user = User.query.filter_by(username="test").first()
     assert user is not None
     response = client.get(
         f"/api/v2/user/{user.id}/", headers=get_api_v2_headers(client)
@@ -171,7 +171,7 @@ def test_notifications(client):
 
 
 def test_comments(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
+    register(client)
     # create a post first
     response = client.post(
         "/api/v2/post/new/",
@@ -200,14 +200,14 @@ def test_comments(client):
     data = response.get_json()
     comments = data.get("comments")
     assert isinstance(comments, list)
-    assert comments[0]["author"] == "user"
+    assert comments[0]["author"] == "test"
     assert comments[0]["body"] == "comment content"
 
     response = client.get(
         f"/api/v2/comment/{comment_id}/", headers=get_api_v2_headers(client)
     )
     data = response.get_json()
-    assert data["author"]["username"] == "user"
+    assert data["author"]["username"] == "test"
     assert data["post"]["id"] == post_id
     assert data["body"] == "comment content"
     response = client.delete(
@@ -219,9 +219,9 @@ def test_comments(client):
 
 
 def test_follow(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
-    user = User.query.filter_by(username="user").first()
-    user2 = User.query.filter(User.username != "user").first()
+    register(client)
+    user = User.query.filter_by(username="test").first()
+    user2 = User.query.filter(User.username != "test").first()
     response = client.get(
         f"/api/v2/user/follow/{user2.id}/", headers=get_api_v2_headers(client)
     )
@@ -235,8 +235,8 @@ def test_follow(client):
 
 
 def test_collect(client):
-    register(email="user@example.com", password="1234", username="user", client=client)
-    user = User.query.filter_by(username="user").first()
+    register(client)
+    user = User.query.filter_by(username="test").first()
     post = Post.query.get(random.randint(1, Post.query.count()))
     response = client.get(
         f"/api/v2/post/collect/{post.id}/", headers=get_api_v2_headers(client)

@@ -13,40 +13,8 @@ from .errors import ValidationError, bad_request, forbidden  # noqa
 from .authentication import auth_required
 from .schemas import user_schema, post_schema, comment_schema
 from flog.models import db, User, Post, Comment, Notification
+from ..api_utils import get_post_data, can_edit_post, can_edit_profile
 import bleach
-
-
-def get_post_data() -> tuple:
-    data = request.get_json()
-    title = data.get("title")
-    content = data.get("content")
-    private = data.get("private")
-    if (
-        content is None
-        or str(content).strip() == ""
-        or title is None
-        or str(title).strip() == ""
-    ):
-        raise ValidationError("The post is invalid or empty.")
-    if private is not None and private != 0:
-        private = True
-    else:
-        private = False
-    return title, content, private
-
-
-def can_edit_post(post: Post) -> bool:
-    try:
-        return g.current_user == post.author or g.current_user.is_administrator()
-    except:  # noqa
-        return False
-
-
-def can_edit_profile(user: User) -> bool:
-    try:
-        return g.current_user == user or g.current_user.is_administrator()
-    except:  # noqa
-        return False
 
 
 class IndexAPI(MethodView):
@@ -104,7 +72,7 @@ class PostAPI(MethodView):
     def post(self) -> "201":
         """Create a post"""
         data = request.get_json()
-        title, content, private = get_post_data()
+        title, content, private = get_post_data(data, ValidationError)
         cleaned_content = bleach.clean(
             content,
             tags=current_app.config["FLOG_ALLOWED_TAGS"],
@@ -129,7 +97,8 @@ class PostAPI(MethodView):
         post = Post.query.get_or_404(post_id)
         if not can_edit_post(post):
             return forbidden("You cannot edit this post.")
-        post_data = get_post_data()
+        data = request.get_json()
+        post_data = get_post_data(data, ValidationError)
         post.title = post_data[0]
         post.content = post_data[1]
         post.private = post_data[2]

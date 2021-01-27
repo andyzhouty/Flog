@@ -78,8 +78,8 @@ def send_notification(client) -> None:
 
 
 def get_api_v1_headers(
-    username: str = "user",
-    password: str = "1234"
+        username: str = "test",
+        password: str = "password"
 ) -> dict:
     """Returns auth headers for api v1"""
     return {
@@ -91,10 +91,10 @@ def get_api_v1_headers(
 
 
 def get_api_v2_headers(
-    client,
-    username: str = "user",
-    password: str = "1234",
-    custom_token: str = None
+        client,
+        username: str = "test",
+        password: str = "password",
+        custom_token: str = None
 ) -> dict:
     """Returns auth headers for api v2"""
     response = client.post(
@@ -130,3 +130,18 @@ def upload_image(client):
 def delete_image(client, image_id: int):
     response = client.post(f"/image/delete/{image_id}/", follow_redirects=True)
     return response
+
+
+def api_upload_image(client, api_bp_prefix: str, headers: dict) -> dict:
+    os.chdir(os.path.dirname(__file__))
+    image_obj = open("test.png", "rb")
+    data = {"upload": image_obj}
+    os.chdir(os.path.dirname(os.path.dirname(__file__)))
+    response = client.post(
+        f"{api_bp_prefix}/upload/", data=data,
+        follow_redirects=True, headers=headers
+    )
+    return {
+        "response": response,
+        "data": response.get_json(),
+    }
