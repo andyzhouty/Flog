@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-01-24 12:28+0800\n"
+"POT-Creation-Date: 2021-01-29 09:34+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -35,7 +35,6 @@ msgid "405 Method Not Allowed"
 msgstr "405 访问方法错误"
 
 #: flog/errors.py:86
-#, fuzzy
 msgid "The file you uploaded was larger than the 1M limit"
 msgstr "你上传的文件超过了服务器限制（1M）"
 
@@ -199,39 +198,35 @@ msgstr "登录"
 msgid "Delete Account"
 msgstr "删除账号"
 
-#: flog/auth/views.py:45
+#: flog/auth/views.py:44
 msgid "A confirmation email has been sent to you by email! You can now login!"
 msgstr "一个验证邮件已经发送，你现在可以使用设置的用户名和密码登录了！"
 
-#: flog/auth/views.py:52
-msgid "You can now login!"
-msgstr "你现在可以登录了！"
-
-#: flog/auth/views.py:76
+#: flog/auth/views.py:72
 msgid "Invalid username or password!"
 msgstr "用户名和密码不符，请检查输入！"
 
-#: flog/auth/views.py:84
+#: flog/auth/views.py:80
 msgid "You have been logged out."
 msgstr "你已经注销了。"
 
-#: flog/auth/views.py:95
+#: flog/auth/views.py:91
 msgid "You have confirmed your account. Thanks !"
 msgstr "你验证了你的账户：）"
 
-#: flog/auth/views.py:97
+#: flog/auth/views.py:93
 msgid "The confirmation link is invalid or has expired"
 msgstr "这个链接已经过期了或没有通过验证"
 
-#: flog/auth/views.py:112
+#: flog/auth/views.py:108
 msgid "A new confirmation email has been sent to you by email"
 msgstr "一个新的验证邮件已经发送，请查收"
 
-#: flog/auth/views.py:125
+#: flog/auth/views.py:121
 msgid "Your account has been deleted"
 msgstr "你的账户已经被删除了"
 
-#: flog/auth/views.py:127
+#: flog/auth/views.py:123
 msgid "Your password is invalid!"
 msgstr "你的密码不正确！"
 
@@ -245,11 +240,15 @@ msgstr "反馈"
 msgid "Your feedback has been sent to the admins!"
 msgstr "你的反馈已经发送给管理员了！"
 
-#: flog/image/views.py:94
+#: flog/image/views.py:35
+msgid "No image uploaded!"
+msgstr "没有上传的图片！"
+
+#: flog/image/views.py:71
 msgid "Image {filename} visibility toggled"
 msgstr "图片 {filename} 的私有状态已切换"
 
-#: flog/image/views.py:112
+#: flog/image/views.py:89
 msgid "Image {filename} deleted"
 msgstr "图片 {filename} 已删除"
 
@@ -270,7 +269,7 @@ msgid "Content"
 msgstr "内容"
 
 #: flog/main/forms.py:19 flog/main/forms.py:26
-#: flog/templates/image/manage_images.html:15 flog/templates/macros.html:189
+#: flog/templates/image/manage_images.html:15 flog/templates/macros.html:194
 msgid "Private"
 msgstr "个人的"
 
@@ -294,52 +293,56 @@ msgstr "被封禁的用户不能发评论！"
 msgid "You cannot comment a private post!"
 msgstr "你不能收藏你自己的文章!"
 
-#: flog/main/views.py:115
+#: flog/main/views.py:116
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:125
+#: flog/main/views.py:126
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:170
+#: flog/main/views.py:171
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:191
+#: flog/main/views.py:192
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:213
+#: flog/main/views.py:214
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:215
+#: flog/main/views.py:216
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:217
+#: flog/main/views.py:218
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:220
+#: flog/main/views.py:221
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:232
+#: flog/main/views.py:233
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:250
+#: flog/main/views.py:251
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
 #: flog/notification/views.py:51
 msgid "All notifications are read."
 msgstr "所有消息都已读。"
+
+#: flog/notification/views.py:61
+msgid "Notification Deleted"
+msgstr "消息已删除"
 
 #: flog/templates/base.html:39 flog/templates/main/main.html:8
 msgid "Main"
@@ -353,42 +356,42 @@ msgstr "关于我们"
 msgid "Search user, post or group"
 msgstr "搜索用户、文章或群"
 
-#: flog/templates/base.html:63
+#: flog/templates/base.html:64
 msgid "Account"
 msgstr "账户"
 
-#: flog/templates/base.html:67 flog/templates/macros.html:137
+#: flog/templates/base.html:68 flog/templates/macros.html:142
 #: flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
 #: flog/templates/user/user_profile.html:48
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
-#: flog/templates/base.html:69
+#: flog/templates/base.html:70
 msgid "Log out"
 msgstr "注销"
 
-#: flog/templates/base.html:73
+#: flog/templates/base.html:74
 msgid "Resend Confirmation Email"
 msgstr "重新发送邮箱验证邮件"
 
-#: flog/templates/base.html:78 flog/templates/user/change_password.html:4
+#: flog/templates/base.html:79 flog/templates/user/change_password.html:4
 msgid "Change Password"
 msgstr "更改密码"
 
-#: flog/templates/base.html:81
+#: flog/templates/base.html:83
 msgid "Delete Your Account"
 msgstr "删除你的账户"
 
-#: flog/templates/base.html:98
+#: flog/templates/base.html:100
 msgid "Log in / Register"
 msgstr "登录 / 注册"
 
-#: flog/templates/base.html:103
+#: flog/templates/base.html:105
 msgid "Theme"
 msgstr "样式选择"
 
-#: flog/templates/base.html:117
+#: flog/templates/base.html:119
 msgid "Language"
 msgstr "语言选择"
 
@@ -442,36 +445,37 @@ msgid "EDIT"
 msgstr "编辑"
 
 #: flog/templates/admin/feedbacks.html:19
-#: flog/templates/image/manage_images.html:34 flog/templates/macros.html:102
-#: flog/templates/macros.html:143 flog/templates/main/_comments.html:48
+#: flog/templates/image/manage_images.html:34 flog/templates/macros.html:107
+#: flog/templates/macros.html:148 flog/templates/main/_comments.html:48
+#: flog/templates/main/notifications.html:45
 msgid "DELETE"
 msgstr "删除"
 
-#: flog/templates/macros.html:112
+#: flog/templates/macros.html:117
 msgid "Collected by 1 person"
 msgstr "被1个人收藏"
 
-#: flog/templates/macros.html:154
+#: flog/templates/macros.html:159
 msgid "LOCK"
 msgstr "封禁"
 
-#: flog/templates/macros.html:163
+#: flog/templates/macros.html:168
 msgid "UNLOCK"
 msgstr "解除封禁"
 
-#: flog/templates/macros.html:185
+#: flog/templates/macros.html:190 flog/templates/main/full_post.html:25
 msgid "Deleted Flog User"
 msgstr "已删除的Flog用户"
 
-#: flog/templates/macros.html:196 flog/templates/main/collections.html:17
+#: flog/templates/macros.html:201 flog/templates/main/collections.html:17
 msgid "Read More"
 msgstr "阅读更多"
 
-#: flog/templates/macros.html:205
+#: flog/templates/macros.html:210
 msgid "Group name:"
 msgstr "群的名字"
 
-#: flog/templates/macros.html:206
+#: flog/templates/macros.html:211
 msgid "Managed by:"
 msgstr "管理者："
 
@@ -504,7 +508,6 @@ msgid "Homepage"
 msgstr "Ta的Flog个人主页"
 
 #: flog/templates/auth/delete_account.html:7
-#, fuzzy
 msgid "Delete account"
 msgstr "删除账号"
 
@@ -592,18 +595,16 @@ msgid "If it is a junk one, please delete it immediately!"
 msgstr "如果这是一则垃圾信息，请马上删除它!"
 
 #: flog/templates/image/manage_images.html:17
-#, fuzzy
 msgid "Public"
-msgstr "发表"
+msgstr "公开的"
 
 #: flog/templates/image/manage_images.html:24
 msgid "Make Public"
 msgstr "公开"
 
 #: flog/templates/image/manage_images.html:26
-#, fuzzy
 msgid "Make Private"
-msgstr "个人的"
+msgstr "私有"
 
 #: flog/templates/main/_comments.html:4
 msgid "comment"
@@ -623,7 +624,6 @@ msgid "Reply"
 msgstr "回复"
 
 #: flog/templates/main/_comments.html:62
-#, fuzzy
 msgid "Reply to"
 msgstr "回复"
 
@@ -684,12 +684,10 @@ msgid "View all users"
 msgstr "查看所有Flog用户"
 
 #: flog/templates/main/_sidebar.html:42
-#, fuzzy
 msgid "User Actions"
-msgstr "你的收藏"
+msgstr "用户操作"
 
 #: flog/templates/main/_sidebar.html:45
-#, fuzzy
 msgid "Edit profile"
 msgstr "编辑账户信息"
 
@@ -972,4 +970,7 @@ msgstr "消息已经发送给了用户{0}"
 
 #~ msgid "return confirm('Are you sure?');"
 #~ msgstr "return confirm('你确定吗？');"
+
+#~ msgid "You can now login!"
+#~ msgstr "你现在可以登录了！"
 
