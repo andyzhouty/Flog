@@ -12,7 +12,7 @@ from flask.views import MethodView
 from .errors import ValidationError, bad_request, forbidden  # noqa
 from .authentication import auth
 from .schemas import comment_schema, user_schema, post_schema
-from flog.models import db, User, Post, Comment, Notification
+from flog.models import db, User, Post, Comment, Notification, Image
 from flog.utils import get_image_path_and_url
 from ..api_utils import get_post_data, can_edit_post, can_edit_profile
 import bleach
@@ -238,7 +238,14 @@ class ImageAPI(MethodView):
         if response.get("error") is not None:
             return bad_request(response["error"])
         image_url = response["image_url"]
+        image_id = response["image_id"]
         return jsonify(
             message="Upload Success",
             image_url=image_url,
+            image_id=image_id
         ), 201
+
+    def delete(self, image_id):
+        image = Image.query.get_or_404(image_id)
+        image.delete()
+        return "", 204

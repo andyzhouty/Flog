@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import json
 import random
 from flask import current_app
-from flog.models import User, Comment, Post
+from flog.models import User, Comment, Post, Image
 from tests.helpers import register, get_api_v2_headers, api_upload_image
 from flog import fakes as fake
 
@@ -265,3 +265,14 @@ def test_image(client):
     assert data["image_url"] == f"/image/{admin_username}_test.png"
     response = client.get(f"/image/{admin_username}_test.png")
     assert response.status_code == 200
+    image_id = data["image_id"]
+    response = client.delete(
+        f"/api/v2/image/{image_id}/",
+        headers=get_api_v2_headers(
+            client=client,
+            username=admin_username,
+            password=admin_password
+        )
+    )
+    assert response.status_code == 204
+    assert Image.query.get(image_id) is None

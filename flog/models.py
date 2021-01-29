@@ -140,6 +140,11 @@ class Image(db.Model):
         self.private = not self.private
         db.session.commit()
 
+    def delete(self) -> None:
+        os.remove(self.path())
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Permission:
     FOLLOW = 1

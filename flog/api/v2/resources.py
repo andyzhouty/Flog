@@ -230,7 +230,14 @@ class ImageAPI(MethodView):
         if response.get("error") is not None:
             return bad_request(response["error"])
         image_url = response["image_url"]
+        image_id = response["image_id"]
         return jsonify(
             message="Upload Success",
             image_url=image_url,
+            image_id=image_id
         ), 201
+
+    def delete(self, image_id):
+        image = Image.query.get_or_404(image_id)
+        image.delete()
+        return "", 204

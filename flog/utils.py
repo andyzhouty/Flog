@@ -60,4 +60,4 @@ def get_image_path_and_url(image_obj, current_user) -> dict:
     db.session.commit()
     url = image.url()
     current_app.logger.info(f"Upload file url: {url}")
-    return {"image_url": url, "filename": image.filename}
+    return {"image_url": url, "filename": image.filename, "image_id": image.id}

@@ -2,7 +2,7 @@
 
 Both api v1 and api v2 users can follow the following instructions.
 
-/api/v1/upload/ or /api/v2/upload/
+/api/v1/image/upload/ or /api/v2/image/upload/
 
 - **POST** Upload Image
   Accepts: *multipart/form-data*
@@ -18,3 +18,10 @@ Both api v1 and api v2 users can follow the following instructions.
   | Key    | Value                |
   | ------ | -------------------- |
   | upload | \<file:picture.png\> |
+
+/api/v1/image/{image_id}
+
+- **DELETE**: Delete an Image
+  Args:
+  - image_id: **int**
+  Status: 204 or 401

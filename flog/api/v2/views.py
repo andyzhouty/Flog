@@ -59,7 +59,12 @@ api_v2.add_url_rule(
     methods=["GET"],
 )
 api_v2.add_url_rule(
-    "/upload/",
+    "/image/upload/",
     view_func=ImageAPI.as_view("image"),
     methods=["POST"]
+)
+api_v2.add_url_rule(
+    "/image/<int:image_id>/",
+    view_func=ImageAPI.as_view("image_delete"),
+    methods=["DELETE"]
 )
