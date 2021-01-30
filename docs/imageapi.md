@@ -5,6 +5,9 @@ Both api v1 and api v2 users can follow the following instructions.
 /api/v1/image/upload/ or /api/v2/image/upload/
 
 - **POST** Upload Image
+
+  Requires Authentication
+
   Accepts: *multipart/form-data*
 
   Status: 201 or 400 or 401
@@ -19,9 +22,14 @@ Both api v1 and api v2 users can follow the following instructions.
   | ------ | -------------------- |
   | upload | \<file:picture.png\> |
 
-/api/v1/image/{image_id}
+URL: /api/v1/image/{image_id} or /api/v2/image{image_id}
 
 - **DELETE**: Delete an Image
+
+  Requires Authentication
+
   Args:
+
   - image_id: **int**
+
   Status: 204 or 401
