@@ -5,6 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from os.path import join, exists
 from urllib.parse import urlparse, urljoin
 from flask import current_app, request, redirect, url_for
+from werkzeug.utils import secure_filename
 from .models import db, Image
 
 
@@ -52,6 +53,7 @@ def get_image_path_and_url(image_obj, current_user) -> dict:
         )
     # get final filename
     filename = filename_without_ext + "." + extension
+    filename = secure_filename(filename)
     current_app.logger.info(f"Upload file {filename} saved.")
     image_obj.save(image_path)
     # commit the image to the db
