@@ -115,7 +115,7 @@ class PostAPI(MethodView):
             attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
             strip_comments=True,
         )
-        post.title, post.content, post.private = title, content, private
+        post.title, post.content, post.private = title, cleaned_content, private
         db.session.commit()
         return "", 204
 

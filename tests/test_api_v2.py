@@ -19,11 +19,13 @@ def test_api_index(client):
 def test_no_auth(client):
     response = client.get("/api/v2/post/1/")
     data = response.get_json()
-    assert data.get("message") == "The token type must be bearer and the token must not be none."
+    assert (
+        data.get("message")
+        == "The token type must be bearer and the token must not be none."
+    )
 
     response = client.get(
-        "/api/v2/post/1/",
-        headers=get_api_v2_headers(client, custom_token="fake-token")
+        "/api/v2/post/1/", headers=get_api_v2_headers(client, custom_token="fake-token")
     )
     data = response.get_json()
     assert data.get("message") == "invalid token"
@@ -47,11 +49,7 @@ def test_posts(client):
     register(client)
 
     # test POST
-    post = {
-        "content": "<p>body of the post</p>",
-        "title": None,
-        "private": False
-    }
+    post = {"content": "<p>body of the post</p>", "title": None, "private": False}
 
     response = client.post(
         "/api/v2/post/new/",
@@ -75,6 +73,18 @@ def test_posts(client):
     assert data.get("title") == "hello"
     assert data.get("private") is False
 
+    post["title"] = "hello_admin"
+    response = client.post(
+        "/api/v2/post/new/",
+        headers=get_api_v2_headers(
+            client,
+            current_app.config["FLOG_ADMIN"],
+            current_app.config["FLOG_ADMIN_PASSWORD"],
+        ),
+        data=json.dumps(post),
+    )
+    admin_post_id = response.get_json().get("id")
+
     # test GET
     response = client.get(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
@@ -83,7 +93,7 @@ def test_posts(client):
     assert isinstance(data["author"], dict)
     assert data["author"]["username"] == "test"
 
-    # test PUT
+    # test put
     data = {"title": "a new title", "content": "the new content", "private": True}
     response = client.put(
         f"/api/v2/post/{post_id}/", json=data, headers=get_api_v2_headers(client)
@@ -96,27 +106,38 @@ def test_posts(client):
     assert response.status_code == 200
     assert response.get_json().get("content") == data["content"]
 
+    # test send PUT request to an admin's post
+    data = {"title": "a new title", "content": "the new content", "private": True}
+    response = client.put(
+        f"/api/v2/post/{admin_post_id}/", json=data, headers=get_api_v2_headers(client)
+    )
+    assert response.status_code == 403
+
     # test PATCH
     response = client.patch(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
     assert response.status_code == 204
 
+    response = client.patch(
+        f"/api/v2/post/{admin_post_id}/", headers=get_api_v2_headers(client)
+    )
+    assert response.status_code == 403
+
     response = client.get(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
     assert response.get_json()["private"] is False
 
-    # test DELETE
     response = client.delete(
         f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
     )
     assert response.status_code == 204
 
-    response = client.get(
-        f"/api/v2/post/{post_id}/", headers=get_api_v2_headers(client)
+    response = client.delete(
+        f"/api/v2/post/{admin_post_id}/", headers=get_api_v2_headers(client)
     )
-    assert response.status_code == 404
+    assert response.status_code == 403
 
 
 def test_users(client):
@@ -144,6 +165,20 @@ def test_users(client):
     assert data["name"] == user_data["name"]
     assert data["about_me"] == user_data["about_me"]
     assert data["location"] == user_data["location"]
+
+    # test forbidden
+    response = client.put(
+        "/api/v2/user/1/", json=user_data, headers=get_api_v2_headers(client)
+    )
+    assert response.status_code == 403
+
+    # test deleting the admin's account
+    # should be forbidden
+    # test forbidden
+    response = client.delete(
+        "/api/v2/user/1/", json=user_data, headers=get_api_v2_headers(client)
+    )
+    assert response.status_code == 403
 
     # test delete method
     response = client.delete(
@@ -253,12 +288,16 @@ def test_collect(client):
 def test_image(client):
     admin_username = current_app.config["FLOG_ADMIN"]
     admin_password = current_app.config["FLOG_ADMIN_PASSWORD"]
-    image_dict = api_upload_image(client, "/api/v2", headers=get_api_v2_headers(
-        client=client,
-        username=admin_username,
-        password=admin_password,
-        content_type="multipart/form-data"
-    ))
+    image_dict = api_upload_image(
+        client,
+        "/api/v2",
+        headers=get_api_v2_headers(
+            client=client,
+            username=admin_username,
+            password=admin_password,
+            content_type="multipart/form-data",
+        ),
+    )
     response = image_dict["response"]
     data = image_dict["data"]
     assert response.status_code == 201
@@ -269,10 +308,8 @@ def test_image(client):
     response = client.delete(
         f"/api/v2/image/{image_id}/",
         headers=get_api_v2_headers(
-            client=client,
-            username=admin_username,
-            password=admin_password
-        )
+            client=client, username=admin_username, password=admin_password
+        ),
     )
     assert response.status_code == 204
     assert Image.query.get(image_id) is None

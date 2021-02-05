@@ -25,11 +25,7 @@ def test_posts(client):
     register(client)
 
     # test POST
-    post = {
-        "content": "<p>body of the post</p>",
-        "title": None,
-        "private": False
-    }
+    post = {"content": "<p>body of the post</p>", "title": None, "private": False}
 
     response = client.post(
         "/api/v1/post/new/",
@@ -53,6 +49,18 @@ def test_posts(client):
     assert data.get("title") == "hello"
     assert data.get("private") is False
 
+    post["title"] = "hello_admin"
+    response = client.post(
+        "/api/v1/post/new/",
+        headers=get_api_v1_headers(
+            current_app.config["FLOG_ADMIN"],
+            current_app.config["FLOG_ADMIN_PASSWORD"],
+        ),
+        data=json.dumps(post),
+    )
+    admin_post_id = response.get_json().get("id")
+    print(admin_post_id)
+
     # test GET
     response = client.get(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     data = response.get_json()
@@ -66,6 +74,11 @@ def test_posts(client):
     )
     assert response.status_code == 204
 
+    response = client.put(
+        f"/api/v1/post/{admin_post_id}/", json=data, headers=get_api_v1_headers()
+    )
+    assert response.status_code == 403
+
     response = client.get(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     assert response.status_code == 200
     assert response.get_json().get("content") == data["content"]
@@ -73,11 +86,21 @@ def test_posts(client):
     response = client.patch(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     assert response.status_code == 204
 
+    response = client.patch(
+        f"/api/v1/post/{admin_post_id}/", json=data, headers=get_api_v1_headers()
+    )
+    assert response.status_code == 403
+
     response = client.get(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     assert response.get_json()["private"] is False
 
     response = client.delete(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     assert response.status_code == 204
+
+    response = client.delete(
+        f"/api/v1/post/{admin_post_id}/", headers=get_api_v1_headers()
+    )
+    assert response.status_code == 403
 
     response = client.get(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())
     assert response.status_code == 404
@@ -106,6 +129,12 @@ def test_users(client):
     assert data["name"] == user_data["name"]
     assert data["about_me"] == user_data["about_me"]
     assert data["location"] == user_data["location"]
+
+    # test forbidden
+    response = client.put(
+        "/api/v1/user/1/", json=user_data, headers=get_api_v1_headers()
+    )
+    assert response.status_code == 403
 
     # test delete method
     response = client.delete(f"/api/v1/user/{user.id}/", headers=get_api_v1_headers())
@@ -208,11 +237,15 @@ def test_collect(client):
 def test_image(client):
     admin_username = current_app.config["FLOG_ADMIN"]
     admin_password = current_app.config["FLOG_ADMIN_PASSWORD"]
-    image_dict = api_upload_image(client, "/api/v1", headers=get_api_v1_headers(
-        username=admin_username,
-        password=admin_password,
-        content_type="multipart/form-data"
-    ))
+    image_dict = api_upload_image(
+        client,
+        "/api/v1",
+        headers=get_api_v1_headers(
+            username=admin_username,
+            password=admin_password,
+            content_type="multipart/form-data",
+        ),
+    )
     response = image_dict["response"]
     data = image_dict["data"]
     assert response.status_code == 201
@@ -222,10 +255,7 @@ def test_image(client):
     image_id = data["image_id"]
     response = client.delete(
         f"/api/v1/image/{image_id}/",
-        headers=get_api_v1_headers(
-            username=admin_username,
-            password=admin_password
-        )
+        headers=get_api_v1_headers(username=admin_username, password=admin_password),
     )
     assert response.status_code == 204
     assert Image.query.get(image_id) is None
