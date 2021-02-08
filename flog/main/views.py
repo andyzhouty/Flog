@@ -111,7 +111,7 @@ def full_post(id: int):
                 comment.replied = replied_comment
             db.session.add(comment)
             db.session.commit()
-            if post.author is not None:
+            if post.author is not None and post.author != current_user:
                 push_comment_notification(comment=comment, receiver=post.author)
             flash(_("Comment published!"), "success")
             return redirect(url_for("main.full_post", id=post.id))

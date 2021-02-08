@@ -22,6 +22,13 @@ MIT License
                 {{ _("Mark all notifications as read") }}
             </button>
         </form>
+        <form method="POST" action="{{ url_for('notification.delete_all') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-danger">
+                <i class="fa fa-trash"></i>
+                {{ _("Delete all notifications") }}
+            </button>
+        </form>
     </div>
     <ul class="list-group">
         {% for notification in notifications %}

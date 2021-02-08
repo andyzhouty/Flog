@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-01-29 09:34+0800\n"
+"POT-Creation-Date: 2021-02-08 14:25+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -344,6 +344,10 @@ msgstr "所有消息都已读。"
 msgid "Notification Deleted"
 msgstr "消息已删除"
 
+#: flog/notification/views.py:71
+msgid "All your notifications are deleted."
+msgstr "已删除所有消息。"
+
 #: flog/templates/base.html:39 flog/templates/main/main.html:8
 msgid "Main"
 msgstr "主页"
@@ -447,7 +451,7 @@ msgstr "编辑"
 #: flog/templates/admin/feedbacks.html:19
 #: flog/templates/image/manage_images.html:34 flog/templates/macros.html:107
 #: flog/templates/macros.html:148 flog/templates/main/_comments.html:48
-#: flog/templates/main/notifications.html:45
+#: flog/templates/main/notifications.html:52
 msgid "DELETE"
 msgstr "删除"
 
@@ -763,7 +767,11 @@ msgstr "未读"
 msgid "Mark all notifications as read"
 msgstr "把所有消息标记为已读"
 
-#: flog/templates/main/notifications.html:35
+#: flog/templates/main/notifications.html:29
+msgid "Delete all notifications"
+msgstr "删除所有消息"
+
+#: flog/templates/main/notifications.html:42
 msgid "Mark this notification as read"
 msgstr "把这条消息标记为已读"
 

@@ -120,6 +120,10 @@ class Notification(db.Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     receiver = db.relationship("User", back_populates="notifications")
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)

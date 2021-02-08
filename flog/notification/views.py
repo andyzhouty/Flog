@@ -60,3 +60,13 @@ def delete(id: int):
     db.session.commit()
     flash(_("Notification Deleted"))
     return redirect(url_for(".show"))
+
+
+@notification_bp.route("/delete/all/", methods=["POST"])
+@login_required
+def delete_all():
+    notifications = Notification.query.filter_by(receiver=current_user).all()
+    for notification in notifications:
+        notification.delete()
+    flash(_("All your notifications are deleted."))
+    return redirect_back(".show")

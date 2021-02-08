@@ -12,7 +12,7 @@ from flog.notifications import (
     push_follow_notification,
 )
 from flog.utils import lower_username, is_safe_url
-from .helpers import send_notification, login
+from .helpers import send_notification, login, create_article
 
 
 def test_lower_username():
@@ -26,16 +26,18 @@ def test_is_safe_url(client_with_request_ctx):
 
 
 def test_push_notifications(client_with_request_ctx):
-    assert Notification.query.count() == 0
+    # test if the push_*_notification functions work.
     random_user_id = randint(1, User.query.count() - 1)
     random_post_id = randint(1, Post.query.count())
     collector = User.query.get(random_user_id)
     receiver = User.query.get(random_user_id + 1)
     post = Post.query.get(random_post_id)
     push_collect_notification(collector, post, receiver)
+
     assert Notification.query.count() == 1
     follower = collector
     push_follow_notification(follower, receiver)
+
     assert Notification.query.count() == 2
     random_comment_id = randint(1, Comment.query.count())
     comment = Comment.query.get(random_comment_id)
@@ -78,10 +80,29 @@ def test_delete_notification(client):
     assert response.status_code == 200
     assert Notification.query.count() == 4
 
+    # test delete all notifications
+    response = client.post("/notification/delete/all/", follow_redirects=True)
+    assert response.status_code == 200
+    assert Notification.query.count() == 0
+
 
 def test_redirections(client):
-    # test if is_safe_url() works
+    """test if is_safe_url() works"""
     response = client.get("/redirect?next=http://example.com", follow_redirects=True)
     assert response.status_code == 200
     data = response.get_data(as_text=True)
     assert "Flog" in data
+
+
+def test_notifications_from_and_to_oneself_are_ignored(client):
+    """
+    Test when a user write a comment to his own article, he will not be notified.
+    """
+    login(client)
+    init_notification_count = Notification.query.count()
+    title = create_article(client)["post"]["title"]
+    post = Post.query.filter_by(title=title).first()
+    response = client.post(
+        f"/post/{post.id}/", data={"body": "lorem ipsum"}, follow_redirects=True
+    )
+    assert Notification.query.count() == init_notification_count
