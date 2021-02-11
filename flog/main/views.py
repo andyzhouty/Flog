@@ -132,8 +132,9 @@ def full_post(id: int):
 @permission_required(Permission.COMMENT)
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
+    author = comment.author
     return redirect(
-        url_for("main.full_post", id=comment.post.id, reply=comment_id)
+        url_for("main.full_post", id=comment.post.id, reply=comment_id, author=author)
         + "#comment-form"
     )
 

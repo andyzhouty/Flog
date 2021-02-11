@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import fakes
-from flog.models import User, Role, Post
+from flog.models import Comment, User, Role, Post
 from .helpers import (
     login,
     create_article,
@@ -159,6 +159,13 @@ def test_comments(client):
     assert response.status_code == 200
     response = client.get(f"/post/{post.id}/")
     assert data["body"] in response.get_data(as_text=True)
+    comment = Comment.query.filter_by(body=data["body"]).first()
+
+    # test replying comments
+    reply = {"body": "reply"}
+    response = client.post(f"/post/{post.id}/?reply={comment.id}", data=reply, follow_redirects=True)
+    assert response.status_code == 200
+    assert len(comment.replies) == 1
 
 
 def test_comment_posts_of_deleted_users(client):

@@ -17,9 +17,13 @@
             <li class="list-group-item list-group-item-action flex-column">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">
-                    <a href="{{ comment.author.profile_url() }}" target="_blank">
-                        {{ comment.author.username }}
-                    </a>
+                    {% if comment.author != None %}
+                        <a href="{{ comment.author.profile_url() }}" target="_blank">
+                            {{ comment.author.username }}
+                        </a>
+                    {% else %}
+                        <span>{{ _("Deleted Flog User") }}</span>
+                    {% endif %}
                 </h5>
                 {% if comment.author.is_administrator() %}
                 <span class="badge badge-danger">{{ _("Admin") }}</span>

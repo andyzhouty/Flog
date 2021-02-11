@@ -291,7 +291,7 @@ msgstr "被封禁的用户不能发评论！"
 
 #: flog/main/views.py:101 flog/templates/main/_comments.html:75
 msgid "You cannot comment a private post!"
-msgstr "你不能收藏你自己的文章!"
+msgstr "你不能评论私有的文章!"
 
 #: flog/main/views.py:116
 msgid "Comment published!"
