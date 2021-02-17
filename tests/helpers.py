@@ -54,7 +54,7 @@ def register(
 
 def create_article(client, title=fake.sentence(), text=fake.text(), **kwargs) -> dict:
     """Create a post for test use"""
-    if kwargs["login"] is not False:
+    if kwargs.get("login") is not False:
         login(client, **kwargs)
     data = {
         "title": title,
