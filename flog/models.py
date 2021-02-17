@@ -2,7 +2,6 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from enum import unique
 import os
 import hashlib
 from datetime import datetime
@@ -18,6 +17,11 @@ group_user_table = db.Table(
     "group_user",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("group_id", db.Integer, db.ForeignKey("group.id")),
+)
+column_post_table = db.Table(
+    "column_post",
+    db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+    db.Column("column_id", db.Integer, db.ForeignKey("column.id")),
 )
 
 
@@ -60,6 +64,10 @@ class Post(db.Model):
     private = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
+    column = db.relationship(
+        "Column", secondary=column_post_table, back_populates="posts"
+    )
+
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
 
@@ -73,6 +81,21 @@ class Post(db.Model):
 
     def url(self):
         return url_for("main.full_post", id=self.id, _external=True)
+
+
+class Column(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), unique=True)
+    posts = db.relationship(
+        "Post", secondary=column_post_table, back_populates="column"
+    )
+    author = db.relationship("User", back_populates="columns")
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    def delete(self):
+        if self in db.session:
+            db.session.delete(self)
+            db.session.commit()
 
 
 class Comment(db.Model):
@@ -272,6 +295,8 @@ class User(db.Model, UserMixin):
     collections = db.relationship("Collect", back_populates="collector", cascade="all")
     locale = db.Column(db.String(16))
 
+    columns = db.relationship("Column", back_populates="author")
+
     following = db.relationship(
         "Follow",
         foreign_keys=[Follow.follower_id],
@@ -445,3 +470,5 @@ class AnonymousUser(AnonymousUserMixin):
 
 
 login_manager.anonymous_user = AnonymousUser
+
+from .db_events import *  # noqa

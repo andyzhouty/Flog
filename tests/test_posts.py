@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import fakes
-from flog.models import Comment, User, Role, Post
+from flog.models import Comment, User, Role, Post, Column
 from .helpers import (
     login,
     create_article,
@@ -163,7 +163,9 @@ def test_comments(client):
 
     # test replying comments
     reply = {"body": "reply"}
-    response = client.post(f"/post/{post.id}/?reply={comment.id}", data=reply, follow_redirects=True)
+    response = client.post(
+        f"/post/{post.id}/?reply={comment.id}", data=reply, follow_redirects=True
+    )
     assert response.status_code == 200
     assert len(comment.replies) == 1
 
@@ -171,7 +173,9 @@ def test_comments(client):
 def test_comment_posts_of_deleted_users(client):
     register(client)
     login(client, "test", "password")
-    title = create_article(client, username="test", password="password")["post"]["title"]
+    title = create_article(client, username="test", password="password")["post"][
+        "title"
+    ]
     logout(client)
     post = Post.query.filter_by(title=title).first()
     user = User.query.filter_by(username="test").first()
@@ -181,3 +185,21 @@ def test_comment_posts_of_deleted_users(client):
     data = {"body": "comment content"}
     response = client.post(f"/post/{post.id}/", data=data, follow_redirects=True)
     assert response.status_code == 200
+
+
+def test_create_column(client):
+    register(client)
+    login(client, "test", "password")
+    create_article(client, login=False)
+    response = client.get("/column/create/")
+    assert response.status_code == 200
+
+    user = User.query.filter_by(username="test").first()
+    column = dict(
+        name="test",
+        posts=[post.id for post in Post.query.filter_by(author=user).all()],
+    )
+    response = client.post("/column/create/", data=column, follow_redirects=True)
+    assert response.status_code == 200
+    res_data = response.get_data(as_text=True)
+    assert "Your column was successfully created." in res_data

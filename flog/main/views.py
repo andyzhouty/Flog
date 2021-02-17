@@ -16,10 +16,10 @@ from flask import (
 )
 from flask_babel import _
 from flask_login import current_user, login_required
-from ..models import Permission, db, Post, Comment, User, Group
+from ..models import Permission, db, Post, Comment, User, Group, Column
 from ..utils import redirect_back
 from ..notifications import push_collect_notification, push_comment_notification
-from .forms import PostForm, EditForm, CommentForm
+from .forms import ColumnForm, PostForm, EditForm, CommentForm
 from . import main_bp
 
 
@@ -139,7 +139,7 @@ def reply_comment(comment_id):
     )
 
 
-@main_bp.route("/comment/delete/<int:comment_id>", methods=["POST"])
+@main_bp.route("/comment/delete/<int:comment_id>/", methods=["POST"])
 @login_required
 @permission_required(Permission.COMMENT)
 def delete_comment(comment_id):
@@ -276,3 +276,27 @@ def search():
         pagination=pagination,
         category=category,
     )
+
+
+@main_bp.route("/column/create/", methods=["GET", "POST"])
+@login_required
+@permission_required(Permission.WRITE)
+def create_column():
+    form = ColumnForm()
+    form.posts.choices = [
+        (post.id, post.title)
+        for post in Post.query.filter_by(author=current_user).all()
+    ]
+    if form.validate_on_submit():
+        column = Column(name=form.name.data, author=current_user)
+        for post_id in form.posts.data:
+            post = Post.query.get(post_id)
+            if post.author != current_user:
+                flash(_("You can't add others' posts to your column!"))
+                return redirect_back()
+            column.posts.append(post)
+        db.session.add(column)
+        db.session.commit()
+        flash(_("Your column was successfully created."))
+        return redirect_back()
+    return render_template("main/create_column.html", form=form)

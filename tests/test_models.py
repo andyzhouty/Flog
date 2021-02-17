@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import db
-from flog.models import Post, User, Notification, Group
+from flog.models import Post, User, Notification, Group, Column
 
 
 def test_password_setter(client):
@@ -68,3 +68,16 @@ def test_block_user(client):
     assert user.locked
     user.unlock()
     assert not user.locked
+
+
+def test_column(client):
+    user = User()
+    post = Post()
+    column = Column()
+    column.posts.append(post)
+    db.session.add(column)
+    db.session.commit()
+    assert post in column.posts
+    user.columns.append(column)
+    assert column in user.columns
+    assert post in user.posts

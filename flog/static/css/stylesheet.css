@@ -14,12 +14,13 @@
 }
 
 #image-large {
-    width: 50%;
+    width: 50% !important;
     left: 25%;
-    height: auto;
+    height: auto !important;
+    max-height: auto !important;
     top: 10px;
     text-align: center;
-    position: absolute;
+    position: fixed;
     z-index: 100;
     opacity: 1;
 }
@@ -29,8 +30,8 @@
 }
 
 .image-normal {
-    height: 100px;
-    width: auto;
+    height: 100px !important;
+    width: auto !important;
 }
 .image-normal:hover {
     cursor: zoom-in;

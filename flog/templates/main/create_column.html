@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% block page_content %}
+    <h1>{{ _("Create Column") }}</h1>
+    {{ render_form(form) }}
+{% endblock page_content %}
