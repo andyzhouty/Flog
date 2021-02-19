@@ -64,7 +64,7 @@ class Post(db.Model):
     private = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
-    column = db.relationship(
+    columns = db.relationship(
         "Column", secondary=column_post_table, back_populates="posts"
     )
 
@@ -87,10 +87,12 @@ class Column(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
     posts = db.relationship(
-        "Post", secondary=column_post_table, back_populates="column"
+        "Post", secondary=column_post_table, back_populates="columns"
     )
     author = db.relationship("User", back_populates="columns")
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def delete(self):
         if self in db.session:

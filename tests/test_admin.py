@@ -6,14 +6,14 @@ from random import randint
 from faker import Faker
 from flog.models import Post
 from flog.utils import lower_username
-from .helpers import create_article, login
+from .helpers import generate_post, login
 
 fake = Faker()
 
 
 def test_admin_edit_article(client):
     login(client)
-    post_data = create_article(client)
+    post_data = generate_post(client)
     title = post_data["post"]["title"]
     post_id = Post.query.filter_by(title=title).first().id
     response = client.get(f"/post/edit/{post_id}/")

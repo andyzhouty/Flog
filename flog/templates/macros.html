@@ -181,11 +181,11 @@ MIT License
         </h3>
         <h4>
             {% if post.author %}
-            <a href="{{ url_for('user.user_profile', username=post.author.username) }}"
-               class="text-muted profile-popover"
-               data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                {{ post.author.username }}
-            </a>
+                <a href="{{ url_for('user.user_profile', username=post.author.username) }}"
+                   class="text-muted profile-popover"
+                   data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+                    {{ post.author.username }}
+                </a>
             {% else %}
                 {{ _("Deleted Flog User") }}
             {% endif %}
@@ -200,6 +200,19 @@ MIT License
             <small class="text-primary">
                 <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _("Read More") }}</a>
             </small>
+            {% if post.columns %}
+                <p class="small">
+                    This post belongs to
+                    {% for column in post.columns[:-1] %}
+                        <a href="{{ url_for('main.view_column', id=column.id) }}">
+                            Column &quot;{{ column.name }}&quot;
+                        </a>,
+                    {% endfor %} and
+                    <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
+                        Column &quot;{{ post.columns[-1].name }}&quot;
+                    </a>.
+                </p>
+            {% endif %}
             {{ post_actions(post) }}
         </div>
     </li>
@@ -214,5 +227,22 @@ MIT License
                data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
                 {{ group.manager.username }}
             </a>
+        </h4>
+    </li>
+{% endmacro %}
+
+{% macro column_card(column) %}
+    <li class="list-group-item">
+        <h3>{{ _("Column name:") }} {{ column.name }}</h3>
+        <h4>{{ _("Author: ") }}
+            <a href="{{ column.author.profile_url() }}"
+               class="text-muted profile-popover"
+               data-href="{{ url_for('ajax.get_profile', user_id=column.author.id) }}">
+                {{ column.author.username }}
+            </a>
+        </h4>
+        <h4>
+            {{ _("Created") }} {{ moment(column.timestamp).fromNow(refresh=True) }}
+        </h4>
     </li>
 {% endmacro %}

@@ -46,6 +46,14 @@ MIT License
                 </a>
             </ul>
         </div>
+        <div class="card mb-3">
+            <div class="card-header">{{ _("Column Actions") }}</div>
+            <ul class="list-group list-group-flush">
+                <a class="list-group-item" href="{{ url_for('main.create_column') }}">
+                    {{ _("Create a column") }}
+                </a>
+            </ul>
+        </div>
         {% if current_user.is_administrator() %}
         <div class="card mb-3">
             <div class="card-header">{{ _("Admin Actions") }}</div>

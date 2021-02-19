@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import post_card with context %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block page_content %}
+    <h1 class="display-3">{{ column.name }}</h1>
+    {% for post in pagination.items %}
+        {{ post_card(post) }}
+    {% endfor %}
+    {{ render_pagination(pagination) }}
+{% endblock %}

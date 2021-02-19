@@ -3,25 +3,49 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import fakes
+from faker import Faker
 from flog.models import Comment, User, Role, Post, Column
 from .helpers import (
     login,
-    create_article,
+    generate_post,
+    generate_column,
     get_response_and_data_of_post,
     logout,
     register,
 )
 
+fake = Faker()
 
-def test_create_article(client):
-    data = create_article(client)
-    response = data["response"]
+
+def test_create_post(client):
+    login(client)
+    data = generate_post(client)
     post = data["post"]
     response = client.get("/")
     response_data = response.get_data(as_text=True)
     assert post["title"] in response_data
     # test if filter 'striptag' work
     assert not (post["content"] in response_data)
+
+    col_name = generate_column(client)["column_name"]
+    column = Column.query.filter_by(name=col_name).first()
+    print(column.author)
+    # test add post to column when submit
+    title = fake.sentence()
+    data = dict(
+        title=title,
+        content=fake.text(),
+        columns=[column.id]
+    )
+    response = client.post("/write/", data=data, follow_redirects=True)
+    assert response.status_code == 200
+    print(response.get_data(as_text=True))
+    post = Post.query.filter_by(title=title).first()
+    admin = User.query.filter_by(
+        role=Role.query.filter_by(name="Administrator").first()
+    ).first()
+    assert post in column.posts
+    assert column in admin.columns
 
 
 def test_collect_uncollect(client):
@@ -73,7 +97,7 @@ def test_collect_uncollect(client):
     )
     assert not admin.is_collecting(private_post)
 
-    title = create_article(client)["post"]["title"]
+    title = generate_post(client)["post"]["title"]
     post_id = Post.query.filter_by(title=title).first().id
     data = client.get(f"/post/collect/{post_id}", follow_redirects=True).get_data(
         as_text=True
@@ -130,7 +154,7 @@ def test_view_post(client):
 
 def test_delete_post(client):
     login(client)
-    title = create_article(client)["post"]["title"]
+    title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
     response = client.post(f"/post/delete/{post.id}/", follow_redirects=True)
     assert response.status_code == 200
@@ -140,7 +164,7 @@ def test_delete_post(client):
 def test_get_urls(client):
     """Test if the user can GET the urls withour displaying a 500 page."""
     login(client)
-    title = create_article(client)["post"]["title"]
+    title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
     response = client.get(f"/post/{post.id}/")
     assert response.status_code == 200
@@ -152,7 +176,7 @@ def test_get_urls(client):
 
 def test_comments(client):
     login(client)
-    title = create_article(client)["post"]["title"]
+    title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
     data = {"body": "comment content"}
     response = client.post(f"/post/{post.id}/", data=data, follow_redirects=True)
@@ -173,7 +197,7 @@ def test_comments(client):
 def test_comment_posts_of_deleted_users(client):
     register(client)
     login(client, "test", "password")
-    title = create_article(client, username="test", password="password")["post"][
+    title = generate_post(client, username="test", password="password")["post"][
         "title"
     ]
     logout(client)
@@ -190,7 +214,7 @@ def test_comment_posts_of_deleted_users(client):
 def test_create_column(client):
     register(client)
     login(client, "test", "password")
-    create_article(client, login=False)
+    generate_post(client, login=False)
     response = client.get("/column/create/")
     assert response.status_code == 200
 
@@ -203,3 +227,13 @@ def test_create_column(client):
     assert response.status_code == 200
     res_data = response.get_data(as_text=True)
     assert "Your column was successfully created." in res_data
+
+
+def test_view_column(client):
+    register(client)
+    login(client, "test", "password")
+    col_name = generate_column(client)["column_name"]
+    column = Column.query.filter_by(name=col_name).first()
+    response = client.get(f"/column/{column.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert col_name in response.get_data(as_text=True)

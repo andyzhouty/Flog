@@ -27,7 +27,20 @@ MIT License
                 </small>
             </div>
             <br>
-            {{ post.content | safe }}
+            <div id="post-content">
+                {{ post.content | safe }}
+            </div>
+            <p class="text-muted">
+                This post belongs to
+                {% for column in post.columns[:-1] %}
+                    <a href="{{ url_for('main.view_column', id=column.id) }}">
+                        Column &quot;{{ column.name }}&quot;
+                    </a>,
+                {% endfor %} and
+                <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
+                    Column &quot;{{ post.columns[-1].name }}&quot;
+                </a>.
+            </p>
             {{ post_actions(post, show_collectors=True) }}
             {% if current_user.is_authenticated %}
                 <div class="comments" id="comments">

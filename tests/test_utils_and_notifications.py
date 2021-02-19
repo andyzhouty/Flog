@@ -12,7 +12,7 @@ from flog.notifications import (
     push_follow_notification,
 )
 from flog.utils import lower_username, is_safe_url
-from .helpers import send_notification, login, create_article
+from .helpers import send_notification, login, generate_post
 
 
 def test_lower_username():
@@ -100,7 +100,7 @@ def test_notifications_from_and_to_oneself_are_ignored(client):
     """
     login(client)
     init_notification_count = Notification.query.count()
-    title = create_article(client)["post"]["title"]
+    title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
     response = client.post(
         f"/post/{post.id}/", data={"body": "lorem ipsum"}, follow_redirects=True

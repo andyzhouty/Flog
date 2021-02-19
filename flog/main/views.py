@@ -54,6 +54,10 @@ def main():
 @permission_required(Permission.WRITE)
 def create_post():
     form = PostForm()
+    form.columns.choices = [
+        (column.id, column.name)
+        for column in Column.query.filter_by(author=current_user).all()
+    ]
     if form.validate_on_submit():
         cleaned_content = bleach.clean(
             form.content.data,
@@ -67,6 +71,11 @@ def create_post():
             content=cleaned_content,
             private=form.private.data,
         )
+        print("Here")
+        for col_id in form.columns.data:
+            column = Column.query.get(col_id)
+            post.columns.append(column)
+            print(current_user.columns)
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
@@ -132,10 +141,10 @@ def full_post(id: int):
 @permission_required(Permission.COMMENT)
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
-    author = comment.author
+    author = comment.author.username
     return redirect(
         url_for("main.full_post", id=comment.post.id, reply=comment_id, author=author)
-        + "#comment-form"
+        + "#reply-comment-form"
     )
 
 
@@ -257,16 +266,15 @@ def search():
     per_page = current_app.config["SEARCH_RESULT_PER_PAGE"]
     if category == "user":
         query = User.query.filter(User.username.ilike(f"%{q}%"))
-        pagination = query.paginate(page, per_page)
-        results_count = query.count()
     elif category == "group":
         query = Group.query.filter(Group.name.ilike(f"%{q}%"))
-        pagination = query.paginate(page, per_page)
-        results_count = query.count()
+    elif category == "column":
+        query = Column.query.filter(Column.name.ilike(f"%{q}%"))
     else:
         query = Post.query.filter(Post.title.ilike(f"%{q}%"))
-        pagination = query.paginate(page, per_page)
-        results_count = query.count()
+    results_count = query.count()
+    pagination = query.paginate(page, per_page)
+
     results = pagination.items
     return render_template(
         "main/search.html",
@@ -300,3 +308,14 @@ def create_column():
         flash(_("Your column was successfully created."))
         return redirect_back()
     return render_template("main/create_column.html", form=form)
+
+
+@main_bp.route("/column/<int:id>/")
+@login_required
+def view_column(id: int):
+    column = Column.query.get_or_404(id)
+    page = request.args.get("page", 1)
+    pagination = Post.query.with_parent(column).order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config["POSTS_PER_PAGE"]
+    )
+    return render_template("main/column.html", column=column, pagination=pagination)
