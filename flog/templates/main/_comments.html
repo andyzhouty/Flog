@@ -48,7 +48,7 @@
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}"
                     style="display: inline !important">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
                         {{ _("DELETE") }}
                     </button>
                 </form>

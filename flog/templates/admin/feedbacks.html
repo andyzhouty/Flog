@@ -15,7 +15,7 @@ MIT License
                         action="{{ url_for('admin.delete_feedback', id=feedback.id)}}"
                         style="float: right">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-danger" onclick="return confirm('Are you sure?');">
+                        <button class="btn btn-danger" onclick="_("return confirm('{{_ ('Are you sure?') }}');")">
                             {{ _("DELETE") }}
                         </button>
                     </form>
