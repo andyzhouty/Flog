@@ -30,6 +30,7 @@ MIT License
             <div id="post-content">
                 {{ post.content | safe }}
             </div>
+            {% if post.columns %}
             <p class="text-muted">
                 This post belongs to
                 {% for column in post.columns[:-1] %}
@@ -41,6 +42,7 @@ MIT License
                     Column &quot;{{ post.columns[-1].name }}&quot;
                 </a>.
             </p>
+            {% endif %}
             {{ post_actions(post, show_collectors=True) }}
             {% if current_user.is_authenticated %}
                 <div class="comments" id="comments">
