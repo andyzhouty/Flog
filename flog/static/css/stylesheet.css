@@ -17,7 +17,7 @@
     width: 50% !important;
     left: 25%;
     height: auto !important;
-    max-height: auto !important;
+    max-height: 900px !important;
     top: 10px;
     text-align: center;
     position: fixed;

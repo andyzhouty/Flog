@@ -67,7 +67,8 @@ function largeImage(e) {
     let image_large = $('#image-large')
     image_large.attr('src', element.attr('src'));
     $('.content').addClass('shadow');
-    image_large.show()
+    image_large.show();
+    $('#image-large').height = $(document).height
 }
 
 $(function () {
@@ -77,5 +78,5 @@ $(function () {
     $('#image-large').click(function () {
         $('.content').removeClass('shadow');
         $('#image-large').hide();
-    })
-})
+    });
+});
