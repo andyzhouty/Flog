@@ -355,7 +355,7 @@ class User(db.Model, UserMixin):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
 
     def gravatar(self, size=100, default="identicon", rating="g"):
-        url = "https://cdn.v2ex.com/gravatar/"
+        url = "https://gravatar.com/avatar"
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}&d={default}&r={rating}"
 
