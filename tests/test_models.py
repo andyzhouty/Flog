@@ -81,3 +81,13 @@ def test_column(client):
     user.columns.append(column)
     assert column in user.columns
     assert post in user.posts
+
+
+def test_avatar(client):
+    user = User(email="test@example.com")
+    user.locale = "zh_Hans_CN"
+    db.session.add(user)
+    db.session.commit()
+    assert "sdn.geekzu.org" in user.gravatar()
+    user.locale = "en_US"
+    assert "gravatar.com" in user.gravatar()
