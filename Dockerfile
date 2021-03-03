@@ -4,7 +4,7 @@ WORKDIR /usr/src/flog/
 
 COPY requirements/ requirements/
 RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
-RUN pip install -r requirements/common.txt
+RUN pip install -r requirements/dev.txt
 RUN pip install gunicorn
 
 COPY flog/ flog/
