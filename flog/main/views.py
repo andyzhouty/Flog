@@ -42,8 +42,8 @@ def main():
     else:
         pagination = (
             Post.query.filter(~Post.private)
-            .order_by(Post.timestamp.desc())
-            .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
+                .order_by(Post.timestamp.desc())
+                .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
         )
     posts = pagination.items
     return render_template("main/main.html", pagination=pagination, posts=posts)
@@ -89,19 +89,20 @@ def create_post():
 def full_post(id: int):
     post = Post.query.get_or_404(id)
     if (
-        (not post.private)
-        or post.author == current_user
-        or current_user.is_administrator()
+            (not post.private)
+            or post.author == current_user
+            or current_user.is_administrator()
     ):
         page = request.args.get("page", 1, type=int)
         per_page = current_app.config["COMMENTS_PER_PAGE"]
         pagination = (
             Comment.query.with_parent(post)
-            .order_by(Comment.timestamp.asc())
-            .paginate(page, per_page)
+                .order_by(Comment.timestamp.asc())
+                .paginate(page, per_page)
         )
         comments = pagination.items
         form = CommentForm()
+
         if form.validate_on_submit():
             if not current_user.can(Permission.COMMENT):
                 flash(_("Blocked users cannot post a comment!"))
@@ -124,26 +125,31 @@ def full_post(id: int):
                 push_comment_notification(comment=comment, receiver=post.author)
             flash(_("Comment published!"), "success")
             return redirect(url_for("main.full_post", id=post.id))
-        return render_template(
-            "main/full_post.html",
+
+        kwargs = dict(
             post=post,
             pagination=pagination,
             comments=comments,
             form=form,
         )
+        replied_id = request.args.get("reply")
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            kwargs["replied_comment"] = replied_comment
+            print(replied_comment)
+        return render_template("main/full_post.html", **kwargs)
     else:
         flash(_("The author has set this post to invisible."))
         return redirect_back()
 
 
-@main_bp.route("/reply/comment/<int:comment_id>")
+@main_bp.route("/reply/comment/<int:comment_id>/")
 @login_required
 @permission_required(Permission.COMMENT)
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
-    author = comment.author.username
     return redirect(
-        url_for("main.full_post", id=comment.post.id, reply=comment_id, author=author)
+        url_for("main.full_post", id=comment.post.id, reply=comment_id)
         + "#reply-comment-form"
     )
 
@@ -164,8 +170,8 @@ def manage_posts():
     page = request.args.get("page", 1, type=int)
     pagination = (
         Post.query.filter_by(author=current_user)
-        .order_by(Post.timestamp.desc())
-        .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
+            .order_by(Post.timestamp.desc())
+            .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
     )
     return render_template("main/personal_posts.html", pagination=pagination)
 
@@ -196,6 +202,7 @@ def edit_post(id):
         post.title = form.title.data
         post.content = form.content.data
         post.timestamp = datetime.utcnow()
+        post.private = form.private.data
         db.session.add(post)
         db.session.commit()
         current_app.logger.info(f"Post id {id} editted.")
@@ -203,6 +210,7 @@ def edit_post(id):
         return redirect(url_for("main.main"))
     form.title.data = post.title
     form.content.data = post.content
+    form.private.data = post.private
     return render_template("main/edit_post.html", form=form)
 
 
@@ -211,9 +219,9 @@ def edit_post(id):
 def collect_post(id):
     post = Post.query.get(id)
     if (
-        not post.private
-        and post.author != current_user
-        and not current_user.is_collecting(post)
+            not post.private
+            and post.author != current_user
+            and not current_user.is_collecting(post)
     ):
         current_user.collect(post)
         push_collect_notification(

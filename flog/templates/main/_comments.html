@@ -64,7 +64,7 @@
         {% if request.args.get('reply') %}
         <div class="alert alert-dark" id="reply-comment-form">
             <i class="fa fa-mail-reply"></i>{{ _("Reply to") }}
-            <b>{{ request.args.get('author') }}</b>:
+            <b>{{ replied_comment.author.username }}</b>:
             <a class="float-right btn btn-light btn-sm" href="{{ post.url() }}">
                 <i class="fa fa-window-close-o"></i>
                 {{ _("Cancel") }}

@@ -61,9 +61,7 @@ def test_collect_uncollect(client):
             Post.author != admin, ~Post.private
         ).first()
     post_id = post_not_private.id
-    data = client.get(f"/post/collect/{post_id}", follow_redirects=True).get_data(
-        as_text=True
-    )
+    client.get(f"/post/collect/{post_id}", follow_redirects=True).get_data(as_text=True)
     assert admin.is_collecting(post_not_private)
 
     # test if the collected post appears in the collection page
@@ -92,8 +90,8 @@ def test_collect_uncollect(client):
         as_text=True
     )
     assert (
-        "The author has set this post to invisible. So you cannot collect this post."
-        in data
+            "The author has set this post to invisible. So you cannot collect this post."
+            in data
     )
     assert not admin.is_collecting(private_post)
 
@@ -152,6 +150,24 @@ def test_view_post(client):
     assert "The author has set this post to invisible." in data
 
 
+def test_edit_post(client):
+    login(client)
+    post_data = generate_post(client)
+    title = post_data["post"]["title"]
+    post_id = Post.query.filter_by(title=title).first().id
+    response = client.get(f"/post/edit/{post_id}/")
+    response_data = response.get_data(as_text=True)
+    # test if the old content exists in the edit page.
+    assert post_data["text"] in response_data
+    data = dict(title="new title", content="new content", private=True)
+    response = client.post(f"/post/edit/{post_id}/", data=data, follow_redirects=True)
+    assert response.status_code == 200
+    post = Post.query.get(post_id)
+    assert post is not None
+    assert post.title == data["title"]
+    assert post.private
+
+
 def test_delete_post(client):
     login(client)
     title = generate_post(client)["post"]["title"]
@@ -172,9 +188,12 @@ def test_get_urls(client):
     assert response.status_code == 200
     response = client.get(f"/post/edit/{post.id}/")
     assert response.status_code == 200
+    response = client.get(f"/post/manage/")
+    assert response.status_code == 200
 
 
-def test_comments(client):
+def test_comments(client_with_request_ctx):
+    client = client_with_request_ctx
     login(client)
     title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
@@ -186,12 +205,21 @@ def test_comments(client):
     comment = Comment.query.filter_by(body=data["body"]).first()
 
     # test replying comments
+    response1 = client.get(f"/post/{post.id}/?reply={comment.id}")
+    response2 = client.get(f"/reply/comment/{comment.id}/", follow_redirects=True)
+    print(f"/post/{post.id}/?reply={comment.id}")
+    assert response1.get_data() == response2.get_data()
+
     reply = {"body": "reply"}
-    response = client.post(
-        f"/post/{post.id}/?reply={comment.id}", data=reply, follow_redirects=True
-    )
+    response = client.post(f"/post/{post.id}/?reply={comment.id}", data=reply,
+                           follow_redirects=True)
     assert response.status_code == 200
     assert len(comment.replies) == 1
+
+    # test deleting comments
+    response = client.post(f"/comment/delete/{comment.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert Comment.query.get(comment.id) is None
 
 
 def test_comment_posts_of_deleted_users(client):

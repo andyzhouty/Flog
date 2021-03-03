@@ -11,22 +11,6 @@ from .helpers import generate_post, login
 fake = Faker()
 
 
-def test_admin_edit_article(client):
-    login(client)
-    post_data = generate_post(client)
-    title = post_data["post"]["title"]
-    post_id = Post.query.filter_by(title=title).first().id
-    response = client.get(f"/post/edit/{post_id}/")
-    response_data = response.get_data(as_text=True)
-    # test if the old content exists in the edit page.
-    assert post_data["text"] in response_data
-    data = {"title": "new title", "content": "new content"}
-    response = client.post(f"/post/edit/{post_id}/", data=data, follow_redirects=True)
-    post = Post.query.get(post_id)
-    assert post is not None
-    assert post.title == data["title"]
-
-
 def test_admin_edit_user_profile(client):
     login(client)
     response = client.get("/admin/user/all/")
