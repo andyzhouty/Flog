@@ -394,7 +394,7 @@ class User(db.Model, UserMixin):
         return s.dumps({"id": self.id}).decode("ascii")
 
     @staticmethod
-    def verify_auth_token_api_v2(token: str):
+    def verify_auth_token_api(token: str):
         s = Serializer(current_app.config["SECRET_KEY"])
         try:
             data = s.loads(token.encode("ascii"))

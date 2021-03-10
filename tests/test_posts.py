@@ -56,7 +56,7 @@ def test_collect_uncollect(client):
 
     post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
     while post_not_private is None:  # ensure the post exists
-        fakes.posts(2)
+        fakes.posts(5)
         post_not_private = Post.query.filter(
             Post.author != admin, ~Post.private
         ).first()
@@ -83,7 +83,7 @@ def test_collect_uncollect(client):
 
     private_post = Post.query.filter(Post.author != admin, Post.private).first()
     while private_post is None:  # same as the while loop above
-        fakes.posts(2)
+        fakes.posts(5)
         private_post = Post.query.filter(Post.author != admin, Post.private).first()
     post_id = private_post.id
     data = client.get(f"/post/collect/{post_id}", follow_redirects=True).get_data(
@@ -107,7 +107,7 @@ def test_collect_uncollect(client):
 def test_view_post(client):
     post = Post.query.filter(~Post.private).first()
     while post is None:
-        fakes.posts(1)
+        fakes.posts(5)
         post = Post.query.filter(~Post.private).first()
     data = get_response_and_data_of_post(client, post.id)[1]
     print(data)
@@ -115,7 +115,7 @@ def test_view_post(client):
 
     post_private = Post.query.filter(Post.private).first()
     while post_private is None:
-        fakes.posts(1)
+        fakes.posts(5)
         post_private = Post.query.filter(Post.private).first()
     data = get_response_and_data_of_post(client, post_private.id)[1]
     assert "The author has set this post to invisible." in data
@@ -127,7 +127,7 @@ def test_view_post(client):
 
     post_not_private = Post.query.filter(Post.author != admin, ~Post.private).first()
     while post_not_private is None:  # ensure the post exists
-        fakes.posts(1)
+        fakes.posts(5)
         post_not_private = Post.query.filter(
             Post.author != admin, ~Post.private
         ).first()
@@ -137,7 +137,7 @@ def test_view_post(client):
     # test if admin users can see other users' private postss
     post_private = Post.query.filter(Post.author != admin, Post.private).first()
     while post_private is None:
-        fakes.posts(1)
+        fakes.posts(5)
         post_private = Post.query.filter(Post.author != admin, Post.private).first()
     data = get_response_and_data_of_post(client, post_private.id)[1]
     assert post_private.content in data

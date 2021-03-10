@@ -6,7 +6,7 @@ import json
 import random
 from flask.globals import current_app
 from flog.models import User, Comment, Post, Image
-from tests.helpers import register, get_api_v1_headers, api_upload_image
+from tests.helpers import register, get_api_v1_headers, api_upload_image, b64encode
 from flog import fakes as fake
 
 
@@ -19,6 +19,20 @@ def test_api_index(client):
 def test_no_auth(client):
     response = client.get("/api/v1/post/1/")
     assert response.status_code == 401
+
+
+def test_get_token(client):
+    register(client)
+    response = client.get("/api/v1/auth/token/", headers=get_api_v1_headers())
+    assert response.status_code == 200
+    token = response.get_json().get("access_token")
+    headers = {
+        "Authorization": "Basic " + b64encode(f"{token}:".encode("utf-8")).decode("utf-8"),
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+    response = client.get("/api/v1/post/1/", headers=headers)
+    assert response.status_code == 200
 
 
 def test_posts(client):

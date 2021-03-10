@@ -11,7 +11,7 @@ from .models import db, Post, Feedback, User, Role, Comment, Notification, Group
 fake = Faker()
 
 
-def users(count: int = 2) -> None:
+def users(count: int = 10) -> None:
     """Generates fake users"""
     for i in range(count):
         name = fake.name()
@@ -31,21 +31,36 @@ def users(count: int = 2) -> None:
     db.session.commit()
 
 
-def posts(count: int = 2) -> None:
+def posts(count: int = 10) -> None:
     """Generates fake posts"""
-    for i in range(count):
+    not_private = Post(
+        title=fake.word() + " " + fake.word(),
+        content=fake.text(randint(100, 300)),
+        timestamp=fake.date_time_this_year(),
+        author=User.query.get(randint(1, User.query.count())),
+        private=False,
+    )
+    private = Post(
+        title=fake.word() + " " + fake.word(),
+        content=fake.text(randint(100, 300)),
+        timestamp=fake.date_time_this_year(),
+        author=User.query.get(randint(1, User.query.count())),
+        private=False,
+    )
+    db.session.add_all([not_private, private])
+    for i in range(count - 2):
         post = Post(
             title=fake.word() + " " + fake.word(),
             content=fake.text(randint(100, 300)),
             timestamp=fake.date_time_this_year(),
+            author=User.query.get(randint(1, User.query.count())),
             private=bool(randint(0, 1)),
         )
-        post.author = User.query.get(randint(1, User.query.count()))
         db.session.add(post)
     db.session.commit()
 
 
-def comments(count: int = 2) -> None:
+def comments(count: int = 10) -> None:
     """Generates fake comments for posts."""
     for i in range(count):
         comment = Comment(
@@ -57,7 +72,7 @@ def comments(count: int = 2) -> None:
     db.session.commit()
 
 
-def feedbacks(count: int = 2) -> None:
+def feedbacks(count: int = 10) -> None:
     """Generates fake feedbacks"""
     for i in range(count):
         feedback = Feedback(
@@ -69,7 +84,7 @@ def feedbacks(count: int = 2) -> None:
     db.session.commit()
 
 
-def follows(count: int = 20) -> None:
+def follows(count: int = 100) -> None:
     """Generates fake follow relationships"""
     admin_role = Role.query.filter_by(name="Administrator").first()
     admin = User.query.filter_by(role=admin_role).first()

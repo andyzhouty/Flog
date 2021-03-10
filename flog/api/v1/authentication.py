@@ -8,13 +8,15 @@ auth = HTTPBasicAuth()
 
 @auth.verify_password
 def verify_password_or_token(username_or_token, password):
+    print(username_or_token)
     if username_or_token == "":
         return False
+    if password == "":
+        g.current_user = User.verify_auth_token_api(username_or_token)
+        return g.current_user is not None
     user = User.query.filter_by(username=username_or_token).first()
     if not user:
-        user = User.verify_auth_token_api_v2(username_or_token)
-        g.current_user = user
-        return bool(user)
+        return False
     g.current_user = user
     return user.verify_password(password)
 

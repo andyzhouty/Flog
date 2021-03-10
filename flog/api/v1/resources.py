@@ -69,9 +69,9 @@ class PostAPI(MethodView):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
         if (
-            not post.private
+            (not post.private)
             or g.current_user.is_administrator()
-            or post.author == g.current_user
+            or (post.author == g.current_user)
         ):
             return jsonify(post_schema(post))
         else:
@@ -201,7 +201,7 @@ class TokenAPI(MethodView):
     decorators = [auth.login_required]
 
     def get(self):
-        return g.current_user.gen_api_auth_token()
+        return dict(access_token=g.current_user.gen_api_auth_token(), expires_in=3600)
 
 
 class NotificationAPI(MethodView):
