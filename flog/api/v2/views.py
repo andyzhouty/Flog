@@ -59,12 +59,41 @@ api_v2.add_url_rule(
     methods=["GET"],
 )
 api_v2.add_url_rule(
-    "/image/upload/",
-    view_func=ImageAPI.as_view("image"),
-    methods=["POST"]
+    "/image/upload/", view_func=ImageAPI.as_view("image"), methods=["POST"]
 )
 api_v2.add_url_rule(
     "/image/<int:image_id>/",
     view_func=ImageAPI.as_view("image_delete"),
-    methods=["DELETE"]
+    methods=["DELETE"],
 )
+
+
+# folder-like urls
+@api_v2.route("/post/<int:post_id>/comments/")
+def comments_of_a_post(post_id: int):
+    post = Post.query.get_or_404(post_id)
+    return jsonify([comment_schema(c) for c in post.comments])
+
+
+@api_v2.route("/user/<int:user_id>/posts/")
+def posts_of_an_author(user_id: int):
+    user = User.query.get_or_404(user_id)
+    return jsonify([post_schema(p) for p in user.posts])
+
+
+@api_v2.route("/user/<int:user_id>/followers/")
+def followers(user_id: int):
+    user = User.query.get_or_404(user_id)
+    return jsonify([user_schema(f.follower) for f in user.followers])
+
+
+@api_v2.route("/user/<int:user_id>/following/")
+def following(user_id: int):
+    user = User.query.get_or_404(user_id)
+    return jsonify([user_schema(f.followed) for f in user.following])
+
+
+@api_v2.route("/user/<int:user_id>/comments/")
+def comments_of_a_user(user_id: int):
+    user = User.query.get_or_404(user_id)
+    return jsonify([comment_schema(c) for c in user.comments])

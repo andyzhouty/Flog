@@ -313,3 +313,54 @@ def test_image(client):
     )
     assert response.status_code == 204
     assert Image.query.get(image_id) is None
+
+
+def test_folder_like_urls(client):
+    register(client)
+    # create a post first
+    response = client.post(
+        "/api/v2/post/new/",
+        headers=get_api_v2_headers(client),
+        data=json.dumps(
+            {"content": "<p>body of the post</p>", "title": "hello", "private": False}
+        ),
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    post_id = data.get("id")
+
+    user_id = User.query.filter_by(username="test").first().id
+    response = client.get(f"/api/v2/user/{user_id}/posts/", headers=get_api_v2_headers(client))
+    assert response.status_code == 200
+    posts = response.get_json()
+    assert posts[0].get("id") == post_id
+
+    data = {"body": "comment content", "post_id": post_id}
+    client.post(
+        "/api/v2/comment/new/",
+        data=json.dumps(data),
+        headers=get_api_v2_headers(client),
+    )
+    response = client.get(f"/api/v2/post/{post_id}/comments/", headers=get_api_v2_headers(client))
+    assert response.status_code == 200
+    comments = response.get_json()
+    assert comments[0].get("body") == "comment content"
+
+    response = client.get(f"/api/v2/user/{user_id}/comments/", headers=get_api_v2_headers(client))
+    assert response.status_code == 200
+    comments = response.get_json()
+    assert comments[0].get("body") == "comment content"
+
+    # register a user and follow it
+    u2 = User.query.filter(User.username != "test").first()
+    user = User.query.get(user_id)
+    user.follow(u2)
+    print(user.following[0])
+
+    response = client.get(f"/api/v2/user/{user_id}/following/", headers=get_api_v2_headers(client))
+    following = response.get_json()
+    assert following[0].get("username") == u2.username
+
+    response = client.get(f"/api/v2/user/{u2.id}/followers/", headers=get_api_v2_headers(client))
+    u2_followers = response.get_json()
+    assert "test" in [u["username"] for u in u2_followers]

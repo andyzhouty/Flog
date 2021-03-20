@@ -46,6 +46,9 @@ class Follow(db.Model):
     followed = db.relationship(
         "User", foreign_keys=[followed_id], back_populates="followers", lazy="joined"
     )
+    
+    def __repr__(self):
+        return f"<Follow follower: '{self.follower}' following: '{self.followed}'"
 
 
 class Post(db.Model):

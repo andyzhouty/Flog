@@ -11,6 +11,7 @@ COPY flog/ flog/
 COPY migrations/ migrations/
 COPY wsgi.py ./
 COPY docker_boot.sh ./
+COPY tests/ tests/
 RUN chmod +x docker_boot.sh
 
 ENV FLASK_APP wsgi.py

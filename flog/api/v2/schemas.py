@@ -74,7 +74,7 @@ def comment_schema(comment: Comment) -> dict:
         dict: comment schema
     """
     comment_schema = dict(
-        kind="Comments",
+        kind="Comment",
         author=user_schema(comment.author),
         post=post_schema(comment.post, False),
         id=comment.id,

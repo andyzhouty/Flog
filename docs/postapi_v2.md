@@ -89,3 +89,48 @@
     "url": "http://127.0.0.1:5000/api/v2/post/15/"
   }
   ```
+
+/api/v2/post/*int:post_id*/comments/
+
+- **GET** Returns the comments of a certain post
+  Successful Status: 200
+
+  Example return value:
+
+  ```json
+  [
+    {
+      "author": {
+        "id": 10,
+        "kind": "User",
+        "last_seen": "Sat, 20 Mar 2021 10:30:05 GMT",
+        "member_since": "Sat, 20 Mar 2021 10:30:05 GMT",
+        "name": "Scott Jimenez",
+        "url": "http://localhost:5000/api/v2/user/10/",
+        "username": "scottjimenez"
+      },
+      "body": "Child not reflect meet. History western onto several could your risk. Air any however response sell.\nDegree central yet color brother lay poor government. Peace different try.",
+      "id": 17,
+      "kind": "Comments",
+      "post": {
+        "author": {
+          "id": 10,
+          "kind": "User",
+          "last_seen": "Sat, 20 Mar 2021 10:30:05 GMT",
+          "member_since": "Sat, 20 Mar 2021 10:30:05 GMT",
+          "name": "Scott Jimenez",
+          "url": "http://localhost:5000/api/v2/user/10/",
+          "username": "scottjimenez"
+        },
+        "comments_count": 1,
+        "content": "Mother song professional guy. Writer team director policy follow thought election. Continue prevent only than couple pretty.",
+        "id": 2,
+        "kind": "Post",
+        "private": false,
+        "title": "event focus",
+        "url": "http://localhost:5000/api/v2/post/2/"
+      },
+      "url": "http://localhost:5000/api/v2/comment/17/"
+    }
+  ]
+  ```
