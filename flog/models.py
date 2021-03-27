@@ -12,7 +12,6 @@ from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
-
 group_user_table = db.Table(
     "group_user",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
@@ -328,6 +327,8 @@ class User(db.Model, UserMixin):
     )
     managed_groups = db.relationship("Group", back_populates="manager")
 
+    custom_avatar_url = db.Column(db.String(128))
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -357,7 +358,9 @@ class User(db.Model, UserMixin):
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
 
-    def gravatar(self, size=100, default="identicon", rating="g"):
+    def avatar_url(self, size=100, default="identicon", rating="g"):
+        if self.custom_avatar_url:
+            return self.custom_avatar_url
         url = "https://sdn.geekzu.org/avatar" # use gravatar cdn by geekzu.cn
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}&d={default}&r={rating}"

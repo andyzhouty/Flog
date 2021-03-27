@@ -128,7 +128,7 @@ MIT License
     <li class="list-group-item d-flex">
         <div style="float: left">
             <a href="{{ url_for('user.user_profile', username=user.username) }}">
-                <img src="{{ user.gravatar() }}" class="profile-popover"
+                <img src="{{ user.avatar_url() }}" class="profile-popover"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
             <a style="font-size: 2em"
                href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>

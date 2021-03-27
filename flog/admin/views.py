@@ -76,6 +76,7 @@ def edit_user_profile(id):
         user.name = form.name.data
         user.location = form.location.data
         user.about_me = form.about_me.data
+        user.custom_avatar_url = form.custom_avatar_url.data
         db.session.add(user)
         db.session.commit()
         flash(_("%s's profile has been updated." % user.username), "info")
@@ -87,6 +88,7 @@ def edit_user_profile(id):
     form.name.data = user.name
     form.location.data = user.location
     form.about_me.data = user.about_me
+    form.custom_avatar_url.data = user.avatar_url()
     return render_template("admin/edit_user_profile.html", form=form, user=user)
 
 

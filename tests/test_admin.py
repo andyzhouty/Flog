@@ -24,6 +24,7 @@ def test_admin_edit_user_profile(client):
         "name": fake.name(),
         "location": fake.address(),
         "about_me": fake.text(),
+        "custom_avatar_url": "https://example.com/test.png"
     }
     response = client.post(
         f"/admin/user/{user_id}/profile/edit/", data=data, follow_redirects=True
@@ -33,3 +34,4 @@ def test_admin_edit_user_profile(client):
     assert data["username"] in response_data
     assert data["about_me"] in response_data
     assert data["location"] in response_data
+    assert data["custom_avatar_url"] in response_data

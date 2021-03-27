@@ -78,12 +78,14 @@ def test_edit_profile(client):
         "name": fake.name(),
         "location": fake.address(),
         "about_me": fake.sentence(),
+        "custom_avatar_url": "https://example.com/test.png"
     }
     response = client.post("/profile/edit/", data=data, follow_redirects=True)
     user = User.query.filter_by(username="abcd").first()
     assert user.name == data["name"]
     assert user.location == data["location"]
     assert user.about_me == data["about_me"]
+    assert user.custom_avatar_url == data["custom_avatar_url"]
     logout(client)
 
     login(client)

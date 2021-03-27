@@ -36,6 +36,7 @@ def edit_profile():
             current_user.name = form.name.data
             current_user.location = form.location.data
             current_user.about_me = form.about_me.data
+            current_user.custom_avatar_url = form.custom_avatar_url.data
             db.session.add(current_user._get_current_object())
             db.session.commit()
             flash(_("Your profile has been updated!"), "success")

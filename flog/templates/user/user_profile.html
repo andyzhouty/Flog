@@ -8,7 +8,7 @@
 {% block page_content %}
 <div class="row container">
     <div class="col-lg-2">
-        <img class="img-fluid" src="{{ user.gravatar() }}" width="200px" height="200px">
+        <img class="img-fluid" src="{{ user.avatar_url() }}" width="200px" height="200px">
     </div>
     <div class="col-lg-10">
         <h1>{{ user.username }}</h1>{{ role_label_of(user) }}

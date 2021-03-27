@@ -7,12 +7,13 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField
 from wtforms.fields.core import BooleanField, StringField, SelectField
 from wtforms.fields.simple import TextAreaField
-from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError
+from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError, URL
 from ..models import Role, User
 
 dr_message = _l("Please fill out this field.")
 l_message = _l("Field must be between %(min)d and %(max)d characters long.")
 e_message = _l("Invalid email.")
+u_message = _l("Invalid url.")
 
 
 class EditProfileAdminForm(FlaskForm):
@@ -39,6 +40,7 @@ class EditProfileAdminForm(FlaskForm):
     name = StringField(_l("Real Name"), validators=[Length(0, 64, l_message)])
     location = StringField(_l("Location"), validators=[Length(0, 64, l_message)])
     about_me = TextAreaField(_l("About me"))
+    custom_avatar_url = StringField(_l("Avatar URL"), validators=[URL(True, u_message)])
     submit = SubmitField(_l("Submit"))
 
     def __init__(self, user, *args, **kwargs):

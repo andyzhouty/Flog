@@ -81,3 +81,9 @@ def test_column(client):
     user.columns.append(column)
     assert column in user.columns
     assert post in user.posts
+
+
+def test_avatar_url(client):
+    user = User(email="test@example.com")
+    user.custom_avatar_url = "https://example.com/test.png"
+    assert user.avatar_url() == "https://example.com/test.png"

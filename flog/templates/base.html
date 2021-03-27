@@ -56,7 +56,7 @@ MIT License
                             <a href="{{ url_for('user.user_profile', username=current_user.username) }}"
                                class="nav-link">
                                 {# Display user identicon as a circle here #}
-                                <img src="{{ current_user.gravatar(size=30) }}" alt="identicon" class="rounded-circle">
+                                <img src="{{ current_user.avatar_url(size=30) }}" alt="identicon" class="rounded-circle">
                             </a>
                         </li>
                         <li class="nav-item dropdown">
