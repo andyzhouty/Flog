@@ -327,7 +327,7 @@ class User(db.Model, UserMixin):
     )
     managed_groups = db.relationship("Group", back_populates="manager")
 
-    custom_avatar_url = db.Column(db.String(128))
+    custom_avatar_url = db.Column(db.String(128), default="")
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
