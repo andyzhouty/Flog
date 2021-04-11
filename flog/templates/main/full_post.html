@@ -31,17 +31,18 @@ MIT License
                 {{ post.content | safe }}
             </div>
             {% if post.columns %}
-            <p class="text-muted">
-                This post belongs to
-                {% for column in post.columns[:-1] %}
-                    <a href="{{ url_for('main.view_column', id=column.id) }}">
-                        Column &quot;{{ column.name }}&quot;
-                    </a>,
-                {% endfor %} and
-                <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
-                    Column &quot;{{ post.columns[-1].name }}&quot;
-                </a>.
-            </p>
+                <p class="small">
+                    {{ _("This post belongs to") }}
+                    {% for column in post.columns[:-1] %}
+                        <a href="{{ url_for('main.view_column', id=column.id) }}">
+                            {{ _("Column") }} 「{{ column.name }}」
+                        </a>,
+                    {% endfor %}
+                    {% if post.columns | length > 1%} {{ _("and") }}{% endif %}
+                    <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
+                        {{ _("Column") }} 「{{ post.columns[-1].name }}」
+                    </a>.
+                </p>
             {% endif %}
             {{ post_actions(post, show_collectors=True) }}
             {% if current_user.is_authenticated %}
