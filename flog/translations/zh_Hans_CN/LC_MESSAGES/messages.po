@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-11 09:04+0800\n"
+"POT-Creation-Date: 2021-04-11 09:20+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -317,66 +317,66 @@ msgstr "专栏名称"
 msgid "Posts to add (optional)"
 msgstr "你想把哪些文章加入这个专栏（可选）？"
 
-#: flog/main/views.py:83
+#: flog/main/views.py:76
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:108
+#: flog/main/views.py:101
 msgid "Blocked users cannot post a comment!"
 msgstr "被封禁的用户不能发评论！"
 
-#: flog/main/views.py:111 flog/templates/main/_comments.html:79
+#: flog/main/views.py:104 flog/templates/main/_comments.html:79
 msgid "You cannot comment a private post!"
 msgstr "你不能评论私有的文章!"
 
-#: flog/main/views.py:126
+#: flog/main/views.py:119
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:142
+#: flog/main/views.py:135
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:187
+#: flog/main/views.py:180
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:209
+#: flog/main/views.py:202
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:232
+#: flog/main/views.py:225
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:234
+#: flog/main/views.py:227
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:236
+#: flog/main/views.py:229
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:239
+#: flog/main/views.py:232
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:251
+#: flog/main/views.py:244
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:269
+#: flog/main/views.py:262
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
-#: flog/main/views.py:311
+#: flog/main/views.py:304
 msgid "You can't add others' posts to your column!"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:316
+#: flog/main/views.py:309
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
@@ -527,16 +527,17 @@ msgstr "已删除的Flog用户"
 msgid "Read More"
 msgstr "阅读更多"
 
-#: flog/templates/macros.html:205
+#: flog/templates/macros.html:205 flog/templates/main/full_post.html:35
 msgid "This post belongs to"
 msgstr "这篇文章属于"
 
 #: flog/templates/macros.html:208 flog/templates/macros.html:213
+#: flog/templates/main/full_post.html:38 flog/templates/main/full_post.html:43
 #: flog/templates/main/search.html:37
 msgid "Column"
 msgstr "专栏"
 
-#: flog/templates/macros.html:211
+#: flog/templates/macros.html:211 flog/templates/main/full_post.html:41
 msgid "and"
 msgstr "和"
 
