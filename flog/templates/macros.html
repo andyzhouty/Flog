@@ -202,14 +202,15 @@ MIT License
             </small>
             {% if post.columns %}
                 <p class="small">
-                    This post belongs to
+                    {{ _("This post belongs to") }}
                     {% for column in post.columns[:-1] %}
                         <a href="{{ url_for('main.view_column', id=column.id) }}">
-                            Column &quot;{{ column.name }}&quot;
+                            {{ _("Column") }} 「{{ column.name }}」
                         </a>,
-                    {% endfor %} and
+                    {% endfor %}
+                    {% if post.columns | length > 1%} {{ _("and") }}{% endif %}
                     <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
-                        Column &quot;{{ post.columns[-1].name }}&quot;
+                        {{ _("Column") }} 「{{ post.columns[-1].name }}」
                     </a>.
                 </p>
             {% endif %}
