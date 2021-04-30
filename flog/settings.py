@@ -87,7 +87,7 @@ class Base:
         "img", "strong", "em", "s", "i", "b",
         "div", "span", "br", "ol", "ul", "li",
         "table", "thead", "tbody", "th", "td", "tr",
-        "pre", "code", "iframe"
+        "pre", "code", "iframe", "sub", "sup"
     ]
 
     FLOG_ALLOWED_HTML_ATTRIBUTES = [
