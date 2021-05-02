@@ -7,7 +7,6 @@
     :license: MIT License
 """
 from flog.utils import get_image_path_and_url
-from os.path import join, exists
 from flask import g, request, current_app, jsonify, url_for
 from flask.views import MethodView
 from .errors import ValidationError, bad_request, forbidden  # noqa

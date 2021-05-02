@@ -70,6 +70,8 @@ bleach = "*"
 flask-apispec = "*"
 flask-caching = "*"
 flask-compress = "*"
+apiflask = "*"
+marshmallow-sqlalchemy = "*"
 
 [pipenv]
 allow_prereleases = true

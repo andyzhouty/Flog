@@ -5,6 +5,7 @@ Copyright(c) 2021 Andy Zhou
 import os
 import logging
 from logging.handlers import RotatingFileHandler
+from apiflask import APIFlask
 from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
@@ -30,6 +31,7 @@ from .admin import admin_bp
 from .ajax import ajax_bp
 from .api.v1 import api_v1
 from .api.v2 import api_v2
+from .api.v3 import api_v3
 from .auth import auth_bp
 from .feedback import feedback_bp
 from .image import image_bp
@@ -44,7 +46,7 @@ from .user import user_bp
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_CONFIG", "development")
-    app = Flask("flog")
+    app = APIFlask("flog")
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
@@ -88,6 +90,7 @@ def register_extensions(app: Flask) -> None:
     csrf.init_app(app)
     csrf.exempt(api_v1)
     csrf.exempt(api_v2)
+    csrf.exempt(api_v3)
     db.init_app(app)
     login_manager.login_view = "auth.login"
     login_manager.login_message = _l("Please log in to access this page")
@@ -106,6 +109,7 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(api_v1, url_prefix="/api/v1")
     app.register_blueprint(api_v2, url_prefix="/api/v2")
+    app.register_blueprint(api_v3, url_prefix="/api/v3")
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(image_bp, url_prefix="/image")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
