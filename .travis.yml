@@ -5,6 +5,6 @@ python:
   - "3.8"
   - "3.9"
 install:
-  - pip install -r requirements/dev.txt
+  - pip install -r requirements/dev.txt -i https://pypi.org/simple/
 script:
   - flask translate compile && pytest
