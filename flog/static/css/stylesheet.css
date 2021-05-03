@@ -30,9 +30,10 @@
 }
 
 .image-normal {
-    height: 100px !important;
+    max-height: 100px !important;
     width: auto !important;
 }
+
 .image-normal:hover {
     cursor: zoom-in;
 }

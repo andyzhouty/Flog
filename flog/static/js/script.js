@@ -53,7 +53,7 @@ function hide_profile_popover(e) {
 function update_notifications_count() {
     let $el = $('#notification-badge')
     $.get($el.data('href'), function (data) {
-        if (data.count == 0) {
+        if (data.count === 0) {
             $('#notification-badge').hide()
         } else {
             $el.show()
@@ -64,11 +64,11 @@ function update_notifications_count() {
 
 function largeImage(e) {
     let element = $(e.target);
-    let image_large = $('#image-large')
+    let image_large = $('#image-large');
     image_large.attr('src', element.attr('src'));
     $('.content').addClass('shadow');
     image_large.show();
-    $('#image-large').height = $(document).height
+    image_large.height = $(document).height
 }
 
 $(function () {

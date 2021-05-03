@@ -120,6 +120,25 @@ def get_api_v2_headers(
         "/api/v2/oauth/token/",
         data=dict(grant_type="password", username=username, password=password),
     )
+    return get_token_from_response(response, custom_token, **kwargs)
+
+
+def get_api_v3_headers(
+        client,
+        username: str = "test",
+        password: str = "password",
+        custom_token: str = None,
+        **kwargs,
+) -> dict:
+    """Returns auth headers for api v3"""
+    response = client.post(
+        "/api/v3/token/",
+        data=dict(username=username, password=password),
+    )
+    return get_token_from_response(response, custom_token, **kwargs)
+
+
+def get_token_from_response(response, custom_token: str, **kwargs):
     data = response.get_json()
     token = data.get("access_token")
     if custom_token is not None:
