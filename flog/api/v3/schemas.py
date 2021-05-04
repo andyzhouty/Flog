@@ -3,8 +3,8 @@ MIT License
 Copyright(c) 2021 Andy Zhou
 """
 from apiflask import Schema
-from apiflask.fields import Integer, Boolean, String, URL, DateTime, Email
-from marshmallow_sqlalchemy import SQLAlchemySchema
+from apiflask.fields import Integer, Boolean, String, URL, DateTime, Email, Nested, List
+from flog.extensions import ma
 
 
 class IndexSchema(Schema):
@@ -12,7 +12,7 @@ class IndexSchema(Schema):
     api_base_url = URL()
 
 
-class UserOutSchema(SQLAlchemySchema):
+class UserOutSchema(Schema):
     id = Integer()
     username = String()
     name = String()
@@ -22,6 +22,7 @@ class UserOutSchema(SQLAlchemySchema):
     blocked = Boolean()
     member_since = DateTime()
     last_seen = DateTime()
+    self = ma.URLFor(".user", values=dict(user_id="<id>"))
 
 
 class UserInSchema(Schema):
@@ -42,3 +43,20 @@ class TokenOutSchema(Schema):
     access_token = String()
     expires_in = Integer()
     token_type = String()
+
+
+class CommentOutSchema(Schema):
+    id = Integer()
+    body = String()
+    author = Nested(UserOutSchema)
+    post = Nested(lambda: PostOutSchema(only=("id", "title", "author",)))
+    self = ma.URLFor(".comment", values=dict(comment_id="<id>"))
+
+
+class PostOutSchema(Schema):
+    id = Integer()
+    title = String()
+    content = String()
+    author = Nested(UserOutSchema)
+    comments = List(Nested(CommentOutSchema, exclude=("post",)))
+    self = ma.URLFor(".post", values=dict(post_id="<id>"))

@@ -17,6 +17,7 @@ from .extensions import (
     csrf,
     db,
     login_manager,
+    ma,
     mail,
     migrate,
     moment,
@@ -95,6 +96,7 @@ def register_extensions(app: Flask) -> None:
     login_manager.login_view = "auth.login"
     login_manager.login_message = _l("Please log in to access this page")
     login_manager.init_app(app)
+    ma.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
     moment.init_app(app)

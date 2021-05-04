@@ -72,6 +72,7 @@ flask-caching = "*"
 flask-compress = "*"
 apiflask = "*"
 marshmallow-sqlalchemy = "*"
+flask-marshmallow = "*"
 
 [pipenv]
 allow_prereleases = true

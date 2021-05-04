@@ -132,7 +132,7 @@ def get_api_v3_headers(
 ) -> dict:
     """Returns auth headers for api v3"""
     response = client.post(
-        "/api/v3/token/",
+        "/api/v3/token",
         data=dict(username=username, password=password),
     )
     return get_token_from_response(response, custom_token, **kwargs)

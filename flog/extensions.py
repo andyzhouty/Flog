@@ -10,6 +10,7 @@ from flask_ckeditor import CKEditor
 from flask_compress import Compress
 from flask_login import LoginManager, current_user
 from flask_mail import Mail
+from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_share import Share
@@ -23,6 +24,7 @@ compress = Compress()
 csrf = CSRFProtect()
 db = SQLAlchemy()
 login_manager = LoginManager()
+ma = Marshmallow()
 mail = Mail()
 migrate = Migrate()
 moment = Moment()
