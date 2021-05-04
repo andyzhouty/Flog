@@ -46,7 +46,12 @@
 
 ## API 文档
 
-[ReadTheDocs](https://flog.readthedocs.io/en/latest/?)
+api v1 & v2
+[ReadTheDocs](https://flog.readthedocs.io/en/latest/)
+
+api v3
+[Swagger文档](https://flog.pythonanywhere.com/docs)
+[Redoc](https://flog.pythonanywhere.com/redoc)
 
 ## 在本地运行这个网站
 

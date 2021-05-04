@@ -56,7 +56,12 @@ It might use flask-apispec and flask-jwt-extended.
 
 ## Web API Documents
 
+api v1 & v2
 [ReadTheDocs](https://flog.readthedocs.io/en/latest/)
+
+api v3
+[Swagger Doc](https://flog.pythonanywhere.com/docs)
+[Redoc](https://flog.pythonanywhere.com/redoc)
 
 ## Run Flog locally
 
