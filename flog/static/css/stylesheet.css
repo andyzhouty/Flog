@@ -31,6 +31,8 @@
 
 .image-normal {
     max-height: 100px !important;
+    max-width: 500px !important;
+    height: auto !important;
     width: auto !important;
 }
 
