@@ -3,10 +3,10 @@ MIT License
 Copyright(c) 2021 Andy Zhou
 """
 from apiflask import input, output, abort
-from flask import url_for, jsonify
+from flask import url_for, jsonify, g, request
 from flask.views import MethodView
 from .schemas import *
-from flog.models import User, Post, Comment
+from flog.models import db, User, Post, Comment
 from . import api_v3
 from .decorators import can_edit_post, can_edit_profile
 
@@ -86,15 +86,29 @@ class TokenAPI(MethodView):
 class PostAPI(MethodView):
     @output(PostOutSchema)
     def get(self, post_id: int):
-        return Post.query.get_or_404(post_id)
+        post = Post.query.get_or_404(post_id)
+        print(g.get("current_user"))
+        if post.private:
+            auth = request.headers.get("Authorization")
+            if auth:
+                if not auth.startswith("Bearer"):
+                    abort(403, "the post is private")
+                token = auth[7:]
+                user = User.verify_auth_token_api(token)
+                if user:
+                    if user.is_administrator() or post in user.posts:
+                        return post
+            abort(403, "the post is private")
+        return post
 
     @can_edit_post
-    @input(PostInSchema)
+    @input(PostInSchema(partial=True))
     @output(PostOutSchema)
-    def put(self, post_id: int, data: dict):
+    def put(self, post_id, data):
         post = Post.query.get_or_404(post_id)
         for attr, value in data.items():
             post.__setattr__(attr, value)
+        db.session.commit()
         return post
 
 

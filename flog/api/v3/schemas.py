@@ -54,14 +54,16 @@ class CommentOutSchema(Schema):
 
 
 class PostInSchema(Schema):
-    title = String()
-    content = String()
+    title = String(required=True)
+    content = String(required=True)
+    private = Boolean(default=False)
 
 
 class PostOutSchema(Schema):
     id = Integer()
     title = String()
     content = String()
+    private = Boolean()
     author = Nested(UserOutSchema)
     comments = List(Nested(CommentOutSchema, exclude=("post",)))
     self = ma.URLFor(".post", values=dict(post_id="<id>"))

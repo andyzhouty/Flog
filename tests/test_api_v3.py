@@ -42,9 +42,11 @@ def test_user(client):
         "name": "Real Name",
         "about_me": "A test user.",
         "location": "Nowhere",
-        "password": "new_password"
+        "password": "new_password",
     }
-    response = client.put(f"/api/v3/user/{user.id}", json=user_data, headers=get_api_v3_headers(client))
+    response = client.put(
+        f"/api/v3/user/{user.id}", json=user_data, headers=get_api_v3_headers(client)
+    )
     assert response.status_code == 200
     assert user.name == user_data["name"]
     assert user.verify_password("new_password")
@@ -55,19 +57,39 @@ def test_user(client):
         headers=get_api_v3_headers(
             client,
             username=current_app.config["FLOG_ADMIN"],
-            password=current_app.config["FLOG_ADMIN_PASSWORD"]
-        )
+            password=current_app.config["FLOG_ADMIN_PASSWORD"],
+        ),
     )
     assert response.status_code == 200
     assert user.locked
 
 
 def test_post(client):
-    title = generate_post(client)["post"]["title"]
+    register(client)
+    title = generate_post(client, username="test", password="password")["post"]["title"]
     post = Post.query.filter_by(title=title).first()
     response = client.get(f"/api/v3/post/{post.id}")
     data = response.get_json()
     assert data["title"] == title
+    put_data = {"title": "ABCD", "content": "<p>test</p>", "private": True}
+    response = client.put(
+        f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client), json=put_data
+    )
+    data = response.get_json()
+    assert data["private"] is True
+
+    response = client.get(f"/api/v3/post/{post.id}")
+    assert response.status_code == 403
+
+    response = client.get(
+        f"/api/v3/post/{post.id}",
+        headers=get_api_v3_headers(
+            client,
+            username=current_app.config["FLOG_ADMIN"],
+            password=current_app.config["FLOG_ADMIN_PASSWORD"],
+        )
+    )
+    assert response.status_code == 200
 
 
 def test_comments(client):

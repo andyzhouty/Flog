@@ -64,7 +64,6 @@ def create_post():
             content=cleaned_content,
             private=form.private.data,
         )
-        print("Here")
         for col_id in form.columns.data:
             column = Column.query.get(col_id)
             post.columns.append(column)
