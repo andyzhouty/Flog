@@ -53,6 +53,11 @@ class CommentOutSchema(Schema):
     self = ma.URLFor(".comment", values=dict(comment_id="<id>"))
 
 
+class PostInSchema(Schema):
+    title = String()
+    content = String()
+
+
 class PostOutSchema(Schema):
     id = Integer()
     title = String()

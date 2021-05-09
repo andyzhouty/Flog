@@ -14,5 +14,6 @@ def verify_token(token: str):
     user = User.verify_auth_token_api(token)
     if user:
         g.current_user = user
+        user.ping()
         return user
     return None

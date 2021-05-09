@@ -22,6 +22,7 @@ def validate_token(token):
     if user is None:
         return False
     g.current_user = user
+    user.ping()
     return True
 
 

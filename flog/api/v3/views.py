@@ -8,7 +8,7 @@ from flask.views import MethodView
 from .schemas import *
 from flog.models import User, Post, Comment
 from . import api_v3
-from .decorators import can_edit_profile
+from .decorators import can_edit_post, can_edit_profile
 
 
 @api_v3.route("", endpoint="index")
@@ -87,6 +87,15 @@ class PostAPI(MethodView):
     @output(PostOutSchema)
     def get(self, post_id: int):
         return Post.query.get_or_404(post_id)
+
+    @can_edit_post
+    @input(PostInSchema)
+    @output(PostOutSchema)
+    def put(self, post_id: int, data: dict):
+        post = Post.query.get_or_404(post_id)
+        for attr, value in data.items():
+            post.__setattr__(attr, value)
+        return post
 
 
 @api_v3.route("/comment/<int:comment_id>", endpoint="comment")

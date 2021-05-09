@@ -18,6 +18,7 @@ def verify_password_or_token(username_or_token, password):
     if not user:
         return False
     g.current_user = user
+    g.current_user.ping()
     return user.verify_password(password)
 
 
