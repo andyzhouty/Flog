@@ -45,11 +45,18 @@ class TokenOutSchema(Schema):
     token_type = String()
 
 
+class CommentInSchema(Schema):
+    body = String(required=True)
+    post_id = Integer(required=True)
+    reply_id = Integer()
+
+
 class CommentOutSchema(Schema):
     id = Integer()
     body = String()
     author = Nested(UserOutSchema)
     post = Nested(lambda: PostOutSchema(only=("id", "title", "author",)))
+    replying = Nested(lambda: CommentOutSchema(exclude=("replying",)))
     self = ma.URLFor(".comment", values=dict(comment_id="<id>"))
 
 

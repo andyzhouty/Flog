@@ -12,7 +12,7 @@ fake = Faker()
 
 
 def login(
-        client, username=os.getenv("FLOG_ADMIN"), password=os.getenv("FLOG_ADMIN_PASSWORD")
+    client, username=os.getenv("FLOG_ADMIN"), password=os.getenv("FLOG_ADMIN_PASSWORD")
 ):
     """Login helper function"""
     if username is None:
@@ -32,11 +32,11 @@ def logout(client):
 
 
 def register(
-        client,
-        name: str = "Test",
-        username: str = "test",
-        password: str = "password",
-        email: str = "test@example.com",
+    client,
+    name: str = "Test",
+    username: str = "test",
+    password: str = "password",
+    email: str = "test@example.com",
 ):
     """Register helper function"""
     return client.post(
@@ -52,14 +52,14 @@ def register(
     )
 
 
-def generate_post(client, title=fake.sentence(), text=fake.text(), **kwargs) -> dict:
+def generate_post(
+    client, title=fake.sentence(), text=fake.text(), **kwargs
+) -> dict:
     """Create a post for test use"""
     if kwargs.get("login") is not False:
         login(client, **kwargs)
-    data = {
-        "title": title,
-        "content": f"<p>{text}</p>",
-    }
+    data = {"title": title, "content": f"<p>{text}</p>"}
+    
     return {
         "response": client.post("/write/", data=data, follow_redirects=True),
         "post": data,
@@ -75,10 +75,7 @@ def generate_column(client, name=fake.word(), columns=None) -> dict:
         columns=columns,
     )
     response = client.post("/column/create/", data=data, follow_redirects=True)
-    return dict(
-        response=response,
-        column_name=name
-    )
+    return dict(response=response, column_name=name)
 
 
 def send_notification(client) -> None:
@@ -93,7 +90,7 @@ def send_notification(client) -> None:
 
 
 def get_api_v1_headers(
-        username: str = "test", password: str = "password", **kwargs
+    username: str = "test", password: str = "password", **kwargs
 ) -> dict:
     """Returns auth headers for api v1"""
     if kwargs.get("content_type"):
@@ -102,18 +99,18 @@ def get_api_v1_headers(
         content_type = "application/json"
     return {
         "Authorization": "Basic "
-                         + b64encode(f"{username}:{password}".encode("utf-8")).decode("utf-8"),
+        + b64encode(f"{username}:{password}".encode("utf-8")).decode("utf-8"),
         "Accept": "application/json",
-        "Content-Type": content_type
+        "Content-Type": content_type,
     }
 
 
 def get_api_v2_headers(
-        client,
-        username: str = "test",
-        password: str = "password",
-        custom_token: str = None,
-        **kwargs,
+    client,
+    username: str = "test",
+    password: str = "password",
+    custom_token: str = None,
+    **kwargs,
 ) -> dict:
     """Returns auth headers for api v2"""
     response = client.post(
@@ -124,11 +121,11 @@ def get_api_v2_headers(
 
 
 def get_api_v3_headers(
-        client,
-        username: str = "test",
-        password: str = "password",
-        custom_token: str = None,
-        **kwargs,
+    client,
+    username: str = "test",
+    password: str = "password",
+    custom_token: str = None,
+    **kwargs,
 ) -> dict:
     """Returns auth headers for api v3"""
     response = client.post(

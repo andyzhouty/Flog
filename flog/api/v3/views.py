@@ -2,13 +2,13 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from apiflask import input, output, abort
+from apiflask import input, output, abort, doc
 from flask import url_for, jsonify, g, request
 from flask.views import MethodView
 from .schemas import *
-from flog.models import db, User, Post, Comment
+from flog.models import db, User, Post, Comment, Permission
 from . import api_v3
-from .decorators import can_edit_post, can_edit_profile
+from .decorators import can_edit, permission_required
 
 
 @api_v3.route("", endpoint="index")
@@ -18,7 +18,7 @@ class IndexAPI(MethodView):
         """API Index"""
         return {
             "api_version": "3.0",
-            "api_base_url": url_for("api_v3.index", _external=True)
+            "api_base_url": url_for("api_v3.index", _external=True),
         }
 
 
@@ -29,7 +29,7 @@ class UserAPI(MethodView):
         """Return the schema of a certain user"""
         return User.query.get_or_404(user_id)
 
-    @can_edit_profile
+    @can_edit("profile")
     @input(UserInSchema(partial=True))
     @output(UserOutSchema)
     def put(self, user_id: int, data):
@@ -41,7 +41,7 @@ class UserAPI(MethodView):
             user.__setattr__(attr, value)
         return user
 
-    @can_edit_profile
+    @can_edit("profile")
     @output(UserOutSchema)
     def patch(self, user_id: int):
         """Lock or unlock a user"""
@@ -87,7 +87,7 @@ class PostAPI(MethodView):
     @output(PostOutSchema)
     def get(self, post_id: int):
         post = Post.query.get_or_404(post_id)
-        print(g.get("current_user"))
+
         if post.private:
             auth = request.headers.get("Authorization")
             if auth:
@@ -101,7 +101,7 @@ class PostAPI(MethodView):
             abort(403, "the post is private")
         return post
 
-    @can_edit_post
+    @can_edit("post")
     @input(PostInSchema(partial=True))
     @output(PostOutSchema)
     def put(self, post_id, data):
@@ -112,8 +112,66 @@ class PostAPI(MethodView):
         return post
 
 
+@api_v3.route("/post/add", endpoint="post_create")
+class PostAddAPI(MethodView):
+    @permission_required(Permission.WRITE)
+    @input(PostInSchema)
+    @output(PostOutSchema)
+    def post(self, data):
+        post = Post(author=g.current_user)
+        for attr, value in data.items():
+            post.__setattr__(attr, value)
+        db.session.add(post)
+        db.session.commit()
+        return post
+
+
 @api_v3.route("/comment/<int:comment_id>", endpoint="comment")
 class CommentAPI(MethodView):
     @output(CommentOutSchema)
     def get(self, comment_id: int):
         return Comment.query.get_or_404(comment_id)
+
+    @permission_required(Permission.COMMENT)
+    @can_edit("comment")
+    @input(CommentInSchema(partial=True))
+    @output(CommentOutSchema)
+    def put(self, comment_id: int, data):
+        comment = Comment.query.get_or_404(comment_id)
+        for attr, value in data.items():
+            if attr == "reply_id":
+                comment.replied = Comment.query.get_or_404(value)
+            if attr == "post_id":
+                post = Post.query.get_or_404(value)
+                if post.private:
+                    abort(400, "the post is private")
+                comment.post = post
+            comment.__setattr__(attr, value)
+        db.session.commit()
+        return comment
+
+
+@api_v3.route("/comment/add", endpoint="add_comment")
+class CommentAddAPI(MethodView):
+    @permission_required(Permission.COMMENT)
+    @input(CommentInSchema)
+    @output(CommentOutSchema)
+    def post(self, data):
+        comment = Comment(author=g.current_user)
+        for attr, value in data.items():
+            if attr == "reply_id":
+                comment.replied = Comment.query.get_or_404(value)
+            if attr == "post_id":
+                post = Post.query.get_or_404(value)
+                if post.private:
+                    abort(400, "the post is private")
+                comment.post = post
+                comment.replied = Comment.query.get_or_404(data["reply_id"])
+                if comment.replied not in comment.post.comments:
+                    abort(
+                        400,
+                        "the comment you want to reply does not belongs to the post",
+                    )
+            comment.__setattr__(attr, value)
+        db.session.add(comment)
+        return comment

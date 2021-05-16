@@ -73,7 +73,7 @@ def test_posts(client):
         data=json.dumps(post),
     )
     admin_post_id = response.get_json().get("id")
-    print(admin_post_id)
+    
 
     # test GET
     response = client.get(f"/api/v1/post/{post_id}/", headers=get_api_v1_headers())

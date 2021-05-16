@@ -8,7 +8,7 @@ auth = HTTPBasicAuth()
 
 @auth.verify_password
 def verify_password_or_token(username_or_token, password):
-    print(username_or_token)
+    
     if username_or_token == "":
         return False
     if password == "":

@@ -67,7 +67,7 @@ def create_post():
         for col_id in form.columns.data:
             column = Column.query.get(col_id)
             post.columns.append(column)
-            print(current_user.columns)
+            
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
@@ -128,7 +128,7 @@ def full_post(id: int):
         if replied_id:
             replied_comment = Comment.query.get_or_404(replied_id)
             kwargs["replied_comment"] = replied_comment
-            print(replied_comment)
+            
         return render_template("main/full_post.html", **kwargs)
     else:
         flash(_("The author has set this post to invisible."))
@@ -195,7 +195,6 @@ def edit_post(id):
         post.content = form.content.data
         post.timestamp = datetime.utcnow()
         post.private = form.private.data
-        db.session.add(post)
         db.session.commit()
         current_app.logger.info(f"Post id {id} editted.")
         flash(_("Edit Succeeded!"), "success")

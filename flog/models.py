@@ -358,7 +358,7 @@ class User(db.Model, UserMixin):
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
 
-    def avatar_url(self, size=100, default="identicon", rating="g"):
+    def avatar_url(self, size=30, default="identicon", rating="g"):
         if self.custom_avatar_url:
             return self.custom_avatar_url
         url = "https://sdn.geekzu.org/avatar" # use gravatar cdn by geekzu.cn

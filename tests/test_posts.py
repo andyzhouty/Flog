@@ -29,7 +29,7 @@ def test_create_post(client):
 
     col_name = generate_column(client)["column_name"]
     column = Column.query.filter_by(name=col_name).first()
-    print(column.author)
+    
     # test add post to column when submit
     title = fake.sentence()
     data = dict(
@@ -39,7 +39,7 @@ def test_create_post(client):
     )
     response = client.post("/write/", data=data, follow_redirects=True)
     assert response.status_code == 200
-    print(response.get_data(as_text=True))
+    
     post = Post.query.filter_by(title=title).first()
     admin = User.query.filter_by(
         role=Role.query.filter_by(name="Administrator").first()
@@ -110,7 +110,7 @@ def test_view_post(client):
         fakes.posts(5)
         post = Post.query.filter(~Post.private).first()
     data = get_response_and_data_of_post(client, post.id)[1]
-    print(data)
+    
     assert post.content in data
 
     post_private = Post.query.filter(Post.private).first()
@@ -201,13 +201,14 @@ def test_comments(client_with_request_ctx):
     response = client.post(f"/post/{post.id}/", data=data, follow_redirects=True)
     assert response.status_code == 200
     response = client.get(f"/post/{post.id}/")
+    print(response.get_data(as_text=True))
     assert data["body"] in response.get_data(as_text=True)
     comment = Comment.query.filter_by(body=data["body"]).first()
 
     # test replying comments
     response1 = client.get(f"/post/{post.id}/?reply={comment.id}")
     response2 = client.get(f"/reply/comment/{comment.id}/", follow_redirects=True)
-    print(f"/post/{post.id}/?reply={comment.id}")
+    
     assert response1.get_data() == response2.get_data()
 
     reply = {"body": "reply"}

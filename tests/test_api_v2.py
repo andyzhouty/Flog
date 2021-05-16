@@ -355,7 +355,7 @@ def test_folder_like_urls(client):
     u2 = User.query.filter(User.username != "test").first()
     user = User.query.get(user_id)
     user.follow(u2)
-    print(user.following[0])
+    
 
     response = client.get(f"/api/v2/user/{user_id}/following/", headers=get_api_v2_headers(client))
     following = response.get_json()
