@@ -7,6 +7,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from apiflask import APIFlask
 from flask import Flask
+from flask.helpers import send_from_directory
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
@@ -103,7 +104,7 @@ def register_extensions(app: Flask) -> None:
     share.init_app(app)
 
 
-def register_blueprints(app: Flask) -> None:
+def register_blueprints(app: APIFlask) -> None:
     app.register_blueprint(main_bp)
     app.register_blueprint(others_bp)
     app.register_blueprint(user_bp)
@@ -120,6 +121,10 @@ def register_blueprints(app: Flask) -> None:
 
     if app.testing:
         app.register_blueprint(testing_bp)
+
+    @app.route("/alter_static/<path:filename>")
+    def alternative_static(filename):
+        return send_from_directory("static", filename)
 
 
 def register_context(app: Flask) -> None:

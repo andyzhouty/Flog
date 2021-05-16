@@ -4,7 +4,7 @@ MIT License
 #}
 {% macro static_file(type, filename_or_url, local=True, alt=None) %}
     {% if local -%}
-        {% set filename_or_url = url_for('static', filename=filename_or_url) %}
+        {% set filename_or_url = url_for('alternative_static', filename=filename_or_url) %}
     {%- endif %}
     {% if type == 'css' -%}
         <link rel="stylesheet" href="{{ filename_or_url }}">

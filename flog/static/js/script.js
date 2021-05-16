@@ -79,4 +79,5 @@ $(function () {
         $('.content').removeClass('shadow');
         $('#image-large').hide();
     });
+    $('table').addClass('table table-bordered');
 });
