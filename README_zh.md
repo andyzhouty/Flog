@@ -64,7 +64,7 @@ git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.
 cd flog/
 python3 -m venv venv # 如果你使用Windows,请替换为 python -m venv venv
 source ./venv/bin/activate # 如果你使用Windows，请替换为 ./venv/Scripts/activate
-pip3 install -r requirements/dev.txt # 安装相关依赖
+pip3 install -r requirements.txt # 安装相关依赖
 flask deploy # 初始化数据库
 flask forge # 生成虚拟数据
 flask create-admin

@@ -74,7 +74,7 @@ git clone https://github.com/z-t-y/Flog.git ./flog
 cd flog/
 python3 -m venv venv # or `python -m venv venv` on windows
 source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
-pip3 install -r requirements/dev.txt
+pip3 install -r requirements.txt
 flask deploy # initialize database
 flask forge # generates fake data
 flask create-admin
