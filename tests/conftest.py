@@ -34,8 +34,11 @@ def common_setup(app, context):
 def clean_up(app, context):
     filename = app.config["FLOG_ADMIN"] + "_" + "test.png"
     test_image_path = os.path.join(app.config["UPLOAD_DIRECTORY"], filename)
+    test_image_path2 = os.path.join(app.config["UPLOAD_DIRECTORY"], "test_test.png")
     if os.path.exists(test_image_path):
         os.remove(test_image_path)
+    if os.path.exists(test_image_path2):
+        os.remove(test_image_path2)
     db.session.remove()
     db.drop_all()
     context.pop()

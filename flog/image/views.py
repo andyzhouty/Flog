@@ -47,7 +47,7 @@ def upload():
 def manage_images():
     page = request.args.get("page", 1, int)
     if not current_user.is_administrator():
-        pagination = current_user.images.order_by(Image.timestamp.desc()).paginate(
+        pagination = Image.query.with_parent(current_user).order_by(Image.timestamp.desc()).paginate(
             page, per_page=current_app.config["IMAGES_PER_PAGE"]
         )
     else:

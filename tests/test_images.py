@@ -56,6 +56,19 @@ def test_manage_images(client):
     assert f'src="/image/{filename}"' in data
     image = Image.query.filter_by(filename=filename).first()
     delete_image(client, image.id)
+    logout(client)
+
+    register(client)
+    login(client, "test", "password")
+    upload_image(client)
+    response = client.get("/image/manage/")
+    data = response.get_data(as_text=True)
+    filename = "test_test.png"
+    print(data)
+
+    assert f'src="/image/{filename}"' in data
+    image = Image.query.filter_by(filename=filename).first()
+    delete_image(client, image.id)
 
 
 def test_image_errors(client):
