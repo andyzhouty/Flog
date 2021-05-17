@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5cf53772c60bbd50cb59b67295e7d888fab89fb806ba053db684500daa94b62e"
+            "sha256": "5e26a3d4de06b93d14eef0bb6470235b5faed4ec35ce5174942399abb96c7dfd"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -23,11 +23,11 @@
         },
         "apiflask": {
             "hashes": [
-                "sha256:384f9e499b6ff406b745e34f67eee2536a25fc9fe11b7adf31390e7852933b2c",
-                "sha256:64f5c6c4d4ba13daedf03552a8715dbb06006bcdc83248e24d26f5fb37c71910"
+                "sha256:242fbb6d6dbe423cf519de5092ad67a67df41f877a4b6e03d3b5cc81b029b6db",
+                "sha256:29d40794f21ba9b2954c08eb16753db710683b880d725bb7d9673711b9e60075"
             ],
             "index": "pypi",
-            "version": "==0.6.0"
+            "version": "==0.6.3"
         },
         "apispec": {
             "hashes": [
@@ -941,7 +941,7 @@
                 "sha256:0a943902919f65c5684ac4e0154b1ad4fac6dcaa5d9f3426b732f1c8b5419be6",
                 "sha256:2bb1680aad211e3c9944dbce1d4ba09a989f04e238296c87fe2139faa26d655d"
             ],
-            "markers": "python_version >= '3.6' and python_version < '4'",
+            "markers": "python_version >= '3.6' and python_version < '4.0'",
             "version": "==5.8.0"
         },
         "jinja2": {

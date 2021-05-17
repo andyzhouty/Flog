@@ -122,10 +122,6 @@ def register_blueprints(app: APIFlask) -> None:
     if app.testing:
         app.register_blueprint(testing_bp)
 
-    @app.route("/alter_static/<path:filename>")
-    def alternative_static(filename):
-        return send_from_directory("static", filename)
-
 
 def register_context(app: Flask) -> None:
     @app.shell_context_processor

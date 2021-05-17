@@ -70,7 +70,7 @@ bleach = "*"
 flask-apispec = "*"
 flask-caching = "*"
 flask-compress = "*"
-apiflask = "==0.6.0"
+apiflask = "==0.6.3"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
 
