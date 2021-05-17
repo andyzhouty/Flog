@@ -2,9 +2,10 @@ FROM python:3.8
 
 WORKDIR /usr/src/flog/
 
-COPY requirements/ requirements/
+COPY requirements.txt ./
+COPY requirements-dev.txt ./
 RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
-RUN pip install -r requirements/dev.txt
+RUN pip install -r requirements-dev.txt
 RUN pip install gunicorn
 
 COPY flog/ flog/
