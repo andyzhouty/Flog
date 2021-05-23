@@ -87,3 +87,9 @@ def test_avatar_url(client):
     user = User(email="test@example.com")
     user.custom_avatar_url = "https://example.com/test.png"
     assert user.avatar_url() == "https://example.com/test.png"
+
+
+def test_group_password(client):
+    group = Group()
+    group.set_password("abcd")
+    assert group.verify_password("abcd")

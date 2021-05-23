@@ -45,7 +45,7 @@ class Follow(db.Model):
     followed = db.relationship(
         "User", foreign_keys=[followed_id], back_populates="followers", lazy="joined"
     )
-    
+
     def __repr__(self):
         return f"<Follow follower: '{self.follower}' following: '{self.followed}'"
 
@@ -185,21 +185,28 @@ class Permission:
     ADMIN = 16
 
 
-class Group(db.Model):
+class Group(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
     members = db.relationship(
         "User", secondary=group_user_table, back_populates="groups"
     )
+    password_hash = db.Column(db.String(128))
     manager = db.relationship("User", back_populates="managed_groups")
     manager_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    def set_password(self, password: str):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password: str) -> bool:
+        return check_password_hash(self.password_hash, password)
 
     def generate_join_token(self, expiration: int = 3600):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
         return s.dumps({"group_id": self.id}).decode("utf-8")
 
     def join_url(self, **kwargs):
-        return url_for("user.join_group", token=self.generate_join_token(), **kwargs)
+        return url_for("group.join", token=self.generate_join_token(), **kwargs)
 
     @staticmethod
     def verify_join_token(token):
@@ -361,7 +368,7 @@ class User(db.Model, UserMixin):
     def avatar_url(self, size=30, default="identicon", rating="g"):
         if self.custom_avatar_url:
             return self.custom_avatar_url
-        url = "https://sdn.geekzu.org/avatar" # use gravatar cdn by geekzu.cn
+        url = "https://sdn.geekzu.org/avatar"  # use gravatar cdn by geekzu.cn
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}&d={default}&r={rating}"
 

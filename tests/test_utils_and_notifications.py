@@ -94,7 +94,7 @@ def test_redirections(client):
     assert "Flog" in data
 
 
-def test_notifications_from_and_to_oneself_are_ignored(client):
+def test_ignored_notifications(client):
     """
     Test when a user write a comment to his own article, he will not be notified.
     """
@@ -102,7 +102,7 @@ def test_notifications_from_and_to_oneself_are_ignored(client):
     init_notification_count = Notification.query.count()
     title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
-    response = client.post(
+    client.post(
         f"/post/{post.id}/", data={"body": "lorem ipsum"}, follow_redirects=True
     )
     assert Notification.query.count() == init_notification_count

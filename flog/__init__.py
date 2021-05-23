@@ -35,6 +35,7 @@ from .api.v1 import api_v1
 from .api.v2 import api_v2
 from .api.v3 import api_v3
 from .auth import auth_bp
+from .group import group_bp
 from .feedback import feedback_bp
 from .image import image_bp
 from .language import language_bp
@@ -114,6 +115,7 @@ def register_blueprints(app: APIFlask) -> None:
     app.register_blueprint(api_v2, url_prefix="/api/v2")
     app.register_blueprint(api_v3, url_prefix="/api/v3")
     app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(group_bp, url_prefix="/group")
     app.register_blueprint(image_bp, url_prefix="/image")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(language_bp, url_prefix="/language")

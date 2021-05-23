@@ -1,6 +1,6 @@
 """
 MIT License
-Copyright (c) 2020 Andy Zhou
+Copyright (c) 2021 Andy Zhou
 """
 from flask import abort, render_template, redirect, url_for, flash, request, current_app
 from flask_login import current_user, login_required, login_user
@@ -8,19 +8,14 @@ from flask_babel import _
 from . import user_bp
 from .forms import (
     EditProfileForm,
-    GroupCreationForm,
-    GroupFindForm,
-    GroupInviteForm,
     PasswordChangeForm,
     ValidateEmailForm,
 )
-from ..models import Group, db, User, Permission
+from ..models import db, User, Permission
 from ..decorators import permission_required
 from ..utils import redirect_back
 from ..notifications import (
     push_follow_notification,
-    push_group_invite_notification,
-    push_group_join_notification,
 )
 from ..emails import send_email
 
@@ -143,80 +138,3 @@ def reset_password(token):
         flash(_("Password Changed"))
         return redirect(url_for("main.main"))
     return render_template("user/change_password.html", form=form)
-
-
-@user_bp.route("/group/create/", methods=["GET", "POST"])
-@login_required
-def create_group():
-    form = GroupCreationForm()
-    if form.validate_on_submit():
-        group = Group(name=form.group_name.data)
-        current_user.join_group(group)
-        group.manager = current_user
-        db.session.commit()
-        flash(_("Created group {0}.".format(group.name)))
-        return redirect_back()
-    return render_template("user/create_group.html", form=form)
-
-
-@user_bp.route("/group/find/", methods=["GET", "POST"])
-@login_required
-def explore_group():
-    form = GroupFindForm()
-    if form.validate_on_submit():
-        group = Group.query.filter_by(name=form.group_name.data).first_or_404()
-        push_group_join_notification(
-            joiner=current_user, group=group, receiver=group.manager
-        )
-        flash(
-            _(
-                """We have sent a notification to the manager of the group.
-                All you should do is to wait the manager's reply."""
-            )
-        )
-        return redirect_back()
-    return render_template("user/find_group.html", form=form)
-
-
-@user_bp.route("/group/join/<token>/")
-@login_required
-def join_group(token):
-    group = Group.verify_join_token(token)
-    if group is None:
-        abort(404)
-    else:
-        user_id = request.args.get("user_id", type=int)
-        if user_id is None:
-            user = current_user
-        else:
-            user = User.query.get(user_id)
-        user.join_group(group)
-        flash(_("Joined group {0}".format(group.name)))
-        return redirect_back()
-
-
-@user_bp.route("/group/invite/<int:user_id>/", methods=["GET", "POST"])
-@login_required
-def invite_user(user_id: int):
-    form = GroupInviteForm()
-    form.group_id.choices = [
-        (g.id, g.name)
-        for g in Group.query.filter_by(manager=current_user).order_by("name")
-    ]
-    if len(form.group_id.choices) == 0:
-        flash(
-            _(
-                """
-            You are not managing any groups.
-            Please create a group first to invite other users.
-        """
-            )
-        )
-        return redirect_back()
-    if form.validate_on_submit():
-        group = Group.query.get_or_404(form.group_id.data)
-        invited_user = User.query.get_or_404(user_id)
-        push_group_invite_notification(current_user, group, invited_user)
-        flash(_("Notification sent to user {0}".format(invited_user.username)))
-        return redirect_back()
-    return render_template("user/group_invite.html", form=form)
