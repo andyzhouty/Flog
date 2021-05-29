@@ -39,10 +39,10 @@
             {% if comment.replied %}
             <p class="alert alert-dark reply-body">
                 {{ comment.replied.author.username }}:<br>
-                {{ comment.replied.body }}
+                {{ comment.replied.body | safe }}
             </p>
             {% endif %}
-            <p class="mb-1">{{ comment.body }}</p>
+            <p class="mb-1">{{ comment.body | safe }}</p>
             <div class="float-right">
                 {% if current_user.is_administrator() or current_user == comment.author %}
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}"

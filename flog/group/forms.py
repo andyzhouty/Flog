@@ -5,7 +5,7 @@ Copyright (c) 2021 Andy Zhou
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError, SelectField
-from wtforms.validators import Length, Required
+from wtforms.validators import Length
 from ..models import Group
 
 l_message = _l("Field must be between %(min)d and %(max)d characters long.")

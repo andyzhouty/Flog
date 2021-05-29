@@ -6,15 +6,14 @@
     :copyright: Andy Zhou
     :license: MIT License
 """
-from flog.utils import get_image_path_and_url
-from flask import g, request, current_app, jsonify, url_for
+from flog.utils import clean_html, get_image_path_and_url
+from flask import g, request, jsonify, url_for
 from flask.views import MethodView
 from .errors import ValidationError, bad_request, forbidden  # noqa
 from .authentication import auth_required
 from .schemas import user_schema, post_schema, comment_schema
 from flog.models import db, User, Post, Comment, Notification, Image
 from ..api_utils import get_post_data, can_edit_post, can_edit_profile
-import bleach
 
 
 class IndexAPI(MethodView):
@@ -73,12 +72,7 @@ class PostAPI(MethodView):
         """Create a post"""
         data = request.get_json()
         title, content, private = get_post_data(data, ValidationError)
-        cleaned_content = bleach.clean(
-            content,
-            tags=current_app.config["FLOG_ALLOWED_TAGS"],
-            attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
-            strip_comments=True,
-        )
+        cleaned_content = clean_html(content)
         post = Post(
             author=g.current_user,
             title=title,
@@ -165,7 +159,7 @@ class CommentAPI(MethodView):
 
     def post(self) -> "201":
         data = request.get_json()
-        body = data.get("body").strip()
+        body = clean_html(data.get("body").strip())
         post_id = data.get("post_id")
         if not (isinstance(body, str) and body != "" and isinstance(post_id, int)):
             return bad_request("Invalid input")

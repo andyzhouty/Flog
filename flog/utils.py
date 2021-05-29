@@ -4,6 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 from os.path import join, exists
 from urllib.parse import urlparse, urljoin
+from bleach import clean
 from flask import current_app, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from .models import db, Image
@@ -63,3 +64,12 @@ def get_image_path_and_url(image_obj, current_user) -> dict:
     url = image.url()
     current_app.logger.info(f"Upload file url: {url}")
     return {"image_url": url, "filename": image.filename, "image_id": image.id}
+
+
+def clean_html(content: str) -> str:
+    return clean(
+        content,
+        tags=current_app.config["FLOG_ALLOWED_TAGS"],
+        attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
+        strip_comments=True,
+    )

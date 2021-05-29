@@ -53,4 +53,6 @@ MIT License
         </div>
         {% include 'main/_sidebar.html' %}
     </div>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(custom_config="width: 'auto'; height: 30;") }}
 {% endblock page_content %}

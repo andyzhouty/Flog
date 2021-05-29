@@ -201,15 +201,13 @@ def test_comments(client_with_request_ctx):
     response = client.post(f"/post/{post.id}/", data=data, follow_redirects=True)
     assert response.status_code == 200
     response = client.get(f"/post/{post.id}/")
-    print(response.get_data(as_text=True))
     assert data["body"] in response.get_data(as_text=True)
     comment = Comment.query.filter_by(body=data["body"]).first()
 
     # test replying comments
-    response1 = client.get(f"/post/{post.id}/?reply={comment.id}")
     response2 = client.get(f"/reply/comment/{comment.id}/", follow_redirects=True)
-    
-    assert response1.get_data() == response2.get_data()
+
+    assert post.title in response2.get_data(as_text=True)
 
     reply = {"body": "reply"}
     response = client.post(f"/post/{post.id}/?reply={comment.id}", data=reply,

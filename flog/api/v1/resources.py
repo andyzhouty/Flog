@@ -7,13 +7,13 @@
     :license: MIT License
 """
 
-from flask import g, request, current_app, jsonify, url_for
+from flask import g, request, jsonify, url_for
 from flask.views import MethodView
 from .errors import ValidationError, bad_request, forbidden  # noqa
 from .authentication import auth
 from .schemas import comment_schema, user_schema, post_schema
 from flog.models import db, User, Post, Comment, Notification, Image
-from flog.utils import get_image_path_and_url
+from flog.utils import clean_html, get_image_path_and_url
 from ..api_utils import get_post_data, can_edit_post, can_edit_profile
 import bleach
 
@@ -82,12 +82,7 @@ class PostAPI(MethodView):
         data = request.get_json()
         title, content, private = get_post_data(data, ValidationError)
         # remove javascript and css from the content
-        cleaned_content = bleach.clean(
-            content,
-            tags=current_app.config["FLOG_ALLOWED_TAGS"],
-            attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
-            strip_comments=True,
-        )
+        cleaned_content = clean_html(content)
 
         post = Post(
             author=g.current_user,
@@ -109,12 +104,7 @@ class PostAPI(MethodView):
             return forbidden("You cannot edit this post.")
         data = request.get_json()
         title, content, private = get_post_data(data, ValidationError)
-        cleaned_content = bleach.clean(
-            content,
-            tags=current_app.config["FLOG_ALLOWED_TAGS"],
-            attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
-            strip_comments=True,
-        )
+        cleaned_content = clean_html(content)
         post.title, post.content, post.private = title, cleaned_content, private
         db.session.commit()
         return "", 204
@@ -178,7 +168,7 @@ class CommentAPI(MethodView):
 
     def post(self) -> "200":
         data = request.get_json()
-        body = data.get("body").strip()
+        body = clean_html(data.get("body").strip())
         post_id = data.get("post_id")
         if not (isinstance(body, str) and body != "" and isinstance(post_id, int)):
             return bad_request("Invalid input")
@@ -239,11 +229,10 @@ class ImageAPI(MethodView):
             return bad_request(response["error"])
         image_url = response["image_url"]
         image_id = response["image_id"]
-        return jsonify(
-            message="Upload Success",
-            image_url=image_url,
-            image_id=image_id
-        ), 201
+        return (
+            jsonify(message="Upload Success", image_url=image_url, image_id=image_id),
+            201,
+        )
 
     def delete(self, image_id):
         image = Image.query.get_or_404(image_id)

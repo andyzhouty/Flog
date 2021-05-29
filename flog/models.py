@@ -185,21 +185,14 @@ class Permission:
     ADMIN = 16
 
 
-class Group(db.Model, UserMixin):
+class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
     members = db.relationship(
         "User", secondary=group_user_table, back_populates="groups"
     )
-    password_hash = db.Column(db.String(128))
     manager = db.relationship("User", back_populates="managed_groups")
     manager_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-
-    def set_password(self, password: str):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password: str) -> bool:
-        return check_password_hash(self.password_hash, password)
 
     def generate_join_token(self, expiration: int = 3600):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
@@ -232,7 +225,7 @@ class Role(db.Model):
             self.permissions = 0
 
     def __repr__(self):
-        return self.name
+        return f"<Role: {self.name}>"
 
     def add_permission(self, perm):
         if not self.has_permission(perm):

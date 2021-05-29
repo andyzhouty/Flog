@@ -47,7 +47,7 @@ class EditForm(FlaskForm):
 
 
 class CommentForm(FlaskForm):
-    body = TextAreaField("", validators=[DataRequired(dr_message)])
+    body = CKEditorField("", validators=[DataRequired(dr_message)])
     submit = SubmitField(_l("Comment"))
 
 

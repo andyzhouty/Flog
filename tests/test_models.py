@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import db
-from flog.models import Post, User, Notification, Group, Column
+from flog.models import AnonymousUser, Permission, Post, User, Notification, Group, Column, Follow
 
 
 def test_password_setter(client):
@@ -89,7 +89,29 @@ def test_avatar_url(client):
     assert user.avatar_url() == "https://example.com/test.png"
 
 
-def test_group_password(client):
-    group = Group()
-    group.set_password("abcd")
-    assert group.verify_password("abcd")
+def test_print_layout(client):
+    user1 = User()
+    user2 = User()
+    assert user1.role.__repr__() == "<Role: User>"
+    user1.follow(user2)
+    assert user1.is_following(user2)
+
+    f = Follow.query.with_parent(user1).first()
+    assert f.__repr__() == f"<Follow follower: '{user1}' following: '{user2}'"
+
+
+def test_delete_column(client):
+    user = User()
+    column = Column()
+    db.session.add(column)
+    db.session.commit()
+    user.columns.append(column)
+    assert column in user.columns
+    column.delete()
+    assert column not in user.columns
+
+
+def test_anonymous_permissions(client):
+    anonym_user = AnonymousUser()
+    assert not anonym_user.can(Permission.COMMENT)
+    assert not anonym_user.is_administrator()

@@ -4,7 +4,6 @@ Copyright(c) 2021 Andy Zhou
 """
 from datetime import datetime
 from flog.decorators import permission_required
-import bleach
 from flask import (
     render_template,
     redirect,
@@ -17,7 +16,7 @@ from flask import (
 from flask_babel import _
 from flask_login import current_user, login_required
 from ..models import Permission, db, Post, Comment, User, Group, Column
-from ..utils import redirect_back
+from ..utils import redirect_back, clean_html
 from ..notifications import push_collect_notification, push_comment_notification
 from .forms import ColumnForm, PostForm, EditForm, CommentForm
 from . import main_bp
@@ -46,18 +45,14 @@ def main():
 @login_required
 @permission_required(Permission.WRITE)
 def create_post():
+    current_app.config["CKEDITOR_PKG_TYPE"] = "basic"
     form = PostForm()
     form.columns.choices = [
         (column.id, column.name)
         for column in Column.query.filter_by(author=current_user).all()
     ]
     if form.validate_on_submit():
-        cleaned_content = bleach.clean(
-            form.content.data,
-            tags=current_app.config["FLOG_ALLOWED_TAGS"],
-            attributes=current_app.config["FLOG_ALLOWED_HTML_ATTRIBUTES"],
-            strip_comments=True,
-        )
+        cleaned_content = clean_html(form.content.data)
         post = Post(
             author=current_user,
             title=form.title.data,
@@ -79,6 +74,7 @@ def create_post():
 
 @main_bp.route("/post/<int:id>/", methods=["GET", "POST"])
 def full_post(id: int):
+    current_app.config["CKEDITOR_PKG_TYPE"] = "basic"
     post = Post.query.get_or_404(id)
     if (
             (not post.private)
@@ -105,7 +101,7 @@ def full_post(id: int):
             comment = Comment(
                 author=current_user,
                 post=post,
-                body=form.body.data,
+                body=clean_html(form.body.data),
             )
             replied_id = request.args.get("reply")
             if replied_id:
@@ -128,7 +124,6 @@ def full_post(id: int):
         if replied_id:
             replied_comment = Comment.query.get_or_404(replied_id)
             kwargs["replied_comment"] = replied_comment
-            
         return render_template("main/full_post.html", **kwargs)
     else:
         flash(_("The author has set this post to invisible."))
