@@ -181,6 +181,7 @@ def delete_post(id):
 @login_required
 @permission_required(Permission.WRITE)
 def edit_post(id):
+    current_app.config["CKEDITOR_PKG_TYPE"] = "standard"
     post = Post.query.get(id)
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
