@@ -45,7 +45,7 @@ def main():
 @login_required
 @permission_required(Permission.WRITE)
 def create_post():
-    current_app.config["CKEDITOR_PKG_TYPE"] = "basic"
+    current_app.config["CKEDITOR_PKG_TYPE"] = "standard"
     form = PostForm()
     form.columns.choices = [
         (column.id, column.name)
