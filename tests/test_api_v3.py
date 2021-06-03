@@ -32,7 +32,15 @@ def test_get_token(client):
 
 
 def test_user(client):
-    register(client)
+    test_user_data = {
+        "username": "test",
+        "password": "password",
+        "email": "test@example.com",
+    }
+    response = client.post("/api/v3/register", data=test_user_data)
+    print(response.get_json())
+    assert response.status_code == 200
+
     user = User.query.filter_by(username="test").first()
     response = client.get(f"/api/v3/user/{user.id}")
     data = response.get_json()
@@ -87,6 +95,9 @@ def test_post(client):
 
     response = client.get(f"/api/v3/post/{post.id}")
     assert response.status_code == 403
+
+    response = client.get(f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client))
+    assert response.status_code == 200
 
     response = client.get(
         f"/api/v3/post/{post.id}",

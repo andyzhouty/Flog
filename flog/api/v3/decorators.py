@@ -29,7 +29,6 @@ def can_edit(permission_type: str):
                 if g.current_user.is_administrator():
                     permitted = True
             if not permitted:
-
                 abort(403)
             return f(*args, **kwargs)
 

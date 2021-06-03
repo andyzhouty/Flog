@@ -7,6 +7,7 @@ from flask import url_for, jsonify, g, request
 from flask.views import MethodView
 from .schemas import *
 from flog.models import db, User, Post, Comment, Permission
+from flog.utils import clean_html
 from . import api_v3
 from .decorators import can_edit, permission_required
 
@@ -52,7 +53,7 @@ class UserAPI(MethodView):
 
 @api_v3.route("/register", endpoint="register")
 class RegistrationAPI(MethodView):
-    @input(UserInSchema)
+    @input(UserInSchema, location="form")
     @output(UserOutSchema)
     def post(self, data):
         """Register a new user"""
@@ -107,7 +108,10 @@ class PostAPI(MethodView):
     def put(self, post_id, data):
         post = Post.query.get_or_404(post_id)
         for attr, value in data.items():
-            post.__setattr__(attr, value)
+            if attr == "content":
+                post.content = clean_html(value)
+            else:
+                post.__setattr__(attr, value)
         db.session.commit()
         return post
 
@@ -120,7 +124,10 @@ class PostAddAPI(MethodView):
     def post(self, data):
         post = Post(author=g.current_user)
         for attr, value in data.items():
-            post.__setattr__(attr, value)
+            if attr == "content":
+                post.content = clean_html(value)
+            else:
+                post.__setattr__(attr, value)
         db.session.add(post)
         db.session.commit()
         return post
@@ -141,12 +148,15 @@ class CommentAPI(MethodView):
         for attr, value in data.items():
             if attr == "reply_id":
                 comment.replied = Comment.query.get_or_404(value)
-            if attr == "post_id":
+            elif attr == "post_id":
                 post = Post.query.get_or_404(value)
                 if post.private:
                     abort(400, "the post is private")
                 comment.post = post
-            comment.__setattr__(attr, value)
+            elif attr == "body":
+                comment.body = clean_html(value)
+            else:
+                comment.__setattr__(attr, value)
         db.session.commit()
         return comment
 
@@ -161,7 +171,7 @@ class CommentAddAPI(MethodView):
         for attr, value in data.items():
             if attr == "reply_id":
                 comment.replied = Comment.query.get_or_404(value)
-            if attr == "post_id":
+            elif attr == "post_id":
                 post = Post.query.get_or_404(value)
                 if post.private:
                     abort(400, "the post is private")
@@ -172,6 +182,9 @@ class CommentAddAPI(MethodView):
                         400,
                         "the comment you want to reply does not belongs to the post",
                     )
-            comment.__setattr__(attr, value)
+            elif attr == "body":
+                comment.body = clean_html(value)
+            else:
+                comment.__setattr__(attr, value)
         db.session.add(comment)
         return comment
