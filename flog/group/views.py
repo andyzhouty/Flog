@@ -9,7 +9,7 @@ from . import group_bp
 from .forms import GroupCreationForm, GroupFindForm, GroupInviteForm
 from ..models import db, Group, User, Message
 from ..utils import redirect_back
-from ..notifications import push_group_join_notification, push_group_invite_notification
+from ..notifications import push_group_join_notification, push_group_invite_notification, push_new_message_notification
 
 
 @group_bp.route("/all/")
@@ -115,4 +115,7 @@ def discussion(id: int):
         message = Message(author=current_user, body=body)
         group.messages.append(message)
         db.session.commit()
+        for member in group.members:
+            if member != current_user:
+                push_new_message_notification(current_user, member, group)
     return render_template("group/discussion.html", group=group)

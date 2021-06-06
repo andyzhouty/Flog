@@ -77,3 +77,14 @@ def push_group_invite_notification(inviter, group, receiver):
     notification = Notification(message=message, receiver=receiver, is_read=False)
     db.session.add(notification)
     db.session.commit()
+
+
+def push_new_message_notification(sender, receiver, group):
+    message = _(
+        """<a href="{}">{}</a> send a message in group {}""".format(
+            sender.profile_url(), sender.username, group.name
+        )
+    )
+    notification = Notification(message=message, receiver=receiver, is_read=False)
+    db.session.add(notification)
+    db.session.commit()

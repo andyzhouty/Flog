@@ -26,12 +26,12 @@ function show_profile_popover(e) {
                     setTimeout(function () {
                         $el.popover("hide");
                     }, 200);
-                })
+                });
             },
             error: function (error) {
                 toastr.error('Server Error, please try again later.');
             }
-        })
+        });
     }, 500);
 }
 
@@ -46,20 +46,23 @@ function hide_profile_popover(e) {
             if (!$('.popover:hover').length) {
                 $el.popover("hide");
             }
-        }, 200)
+        }, 200);
     }
 }
 
 function update_notifications_count() {
-    let $el = $('#notification-badge')
+    let $el = $('#notification-badge');
     $.get($el.data('href'), function (data) {
         if (data.count === 0) {
-            $('#notification-badge').hide()
+            $('#notification-badge').hide();
         } else {
-            $el.show()
-            $el.text(data.count)
+            $el.show();
+            $el.text(data.count);
         }
-    })
+        if (!document.hasFocus() && data.count != 0) {
+            document.title = '(' + data.count + ') ' + document.title;
+        }
+    });
 }
 
 function largeImage(e) {
@@ -68,7 +71,7 @@ function largeImage(e) {
     image_large.attr('src', element.attr('src'));
     $('.content').addClass('shadow');
     image_large.show();
-    image_large.height = $(document).height
+    image_large.height = $(document).height;
 }
 
 $(function () {

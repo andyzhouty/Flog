@@ -128,6 +128,14 @@ def test_group_discussions(client):
     login(client)
     response = client.post(f"/group/{g.id}/discussion/", data=dict(body="hello"))
     assert response.status_code == 403
+    logout(client)
+    u = User.query.get(1)
+    g.members.append(u)
+    login(client, "test", "password")
+    c = Notification.query.count()
+    response = client.post(f"/group/{g.id}/discussion/", data=dict(body="hello"))
+    assert Notification.query.count() == c + 1
+    
 
 
 def test_group_all(client):
@@ -142,4 +150,3 @@ def test_group_all(client):
     login(client) # login as administrator
     response = client.get(f"/group/all/")
     assert g1.name in response.get_data(as_text=True)
-
