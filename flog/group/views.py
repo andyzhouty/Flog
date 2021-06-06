@@ -7,7 +7,7 @@ from flask_babel import _
 from flask_login import login_required, current_user
 from . import group_bp
 from .forms import GroupCreationForm, GroupFindForm, GroupInviteForm
-from ..models import db, Group, User
+from ..models import db, Group, User, Message
 from ..utils import redirect_back
 from ..notifications import push_group_join_notification, push_group_invite_notification
 
@@ -23,7 +23,7 @@ def create():
         db.session.commit()
         flash(_("Created group {0}.".format(group.name)))
         return redirect_back()
-    return render_template("user/create_group.html", form=form)
+    return render_template("group/create.html", form=form)
 
 
 @group_bp.route("/find/", methods=["GET", "POST"])
@@ -42,7 +42,7 @@ def explore():
             )
         )
         return redirect_back()
-    return render_template("user/find_group.html", form=form)
+    return render_template("group/find.html", form=form)
 
 
 @group_bp.route("/join/<token>/")
@@ -86,4 +86,24 @@ def invite_user(user_id: int):
         push_group_invite_notification(current_user, group, invited_user)
         flash(_("Notification sent to user {0}".format(invited_user.username)))
         return redirect_back()
-    return render_template("user/group_invite.html", form=form)
+    return render_template("group/invite.html", form=form)
+
+
+@group_bp.route("/info/<int:id>/", methods=["GET", "POST"])
+@login_required
+def group_info(id: int):
+    group = Group.query.get_or_404(id)
+    return render_template("group/info.html", group=group)
+
+
+@group_bp.route("/<int:id>/discussion", methods=["GET", "POST"])
+def discussion(id: int):
+    group = Group.query.get_or_404(id)
+    if current_user not in group.members:
+        abort(403)
+    if request.method == "POST":
+        body = request.form.get("body")
+        message = Message(author=current_user, body=body)
+        group.messages.append(message)
+        db.session.commit()
+    return render_template("group/discussion.html", group=group)

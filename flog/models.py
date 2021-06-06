@@ -193,6 +193,7 @@ class Group(db.Model):
     )
     manager = db.relationship("User", back_populates="managed_groups")
     manager_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    messages = db.relationship("Message", back_populates="group")
 
     def generate_join_token(self, expiration: int = 3600):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
@@ -209,6 +210,16 @@ class Group(db.Model):
         except:
             return None
         return Group.query.get(data.get("group_id"))
+
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    group_id = db.Column(db.Integer, db.ForeignKey("group.id"))
+    group = db.relationship("Group", back_populates="messages")
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    author = db.relationship("User", back_populates="sent_messages")
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
 
 class Role(db.Model):
@@ -328,6 +339,8 @@ class User(db.Model, UserMixin):
     managed_groups = db.relationship("Group", back_populates="manager")
 
     custom_avatar_url = db.Column(db.String(128), default="")
+
+    sent_messages = db.relationship("Message", back_populates="author")
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

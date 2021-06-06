@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import user_card with context %}
+{% block title %} Group: {{ group.name }} {% endblock %}
+{% block page_content %}
+    <h2>{{ _("Members") }} ({{ group.members | length }}): </h2>
+    <ul class="list-group">
+        {% for member in group.members %}
+            {{ user_card(member) }}
+        {% endfor %}
+    </ul>
+    {% if current_user in group.members %}
+        <a href="{{ url_for('group.discussion', id=group.id) }}" class="btn btn-larges btn-outline-primary">
+            Go to discussion
+        </a>
+    {% endif %}
+{% endblock page_content %}

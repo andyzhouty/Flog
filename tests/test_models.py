@@ -3,8 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import db
-from flog.models import AnonymousUser, Permission, Post, User, Notification, Group, Column, Follow
-
+from flog.models import *
 
 def test_password_setter(client):
     u = User()
@@ -115,3 +114,10 @@ def test_anonymous_permissions(client):
     anonym_user = AnonymousUser()
     assert not anonym_user.can(Permission.COMMENT)
     assert not anonym_user.is_administrator()
+
+
+def test_group_messages(client):
+    g = Group()
+    m = Message()
+    g.messages.append(m)
+    assert m.group == g

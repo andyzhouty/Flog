@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import user_card, message_card with context %}
+{% block title %} Group: {{ group.name }} {% endblock %}
+{% block styles %}
+    {{ static_file('icon', 'favicon/favicon.svg') }}
+    {{ static_file('icon', 'favicon/favicon.ico') }}
+    {{ static_file('css', '//cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' % request.cookies.get('theme', 'cosmo'), local=False) }}
+    {{ static_file('css', '//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
+    {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
+{% endblock %}
+{% block page_content %}
+    <h2>{{ group.name }}{{ _("'s chatting room") }}</h2>
+    <hr>
+    <div class="messages">
+        {% for message in group.messages %}
+            {{ message_card(message) }}
+        {% endfor %}
+    </div>
+    <form class="form-inline d-flex justify-content-lg-center" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="text" name="body" class="form-control" required>
+        <input type="submit" name="submit" class="form-control btn btn-success">
+    </form>
+{% endblock page_content %}

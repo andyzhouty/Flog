@@ -7,7 +7,6 @@ import logging
 from logging.handlers import RotatingFileHandler
 from apiflask import APIFlask
 from flask import Flask
-from flask.helpers import send_from_directory
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
@@ -25,7 +24,7 @@ from .extensions import (
     share,
 )
 from flask_babel import lazy_gettext as _l
-from .models import Post, Feedback, Role, Permission, User, Notification
+from .models import Post, Feedback, Role, Permission, User, Notification, Message, Group
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
@@ -136,6 +135,8 @@ def register_context(app: Flask) -> None:
             Permission=Permission,
             Role=Role,
             User=User,
+            Message=Message,
+            Group=Group
         )
 
     @app.context_processor

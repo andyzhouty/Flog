@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-11 09:20+0800\n"
+"POT-Creation-Date: 2021-06-06 10:04+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.0\n"
+"Generated-By: Babel 2.9.1\n"
 
-#: flog/__init__.py:93
+#: flog/__init__.py:98
 msgid "Please log in to access this page"
 msgstr "登录后才能查看此页面"
 
@@ -79,20 +79,20 @@ msgid "Please fill out this field."
 msgstr "请填充这个输入框。"
 
 #: flog/admin/forms.py:14 flog/auth/forms.py:23 flog/feedback/forms.py:12
-#: flog/main/forms.py:21 flog/user/forms.py:13
+#: flog/group/forms.py:11 flog/main/forms.py:21 flog/user/forms.py:12
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
 msgstr "字段长度必须在%(min)d和%(max)d之间。"
 
-#: flog/admin/forms.py:15 flog/auth/forms.py:25 flog/user/forms.py:14
+#: flog/admin/forms.py:15 flog/auth/forms.py:25 flog/user/forms.py:13
 msgid "Invalid email."
 msgstr "不符合格式的电子邮箱。"
 
-#: flog/admin/forms.py:16 flog/user/forms.py:15
+#: flog/admin/forms.py:16 flog/user/forms.py:14
 msgid "Invalid url."
 msgstr "不符合格式的网址。"
 
-#: flog/admin/forms.py:21 flog/user/forms.py:35
+#: flog/admin/forms.py:21 flog/user/forms.py:34
 msgid "Email"
 msgstr "电子邮箱"
 
@@ -112,25 +112,25 @@ msgstr "验证过的"
 msgid "Role"
 msgstr "角色"
 
-#: flog/admin/forms.py:40 flog/auth/forms.py:44 flog/user/forms.py:19
+#: flog/admin/forms.py:40 flog/auth/forms.py:44 flog/user/forms.py:18
 msgid "Real Name"
 msgstr "真实姓名"
 
-#: flog/admin/forms.py:41 flog/user/forms.py:20
+#: flog/admin/forms.py:41 flog/user/forms.py:19
 msgid "Location"
 msgstr "位置"
 
-#: flog/admin/forms.py:42 flog/user/forms.py:21
+#: flog/admin/forms.py:42 flog/user/forms.py:20
 msgid "About me"
 msgstr "关于自己"
 
-#: flog/admin/forms.py:43 flog/user/forms.py:22
+#: flog/admin/forms.py:43 flog/user/forms.py:21
 msgid "Avatar URL"
 msgstr "头像网址"
 
-#: flog/admin/forms.py:44 flog/main/forms.py:39 flog/main/forms.py:60
-#: flog/user/forms.py:23 flog/user/forms.py:31 flog/user/forms.py:36
-#: flog/user/forms.py:47 flog/user/forms.py:52 flog/user/forms.py:61
+#: flog/admin/forms.py:44 flog/group/forms.py:18 flog/group/forms.py:23
+#: flog/group/forms.py:32 flog/main/forms.py:39 flog/main/forms.py:60
+#: flog/user/forms.py:22 flog/user/forms.py:30 flog/user/forms.py:35
 msgid "Submit"
 msgstr "提交"
 
@@ -176,7 +176,7 @@ msgstr "密码"
 msgid "Password (Again)"
 msgstr "密码（重复一遍）"
 
-#: flog/auth/forms.py:59 flog/user/forms.py:29
+#: flog/auth/forms.py:59 flog/user/forms.py:28
 msgid "Passwords must match"
 msgstr "两个密码框中的内容必须一样"
 
@@ -252,6 +252,40 @@ msgstr "反馈"
 msgid "Your feedback has been sent to the admins!"
 msgstr "你的反馈已经发送给管理员了！"
 
+#: flog/group/forms.py:16 flog/group/forms.py:22 flog/group/forms.py:31
+msgid "Group Name"
+msgstr "群的名字"
+
+#: flog/group/forms.py:27 flog/group/forms.py:36
+msgid "No such group"
+msgstr "没有叫这个名字的群"
+
+#: flog/group/views.py:24
+msgid "Created group {0}."
+msgstr "创建了群{0}"
+
+#: flog/group/views.py:39
+msgid ""
+"We have sent a notification to the manager of the group.\n"
+"                All you should do is to wait the manager's reply."
+msgstr "我们已经向这个群的管理者发了一个通知，你只需等待回复即可。"
+
+#: flog/group/views.py:61
+msgid "Joined group {0}"
+msgstr "加入了群{0}"
+
+#: flog/group/views.py:75
+msgid ""
+"\n"
+"            You are not managing any groups.\n"
+"            Please create a group first to invite other users.\n"
+"        "
+msgstr "你不在管理任何群，请创建一个群来邀请其他用户入群"
+
+#: flog/group/views.py:87
+msgid "Notification sent to user {0}"
+msgstr "消息已经发送给了用户{0}"
+
 #: flog/image/views.py:35
 msgid "No image uploaded!"
 msgstr "没有上传的图片！"
@@ -317,66 +351,66 @@ msgstr "专栏名称"
 msgid "Posts to add (optional)"
 msgstr "你想把哪些文章加入这个专栏（可选）？"
 
-#: flog/main/views.py:76
+#: flog/main/views.py:70
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:101
+#: flog/main/views.py:96
 msgid "Blocked users cannot post a comment!"
 msgstr "被封禁的用户不能发评论！"
 
-#: flog/main/views.py:104 flog/templates/main/_comments.html:79
+#: flog/main/views.py:99 flog/templates/main/_comments.html:79
 msgid "You cannot comment a private post!"
 msgstr "你不能评论私有的文章!"
 
-#: flog/main/views.py:119
+#: flog/main/views.py:114
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:135
+#: flog/main/views.py:129
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:180
+#: flog/main/views.py:174
 #, python-format
 msgid "Post id %d deleted"
 msgstr "Id为%d的文章已被删除"
 
-#: flog/main/views.py:202
+#: flog/main/views.py:196
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:225
+#: flog/main/views.py:219
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:227
+#: flog/main/views.py:221
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:229
+#: flog/main/views.py:223
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:232
+#: flog/main/views.py:226
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:244
+#: flog/main/views.py:238
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:262
+#: flog/main/views.py:256
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
-#: flog/main/views.py:304
+#: flog/main/views.py:298
 msgid "You can't add others' posts to your column!"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:309
+#: flog/main/views.py:303
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
@@ -676,6 +710,30 @@ msgstr "反馈内容"
 msgid "If it is a junk one, please delete it immediately!"
 msgstr "如果这是一则垃圾信息，请马上删除它!"
 
+#: flog/templates/group/create.html:4
+msgid "Create a group"
+msgstr "新建一个群"
+
+#: flog/templates/group/discussion.html:12
+msgid "'s chatting room"
+msgstr "的聊天室"
+
+#: flog/templates/group/find.html:8 flog/templates/group/find.html:14
+msgid "Hint"
+msgstr "提示"
+
+#: flog/templates/group/find.html:25
+msgid "Which group do you want to join?"
+msgstr "你想加入那个群？"
+
+#: flog/templates/group/info.html:5
+msgid "Members"
+msgstr "成员"
+
+#: flog/templates/group/invite.html:4
+msgid "Invite user to your group"
+msgstr "邀请用户到你管理的群"
+
 #: flog/templates/image/manage_images.html:17
 msgid "Public"
 msgstr "公开的"
@@ -894,18 +952,6 @@ msgstr "没有结果"
 msgid "All users"
 msgstr "查看所有Flog用户"
 
-#: flog/templates/user/create_group.html:4
-msgid "Create a group"
-msgstr "新建一个群"
-
-#: flog/templates/user/find_group.html:8 flog/templates/user/find_group.html:14
-msgid "Hint"
-msgstr "提示"
-
-#: flog/templates/user/find_group.html:25
-msgid "Which group do you want to join?"
-msgstr "你想加入那个群？"
-
 #: flog/templates/user/followers.html:9
 msgid "Your"
 msgstr "你的"
@@ -926,10 +972,6 @@ msgstr "你没有关注者:("
 #: flog/templates/user/forget_password.html:4
 msgid "Forget password"
 msgstr "忘记密码"
-
-#: flog/templates/user/group_invite.html:4
-msgid "Invite user to your group"
-msgstr "邀请用户到你管理的群"
 
 #: flog/templates/user/user_profile.html:19
 msgid "from"
@@ -996,79 +1038,45 @@ msgstr "这是链接："
 msgid "or enter the following link to your browser"
 msgstr "为了验证你的账户，请复制下方的链接到浏览器"
 
-#: flog/user/forms.py:27
+#: flog/user/forms.py:26
 msgid "New Password"
 msgstr "新密码"
 
-#: flog/user/forms.py:29
+#: flog/user/forms.py:28
 msgid "Again"
 msgstr "确认密码"
 
-#: flog/user/forms.py:45 flog/user/forms.py:51 flog/user/forms.py:60
-msgid "Group Name"
-msgstr "群的名字"
-
-#: flog/user/forms.py:56 flog/user/forms.py:65
-msgid "No such group"
-msgstr "没有叫这个名字的群"
-
-#: flog/user/views.py:42
+#: flog/user/views.py:37
 msgid "Your profile has been updated!"
 msgstr "你的个人信息已经被更新了！"
 
-#: flog/user/views.py:48
+#: flog/user/views.py:43
 msgid "Your email has not been confirmed yet!"
 msgstr "你的邮箱还没有被验证呢！"
 
-#: flog/user/views.py:58
+#: flog/user/views.py:53
 msgid "Already followed."
 msgstr "你已经关注了该用户。"
 
-#: flog/user/views.py:62
+#: flog/user/views.py:57
 msgid "User followed."
 msgstr "你关注了该用户。"
 
-#: flog/user/views.py:72
+#: flog/user/views.py:67
 msgid "Not following yet."
 msgstr "你还没有关注该用户。"
 
-#: flog/user/views.py:75
+#: flog/user/views.py:70
 msgid "User unfollowed."
 msgstr "你取消关注了这个用户。"
 
-#: flog/user/views.py:113 flog/user/views.py:143
+#: flog/user/views.py:108 flog/user/views.py:138
 msgid "Password Changed"
 msgstr "你的密码已更改"
 
-#: flog/user/views.py:131
+#: flog/user/views.py:126
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
-
-#: flog/user/views.py:157
-msgid "Created group {0}."
-msgstr "创建了群{0}"
-
-#: flog/user/views.py:172
-msgid ""
-"We have sent a notification to the manager of the group.\n"
-"                All you should do is to wait the manager's reply."
-msgstr "我们已经向这个群的管理者发了一个通知，你只需等待回复即可。"
-
-#: flog/user/views.py:194
-msgid "Joined group {0}"
-msgstr "加入了群{0}"
-
-#: flog/user/views.py:208
-msgid ""
-"\n"
-"            You are not managing any groups.\n"
-"            Please create a group first to invite other users.\n"
-"        "
-msgstr "你不在管理任何群，请创建一个群来邀请其他用户入群"
-
-#: flog/user/views.py:220
-msgid "Notification sent to user {0}"
-msgstr "消息已经发送给了用户{0}"
 
 #~ msgid "return confirm('Are you sure?');"
 #~ msgstr "return confirm('你确定吗？');"
