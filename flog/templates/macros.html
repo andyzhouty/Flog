@@ -272,13 +272,13 @@ MIT License
                 <img src="{{ user.avatar_url() }}" class="profile-popover"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" width="30px">
             </a>
-            <span class="bg-success" style="border-radius: 5px; padding: 10px">
+            <span class="bg-success text-light" style="border-radius: 5px; padding: 10px; margin: 5px">
             {{ message.body }}
             </span>
         </div>
     {% else %}
         <div class="d-flex justify-content-end" style="margin-bottom: 10px">
-            <span class="bg-light" style="border-radius: 5px; padding: 10px">
+            <span class="bg-light" style="border-radius: 5px; padding: 10px; margin: 5px">
                 {{ message.body }}
             </span>
             <a href="{{ url_for('user.user_profile', username=user.username) }}">

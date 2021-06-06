@@ -59,9 +59,6 @@ function update_notifications_count() {
             $el.show();
             $el.text(data.count);
         }
-        if (!document.hasFocus() && data.count != 0) {
-            document.title = '(' + data.count + ') ' + document.title;
-        }
     });
 }
 
