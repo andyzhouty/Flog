@@ -95,7 +95,7 @@ def all_users():
     )
     user_count = User.query.count()
     return render_template(
-        "user/all_users.html", pagination=pagination, user_count=user_count
+        "user/all.html", pagination=pagination, user_count=user_count
     )
 
 
@@ -138,3 +138,8 @@ def reset_password(token):
         flash(_("Password Changed"))
         return redirect(url_for("main.main"))
     return render_template("user/change_password.html", form=form)
+
+
+@user_bp.route("/groups/")
+def groups():
+    return render_template("user/groups.html", user=current_user)

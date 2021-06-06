@@ -56,7 +56,7 @@ def manage_images():
         )
     images = pagination.items
     return render_template(
-        "image/manage_images.html", pagination=pagination, images=images
+        "image/manage.html", pagination=pagination, images=images
     )
 
 

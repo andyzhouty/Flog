@@ -60,7 +60,7 @@ def manage_users():
     pagination = User.query.order_by(User.id.desc()).paginate(
         page, per_page=current_app.config["USERS_PER_PAGE"], error_out=False
     )
-    return render_template("user/all_users.html", pagination=pagination)
+    return render_template("user/all.html", pagination=pagination)
 
 
 @admin_bp.route("/user/<int:id>/profile/edit/", methods=["GET", "POST"])

@@ -153,21 +153,23 @@ MIT License
               (current_user.can(Permission.MODERATE) and not user.can(Permission.MODERATE)) -%}
                 {% if not user.blocked %}
                     <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-sm btn-outline-dark" onclick="return confirm('{{ _('Are you sure?') }}');">
-                    <i class="fa fa-lock"></i>
-                    {{ _("LOCK") }}
-                </button>
-            </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-outline-dark"
+                                onclick="return confirm('{{ _('Are you sure?') }}');">
+                            <i class="fa fa-lock"></i>
+                            {{ _("LOCK") }}
+                        </button>
+                    </form>
                 {% else %}
                     <form class="form-inline" method="POST"
                           action="{{ url_for('admin.unblock_user', user_id=user.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-sm btn-outline-dark" onclick="return confirm('{{ _('Are you sure?') }}');">
-                    <i class="fa fa-unlock"></i>
-                    {{ _("UNLOCK") }}
-                </button>
-            </form>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-outline-dark"
+                                onclick="return confirm('{{ _('Are you sure?') }}');">
+                            <i class="fa fa-unlock"></i>
+                            {{ _("UNLOCK") }}
+                        </button>
+                    </form>
                 {% endif %}
             {%- endif %}
     </span>
@@ -221,12 +223,23 @@ MIT License
 
 {% macro group_card(group) %}
     <li class="list-group-item">
-        <h3>{{ _("Group name:" ) }} {{ group.name }}</h3>
+        <h3>{{ _("Group name:" ) }} {{ group.name }}
+            {% if group.private %}
+                <span class="badge badge-dark">
+                    {{ _("Private") }}
+                </span>
+            {% endif %}
+        </h3>
         <h4>{{ _("Managed by:") }}
             <a href="{{ group.manager.profile_url() }}"
                class="text-muted profile-popover"
                data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
                 {{ group.manager.username }}
+            </a>
+        </h4>
+        <h4>
+            <a href="{{ url_for('group.info', id=group.id) }}">
+                {{ _("Group Info: ") }}
             </a>
         </h4>
     </li>

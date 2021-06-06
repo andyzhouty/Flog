@@ -31,6 +31,10 @@ def get_group_hint():
     user_input = request.args.get("q")
     hint = []
     for group in Group.query.all():
-        if user_input.lower() in group.name.lower() and user_input != "":
+        if (
+            user_input.lower() in group.name.lower()
+            and user_input != ""
+            and (not group.private or current_user.is_administrator())
+        ):
             hint.append(group.name)
     return jsonify(hint=hint[:5])

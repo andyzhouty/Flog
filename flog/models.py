@@ -194,6 +194,7 @@ class Group(db.Model):
     manager = db.relationship("User", back_populates="managed_groups")
     manager_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     messages = db.relationship("Message", back_populates="group")
+    private = db.Column(db.Boolean, default=False)
 
     def generate_join_token(self, expiration: int = 3600):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)

@@ -1,4 +1,4 @@
-from flog.models import User, Role, Group, Notification
+from flog.models import User, Role, Group, Notification, Message
 from .helpers import register, login, logout
 
 
@@ -77,15 +77,69 @@ def test_group_hint_ajax(client):
     login(client)
     data1 = {"group_name": "test_group"}
     data2 = {"group_name": "test_group1234abcd"}
+    data3 = {"group_name": "test_group1", "private": True}
     client.post("/group/create/", data=data1, follow_redirects=True)
     client.post("/group/create/", data=data2, follow_redirects=True)
+    client.post("/group/create/", data=data3, follow_redirects=True)
     response = client.get("/ajax/group/hint/?q=test")
     response_data = response.get_json()
     assert response.status_code == 200
     assert data1["group_name"] in response_data["hint"]
     assert data2["group_name"] in response_data["hint"]
+    assert data3["group_name"] in response_data["hint"]
+    logout(client)
+    register(client)
+    login(client, "test", "password")
+    response = client.get("/ajax/group/hint/?q=test")
+    response_data = response.get_json()
+    assert data3["group_name"] not in response_data["hint"]
+    logout(client)
+    login(client)
     assert len(response_data["hint"]) == 2
     response = client.get("/ajax/group/hint/?q=1234")
     response_data = response.get_json()
     assert data2["group_name"] in response_data["hint"]
     assert data1["group_name"] not in response_data["hint"]
+
+
+def test_group_info(client):
+    register(client)
+    login(client, "test", "password")
+    data = {"group_name": "test_group"}
+    client.post("/group/create/", data=data, follow_redirects=True)
+    g = Group.query.filter_by(name="test_group").first()
+    response = client.get(f"/group/{g.id}/info/")
+    assert response.status_code == 200
+
+
+def test_group_discussions(client):
+    register(client)
+    login(client, "test", "password")
+    data = {"group_name": "test_group"}
+    client.post("/group/create/", data=data, follow_redirects=True)
+    g = Group.query.filter_by(name="test_group").first()
+    response = client.get(f"/group/{g.id}/discussion/")
+    assert response.status_code == 200
+    response = client.post(f"/group/{g.id}/discussion/", data=dict(body="hello"))
+    assert response.status_code == 200
+    m = Message.query.filter_by(body="hello").first()
+    assert m in g.messages
+    logout(client)
+    login(client)
+    response = client.post(f"/group/{g.id}/discussion/", data=dict(body="hello"))
+    assert response.status_code == 403
+
+
+def test_group_all(client):
+    register(client)
+    login(client, "test", "password")
+    data = dict(group_name="test_group", private=True)
+    client.post("/group/create/", data=data, follow_redirects=True)
+    g1 = Group.query.filter_by(name="test_group").first()
+    response = client.get(f"/group/all/")
+    assert g1.name not in response.get_data(as_text=True)
+    logout(client)
+    login(client) # login as administrator
+    response = client.get(f"/group/all/")
+    assert g1.name in response.get_data(as_text=True)
+

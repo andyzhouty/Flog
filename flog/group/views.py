@@ -12,12 +12,21 @@ from ..utils import redirect_back
 from ..notifications import push_group_join_notification, push_group_invite_notification
 
 
+@group_bp.route("/all/")
+@login_required
+def all():
+    groups = Group.query.filter(~Group.private).all()
+    if current_user.is_administrator():
+        groups = Group.query.all()
+    return render_template("group/all.html", groups=groups)
+
+
 @group_bp.route("/create/", methods=["GET", "POST"])
 @login_required
 def create():
     form = GroupCreationForm()
     if form.validate_on_submit():
-        group = Group(name=form.group_name.data)
+        group = Group(name=form.group_name.data, private=form.private.data)
         current_user.join_group(group)
         group.manager = current_user
         db.session.commit()
@@ -89,14 +98,14 @@ def invite_user(user_id: int):
     return render_template("group/invite.html", form=form)
 
 
-@group_bp.route("/info/<int:id>/", methods=["GET", "POST"])
+@group_bp.route("/<int:id>/info/", methods=["GET", "POST"])
 @login_required
-def group_info(id: int):
+def info(id: int):
     group = Group.query.get_or_404(id)
     return render_template("group/info.html", group=group)
 
 
-@group_bp.route("/<int:id>/discussion", methods=["GET", "POST"])
+@group_bp.route("/<int:id>/discussion/", methods=["GET", "POST"])
 def discussion(id: int):
     group = Group.query.get_or_404(id)
     if current_user not in group.members:

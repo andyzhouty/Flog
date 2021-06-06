@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-06-06 10:04+0800\n"
+"POT-Creation-Date: 2021-06-06 10:40+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -260,21 +260,21 @@ msgstr "群的名字"
 msgid "No such group"
 msgstr "没有叫这个名字的群"
 
-#: flog/group/views.py:24
+#: flog/group/views.py:31
 msgid "Created group {0}."
 msgstr "创建了群{0}"
 
-#: flog/group/views.py:39
+#: flog/group/views.py:46
 msgid ""
 "We have sent a notification to the manager of the group.\n"
 "                All you should do is to wait the manager's reply."
 msgstr "我们已经向这个群的管理者发了一个通知，你只需等待回复即可。"
 
-#: flog/group/views.py:61
+#: flog/group/views.py:68
 msgid "Joined group {0}"
 msgstr "加入了群{0}"
 
-#: flog/group/views.py:75
+#: flog/group/views.py:82
 msgid ""
 "\n"
 "            You are not managing any groups.\n"
@@ -282,7 +282,7 @@ msgid ""
 "        "
 msgstr "你不在管理任何群，请创建一个群来邀请其他用户入群"
 
-#: flog/group/views.py:87
+#: flog/group/views.py:94
 msgid "Notification sent to user {0}"
 msgstr "消息已经发送给了用户{0}"
 
@@ -315,7 +315,7 @@ msgid "Content"
 msgstr "内容"
 
 #: flog/main/forms.py:27 flog/main/forms.py:45
-#: flog/templates/image/manage_images.html:15 flog/templates/macros.html:194
+#: flog/templates/image/manage.html:15 flog/templates/macros.html:194
 msgid "Private"
 msgstr "个人的"
 
@@ -533,9 +533,9 @@ msgstr "编辑"
 msgid "Are you sure?"
 msgstr "你确定吗？"
 
-#: flog/templates/admin/feedbacks.html:19
-#: flog/templates/image/manage_images.html:34 flog/templates/macros.html:107
-#: flog/templates/macros.html:148 flog/templates/main/_comments.html:52
+#: flog/templates/admin/feedbacks.html:19 flog/templates/image/manage.html:34
+#: flog/templates/macros.html:107 flog/templates/macros.html:148
+#: flog/templates/main/_comments.html:52
 #: flog/templates/main/notifications.html:52
 msgid "DELETE"
 msgstr "删除"
@@ -583,15 +583,20 @@ msgstr "群的名字"
 msgid "Managed by:"
 msgstr "管理者："
 
-#: flog/templates/macros.html:237
+#: flog/templates/macros.html:234
+#, fuzzy
+msgid "Group Info: "
+msgstr "群的名字"
+
+#: flog/templates/macros.html:242
 msgid "Column name:"
 msgstr "专栏名称："
 
-#: flog/templates/macros.html:238
+#: flog/templates/macros.html:243
 msgid "Author: "
 msgstr "作者："
 
-#: flog/templates/macros.html:246
+#: flog/templates/macros.html:251
 msgid "Created"
 msgstr "创建于"
 
@@ -726,7 +731,7 @@ msgstr "提示"
 msgid "Which group do you want to join?"
 msgstr "你想加入那个群？"
 
-#: flog/templates/group/info.html:5
+#: flog/templates/group/info.html:6
 msgid "Members"
 msgstr "成员"
 
@@ -734,15 +739,15 @@ msgstr "成员"
 msgid "Invite user to your group"
 msgstr "邀请用户到你管理的群"
 
-#: flog/templates/image/manage_images.html:17
+#: flog/templates/image/manage.html:17
 msgid "Public"
 msgstr "公开的"
 
-#: flog/templates/image/manage_images.html:24
+#: flog/templates/image/manage.html:24
 msgid "Make Public"
 msgstr "公开"
 
-#: flog/templates/image/manage_images.html:26
+#: flog/templates/image/manage.html:26
 msgid "Make Private"
 msgstr "私有"
 
@@ -815,39 +820,48 @@ msgstr "加入新的群"
 msgid "Create a new group"
 msgstr "创建一个群"
 
-#: flog/templates/main/_sidebar.html:34
+#: flog/templates/main/_sidebar.html:32
+#, fuzzy
+msgid "Your groups"
+msgstr "没有叫这个名字的群"
+
+#: flog/templates/main/_sidebar.html:37
 msgid "Explore"
 msgstr "发现"
 
-#: flog/templates/main/_sidebar.html:37
+#: flog/templates/main/_sidebar.html:40
 msgid "View all users"
 msgstr "查看所有Flog用户"
 
-#: flog/templates/main/_sidebar.html:42
+#: flog/templates/main/_sidebar.html:43
+msgid "View all public groups"
+msgstr ""
+
+#: flog/templates/main/_sidebar.html:48
 msgid "User Actions"
 msgstr "用户操作"
 
-#: flog/templates/main/_sidebar.html:45
+#: flog/templates/main/_sidebar.html:51
 msgid "Edit profile"
 msgstr "编辑账户信息"
 
-#: flog/templates/main/_sidebar.html:50
+#: flog/templates/main/_sidebar.html:56
 msgid "Column Actions"
 msgstr "专栏操作"
 
-#: flog/templates/main/_sidebar.html:53
+#: flog/templates/main/_sidebar.html:59
 msgid "Create a column"
 msgstr "新建一个专栏"
 
-#: flog/templates/main/_sidebar.html:59
+#: flog/templates/main/_sidebar.html:65
 msgid "Admin Actions"
 msgstr "管理员操作"
 
-#: flog/templates/main/_sidebar.html:62
+#: flog/templates/main/_sidebar.html:68
 msgid "Manage Users"
 msgstr "管理用户"
 
-#: flog/templates/main/_sidebar.html:65
+#: flog/templates/main/_sidebar.html:71
 msgid "Manage Posts"
 msgstr "管理文章"
 
@@ -948,7 +962,7 @@ msgstr[0] "条结果"
 msgid "No results"
 msgstr "没有结果"
 
-#: flog/templates/user/all_users.html:8
+#: flog/templates/user/all.html:8 flog/templates/user/groups.html:7
 msgid "All users"
 msgstr "查看所有Flog用户"
 

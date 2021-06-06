@@ -28,6 +28,9 @@ MIT License
                 <a class="list-group-item" href="{{ url_for('group.create') }}">
                     {{ _("Create a new group") }}
                 </a>
+                <a class="list-group-item" href="{{ url_for('user.groups') }}">
+                    {{ _("Your groups") }}
+                </a>
             </ul>
         </div>
         <div class="card mb-3">
@@ -35,6 +38,9 @@ MIT License
             <ul class="list-group list-group-flush">
                 <a class="list-group-item" href="{{ url_for('user.all_users') }}">
                     {{ _("View all users") }}
+                </a>
+                <a class="list-group-item" href="{{ url_for('group.all') }}">
+                    {{ _("View all public groups") }}
                 </a>
             </ul>
         </div>

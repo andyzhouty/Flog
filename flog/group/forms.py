@@ -4,7 +4,7 @@ Copyright (c) 2021 Andy Zhou
 """
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, SelectField
+from wtforms import StringField, SubmitField, ValidationError, SelectField, BooleanField
 from wtforms.validators import Length
 from ..models import Group
 
@@ -15,6 +15,7 @@ class GroupCreationForm(FlaskForm):
     group_name = StringField(
         _l("Group Name"), validators=[Length(max=128, message=l_message)]
     )
+    private = BooleanField(_l("Private"))
     submit = SubmitField(_l("Submit"))
 
 

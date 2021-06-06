@@ -1,0 +1,14 @@
+{#
+Copyright (c) 2021 Andy Zhou
+MIT License
+#}
+{% extends 'base.html' %}
+{% from 'macros.html' import group_card with context %}
+{% block title %}{{ _("All users") }} {% endblock %}
+{% block page_content %}
+    <ul class="list-group">
+        {% for group in user.groups %}
+            {{ group_card(group) }}
+        {% endfor %}
+    </ul>
+{% endblock page_content %}
