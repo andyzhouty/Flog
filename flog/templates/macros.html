@@ -129,7 +129,7 @@ MIT License
         <div style="float: left">
             <a href="{{ url_for('user.user_profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover"
-                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></a>
+                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" height="30px" width="auto"></a>
             <a style="font-size: 2em"
                href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
             {{ role_label_of(user) }}
@@ -270,7 +270,7 @@ MIT License
         <div class="d-flex justify-content-start" style="margin-bottom: 10px">
             <a href="{{ url_for('user.user_profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover"
-                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
+                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" width="30px">
             </a>
             <span class="bg-success" style="border-radius: 5px; padding: 10px">
             {{ message.body }}
@@ -283,7 +283,7 @@ MIT License
             </span>
             <a href="{{ url_for('user.user_profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover"
-                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
+                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" height="30px" width="auto">
             </a>
         </div>
     {% endif %}
