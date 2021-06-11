@@ -1,7 +1,9 @@
 {% if not post.private %}
-    <h3>
+    <h3 class="d-flex justify-content-between">
+        <div>
         {{ comments|length }}
         {{ ngettext('comment', 'comments', __num=comments|length) }}
+        </div>
         <small>
             <a href="{{ url_for('main.full_post', id=post.id, page=pagination.pages or 1) }}#comments">
                 {{ _("latest") }}
@@ -43,7 +45,7 @@
             </p>
             {% endif %}
             <p class="mb-1">{{ comment.body | safe }}</p>
-            <div class="float-right">
+            <div class="d-flex justify-content-end">
                 {% if current_user.is_administrator() or current_user == comment.author %}
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}"
                     style="display: inline !important">

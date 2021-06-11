@@ -6,22 +6,27 @@ MIT License
 {% from 'macros.html' import post_actions with context %}
 {% block title %}{{ _("Your collections") }}{% endblock %}
 {% block page_content %}
-    <ul class="list-group">
-        {% if posts | length > 0%}
-            {% for post in posts %}
-            <li class="list-group-item">
-            <h3 class="text-primary">{{ post.title }}</h3>
-                <div>
-                    {{ post.content | striptags | truncate(200) }}
-                    <small class="text-primary">
-                        <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _("Read More") }}</a>
-                    </small>
-                </div>
-                {{ post_actions(post) }}
-            </li>
-            {% endfor %}
-        {% else %}
-            {{ _("You don't have any collections") }}
-        {% endif %}
-    </ul>
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="list-group">
+                {% if posts | length > 0 %}
+                    {% for post in posts %}
+                        <li class="list-group-item">
+                            <h3 class="text-primary">{{ post.title }}</h3>
+                            <div>
+                                {{ post.content | striptags | truncate(200) }}
+                                <small class="text-primary">
+                                    <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _("Read More") }}</a>
+                                </small>
+                            </div>
+                            {{ post_actions(post) }}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    {{ _("You don't have any collections") }}
+                {% endif %}
+            </ul>
+        </div>
+        {% include 'main/_sidebar.html' %}
+    </div>
 {% endblock page_content %}

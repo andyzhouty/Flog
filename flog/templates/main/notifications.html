@@ -19,33 +19,35 @@ MIT License
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-light">
                 <i class="fa fa-envelope-open"></i>
-                {{ _("Mark all notifications as read") }}
+                {{ _("Mark all as read") }}
             </button>
         </form>
         <form method="POST" action="{{ url_for('notification.delete_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-danger">
                 <i class="fa fa-trash"></i>
-                {{ _("Delete all notifications") }}
+                {{ _("Delete all") }}
             </button>
         </form>
     </div>
     <ul class="list-group">
         {% for notification in notifications %}
-            <li class="list-group-item">
-                {{ _(notification.message) | safe }}
+            <li class="list-group-item d-flex">
+                <div class="p-2 flex-grow-1">
+                    {{ _(notification.message) | safe }}
+                </div>
                 {% if not notification.is_read %}
-                    <form class="form-inline" method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-sm btn-light">
-                            <i class="fa fa-envelope-open-o"></i>
-                            {{ _("Mark this notification as read") }}
-                        </button>
-                    </form>
+                <form class="form-inline p-1" method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-light">
+                        <i class="fa fa-envelope-open-o"></i>
+                        {{ _("Mark as read") }}
+                    </button>
+                </form>
                 {% else %}
-                    <span class="fa fa-check-square-o text-success"></span>
+                    <span class="fa fa-check-square-o text-success p-1"></span>
                 {% endif %}
-                <form class="form-inline" method="POST" action="{{ url_for('notification.delete', id=notification.id) }}">
+                <form class="form-inline p-1" method="POST" action="{{ url_for('notification.delete', id=notification.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-outline-danger">
                         <i class="fa fa-trash"></i>

@@ -6,9 +6,14 @@ MIT License
 {% from 'macros.html' import group_card with context %}
 {% block title %}{{ _("All users") }} {% endblock %}
 {% block page_content %}
-    <ul class="list-group">
-        {% for group in user.groups %}
-            {{ group_card(group) }}
-        {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="list-group">
+                {% for group in user.groups %}
+                    {{ group_card(group) }}
+                {% endfor %}
+            </ul>
+        </div>
+        {% include 'main/_sidebar.html' %}
+    </div>
 {% endblock page_content %}

@@ -106,7 +106,7 @@ class Base:
 class Production(Base):
     FLASK_CONFIG = "production"
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL", generate_sqlite_filename("data")
+        "DATABASE_PROD", generate_sqlite_filename("data")
     )
 
     @classmethod

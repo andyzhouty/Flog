@@ -14,8 +14,11 @@ MIT License
     <div class="hello-form" role="form">
         {{ render_form(form, action=request.full_path) }}
     </div>
-    <h5>{{ feedback|length }} {{ ngettext('feedback', 'feedbacks', __num=feedback|length) }}
-        <small class="float-right">
+    <h5 class="d-flex">
+        <div class="flex-grow-1">
+            {{ feedback|length }} {{ ngettext('feedback', 'feedbacks', __num=feedback|length) }}
+        </div>
+        <small>
             <a href="#bottom" title="Go Bottom">&darr;</a>
         </small>
     </h5>
@@ -37,4 +40,5 @@ MIT License
             {% endif %}
         {% endfor %}
     </div>
+    <div id="bottom"></div>
 {% endblock page_content %}
