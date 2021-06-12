@@ -7,10 +7,7 @@ python:
   - "3.9"
 before_install:
   - wget -qO- https://toolbelt.heroku.com/install.sh | sh #installed heroku CLI
-  - (
-    echo "$HEROKU_USERNAME"  # or you can plaintext it, if you're feeling adventurous
-    echo "$HEROKU_PASSWORD"
-    ) | heroku login
+  - (echo "$HEROKU_USERNAME"; echo "$HEROKU_PASSWORD") | heroku login
   - docker login -u "$HEROKU_USERNAME" --password=$(heroku auth:token) registry.heroku.com #logged in
 install:
   - pip install -r requirements-dev.txt
