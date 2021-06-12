@@ -1,20 +1,16 @@
 language: python
-services:
-  - docker
 python:
   - "3.7.5"
   - "3.8"
   - "3.9"
-before_install:
-  - wget -qO- https://toolbelt.heroku.com/install.sh | sh #installed heroku CLI
-  - (echo "$HEROKU_USERNAME"; echo "$HEROKU_PASSWORD") | heroku login
-  - docker login -u "$HEROKU_USERNAME" --password=$(heroku auth:token) registry.heroku.com #logged in
 install:
   - pip install -r requirements-dev.txt
 script:
   - flask translate compile && pytest
   - curl -s https://codecov.io/bash | bash
 deploy:
-  provider: script
-  script:
-    heroku container:release web --app flog-web
+  provider: heroku
+  api_key:
+    secure: $HEROKU_API_KEY
+  run:
+    flask deploy
