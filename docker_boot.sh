@@ -1,4 +1,8 @@
 #! /bin/sh
+if [ ! "${PORT}" ]
+then
+  export PORT=5000
+fi
 flask deploy
 flask create-admin
 flask forge
