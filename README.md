@@ -3,7 +3,7 @@
 
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs)](https://flog.readthedocs.io/en/latest/?badge=latest)
 [![Build Status](https://travis-ci.com/z-t-y/Flog.svg?branch=master)](https://travis-ci.com/z-t-y/Flog)
-[![Coverage Status](https://img.shields.io/coveralls/github/z-t-y/Flog?logo=coveralls)](https://coveralls.io/github/z-t-y/Flog?branch=master)
+[![codecov](https://codecov.io/gh/z-t-y/Flog/branch/master/graph/badge.svg?token=FZ46GGQIZ7)](https://codecov.io/gh/z-t-y/Flog)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
 Icons made by
