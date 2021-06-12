@@ -2,7 +2,7 @@
 [中文版 README](./README_zh.md)
 
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs)](https://flog.readthedocs.io/en/latest/?badge=latest)
-[![CircleCI Status](https://img.shields.io/circleci/build/gh/z-t-y/Flog?label=circleci&logo=circleci)](https://circleci.com/gh/z-t-y/Flog)
+[![Build Status](https://travis-ci.com/z-t-y/Flog.svg?branch=master)](https://travis-ci.com/z-t-y/Flog)
 [![Coverage Status](https://img.shields.io/coveralls/github/z-t-y/Flog?logo=coveralls)](https://coveralls.io/github/z-t-y/Flog?branch=master)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
