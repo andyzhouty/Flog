@@ -1,16 +1,15 @@
 language: python
 python:
-  - "3.7.5"
-  - "3.8"
-  - "3.9"
+- 3.7.5
+- '3.8'
+- '3.9'
 install:
-  - pip install -r requirements-dev.txt
+- pip install -r requirements-dev.txt
 script:
-  - flask translate compile && pytest
-  - curl -s https://codecov.io/bash | bash
+- flask translate compile && pytest
+- curl -s https://codecov.io/bash | bash
 deploy:
   provider: heroku
   api_key:
-    secure: $HEROKU_API_KEY
-  run:
-    flask deploy
+    secure: o0E5kRGZXox8lkzwHXM7Ip6LfwYOoEaR6lQ4XRdsNrcTaJej1w2LuRqAWA5BK9rmSmP629BhipasA6/5yB2y3YHnguW7qd/i6kgTmO8L1qlhIYB4LrRtbKi7x9IM5yHcC3Ztd5D5E9NQ5hKu92kgSBu1UkB6pLam7EWHVmUYJTs4+PfagK3MIUIDq0lnUQud6ZF0NGGu+hmEIFwyZtdbHuWh6AQrQf41WrukDMPyZJ9FC/0CKjVej6BVyNWBFBvk7RzSxo2wcz7ekbW9g3i8TsVkyKwsl0we0c6S2S512hGYgIAXXM+t5BKRf20+eyUNx+79xEfeTakyrdz/DM2K+pYZC2uj7fueqvm2lQFqiurKOKyZjPmLkvlVeaLgBNhSbDE2hPp00h2SgxacvRCL3jXnp8Fzk0dTCSP8iqfyDHOhA9TMOtLxEUZ/sK0DHXT/aE+bFGNp3bUSVIkovDKAtx3cp1lawadu/EJubyEXNA8o5hJqO5WF3LCw43Hpc8r0EFojqz+1yi0o+78cXf79pD5+XZ3R+ev/ERWFkZqAG0QnTVJp54Nzqa4IAUodTGcoCKdopy5YGt8TQH/IMiZyDQo1LM1pMVhZrMKuEVkV9ZQ46gtr22bgGycdII7wL65X/Zf5nXHoUdz3cczkFXmhyIUMa3FkZHxtHBrT3sEEB3c=
+  run: flask deploy
