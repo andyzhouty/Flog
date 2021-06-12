@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
 jobs:
   build:
     docker:
@@ -31,8 +33,4 @@ jobs:
           destination: tr1
       - store_test_results:
           path: test-reports/
-      - run:
-          name: Submit coverage status to coveralls
-          command: |
-            . venv/bin/activate
-            coveralls
+      - coveralls/upload
