@@ -8,7 +8,9 @@ MIT License
     <div class="popup-profile">
         <h6>
             {{ user.username }}<br>
-            <small class="text-muted">{{ user.name }}</small>
+            {% if current_user.can(Permission.MODERATE) %}
+                <small class="text-muted">{{ user.name }}</small>
+            {% endif %}
         </h6>
     </div>
     <a href="{{ url_for('user.user_profile', username=user.username) }}"

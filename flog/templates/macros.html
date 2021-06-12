@@ -127,24 +127,26 @@ MIT License
 
 {% macro user_card(user) %}
     <li class="list-group-item d-flex">
-        <div class="flex-grow-1 d-flex align-items-center">
+        <div class="d-flex align-items-center">
             <a href="{{ url_for('user.user_profile', username=user.username) }}">
-                <img src="{{ user.avatar_url() }}" class="profile-popover"
-                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" height="30px" width="auto">
+                <img src="{{ user.avatar_url() }}" class="profile-popover mr-3"
+                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" style="height: 50px !important">
             </a>
-            <a style="font-size: 2em"
+            <a style="font-size: 2em;"
+               class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% else %} text-primary {% endif %}"
                href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
-            {{ role_label_of(user) }}
         </div>
-        <span class="text-white align-items-end flex-column">
+        <span class="text-white align-items-end flex-column ml-auto">
             {% if current_user.is_administrator() -%}
-            <a class="btn btn-sm btn-outline-secondary flex-fill" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                <a class="btn btn-sm btn-outline-secondary flex-fill"
+                   href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
                 <i class="fa fa-edit"></i>
                 {{ _("Edit Profile") }}
             </a>
-            <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}">
+                <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-sm btn-outline-danger flex-fill" onclick="return confirm('{{ _('Are you sure?') }}');">
+                <button class="btn btn-sm btn-outline-danger flex-fill"
+                        onclick="return confirm('{{ _('Are you sure?') }}');">
                     <i class="fa fa-trash"></i>
                     {{ _("DELETE") }}
                 </button>

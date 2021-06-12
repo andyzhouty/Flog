@@ -16,7 +16,8 @@ MIT License
         {% block styles %}
             {{ static_file('icon', 'favicon/favicon.svg') }}
             {{ static_file('icon', 'favicon/favicon.ico') }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' % request.cookies.get('theme', 'cosmo'), local=False) }}
+            {{ static_file('css', '//cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' %
+               request.cookies.get('theme', 'cosmo'), local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
             {{ static_file('css', 'css/stylesheet.css') }}
@@ -56,7 +57,8 @@ MIT License
                             <a href="{{ url_for('user.user_profile', username=current_user.username) }}"
                                class="nav-link">
                                 {# Display user identicon as a circle here #}
-                                <img src="{{ current_user.avatar_url(size=30) }}" alt="identicon" class="rounded-circle">
+                                <img src="{{ current_user.avatar_url(size=30) }}" alt="identicon" class="rounded-circle"
+                                    style="height: 40px !important; width: 40px !important;">
                             </a>
                         </li>
                         <li class="nav-item dropdown">
