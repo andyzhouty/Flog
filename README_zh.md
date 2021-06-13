@@ -45,14 +45,19 @@
 - 双语言支持 (简体中文和美式英语)
 - Web API
 
+## 关于在线DEMO
+
+本在线示例仅是Flog功能的DEMO。由于Heroku的限制，你将无法上传图片以及使用中文界面。
+但是，你仍然可以体验Flog的主要功能例如聊天室、Web API和消息中心。
+
 ## API 文档
 
 api v1 & v2
 [ReadTheDocs](https://flog.readthedocs.io/en/latest/)
 
 api v3
-[Swagger文档](https://flog.pythonanywhere.com/docs)
-[Redoc](https://flog.pythonanywhere.com/redoc)
+[Swagger文档](https://flog-web.herokuapp.com/docs)
+[Redoc](https://flog-web.herokuapp.com/redoc)
 
 ## 在本地运行这个网站
 
@@ -105,13 +110,16 @@ pytest
 
 ## Flog可选设置
 
-| 配置名              | 默认值                 | 描述                                       |
-| ------------------- | ---------------------- | ------------------------------------------ |
-| FLOG_EMAIL          | flog_admin@example.com | 部署Flog时所用的邮箱（推荐使用自建服务器） |
-| FLOG_EMAIL_PASSWORD | flog_email_password    | FLOG_EMAIL的邮箱密码                       |
-| FLOG_ADMIN          | flog_admin             | Flog管理员的用户名                         |
-| FLOG_ADMIN_EMAIL    | flog_admin@example.com | Flog管理员的邮箱                           |
-| FLOG_ADMIN_PASSWORD | flog_admin_password    | Flog管理员的密码                           |
+| 配置名               | 默认值                       | 描述                                  |
+| ------------------- | ----------------------      | ------------------------------------ |
+| FLOG_EMAIL          | flog_admin@example.com      | 部署Flog时所用的邮箱（推荐使用自建服务器）  |
+| FLOG_EMAIL_PASSWORD | flog_email_password         | FLOG_EMAIL的邮箱密码                   |
+| FLOG_ADMIN          | flog_admin                  | Flog管理员的用户名                     |
+| FLOG_ADMIN_EMAIL    | flog_admin@example.com      | Flog管理员的邮箱                       |
+| FLOG_ADMIN_PASSWORD | flog_admin_password         | Flog管理员的密码                       |
+| DATABASE_PROD       | sqlite:///./data.sqlite     | Flog在生产环境中的数据库URL             |
+| DATABASE_DEV        | sqlite:///./data-dev.sqlite | Flog在开发环境中的数据库URL             |
+| DATABASE_TEST       | sqlite:///:memory:          | Flog在单元测试中的数据库URL             |
 
 ## 关于一些小问题
 

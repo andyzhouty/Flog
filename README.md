@@ -54,14 +54,21 @@ that took me into the wonderful world of Flask.
 I'm currently planning to add access tokens and refresh tokens to api v3.
 It might use flask-apispec and flask-jwt-extended.
 
+## About the online demo
+
+This demo demonstrates how Flog works. Due to Heroku's limitations,
+you can only see the English version of the website and you cannot upload images to it.
+
+Yet you can still experience most of Flog's features such as the web api, the group chatting room and the notification system.
+
 ## Web API Documents
 
 api v1 & v2
 [ReadTheDocs](https://flog.readthedocs.io/en/latest/)
 
 api v3
-[Swagger Doc](https://flog.pythonanywhere.com/docs)
-[Redoc](https://flog.pythonanywhere.com/redoc)
+[Swagger Doc](https://flog-web.herokuapp.com/docs)
+[Redoc](https://flog-web.herokuapp.com/redoc)
 
 ## Run Flog locally
 
@@ -114,13 +121,16 @@ pytest # or `pipenv run pytest`
 
 ## Available Settings for Flog
 
-| Config Name         | Default Value          | Description                                |
-| ------------------- | ---------------------- | ------------------------------------------ |
-| FLOG_EMAIL          | flog_admin@example.com | The email address used for deploying flog. |
-| FLOG_EMAIL_PASSWORD | flog_email_password    | The email password for FLOG_EMAIL          |
-| FLOG_ADMIN          | flog_admin             | The username of the administrator of flog. |
-| FLOG_ADMIN_EMAIL    | flog_admin@example.com | The administrator's email address.         |
-| FLOG_ADMIN_PASSWORD | flog_admin_password    | The administrator's password.              |
+| Config Name         | Default Value               | Description                                |
+| ------------------- | --------------------------- | ------------------------------------------ |
+| FLOG_EMAIL          | flog_admin@example.com      | The email address used for deploying flog. |
+| FLOG_EMAIL_PASSWORD | flog_email_password         | The email password for FLOG_EMAIL          |
+| FLOG_ADMIN          | flog_admin                  | The username of the administrator of flog. |
+| FLOG_ADMIN_EMAIL    | flog_admin@example.com      | The administrator's email address.         |
+| FLOG_ADMIN_PASSWORD | flog_admin_password         | The administrator's password.              |
+| DATABASE_PROD       | sqlite:///./data.sqlite     | The URL of the database in production.     |
+| DATABASE_DEV        | sqlite:///./data-dev.sqlite | The URL of the database in development.    |
+| DATABASE_TEST       | sqlite:///:memory           | The URL of the database in testing.        |
 
 ## FAQ
 
