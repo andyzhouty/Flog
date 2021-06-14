@@ -1,4 +1,4 @@
-from flask import g
+from flask import g, request
 from ..models import Post, User
 
 
@@ -30,3 +30,16 @@ def can_edit_profile(user: User) -> bool:
     return g.current_user is not None and (
         g.current_user == user or g.current_user.is_administrator()
     )
+
+
+def get_current_user():
+    auth = request.headers.get("Authorization")
+    print(1)
+    if auth:
+        if not auth.startswith("Bearer"):
+            print(2)
+            return None
+        print(3)
+        token = auth[7:]
+        user = User.verify_auth_token_api(token)
+        return user

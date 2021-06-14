@@ -25,7 +25,7 @@ def test_no_auth(client):
     )
 
     response = client.get(
-        "/api/v2/post/1/", headers=get_api_v2_headers(client, custom_token="fake-token")
+        "/api/v2/post/1/", headers=get_api_v2_headers(client, custom_token="Bearer fake-token")
     )
     data = response.get_json()
     assert data.get("message") == "invalid token"

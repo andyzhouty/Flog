@@ -137,7 +137,7 @@ def get_api_v3_headers(
 
 def get_token_from_response(response, custom_token: str, **kwargs):
     data = response.get_json()
-    token = data.get("access_token")
+    token = "Bearer " + str(data.get("access_token"))
     if custom_token is not None:
         token = custom_token
     if kwargs.get("content_type"):
@@ -145,7 +145,7 @@ def get_token_from_response(response, custom_token: str, **kwargs):
     else:
         content_type = "application/json"
     return {
-        "Authorization": "Bearer " + token,
+        "Authorization": token,
         "Accept": "application/json",
         "Content-Type": content_type,
     }

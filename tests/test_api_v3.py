@@ -74,17 +74,21 @@ def test_user(client):
 
 def test_post(client):
     register(client)
+    register(client, "test2", "test2", "123456", "test2@example.com")
+    user = User.query.filter_by(username="test").first()
     post = Post(
         private=False,
         title="abc",
         content="1234",
-        author=User.query.filter_by(username="test").first(),
+        author=user,
     )
     db.session.add(post)
     db.session.commit()
     response = client.get(f"/api/v3/post/{post.id}")
     data = response.get_json()
     assert data["title"] == post.title
+
+    # test PUT /api/v3/post/{post.id}
     put_data = {"title": "ABCD", "content": "<p>test</p>", "private": True}
     response = client.put(
         f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client), json=put_data
@@ -92,6 +96,21 @@ def test_post(client):
     data = response.get_json()
 
     assert data["private"] is True
+
+    # test get private posts without authentication
+    response = client.get(f"/api/v3/user/{user.id}/posts")
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data == []  # should be empty since the user has no public posts
+    # test get private posts with another user's authentication
+    response = client.get(f"/api/v3/user/{user.id}/posts",
+                          headers=get_api_v3_headers(client, "test2", "123456", "InvalidToken"))
+    data = response.get_json()
+    assert data == []
+    # test get private posts with author's authentication
+    response = client.get(f"/api/v3/user/{user.id}/posts", headers=get_api_v3_headers(client))
+    data = response.get_json()
+    assert any(post["title"] == "ABCD" for post in data)
 
     response = client.get(f"/api/v3/post/{post.id}")
     assert response.status_code == 403

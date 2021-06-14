@@ -2,14 +2,15 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from apiflask import input, output, abort, doc
-from flask import url_for, jsonify, g, request
+from apiflask import input, output, abort
+from flask import url_for, jsonify, g
 from flask.views import MethodView
 from .schemas import *
 from flog.models import db, User, Post, Comment, Permission
 from flog.utils import clean_html
 from . import api_v3
 from .decorators import can_edit, permission_required
+from ..api_utils import get_current_user
 
 
 @api_v3.route("", endpoint="index")
@@ -51,6 +52,16 @@ class UserAPI(MethodView):
         return user
 
 
+@api_v3.route("/user/<int:user_id>/posts", endpoint="user_posts")
+class UserPostAPI(MethodView):
+    @output(PostOutSchema(many=True))
+    def get(self, user_id):
+        user = User.query.get_or_404(user_id)
+        permitted = (get_current_user() is not None and (
+                get_current_user() == user or get_current_user().is_administrator()))
+        return user.posts if permitted else [post for post in user.posts if not post.private]
+
+
 @api_v3.route("/register", endpoint="register")
 class RegistrationAPI(MethodView):
     @input(UserInSchema, location="form")
@@ -90,15 +101,10 @@ class PostAPI(MethodView):
         post = Post.query.get_or_404(post_id)
 
         if post.private:
-            auth = request.headers.get("Authorization")
-            if auth:
-                if not auth.startswith("Bearer"):
-                    abort(403, "the post is private")
-                token = auth[7:]
-                user = User.verify_auth_token_api(token)
-                if user:
-                    if user.is_administrator() or post in user.posts:
-                        return post
+            user = get_current_user()
+            if user:
+                if user.is_administrator() or post in user.posts:
+                    return post
             abort(403, "the post is private")
         return post
 
