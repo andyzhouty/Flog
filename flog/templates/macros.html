@@ -214,7 +214,7 @@ MIT License
             <a href="{{ url_for('main.full_post', id=post.id) }}"
                style="color: var(--primary) !important;">{{ _("Read More") }}></a>
             {% if post.columns %}
-                <p class="small">
+                <p class="small mb-0">
                     {{ _("This post belongs to") }}
                     {% for column in post.columns[:-1] %}
                         <a href="{{ url_for('main.view_column', id=column.id) }}">
