@@ -2,9 +2,9 @@ name: Flog CI
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   test:
@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: [ 3.7, 3.8, 3.9 ]
-        os: [ubuntu-latest, macos-latest]
+        os: [ ubuntu-latest, macos-latest ]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -37,10 +37,13 @@ jobs:
           . venv/bin/activate
           flask translate compile
           pytest
+      - name: Submit coverage data
+        if: ${{ matrix.python-version == 3.9 }} && ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
           bash <(curl -s https://codecov.io/bash)
 
   deploy:
-    if: ${{ github.ref == 'master' }}
+    if: ${{ github.ref == 'refs/heads/master' }}
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -48,12 +51,7 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ""
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          justlogin: true
-      - name: Add Heroku remote
-        run: heroku git:remote -app $HEROKU_APP_NAME
-        env:
-          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-      - name: Push to Heroku
-        run: git push heroku master
+      - name: Run database migration
+        run: heroku run flask deploy
