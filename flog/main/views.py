@@ -18,7 +18,7 @@ from flask_login import current_user, login_required
 from ..models import Permission, db, Post, Comment, User, Group, Column
 from ..utils import redirect_back, clean_html
 from ..notifications import push_collect_notification, push_comment_notification
-from .forms import ColumnForm, PostForm, EditForm, CommentForm
+from .forms import ColumnForm, PostForm, CommentForm
 from . import main_bp
 
 
@@ -185,7 +185,7 @@ def edit_post(id):
     post = Post.query.get(id)
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
-    form = EditForm()
+    form = PostForm()
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data

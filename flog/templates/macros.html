@@ -15,6 +15,13 @@ MIT License
     {%- endif %}
 {% endmacro %}
 
+{% macro render_timestamp(timestamp) %}
+    <span data-toggle="tooltip" data-placement="top" data-delay="500"
+          data-timestamp="{{ timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+        {{ moment(timestamp).fromNow(refresh=True) }}
+    </span>
+{% endmacro %}
+
 {% macro role_of(user) %}
     {% if user.is_administrator() -%}
         {{ _("Administrator") }}
@@ -36,6 +43,12 @@ MIT License
     {% else %}
         <span class="badge badge-dark">{{ _("Blocked") }}</span>
     {%- endif %}
+    </span>
+{% endmacro %}
+
+{% macro render_user_role(user) %}
+    <span class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% endif %}">
+        {{ user.username }}
     </span>
 {% endmacro %}
 
@@ -73,12 +86,12 @@ MIT License
             {% if can_collect and post.author != current_user -%}
                 {% if not current_user.is_collecting(post) -%}
                     <a class="btn btn-sm btn-success mr-1" href="{{ url_for('main.collect_post', id=post.id) }}">
-                        <i class="fa fa-star"></i>
+                        <i class="bi-star-fill"></i>
                         {{ _("Collect") }}
                     </a>
                 {% else -%}
                     <a class="btn btn-sm btn-warning mr-1" href="{{ url_for('main.uncollect_post', id=post.id) }}">
-                        <i class="fa fa-ban"></i>
+                        <i class="bi-ban"></i>
                         {{ _("Uncollect") }}
                     </a>
                 {%- endif %}
@@ -87,7 +100,7 @@ MIT License
                   and can_edit -%}
                 <a href="{{ url_for('main.edit_post', id=post.id) }}">
                     <button class="btn btn-sm btn-primary mr-1">
-                        <i class="fa fa-edit"></i>
+                        <i class="bi-pencil-square"></i>
                         {{ _("EDIT") }}
                     </button>
                 </a>
@@ -104,7 +117,7 @@ MIT License
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
-                        <i class="fa fa-trash"></i>
+                        <i class="bi-trash"></i>
                         {{ _("DELETE") }}
                     </button>
                 </form>
@@ -113,12 +126,8 @@ MIT License
                 <br><br>
                 {% set collectors = post.collectors | length %}
                 <p class="text-muted ml-auto">
-                    <i class="fa fa-star"></i>
-                    {% if collectors == 1 -%}
-                        {{ _("Collected by 1 person") }}
-                    {% else -%}
-                        {{ _('Collected by %d people' % collectors) }}
-                    {%- endif %}
+                    <i class="bi-star-fill"></i>
+                    {{ collectors }}
                 </p>
             {%- endif %}
         </div>
@@ -140,14 +149,14 @@ MIT License
             {% if current_user.is_administrator() -%}
                 <a class="btn btn-sm btn-outline-secondary flex-fill"
                    href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
-                <i class="fa fa-edit"></i>
+                <i class="bi-pencil-square"></i>
                 {{ _("Edit Profile") }}
             </a>
                 <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-sm btn-outline-danger flex-fill"
                         onclick="return confirm('{{ _('Are you sure?') }}');">
-                    <i class="fa fa-trash"></i>
+                    <i class="bi-trash"></i>
                     {{ _("DELETE") }}
                 </button>
             </form>
@@ -159,7 +168,7 @@ MIT License
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="btn btn-sm btn-outline-dark flex-fill"
                                 onclick="return confirm('{{ _('Are you sure?') }}');">
-                            <i class="fa fa-lock"></i>
+                            <i class="bi-lock"></i>
                             {{ _("LOCK") }}
                         </button>
                     </form>
@@ -169,7 +178,7 @@ MIT License
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="btn btn-sm btn-outline-dark flex-fill"
                                 onclick="return confirm('{{ _('Are you sure?') }}');">
-                            <i class="fa fa-unlock"></i>
+                            <i class="bi-unlock"></i>
                             {{ _("UNLOCK") }}
                         </button>
                     </form>
@@ -181,30 +190,29 @@ MIT License
 
 {% macro post_card(post) %}
     <li class="list-group-item">
-        <h3 style="color: #5050bb">
-            <a href="{{ post.url() }}" title="{{ post.title }}">{{ post.title }}</a>
+        <h3 style="color: #5050bb" class="flex-grow-1">
+            <a href="{{ post.url() }}" title="{{ post.title }} {% if post.private %}({{ _("Private") }}){% endif %}">
+                {% if post.private %}<i class="bi-eye-slash-fill"></i>{% endif %}
+                {{ post.title }}
+            </a>
         </h3>
-        <h4>
+        <h4 class="text-muted">
             {% if post.author %}
                 <a href="{{ url_for('user.user_profile', username=post.author.username) }}"
-                   class="text-muted profile-popover"
+                   class="profile-popover"
                    data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
                     {{ post.author.username }}
                 </a>
             {% else %}
                 {{ _("Deleted Flog User") }}
             {% endif %}
-            {% if post.private %}
-                <span class="badge badge-dark">
-                    {{ _("Private") }}
-                </span>
-            {% endif %}
         </h4>
+        <div class="post-container">
+            <div class="post-content">{{ post.content | striptags }}</div>
+        </div>
         <div>
-            {{ post.content | striptags | truncate(200) }}
-            <small class="text-primary">
-                <a href="{{ url_for('main.full_post', id=post.id) }}">{{ _("Read More") }}</a>
-            </small>
+            <a href="{{ url_for('main.full_post', id=post.id) }}"
+               style="color: var(--primary) !important;">{{ _("Read More") }}></a>
             {% if post.columns %}
                 <p class="small">
                     {{ _("This post belongs to") }}
@@ -219,6 +227,7 @@ MIT License
                     </a>.
                 </p>
             {% endif %}
+            <div class="text-muted" style="font-size: small">{{ render_timestamp(post.timestamp) }}</div>
             {{ post_actions(post) }}
         </div>
     </li>
@@ -241,7 +250,7 @@ MIT License
             </a>
         </h4>
         <h4>
-            <i class="fa fa-info"></i>
+            <i class="bi-info"></i>
             <a href="{{ url_for('group.info', id=group.id) }}">
                 {{ _("Group Info") }}
             </a>

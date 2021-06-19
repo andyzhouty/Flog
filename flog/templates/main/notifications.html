@@ -7,25 +7,25 @@ MIT License
     <div class="nav nav-pills" role="tablist">
         <a class="nav-item nav-link {% if request.args.get('filter') != 'unread' %}active{% endif %}"
            href="{{ url_for('notification.show', filter='all') }}">
-           <i class="fa fa-inbox"></i> 
+           <i class="bi-inbox"></i>
            {{ _("All") }}
         </a>
         <a class="nav-item nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
             href="{{ url_for('notification.show', filter='unread') }}" style="margin-right: 50px">
-            <i class="fa fa-envelope"></i>
+            <i class="bi-envelope"></i>
             {{ _("Unread") }}
         </a>
         <form method="POST" action="{{ url_for('notification.read_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-light">
-                <i class="fa fa-envelope-open"></i>
+                <i class="bi-envelope-open-fill"></i>
                 {{ _("Mark all as read") }}
             </button>
         </form>
         <form method="POST" action="{{ url_for('notification.delete_all') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-danger">
-                <i class="fa fa-trash"></i>
+                <i class="bi-trash"></i>
                 {{ _("Delete all") }}
             </button>
         </form>
@@ -40,17 +40,17 @@ MIT License
                 <form class="form-inline p-1" method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-light">
-                        <i class="fa fa-envelope-open-o"></i>
+                        <i class="bi-envelope-open"></i>
                         {{ _("Mark as read") }}
                     </button>
                 </form>
                 {% else %}
-                    <span class="fa fa-check-square-o text-success p-1"></span>
+                    <span class="bi-check-square-o text-success p-1"></span>
                 {% endif %}
                 <form class="form-inline p-1" method="POST" action="{{ url_for('notification.delete', id=notification.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-outline-danger">
-                        <i class="fa fa-trash"></i>
+                        <i class="bi-trash"></i>
                         {{ _("DELETE") }}
                     </button>
                 </form>

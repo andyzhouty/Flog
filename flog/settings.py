@@ -46,7 +46,6 @@ class Base:
         "lux": "Lux",
         "materia": "Materia",
         "minty": "Minty",
-        "pulse": "Pulse",
         "sandstone": "Sandstone",
         "simplex": "Simplex",
         "sketchy": "Sketchy",

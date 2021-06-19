@@ -1,0 +1,17 @@
+a {
+    color: var(--dark);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.private-post-title {
+    color: var(--light);
+    background-color: var(--dark);
+}
+
+.private-post-title:hover {
+    text-decoration: underline;
+    color: var(--light);
+}

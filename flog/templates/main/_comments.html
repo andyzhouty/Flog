@@ -39,24 +39,24 @@
                 </small>
             </div>
             {% if comment.replied %}
-            <p class="alert alert-dark reply-body">
+            <div class="alert alert-dark reply-body bg-dark-gray">
                 {{ comment.replied.author.username }}:<br>
                 {{ comment.replied.body | safe }}
-            </p>
+            </div>
             {% endif %}
             <p class="mb-1">{{ comment.body | safe }}</p>
             <div class="d-flex justify-content-end">
                 {% if current_user.is_administrator() or current_user == comment.author %}
-                <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}"
-                    style="display: inline !important">
+                <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
+                        <i class="bi-trash"></i>
                         {{ _("DELETE") }}
                     </button>
                 </form>
                 {% endif %}
                 <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
-                    <i class="fa fa-mail-reply"></i>
+                    <i class="bi-reply"></i>
                     {{ _("Reply") }}
                 </a>
             </div>
@@ -65,11 +65,10 @@
         </ul>
         {% if request.args.get('reply') %}
         <div class="alert alert-dark" id="reply-comment-form">
-            <i class="fa fa-mail-reply"></i>{{ _("Reply to") }}
+            <i class="bi-mail-reply"></i>{{ _("Reply to") }}
             <b>{{ replied_comment.author.username }}</b>:
             <a class="float-right btn btn-light btn-sm" href="{{ post.url() }}">
-                <i class="fa fa-window-close-o"></i>
-                {{ _("Cancel") }}
+                <i class="bi-x"></i>
             </a>
             {{ render_form(form) }}
         </div>

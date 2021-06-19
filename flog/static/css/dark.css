@@ -1,0 +1,16 @@
+a {
+    color: var(--light);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.private-post-title {
+
+}
+
+.private-post-title:hover {
+    text-decoration: underline;
+    background-color: var(--purple);
+}

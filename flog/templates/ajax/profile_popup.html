@@ -2,16 +2,14 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% from 'macros.html' import follow_area with context %}
+{% from 'macros.html' import follow_area, render_user_role with context %}
 <div class="popup-card">
-    <img class="img-circle img-fluid popup-avatar" src="{{ user.avatar_url() }}">
     <div class="popup-profile">
-        <h6>
-            {{ user.username }}<br>
-            {% if current_user.can(Permission.MODERATE) %}
-                <small class="text-muted">{{ user.name }}</small>
-            {% endif %}
-        </h6>
+        <img class="img-circle popup-avatar p-2" src="{{ user.avatar_url() }}" style="width: 50px !important; height: 50px !important;">
+        {{ render_user_role(user) }}<br>
+        {% if current_user.can(Permission.MODERATE) %}
+            <small class="text-muted">{{ user.name }}</small>
+        {% endif %}
     </div>
     <a href="{{ url_for('user.user_profile', username=user.username) }}"
        class="btn btn-light btn-sm">{{ _("Homepage") }}</a>

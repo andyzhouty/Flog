@@ -6,18 +6,18 @@ MIT License
     <div>
     {% if not current_user.is_collecting(post) %}
     <a class="btn btn-sm btn-success" href="{{ url_for('main.collect_post', id=post.id) }}">
-        <i class="fa fa-heart"></i>
+        <i class="bi-heart"></i>
         {{ _("Collect") }}
     </a>
     {% else %}
         <a class="btn btn-sm btn-warning" href="{{ url_for('main.uncollect_post', id=post.id) }}">
-            <i class="fa fa-ban"></i>
+            <i class="bi-ban"></i>
             {{ _("Uncollect") }}
          </a>
     {% endif %}
     {% if current_user.is_administrator() or post.author == current_user %}
         <a class="btn btn-sm btn-primary" href="{{ url_for('main.edit_post', id=post.id) }}">
-            <i class="fa fa-edit"></i>
+            <i class="bi-pencil-square"></i>
             {{ _("EDIT [ADMIN]") }}
         </a>
     {% endif %}
@@ -28,7 +28,7 @@ MIT License
             style="display: inline !important">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
-                <i class="fa fa-trash"></i>   
+                <i class="bi-trash"></i>
                 {{ _("DELETE [ADMIN]") }}
                 </button>
             </form>

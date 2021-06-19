@@ -12,25 +12,25 @@ MIT License
                      onerror="this.src='https:\/\/news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg';">
                 <br>
                 {% if image.private %}
-                    <i class="fa fa-eye-slash"></i>{{ _("Private") }}
+                    <i class="bi-eye-slash"></i>{{ _("Private") }}
                 {% else %}
-                    <i class="fa fa-eye"></i>{{ _("Public") }}
+                    <i class="bi-eye"></i>{{ _("Public") }}
                 {% endif %}
                 <form class="form-inline" style="margin-bottom: 5px" method="POST"
                       action="{{ url_for('image.toggle_image_visibility', id=image.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-primary">
                         {% if image.private %}
-                            <i class="fa fa-eye"></i>{{ _("Make Public") }}
+                            <i class="bi-eye"></i>{{ _("Make Public") }}
                         {% else %}
-                            <i class="fa fa-eye-slash"></i>{{ _("Make Private") }}
+                            <i class="bi-eye-slash"></i>{{ _("Make Private") }}
                         {% endif %}
                     </button>
                 </form>
                 <form class="form-inline" method="POST" action="{{ url_for('image.delete_image', id=image.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button class="btn btn-sm btn-danger">
-                        <span class="fa fa-trash"></span>
+                        <span class="bi-trash"></span>
                         {{ _("DELETE") }}
                     </button>
                 </form>

@@ -14,13 +14,18 @@ MIT License
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         {% endblock metas %}
         {% block styles %}
+            {% set theme = request.cookies.get('theme', 'cosmo') %}
             {{ static_file('icon', 'favicon/favicon.svg') }}
             {{ static_file('icon', 'favicon/favicon.ico') }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' %
-               request.cookies.get('theme', 'cosmo'), local=False) }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css', local=False) }}
+            {{ static_file('css', '//cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' % theme, local=False) }}
+            {{ static_file('css', '//cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css', local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
-            {{ static_file('css', 'css/stylesheet.css') }}
+            {{ static_file('css', 'css/common.css') }}
+            {% if theme in ['darkly', 'cyborg', 'slate'] %}
+                {{ static_file('css', 'css/dark.css') }}
+            {% else %}
+                {{ static_file('css', 'css/light.css') }}
+            {% endif %}
         {% endblock styles %}
     {% endblock head %}
 </head>
@@ -28,7 +33,7 @@ MIT License
 <div class="image-box"><img src="#" id="image-large" style="display: none"></div>
 <div class="content">
     {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-flex align-items-center">
             <a class="navbar-brand" href="/">Flog</a>
             <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
                     data-target="#collapse" aria-controls="collapse" aria-expanded="false"
@@ -36,34 +41,28 @@ MIT License
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="collapse">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav mr-auto align-items-center">
                     {{ render_nav_item('main.main', _('Main')) }}
                     {{ render_nav_item('feedback.feedback', _('Feedback')) }}
                     {{ render_nav_item('others.about_us', _('About Us')) }}
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav align-items-center">
                     {% if current_user.is_authenticated %}
                         {% block search_bar %}
                             <form class="form-inline my-2 my-lg-0" action="{{ url_for('main.search') }}">
-                                <input type="text" name="q" class="form-control mr-sm-1"
+                                <input type="text" name="q" class="form-control mr-sm-1 rounded"
                                        placeholder="{{ _('Search user, post, group or column') }}"
-                                       required>
-                                <button class="btn btn-light my-2 my-sm-0" type="submit">
-                                    <span class="fa fa-search"></span>
+                                       id="search-text" required>
+                                <button class="btn btn-light my-2 my-sm-0 rounded" type="submit" id="search-submit">
+                                    <span class="bi-search"></span>
                                 </button>
                             </form>
                         {% endblock %}
-                        <li class="nav-item">
-                            <a href="{{ url_for('user.user_profile', username=current_user.username) }}"
-                               class="nav-link">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="account">
                                 {# Display user identicon as a circle here #}
                                 <img src="{{ current_user.avatar_url(size=30) }}" alt="identicon" class="rounded-circle"
                                     style="height: 40px !important; width: 40px !important;">
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="account">
-                                {{ _("Account") }}
                             </a>
                             <div class="dropdown-menu">
                                 <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item"
@@ -88,7 +87,7 @@ MIT License
                         </li>
                         <li class="nav-item">
                             <a href="{{ url_for('notification.show', filter='unread') }}" class="nav-link">
-                                <span class="fa fa-bell"></span>
+                                <span class="bi-bell-fill"></span>
                                 <span id="notification-badge" class="badge badge-notification badge-danger"
                                       data-href="{{ url_for('ajax.notification_count') }}"
                                       style="{% if notification_count == 0 %}display: none{% endif %}">
@@ -104,6 +103,7 @@ MIT License
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            <i class="bi-palette"></i>
                             {{ _("Theme") }}
                         </a>
                         <div class="dropdown-menu">
@@ -117,7 +117,7 @@ MIT License
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                            <span class="fa fa-language"></span>
+                            <span class="bi-translate"></span>
                             {{ _("Language") }}
                         </a>
                         <div class="dropdown-menu">
@@ -163,9 +163,11 @@ MIT License
     {{ static_file('js', '//cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js', local=False) }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js', local=False) }}
     {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
+    {{ static_file('js', '//cdn.jsdelivr.net/gh/jjenzz/jquery.ellipsis/jquery.ellipsis.min.js', local=False) }}
     {{ moment.include_moment(local_js='//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js') }}
     {{ moment.locale(auto_detect=True) }}
     {{ static_file('js', 'js/script.js') }}
+    {{ static_file('js', 'js/feedback.js') }}
     {% if current_app.config['FLASK_CONFIG'] == 'production' %}
         <script>
             $(document).ready(function () {

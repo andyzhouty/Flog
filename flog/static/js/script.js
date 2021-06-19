@@ -80,4 +80,9 @@ $(function () {
         $('#image-large').hide();
     });
     $('table').addClass('table table-bordered');
+    $('.post-content').ellipsis({
+        lines: 2,
+        ellipClass: 'ellip',
+        responsive: true
+    });
 });
