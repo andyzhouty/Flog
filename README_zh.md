@@ -2,7 +2,7 @@
 [英文版](./README.md)  
 
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs)](https://flog.readthedocs.io/en/latest/?badge=latest)
-[![Build Status](https://travis-ci.com/z-t-y/Flog.svg?branch=master)](https://travis-ci.com/z-t-y/Flog)
+[![Build Status](https://github.com/z-t-y/Flog/actions/workflows/ci.yml/badge.svg)](https://github.com/z-t-y/Flog/actions)
 [![codecov](https://codecov.io/gh/z-t-y/Flog/branch/master/graph/badge.svg?token=FZ46GGQIZ7)](https://codecov.io/gh/z-t-y/Flog)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 

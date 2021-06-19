@@ -62,7 +62,6 @@ def create_post():
         for col_id in form.columns.data:
             column = Column.query.get(col_id)
             post.columns.append(column)
-            
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
@@ -191,6 +190,9 @@ def edit_post(id):
         post.content = form.content.data
         post.timestamp = datetime.utcnow()
         post.private = form.private.data
+        for col_id in form.columns.data:
+            column = Column.query.get(col_id)
+            post.columns.append(column)
         db.session.commit()
         current_app.logger.info(f"Post id {id} editted.")
         flash(_("Edit Succeeded!"), "success")
@@ -198,6 +200,7 @@ def edit_post(id):
     form.title.data = post.title
     form.content.data = post.content
     form.private.data = post.private
+    form.columns.choices = [column.id for column in current_user.columns]
     return render_template("main/edit_post.html", form=form)
 
 

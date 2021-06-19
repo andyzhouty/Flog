@@ -4,7 +4,7 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% from 'macros.html' import render_timestamp %}
+{% from 'macros.html' import render_timestamp with context %}
 {% block title %} {{ _("Feedback") }} {% endblock title %}
 {% block page_content %}
     <h1 class="text-center display-4">

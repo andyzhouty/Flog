@@ -37,6 +37,7 @@ jobs:
           . venv/bin/activate
           flask translate compile
           pytest
+          bash <(curl -s https://codecov.io/bash)
 
   deploy:
     if: ${{ github.ref == 'master' }}
