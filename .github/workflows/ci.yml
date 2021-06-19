@@ -57,7 +57,7 @@ jobs:
         run: heroku run flask deploy
 
   push_to_registry:
-    if: ${{ github.ref == 'refs/head/master' }}
+    if: ${{ github.ref == 'refs/heads/master' }}
     needs: test
     runs-on: ubuntu-latest
     steps:
