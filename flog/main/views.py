@@ -200,7 +200,8 @@ def edit_post(id):
     form.title.data = post.title
     form.content.data = post.content
     form.private.data = post.private
-    form.columns.choices = [column.id for column in current_user.columns]
+    print([column.id for column in current_user.columns])
+    form.columns.choices = [(column.id, column.name) for column in current_user.columns]
     return render_template("main/edit_post.html", form=form)
 
 
