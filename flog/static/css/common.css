@@ -73,7 +73,7 @@ a, .private-post-title {
     transform: scale(2);
 }
 
-.btn a, .btn a:hover,
+.btn, .btn:hover,
 .navbar-brand, .navbar-brand:hover,
 .nav-link, .nav-link:hover,
 .profile-popover, .profile-popover:hover,
