@@ -1,9 +1,10 @@
 a {
     color: var(--dark);
+    text-decoration: underline;
 }
 
 a:hover {
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 .private-post-title {

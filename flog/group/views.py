@@ -18,7 +18,7 @@ def all():
     groups = Group.query.filter(~Group.private).all()
     if current_user.is_administrator():
         groups = Group.query.all()
-    return render_template("group/all.html", groups=groups)
+    return render_template("user/groups.html", groups=groups)
 
 
 @group_bp.route("/create/", methods=["GET", "POST"])

@@ -5,37 +5,44 @@ MIT License
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block page_content %}
-    <ul class="list-group">
-        {% for image in images %}
-            <li class="list-group-item">
-                <img src="{{ image.url() }}" class="image-normal"
-                     onerror="this.src='https:\/\/news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg';">
-                <br>
-                {% if image.private %}
-                    <i class="bi-eye-slash"></i>{{ _("Private") }}
-                {% else %}
-                    <i class="bi-eye"></i>{{ _("Public") }}
-                {% endif %}
-                <form class="form-inline" style="margin-bottom: 5px" method="POST"
-                      action="{{ url_for('image.toggle_image_visibility', id=image.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-primary">
-                        {% if image.private %}
-                            <i class="bi-eye"></i>{{ _("Make Public") }}
-                        {% else %}
-                            <i class="bi-eye-slash"></i>{{ _("Make Private") }}
-                        {% endif %}
-                    </button>
-                </form>
-                <form class="form-inline" method="POST" action="{{ url_for('image.delete_image', id=image.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-danger">
-                        <span class="bi-trash"></span>
-                        {{ _("DELETE") }}
-                    </button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
-    {{ render_pagination(pagination) }}
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="list-group">
+                {% for image in images %}
+                    <li class="list-group-item d-flex">
+                        <img src="{{ image.url() }}" class="image-normal"
+                             onerror="this.src='https:\/\/news.aut.ac.nz/__data/assets/image/0006/92328/placeholder-image10.jpg';">
+                        <div class="ml-auto">
+                            {% if image.private %}
+                                <i class="bi-eye-slash"></i>{{ _("Private") }}
+                            {% else %}
+                                <i class="bi-eye"></i>{{ _("Public") }}
+                            {% endif %}
+                            <form class="form-inline" style="margin-bottom: 5px" method="POST"
+                                  action="{{ url_for('image.toggle_image_visibility', id=image.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="btn btn-sm btn-primary">
+                                    {% if image.private %}
+                                        <i class="bi-eye"></i>{{ _("Make Public") }}
+                                    {% else %}
+                                        <i class="bi-eye-slash"></i>{{ _("Make Private") }}
+                                    {% endif %}
+                                </button>
+                            </form>
+                            <form class="form-inline" method="POST"
+                                  action="{{ url_for('image.delete_image', id=image.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="btn btn-sm btn-danger">
+                                    <span class="bi-trash"></span>
+                                    {{ _("DELETE") }}
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ render_pagination(pagination) }}
+        </div>
+        {% include 'main/_sidebar.html' %}
+    </div>
 {% endblock page_content %}

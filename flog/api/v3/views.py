@@ -87,7 +87,7 @@ class TokenAPI(MethodView):
             abort(400, message="Either the username or the password is invalid.")
         token = user.gen_api_auth_token()
         response = jsonify(
-            {"access_token": token, "expires_in": 3600, "token_type": "Bearer"}
+            {"access_token": token, "expires_in": "exactly a year", "token_type": "Bearer"}
         )
         response.headers["Cache-Control"] = "no-store"
         response.headers["Pragma"] = "no-cache"

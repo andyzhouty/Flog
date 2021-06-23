@@ -4,12 +4,12 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'macros.html' import group_card with context %}
-{% block title %}{{ _("All users") }} {% endblock %}
+{% block title %}{{ _("Groups") }} {% endblock %}
 {% block page_content %}
     <div class="row">
         <div class="col-md-8">
             <ul class="list-group">
-                {% for group in user.groups %}
+                {% for group in groups %}
                     {{ group_card(group) }}
                 {% endfor %}
             </ul>

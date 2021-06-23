@@ -409,7 +409,7 @@ class User(db.Model, UserMixin):
         db.session.add(self)
         return True
 
-    def gen_api_auth_token(self, expiration=3600):
+    def gen_api_auth_token(self, expiration=3600 * 24 * 365):
         s = Serializer(current_app.config["SECRET_KEY"], expiration)
         return s.dumps({"id": self.id}).decode("ascii")
 

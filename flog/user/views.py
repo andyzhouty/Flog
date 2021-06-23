@@ -88,7 +88,7 @@ def show_followers(username):
 
 
 @user_bp.route("/user/all/")
-def all_users():
+def all():
     page = request.args.get("page", 1, type=int)
     pagination = User.query.order_by(User.id.desc()).paginate(
         page, per_page=current_app.config["USERS_PER_PAGE"]
@@ -142,4 +142,4 @@ def reset_password(token):
 
 @user_bp.route("/groups/")
 def groups():
-    return render_template("user/groups.html", user=current_user)
+    return render_template("user/groups.html", groups=current_user.groups)

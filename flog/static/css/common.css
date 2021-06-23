@@ -52,32 +52,30 @@ a, .private-post-title {
     font-weight: 500;
 }
 
-a:hover {
-    text-decoration: none;
-}
-
 .private-post-title {
     padding: 0.2rem;
 }
 
-.ellip {
-    display: block;
-    height: 100%;
-    line-height: 1.2rem;
+.d-flex {
+    flex-wrap: wrap;
 }
 
-.ellip-line {
-    display: inline-block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-wrap: normal;
-    max-width: 100%;
+.action {
+    margin-top: 0.5rem;
+    margin-bottom: 0.1rem;
+    height: 6rem;
+    flex-wrap: wrap;
+    text-align: center;
+    align-items: center;
 }
 
-.ellip,
-.ellip-line {
-    padding: 0;
-    margin: 0;
-    position: relative;
-    overflow: hidden;
+.action-icon {
+    transform: scale(2);
+}
+
+.navbar-brand, .navbar-brand:hover,
+.nav-link, .nav-link:hover,
+.profile-popover, .profile-popover:hover,
+.action-link, .action-link:hover {
+    text-decoration: none;
 }

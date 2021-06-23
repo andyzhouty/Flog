@@ -295,9 +295,19 @@ MIT License
                 {{ message.body }}
             </span>
             <a href="{{ url_for('user.user_profile', username=user.username) }}">
-                <img src="{{ user.avatar_url() }}" class="profile-popover"
+                <img src="{{ user.avatar_url() }}" class="profile-popover" alt="{{ user.username }}"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" height="30px" width="auto">
             </a>
         </div>
     {% endif %}
 {% endmacro %}
+
+{% macro action_card(icon, text, link) %}
+    <div class="d-inline-flex action justify-content-lg-center flex-fill">
+        <a class="action-link" href="{{ link }}">
+        <div class="action-icon flex-grow-2 align-self-center">
+            <i class="{{ icon }}"></i>
+        </div>
+        {{ text }}</a>
+    </div>
+{% endmacro%}
