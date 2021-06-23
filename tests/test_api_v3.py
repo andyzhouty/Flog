@@ -18,7 +18,7 @@ def test_user(client):
     assert data["username"] == "test"
 
 
-def test_get_token(client):
+def test_token(client):
     response = client.post(
         "/api/v3/token",
         data=dict(
@@ -29,6 +29,17 @@ def test_get_token(client):
     data = response.get_json()
     assert response.status_code == 200
     assert isinstance(data.get("access_token"), str)
+
+    response = client.post(
+        "/api/v3/token/verify",
+        data=dict(token=data.get("access_token"))
+    )
+    assert response.status_code == 200
+    response = client.post(
+        "/api/v3/token/verify",
+        data=dict(token="FAKE-TOKEN")
+    )
+    assert response.status_code == 401
 
 
 def test_user(client):

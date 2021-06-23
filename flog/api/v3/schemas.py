@@ -45,6 +45,15 @@ class TokenOutSchema(Schema):
     token_type = String()
 
 
+class VerifyTokenInSchema(Schema):
+    token = String(required=True)
+
+
+class VerifyTokenOutSchema(Schema):
+    username = String()
+    valid = Boolean()
+
+
 class CommentInSchema(Schema):
     body = String(required=True)
     post_id = Integer(required=True)

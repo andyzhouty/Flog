@@ -94,6 +94,21 @@ class TokenAPI(MethodView):
         return response
 
 
+@api_v3.route("/token/verify", endpoint="verify_token")
+class VerifyTokenAPI(MethodView):
+    @input(VerifyTokenInSchema, location="form")
+    @output(VerifyTokenOutSchema)
+    def post(self, data):
+        """Verify an input token"""
+        user = User.verify_auth_token_api(data["token"])
+        if user is None:
+            abort(401)
+        schema = VerifyTokenOutSchema()
+        schema.valid = True
+        schema.username = user.username
+        return schema
+
+
 @api_v3.route("/post/<int:post_id>", endpoint="post")
 class PostAPI(MethodView):
     @output(PostOutSchema)
