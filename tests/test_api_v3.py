@@ -234,7 +234,16 @@ def test_column(client):
     column2 = Column.query.filter_by(name="column2").first()
     assert post2 in column2.posts
 
-    response = client.put(f"/api/v3/column/{column2.id}", json=dict(name="foobar"), headers=get_api_v3_headers(client))
+    response = client.get(f"/api/v3/column/{column2.id}")
+    assert response.status_code == 200
+    assert response.get_json()["name"] == "column2"
+
+    post3 = dict(title="efgh", content="hello world")
+    client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post3)
+    post3 = Post.query.filter_by(title="efgh").first()
+
+    response = client.put(f"/api/v3/column/{column2.id}", json=dict(name="foobar", post_ids=[post2.id, post3.id]),
+                          headers=get_api_v3_headers(client))
     assert response.status_code == 200
     assert response.get_json()["name"] == "foobar"
 
