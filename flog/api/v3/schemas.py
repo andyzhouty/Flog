@@ -64,15 +64,29 @@ class CommentOutSchema(Schema):
     id = Integer()
     body = String()
     author = Nested(UserOutSchema)
-    post = Nested(lambda: PostOutSchema(only=("id", "title", "author",)))
+    post = Nested(lambda: PostOutSchema(only=("id", "title", "self",)))
     replying = Nested(lambda: CommentOutSchema(exclude=("replying",)))
     self = ma.URLFor(".comment", values=dict(comment_id="<id>"))
+
+
+class ColumnInSchema(Schema):
+    name = String()
+    post_ids = List(Integer())
+
+
+class ColumnOutSchema(Schema):
+    id = Integer()
+    name = String()
+    author = Nested(UserOutSchema)
+    posts = List(Nested(lambda: PostOutSchema(only=("id", "title", "self"))))
+    self = ma.URLFor(".column", values=dict(column_id="<id>"))
 
 
 class PostInSchema(Schema):
     title = String(required=True)
     content = String(required=True)
     private = Boolean(default=False)
+    column_ids = List(Integer())
 
 
 class PostOutSchema(Schema):
@@ -82,4 +96,5 @@ class PostOutSchema(Schema):
     private = Boolean()
     author = Nested(UserOutSchema)
     comments = List(Nested(CommentOutSchema, exclude=("post",)))
+    columns = List(Nested(ColumnOutSchema, exclude=("posts", "author")))
     self = ma.URLFor(".post", values=dict(post_id="<id>"))

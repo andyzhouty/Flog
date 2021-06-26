@@ -11,6 +11,6 @@ MIT License
             <small class="text-muted">{{ user.name }}</small>
         {% endif %}
     </div>
-    <a href="{{ url_for('user.user_profile', username=user.username) }}"
+    <a href="{{ url_for('user.profile', username=user.username) }}"
        class="btn btn-light btn-sm">{{ _("Homepage") }}</a>
 </div>

@@ -65,7 +65,7 @@ def manage_users():
 
 @admin_bp.route("/user/<int:id>/profile/edit/", methods=["GET", "POST"])
 @admin_required
-def edit_user_profile(id):
+def edit_profile(id):
     user = User.query.get_or_404(id)
     form = EditProfileAdminForm(user)
     if form.validate_on_submit():
@@ -80,7 +80,7 @@ def edit_user_profile(id):
         db.session.add(user)
         db.session.commit()
         flash(_("%s's profile has been updated." % user.username), "info")
-        return redirect(url_for("user.user_profile", username=user.username))
+        return redirect(url_for("user.profile", username=user.username))
     form.email.data = user.email
     form.username.data = user.username
     form.confirmed.data = user.confirmed
@@ -94,7 +94,7 @@ def edit_user_profile(id):
 
 @admin_bp.route("/users/delete/<int:id>", methods=["POST"])
 @admin_required
-def delete_user_account(id):
+def delete_account(id):
     User.query.get(id).delete()
     flash(_("User Deleted"), "info")
     return redirect_back()

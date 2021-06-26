@@ -461,7 +461,7 @@ class User(db.Model, UserMixin):
         return self.following.filter_by(followed_id=user.id).first() is not None
 
     def profile_url(self):
-        return url_for("user.user_profile", username=self.username)
+        return url_for("user.profile", username=self.username)
 
     def join_group(self, group) -> None:
         self.groups.append(group)

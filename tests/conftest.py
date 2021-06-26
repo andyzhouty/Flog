@@ -4,11 +4,12 @@ Copyright (c) 2020 Andy Zhou
 """
 import os
 import pytest
-from flog import create_app, db, fakes
-from flog.models import Role, User
+from flog import create_app
+from flog import fakes
+from flog.models import db, Role, User
 
 
-def common_setup(app, context):
+def setup(app, context):
     context.push()
     if not os.path.exists(app.config["UPLOAD_DIRECTORY"]):
         os.mkdir(app.config["UPLOAD_DIRECTORY"])
@@ -44,31 +45,31 @@ def clean_up(app, context):
     context.pop()
 
 
-@pytest.fixture()
+@pytest.fixture
 def production():
     app = create_app("production")
     context = app.app_context()
     client = app.test_client()
-    common_setup(app, context)
+    setup(app, context)
     yield client
     clean_up(app, context)
 
 
-@pytest.fixture()
+@pytest.fixture
 def client_with_request_ctx():
     app = create_app("testing")
     context = app.test_request_context()
     client = app.test_client()
-    common_setup(app, context)
+    setup(app, context)
     yield client
     clean_up(app, context)
 
 
-@pytest.fixture()
+@pytest.fixture
 def client():
     app = create_app("testing")
     context = app.app_context()
     client = app.test_client()
-    common_setup(app, context)
+    setup(app, context)
     yield client
     clean_up(app, context)

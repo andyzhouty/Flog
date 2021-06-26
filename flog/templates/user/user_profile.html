@@ -48,7 +48,7 @@
                 {{ _("Edit Profile") }}
             </a>
         {% elif current_user.is_administrator() %}
-            <a class="btn btn-outline-danger" href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+            <a class="btn btn-outline-danger" href="{{ url_for('admin.edit_profile', id=user.id) }}">
                 {{ _("Edit Profile [Admin]") }}
             </a>
         {% endif %}

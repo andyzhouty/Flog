@@ -1,5 +1,5 @@
 alembic==1.6.2
-APIFlask==0.6.3
+APIFlask==0.7.0
 apispec==4.4.1
 appdirs==1.4.4
 attrs==21.2.0

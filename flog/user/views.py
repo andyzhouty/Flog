@@ -24,7 +24,7 @@ from ..emails import send_email
 @login_required
 def edit_profile():
     if current_user.is_administrator():
-        return redirect(url_for("admin.edit_user_profile", id=current_user.id))
+        return redirect(url_for("admin.edit_profile", id=current_user.id))
     if current_user.confirmed:
         form = EditProfileForm()
         if form.validate_on_submit():
@@ -72,13 +72,13 @@ def unfollow(username):
 
 
 @user_bp.route("/user/<username>/")
-def user_profile(username):
+def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template("user/user_profile.html", user=user)
 
 
 @user_bp.route("/user/<username>/followers/")
-def show_followers(username):
+def followers(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get("page", 1, type=int)
     pagination = user.followers.paginate(
@@ -106,7 +106,7 @@ def change_password():
     if form.validate_on_submit():
         current_user.set_password(form.password.data)
         flash(_("Password Changed"))
-        return redirect(url_for("user.user_profile", username=current_user.username))
+        return redirect(url_for("user.profile", username=current_user.username))
     return render_template("user/change_password.html", form=form)
 
 

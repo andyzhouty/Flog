@@ -1,21 +1,12 @@
 from flask import current_app
 from .helpers import register, login, get_api_v3_headers, generate_post
-from flog.models import User, Post, Comment, db
+from flog.models import User, Post, Comment, db, Column
 
 
 def test_api_index(client):
     response = client.get("/api/v3")
     data = response.get_json()
     assert data["api_version"] == "3.0"
-
-
-def test_user(client):
-    register(client)
-    login(client, "test", "password")
-    user_id = User.query.filter_by(username="test").first().id
-    response = client.get(f"/api/v3/user/{user_id}")
-    data = response.get_json()
-    assert data["username"] == "test"
 
 
 def test_token(client):
@@ -144,8 +135,14 @@ def test_post(client):
         json=dict(title="abcd", content="test content", private=False),
         headers=get_api_v3_headers(client),
     )
+    query = Post.query.filter_by(title="abcd")
     assert response.status_code == 200
-    assert Post.query.filter_by(title="abcd").count() == 1
+    assert query.count() == 1
+    post = query.first()
+
+    response = client.delete(f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client))
+    assert response.status_code == 204
+    assert query.count() == 0
 
 
 def test_comments(client):
@@ -185,6 +182,10 @@ def test_comments(client):
     )
     assert response.status_code == 400
 
+    response = client.delete("/api/v3/comment/1", headers=get_api_v3_headers(client))
+    assert response.status_code == 204
+    assert Comment.query.get(1) is None
+
     comment_dict = {
         "body": "test body",
         "post_id": replied.post.id,
@@ -205,3 +206,38 @@ def test_comments(client):
         headers=get_api_v3_headers(client),
     )
     assert response.status_code == 400
+
+
+def test_column(client):
+    register(client)
+    login(client, "test", "password")
+    data = {
+        "name": "test-column"
+    }
+    response = client.post("/api/v3/column/create", headers=get_api_v3_headers(client), json=data)
+    assert response.status_code == 200
+    assert response.get_json()["author"]["username"] == "test"
+    column = Column.query.filter_by(name="test-column").first()
+
+    post = dict(title="1234", content="content", column_ids=[column.id])
+    response = client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["columns"][0]["id"] == column.id
+
+    post2 = dict(title="abcd", content="foobar")
+    client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post2)
+    post2 = Post.query.filter_by(title="abcd").first()
+    column2 = dict(name="column2", post_ids=[post2.id])
+    response = client.post("/api/v3/column/create", headers=get_api_v3_headers(client), json=column2)
+    assert response.status_code == 200
+    column2 = Column.query.filter_by(name="column2").first()
+    assert post2 in column2.posts
+
+    response = client.put(f"/api/v3/column/{column2.id}", json=dict(name="foobar"), headers=get_api_v3_headers(client))
+    assert response.status_code == 200
+    assert response.get_json()["name"] == "foobar"
+
+    response = client.delete(f"/api/v3/column/{column2.id}", headers=get_api_v3_headers(client))
+    assert response.status_code == 204
+    assert Column.query.filter_by(name="foobar").count() == 0  # ensure the column is deleted.

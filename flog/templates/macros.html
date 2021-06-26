@@ -137,22 +137,22 @@ MIT License
 {% macro user_card(user) %}
     <li class="list-group-item d-flex">
         <div class="d-flex align-items-center">
-            <a href="{{ url_for('user.user_profile', username=user.username) }}">
+            <a href="{{ url_for('user.profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover mr-3"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" style="height: 50px !important">
             </a>
             <a style="font-size: 2em;"
                class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% else %} text-primary {% endif %}"
-               href="{{ url_for('user.user_profile', username=user.username) }}">{{ user.username }}</a>
+               href="{{ url_for('user.profile', username=user.username) }}">{{ user.username }}</a>
         </div>
         <span class="text-white align-items-end flex-column ml-auto">
             {% if current_user.is_administrator() -%}
                 <a class="btn btn-sm btn-outline-secondary flex-fill"
-                   href="{{ url_for('admin.edit_user_profile', id=user.id) }}">
+                   href="{{ url_for('admin.edit_profile', id=user.id) }}">
                 <i class="bi-pencil-square"></i>
                 {{ _("Edit Profile") }}
             </a>
-                <form class="form-inline" method="POST" action="{{ url_for('admin.delete_user_account', id=user.id) }}">
+                <form class="form-inline" method="POST" action="{{ url_for('admin.delete_account', id=user.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button class="btn btn-sm btn-outline-danger flex-fill"
                         onclick="return confirm('{{ _('Are you sure?') }}');">
@@ -198,7 +198,7 @@ MIT License
         </h3>
         <h4 class="text-muted">
             {% if post.author %}
-                <a href="{{ url_for('user.user_profile', username=post.author.username) }}"
+                <a href="{{ url_for('user.profile', username=post.author.username) }}"
                    class="profile-popover"
                    data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
                     {{ post.author.username }}
@@ -281,7 +281,7 @@ MIT License
     </div>
     {% if message.author != current_user %}
         <div class="d-flex justify-content-start" style="margin-bottom: 10px">
-            <a href="{{ url_for('user.user_profile', username=user.username) }}">
+            <a href="{{ url_for('user.profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" width="30px">
             </a>
@@ -294,7 +294,7 @@ MIT License
             <span class="bg-light" style="border-radius: 5px; padding: 10px; margin: 5px">
                 {{ message.body }}
             </span>
-            <a href="{{ url_for('user.user_profile', username=user.username) }}">
+            <a href="{{ url_for('user.profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover" alt="{{ user.username }}"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" height="30px" width="auto">
             </a>

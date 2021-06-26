@@ -6,7 +6,7 @@ from apiflask import input, output, abort
 from flask import url_for, jsonify, g
 from flask.views import MethodView
 from .schemas import *
-from flog.models import db, User, Post, Comment, Permission
+from flog.models import db, User, Post, Comment, Permission, Column
 from flog.utils import clean_html
 from . import api_v3
 from .decorators import can_edit, permission_required
@@ -123,11 +123,12 @@ class PostAPI(MethodView):
             abort(403, "the post is private")
         return post
 
+    @permission_required(Permission.WRITE)
     @can_edit("post")
     @input(PostInSchema(partial=True))
     @output(PostOutSchema)
     def put(self, post_id, data):
-        post = Post.query.get_or_404(post_id)
+        post = Post.query.get(post_id)
         for attr, value in data.items():
             if attr == "content":
                 post.content = clean_html(value)
@@ -135,6 +136,13 @@ class PostAPI(MethodView):
                 post.__setattr__(attr, value)
         db.session.commit()
         return post
+
+    @permission_required(Permission.WRITE)
+    @can_edit("post")
+    @output({}, 204)
+    def delete(self, post_id: int):
+        post = Post.query.get(post_id)
+        post.delete()
 
 
 @api_v3.route("/post/add", endpoint="post_create")
@@ -147,6 +155,10 @@ class PostAddAPI(MethodView):
         for attr, value in data.items():
             if attr == "content":
                 post.content = clean_html(value)
+            elif attr == "column_ids":
+                for column_id in data[attr]:
+                    column = Column.query.get_or_404(column_id)
+                    post.columns.append(column)
             else:
                 post.__setattr__(attr, value)
         db.session.add(post)
@@ -165,7 +177,7 @@ class CommentAPI(MethodView):
     @input(CommentInSchema(partial=True))
     @output(CommentOutSchema)
     def put(self, comment_id: int, data):
-        comment = Comment.query.get_or_404(comment_id)
+        comment = Comment.query.get(comment_id)
         for attr, value in data.items():
             if attr == "reply_id":
                 comment.replied = Comment.query.get_or_404(value)
@@ -180,6 +192,13 @@ class CommentAPI(MethodView):
                 comment.__setattr__(attr, value)
         db.session.commit()
         return comment
+
+    @permission_required(Permission.COMMENT)
+    @can_edit("comment")
+    @output({}, 204)
+    def delete(self, comment_id: int):
+        comment = Comment.query.get(comment_id)
+        comment.delete()
 
 
 @api_v3.route("/comment/add", endpoint="add_comment")
@@ -208,4 +227,60 @@ class CommentAddAPI(MethodView):
             else:
                 comment.__setattr__(attr, value)
         db.session.add(comment)
+        db.session.commit()
         return comment
+
+
+@api_v3.route("/column/<int:column_id>", endpoint="column")
+class ColumnAPI(MethodView):
+    @output(ColumnOutSchema)
+    def get(self, column_id):
+        column = Column.query.get_or_404(column_id)
+        return column
+
+    @permission_required(Permission.WRITE)
+    @can_edit("column")
+    @input(ColumnInSchema(partial=True))
+    @output(ColumnOutSchema)
+    def put(self, column_id, data):
+        column = Column.query.get(column_id)
+        for attr, value in data.items():
+            if attr == "post_ids":
+                for post_id in data[attr]:
+                    post = Post.query.get(post_id)
+                    if post is None:
+                        abort(404, f"post {post_id} not found")
+                    column.posts.append(post)
+            else:
+                column.__setattr__(attr, value)
+        db.session.commit()
+        return column
+
+    @permission_required(Permission.WRITE)
+    @can_edit("column")
+    @output({}, 204)
+    def delete(self, column_id):
+        column = Column.query.get(column_id)
+        db.session.delete(column)
+        db.session.commit()
+
+
+@api_v3.route("/column/create", endpoint="add_column")
+class ColumnAddAPI(MethodView):
+    @permission_required(Permission.WRITE)
+    @input(ColumnInSchema)
+    @output(CommentOutSchema)
+    def post(self, data):
+        column = Column(author=g.current_user)
+        for attr, value in data.items():
+            if attr == "post_ids":
+                for post_id in data[attr]:
+                    post = Post.query.get(post_id)
+                    if post is None:
+                        abort(404, f"post {post_id} not found")
+                    column.posts.append(post)
+            else:
+                column.__setattr__(attr, value)
+        db.session.add(column)
+        db.session.commit()
+        return column

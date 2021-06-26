@@ -13,7 +13,7 @@ def push_follow_notification(follower, receiver):
     """
     message = _(
         """User <a href="{0}">{1}</a> followed you.""".format(
-            url_for("user.user_profile", username=follower.username), follower.username
+            url_for("user.profile", username=follower.username), follower.username
         )
     )
     notification = Notification(message=message, receiver=receiver, is_read=False)
@@ -40,7 +40,7 @@ def push_collect_notification(collector, post, receiver):
     """Push a notification when a post is collected."""
     message = _(
         """User <a href="{0}">{1}</a> collected your <a href="{2}">post</a>""".format(
-            url_for("user.user_profile", username=collector.username),
+            url_for("user.profile", username=collector.username),
             collector.username,
             post.url(),
         )

@@ -44,7 +44,7 @@ def upload():
 
 @image_bp.route("/manage/")
 @login_required
-def manage_images():
+def manage():
     page = request.args.get("page", 1, int)
     if not current_user.is_administrator():
         pagination = Image.query.with_parent(current_user).order_by(Image.timestamp.desc()).paginate(
@@ -62,7 +62,7 @@ def manage_images():
 
 @image_bp.route("/toggle/<int:id>/", methods=["POST"])
 @login_required
-def toggle_image_visibility(id: int):
+def toggle_visibility(id: int):
     image = Image.query.get(id)
     if image.author != current_user and not current_user.is_administrator():
         abort(403)
@@ -74,7 +74,7 @@ def toggle_image_visibility(id: int):
 
 @image_bp.route("/delete/<int:id>/", methods=["POST"])
 @login_required
-def delete_image(id: int):
+def delete(id: int):
     image = Image.query.get(id)
     if image.author != current_user and not current_user.is_administrator():
         abort(403)
