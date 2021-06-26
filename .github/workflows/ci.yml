@@ -36,11 +36,10 @@ jobs:
         run: |
           . venv/bin/activate
           flask translate compile
-          pytest
+          pytest --cov-report=xml
       - name: Submit coverage data
         if: ${{ matrix.python-version == 3.9 && matrix.os == 'ubuntu-latest' }}
-        run: |
-          bash <(curl -s https://codecov.io/bash)
+        uses: codecov/codecov-action@v1
 
   deploy:
     if: ${{ github.ref == 'refs/heads/master' }}
