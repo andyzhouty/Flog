@@ -11,6 +11,7 @@ from flog.utils import clean_html
 from . import api_v3
 from .decorators import can_edit, permission_required
 from ..api_utils import get_current_user
+from .authentication import auth
 
 
 @api_v3.route("", endpoint="index")
@@ -22,6 +23,22 @@ class IndexAPI(MethodView):
             "api_version": "3.0",
             "api_base_url": url_for("api_v3.index", _external=True),
         }
+
+
+@api_v3.route("/self", endpoint="self")
+class SelfAPI(MethodView):
+    @auth.login_required
+    @output(UserOutSchema)
+    def get(self):
+        return g.current_user
+
+
+@api_v3.route("/self/posts", endpoint="self_posts")
+class SelfPostsAPI(MethodView):
+    @auth.login_required
+    @output(PostOutSchema(many=True))
+    def get(self):
+        return g.current_user.posts
 
 
 @api_v3.route("/user/<int:user_id>", endpoint="user")

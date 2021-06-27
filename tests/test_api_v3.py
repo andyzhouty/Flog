@@ -210,7 +210,6 @@ def test_comments(client):
 
 def test_column(client):
     register(client)
-    login(client, "test", "password")
     data = {
         "name": "test-column"
     }
@@ -250,3 +249,15 @@ def test_column(client):
     response = client.delete(f"/api/v3/column/{column2.id}", headers=get_api_v3_headers(client))
     assert response.status_code == 204
     assert Column.query.filter_by(name="foobar").count() == 0  # ensure the column is deleted.
+
+
+def test_self(client):
+    register(client)
+    response = client.get("/api/v3/self", headers=get_api_v3_headers(client))
+    assert response.get_json()["username"] == "test"
+
+    post = dict(title="1234", content="content")
+    client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post)
+
+    response = client.get("/api/v3/self/posts", headers=get_api_v3_headers(client))
+    assert response.get_json()[0]["title"] == "1234"
