@@ -71,7 +71,7 @@ def push_group_invite_notification(inviter, group, receiver):
     message = _(
         """User <a href="{0}">{1}</a> invited you to group {2}.
            Click <a href="{3}">Here</a> to join it.""".format(
-            inviter.profile_url(), inviter.username, group.name, group.join_url()
+            inviter.profile_url(), inviter.username, group.name, group.join_url(user_id=receiver.id)
         )
     )
     notification = Notification(message=message, receiver=receiver, is_read=False)
