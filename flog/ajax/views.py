@@ -19,7 +19,7 @@ def notification_count():
     if not current_user.is_authenticated:
         return jsonify(message="Login required."), 401
     count = (
-        Notification.query.with_parent(current_user).filter_by(is_read=False).count()
+        Notification.query.with_parent(current_user).count()
     )
     return jsonify(count=count)
 

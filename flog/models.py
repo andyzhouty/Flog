@@ -141,7 +141,6 @@ class Feedback(db.Model):
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.Text)
-    is_read = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"))

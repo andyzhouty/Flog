@@ -16,7 +16,7 @@ def push_follow_notification(follower, receiver):
             url_for("user.profile", username=follower.username), follower.username
         )
     )
-    notification = Notification(message=message, receiver=receiver, is_read=False)
+    notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()
 
@@ -31,7 +31,7 @@ def push_comment_notification(comment, receiver, page=1):
             url_for("main.full_post", id=comment.post.id, page=page)
         )
     )
-    notification = Notification(message=message, receiver=receiver, is_read=False)
+    notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()
 
@@ -45,7 +45,7 @@ def push_collect_notification(collector, post, receiver):
             post.url(),
         )
     )
-    notification = Notification(message=message, receiver=receiver, is_read=False)
+    notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()
 
@@ -61,20 +61,20 @@ def push_group_join_notification(joiner, group, receiver):
             group.join_url(user_id=joiner.id),
         )
     )
-    notification = Notification(message=message, receiver=receiver, is_read=False)
+    notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()
 
 
 def push_group_invite_notification(inviter, group, receiver):
-    """Push a notfication to the invited user."""
+    """Push a notification to the invited user."""
     message = _(
         """User <a href="{0}">{1}</a> invited you to group {2}.
            Click <a href="{3}">Here</a> to join it.""".format(
             inviter.profile_url(), inviter.username, group.name, group.join_url(user_id=receiver.id)
         )
     )
-    notification = Notification(message=message, receiver=receiver, is_read=False)
+    notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()
 
@@ -85,6 +85,6 @@ def push_new_message_notification(sender, receiver, group):
             sender.profile_url(), sender.username, group.name
         )
     )
-    notification = Notification(message=message, receiver=receiver, is_read=False)
+    notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()

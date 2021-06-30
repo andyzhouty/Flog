@@ -69,9 +69,9 @@ class PostAPI(MethodView):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
         if (
-            (not post.private)
-            or g.current_user.is_administrator()
-            or (post.author == g.current_user)
+                (not post.private)
+                or g.current_user.is_administrator()
+                or (post.author == g.current_user)
         ):
             return jsonify(post_schema(post))
         else:
@@ -201,17 +201,15 @@ class NotificationAPI(MethodView):
         # fmt: off
         unread_num = (
             Notification.query
-                        .with_parent(g.current_user)
-                        .filter_by(is_read=False)
-                        .count()
+                .with_parent(g.current_user)
+                .count()
         )
         unread_items = [
             (notification.message, notification.id)
             for notification in
-                Notification.query
-                            .with_parent(g.current_user)
-                            .filter_by(is_read=False)
-                            .all()
+            Notification.query
+                .with_parent(g.current_user)
+                .all()
         ]
         # fmt: on
         return jsonify({"unread_num": unread_num, "unread_items": unread_items})

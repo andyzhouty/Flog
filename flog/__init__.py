@@ -146,7 +146,6 @@ def register_context(app: Flask) -> None:
         if current_user.is_authenticated:
             notification_count = (
                 Notification.query.with_parent(current_user)
-                .filter_by(is_read=False)
                 .count()
             )
         else:

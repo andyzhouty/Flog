@@ -199,15 +199,11 @@ class NotificationAPI(MethodView):
 
     def get(self):
         unread_num = (
-            Notification.query.with_parent(g.current_user)
-            .filter_by(is_read=False)
-            .count()
+            Notification.query.with_parent(g.current_user).count()
         )
         unread_items = [
             (notification.message, notification.id)
-            for notification in Notification.query.with_parent(g.current_user)
-            .filter_by(is_read=False)
-            .all()
+            for notification in Notification.query.with_parent(g.current_user).all()
         ]
         return jsonify({"unread_num": unread_num, "unread_items": unread_items})
 

@@ -56,7 +56,7 @@ def test_notifications(client):
         role=Role.query.filter_by(name="Administrator").first()
     ).first()
     assert len(admin.notifications) == 5
-    assert Notification.query.filter_by(is_read=False).count() == 5
+    assert Notification.query.count() == 5
 
     response = client.get("/notification/")
     assert response.status_code == 200
@@ -64,26 +64,12 @@ def test_notifications(client):
     data = json.loads(str_data)
     assert dict(count=5) == data
     client.post("/notification/read/1/")
-    assert Notification.query.filter_by(is_read=False).count() == 4
+    assert Notification.query.count() == 4
     client.post("/notification/read/all/")
-    assert Notification.query.filter_by(is_read=False).count() == 0
+    assert Notification.query.count() == 0
     str_data = client.get("/ajax/notification/count/").get_data(as_text=True).strip()
     data = json.loads(str_data)
     assert dict(count=0) == data
-
-
-def test_delete_notification(client):
-    login(client)
-    for i in range(5):
-        send_notification(client)
-    response = client.post("/notification/delete/1/", follow_redirects=True)
-    assert response.status_code == 200
-    assert Notification.query.count() == 4
-
-    # test delete all notifications
-    response = client.post("/notification/delete/all/", follow_redirects=True)
-    assert response.status_code == 200
-    assert Notification.query.count() == 0
 
 
 def test_redirections(client):
@@ -99,10 +85,10 @@ def test_ignored_notifications(client):
     Test when a user write a comment to his own article, he will not be notified.
     """
     login(client)
-    init_notification_count = Notification.query.count()
+    initial_notification_count = Notification.query.count()
     title = generate_post(client)["post"]["title"]
     post = Post.query.filter_by(title=title).first()
     client.post(
         f"/post/{post.id}/", data={"body": "lorem ipsum"}, follow_redirects=True
     )
-    assert Notification.query.count() == init_notification_count
+    assert Notification.query.count() == initial_notification_count

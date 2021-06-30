@@ -45,7 +45,7 @@
 }
 
 .post-container {
-    word-break: keep-all;
+    word-break: break-all;
 }
 
 a, .private-post-title {
