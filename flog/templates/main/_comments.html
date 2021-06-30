@@ -21,6 +21,7 @@
                 <h5 class="mb-1">
                     {% if comment.author != None %}
                         <a href="{{ comment.author.profile_url() }}" target="_blank">
+                            <img class="{{ comment.author.avatar_url() }}"
                             {{ comment.author.username }}
                         </a>
                     {% else %}

@@ -202,6 +202,9 @@ class Group(db.Model):
     def join_url(self, **kwargs):
         return url_for("group.join", token=self.generate_join_token(), **kwargs)
 
+    def info_url(self):
+        return url_for("group.info", id=self.id)
+
     @staticmethod
     def verify_join_token(token):
         s = Serializer(current_app.config["SECRET_KEY"])

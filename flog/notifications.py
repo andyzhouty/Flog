@@ -81,8 +81,8 @@ def push_group_invite_notification(inviter, group, receiver):
 
 def push_new_message_notification(sender, receiver, group):
     message = _(
-        """<a href="{}">{}</a> send a message in group {}""".format(
-            sender.profile_url(), sender.username, group.name
+        """<a href="{0}">{1}</a> send a message in <a href="{2}">Group {3}</a>""".format(
+            sender.profile_url(), sender.username, group.info_url(), group.name
         )
     )
     notification = Notification(message=message, receiver=receiver)
