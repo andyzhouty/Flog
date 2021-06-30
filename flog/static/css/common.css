@@ -40,7 +40,7 @@
     cursor: zoom-in;
 }
 
-.profile-popover, .popup-avatar {
+.profile-popover, .popup-avatar, .avatar {
     height: 36px !important;
     width: 36px !important;
 }
