@@ -4,6 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 from flog import fakes
 from faker import Faker
+from sqlalchemy import and_
 from flog.models import Comment, User, Role, Post, Column
 from .helpers import (
     login,
@@ -29,7 +30,7 @@ def test_create_post(client):
 
     col_name = generate_column(client)["column_name"]
     column = Column.query.filter_by(name=col_name).first()
-    
+
     # test add post to column when submit
     title = fake.sentence()
     data = dict(
@@ -39,7 +40,7 @@ def test_create_post(client):
     )
     response = client.post("/write/", data=data, follow_redirects=True)
     assert response.status_code == 200
-    
+
     post = Post.query.filter_by(title=title).first()
     admin = User.query.filter_by(
         role=Role.query.filter_by(name="Administrator").first()
@@ -110,7 +111,7 @@ def test_view_post(client):
         fakes.posts(5)
         post = Post.query.filter(~Post.private).first()
     data = get_response_and_data_of_post(client, post.id)[1]
-    
+
     assert post.content in data
 
     post_private = Post.query.filter(Post.private).first()
@@ -264,3 +265,20 @@ def test_view_column(client):
     response = client.get(f"/column/{column.id}/", follow_redirects=True)
     assert response.status_code == 200
     assert col_name in response.get_data(as_text=True)
+
+
+def test_picks(client):
+    login(client)
+    post = Post.query.filter(and_(~Post.picked, ~Post.private)).first()
+    response = client.get(f"/post/pick/{post.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert post.picked
+
+    response = client.get(f"/post/picks/")
+    assert post.title in response.get_data(as_text=True)
+
+    response = client.get(f"/post/unpick/{post.id}/", follow_redirects=True)
+    assert response.status_code == 200
+
+    response = client.get(f"/post/picks/")
+    assert post.title not in response.get_data(as_text=True)

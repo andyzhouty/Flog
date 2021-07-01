@@ -236,11 +236,32 @@ def collect_post(id):
 
 @main_bp.route("/post/uncollect/<int:id>/")
 @login_required
-def uncollect_post(id):
-    post = Post.query.get(id)
+def uncollect_post(id: int):
+    post = Post.query.get_or_404(id)
     current_user.uncollect(post)
     flash(_("Post uncollected."), "info")
     return redirect_back()
+
+
+@main_bp.route("/post/pick/<int:id>/")
+@permission_required(Permission.MODERATE)
+def pick(id: int):
+    post = Post.query.get_or_404(id)
+    post.picked = True
+    db.session.commit()
+    flash(_("Picked post %d" % id))
+    return redirect_back()
+
+
+@main_bp.route("/post/unpick/<int:id>/")
+@permission_required(Permission.MODERATE)
+def unpick(id: int):
+    post = Post.query.get_or_404(id)
+    post.picked = False
+    db.session.commit()
+    flash(_("Unpicked post %d" % id))
+    return redirect_back()
+
 
 
 @main_bp.route("/post/collected/")
@@ -249,6 +270,13 @@ def collected_posts():
     # Get current user's collection
     posts = [post for post in Post.query.all() if current_user.is_collecting(post)]
     return render_template("main/collections.html", posts=posts)
+
+
+@main_bp.route("/post/picks/")
+@login_required
+def picks():
+    posts = Post.query.filter_by(picked=True).all()
+    return render_template("main/recommended.html", posts=posts)
 
 
 @main_bp.route("/search/")

@@ -90,12 +90,25 @@ MIT License
                         {{ _("Collect") }}
                     </a>
                 {% else -%}
-                    <a class="btn btn-sm btn-warning mr-1" href="{{ url_for('main.uncollect_post', id=post.id) }}">
-                        <i class="bi-ban"></i>
+                    <a class="btn btn-sm mr-1 text-white" href="{{ url_for('main.uncollect_post', id=post.id) }}" style="background-color: var(--orange);">
+                        <i class="bi-bookmark-x-fill"></i>
                         {{ _("Uncollect") }}
                     </a>
                 {%- endif %}
             {%- endif %}
+            {% if current_user.can(Permission.MODERATE) %}
+                {% if not post.picked or post.private %}
+                    <a class="btn btn-sm mr-1 text-white" href="{{ url_for('main.pick', id=post.id) }}" style="background-color: var(--purple);">
+                        <i class="bi-x-diamond-fill"></i>
+                        {{ _("Pick") }}
+                    </a>
+                {% else %}
+                    <a class="btn btn-sm mr-1" href="{{ url_for('main.unpick', id=post.id) }}" style="background-color: yellow; color: black;">
+                        <i class="bi-patch-minus"></i>
+                        {{ _("Unpick") }}
+                    </a>
+                {% endif %}
+            {% endif %}
             {% if current_user.is_administrator() or post.author == current_user
                   and can_edit -%}
                 <a href="{{ url_for('main.edit_post', id=post.id) }}">
@@ -305,9 +318,9 @@ MIT License
 {% macro action_card(icon, text, link) %}
     <div class="d-inline-flex action justify-content-lg-center flex-fill">
         <a class="action-link" href="{{ link }}">
-        <div class="action-icon flex-grow-2 align-self-center">
-            <i class="{{ icon }}"></i>
-        </div>
-        {{ text }}</a>
+            <div class="action-icon flex-grow-2 align-self-center">
+                <i class="{{ icon }}"></i>
+            </div>
+            {{ text }}</a>
     </div>
-{% endmacro%}
+{% endmacro %}

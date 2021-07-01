@@ -69,6 +69,7 @@ class Post(db.Model):
     columns = db.relationship(
         "Column", secondary=column_post_table, back_populates="posts"
     )
+    picked = db.Column(db.Boolean, default=False)
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
