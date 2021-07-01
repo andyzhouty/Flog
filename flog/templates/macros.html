@@ -293,7 +293,7 @@ MIT License
         <p class="text-muted"><small>{{ moment(message.timestamp).format('LLL') }}</small></p>
     </div>
     {% if message.author == current_user %}
-        <div class="d-flex justify-content-start" style="margin-bottom: 10px">
+        <div class="d-flex justify-content-end" style="margin-bottom: 10px">
             <a href="{{ url_for('user.profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover"
                      data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
@@ -303,7 +303,7 @@ MIT License
             </span>
         </div>
     {% else %}
-        <div class="d-flex justify-content-end" style="margin-bottom: 10px">
+        <div class="d-flex justify-content-start" style="margin-bottom: 10px">
             <span class="bg-light" style="border-radius: 5px; padding: 10px; margin: 5px">
                 {{ message.body }}
             </span>
