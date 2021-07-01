@@ -1,6 +1,4 @@
 import os
-from os.path import join, exists
-
 from flask import (
     current_app,
     request,
@@ -47,17 +45,17 @@ def upload():
 def manage():
     page = request.args.get("page", 1, int)
     if not current_user.is_administrator():
-        pagination = Image.query.with_parent(current_user).order_by(Image.timestamp.desc()).paginate(
-            page, per_page=current_app.config["IMAGES_PER_PAGE"]
+        pagination = (
+            Image.query.with_parent(current_user)
+            .order_by(Image.timestamp.desc())
+            .paginate(page, per_page=current_app.config["IMAGES_PER_PAGE"])
         )
     else:
         pagination = Image.query.order_by(Image.timestamp.desc()).paginate(
             page, per_page=current_app.config["IMAGES_PER_PAGE"]
         )
     images = pagination.items
-    return render_template(
-        "image/manage.html", pagination=pagination, images=images
-    )
+    return render_template("image/manage.html", pagination=pagination, images=images)
 
 
 @image_bp.route("/toggle/<int:id>/", methods=["POST"])

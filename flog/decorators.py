@@ -32,4 +32,5 @@ def group_login_required(f):
         if not isinstance(current_user, Group):
             return current_app.login_manager.unauthorized()
         return f(*args, **kwargs)
+
     return decorator

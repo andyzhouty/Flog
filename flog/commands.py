@@ -7,7 +7,7 @@ import click
 from flask import Flask
 
 
-def register_commands(app: Flask, db):
+def register_commands(app: Flask, db):  # noqa: C901
     @app.cli.command()
     def test() -> None:
         """Run the unittests."""

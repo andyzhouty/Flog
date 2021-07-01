@@ -9,7 +9,11 @@ from . import group_bp
 from .forms import GroupCreationForm, GroupFindForm, GroupInviteForm
 from ..models import db, Group, User, Message
 from ..utils import redirect_back
-from ..notifications import push_group_join_notification, push_group_invite_notification, push_new_message_notification
+from ..notifications import (
+    push_group_join_notification,
+    push_group_invite_notification,
+    push_new_message_notification,
+)
 
 
 @group_bp.route("/all/")

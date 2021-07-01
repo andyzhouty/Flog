@@ -198,9 +198,7 @@ class NotificationAPI(MethodView):
     decorators = [auth_required]
 
     def get(self):
-        unread_num = (
-            Notification.query.with_parent(g.current_user).count()
-        )
+        unread_num = Notification.query.with_parent(g.current_user).count()
         unread_items = [
             (notification.message, notification.id)
             for notification in Notification.query.with_parent(g.current_user).all()
@@ -220,11 +218,10 @@ class ImageAPI(MethodView):
             return bad_request(response["error"])
         image_url = response["image_url"]
         image_id = response["image_id"]
-        return jsonify(
-            message="Upload Success",
-            image_url=image_url,
-            image_id=image_id
-        ), 201
+        return (
+            jsonify(message="Upload Success", image_url=image_url, image_id=image_id),
+            201,
+        )
 
     def delete(self, image_id):
         image = Image.query.get_or_404(image_id)

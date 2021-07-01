@@ -2,7 +2,7 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from flask import current_app, make_response, abort, flash
+from flask import current_app, abort, flash
 from flask_login import current_user
 from flask_babel import _
 from ..models import db

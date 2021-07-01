@@ -28,7 +28,7 @@ def api_error_handler(
         return response
 
 
-def register_error_handlers(app):
+def register_error_handlers(app):  # noqa: C901
     @app.errorhandler(400)
     @app.errorhandler(CSRFError)
     def bad_request(e):

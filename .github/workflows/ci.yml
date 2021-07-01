@@ -1,4 +1,4 @@
-name: Flog CI
+name: Test and Deploy
 
 on:
   push:

@@ -64,7 +64,15 @@ class CommentOutSchema(Schema):
     id = Integer()
     body = String()
     author = Nested(UserOutSchema)
-    post = Nested(lambda: PostOutSchema(only=("id", "title", "self",)))
+    post = Nested(
+        lambda: PostOutSchema(
+            only=(
+                "id",
+                "title",
+                "self",
+            )
+        )
+    )
     replying = Nested(lambda: CommentOutSchema(exclude=("replying",)))
     self = ma.URLFor(".comment", values=dict(comment_id="<id>"))
 

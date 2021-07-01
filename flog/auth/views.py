@@ -41,9 +41,7 @@ def register():
             token=token,
         )
         flash(
-            _(
-                "A confirmation email has been sent to you by email! You can now login!"
-            ),
+            _("A confirmation email has been sent to you by email! You can now login!"),
             "info",
         )
         return redirect(url_for("auth.login"))

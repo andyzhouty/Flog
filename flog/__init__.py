@@ -136,7 +136,7 @@ def register_context(app: Flask) -> None:
             Role=Role,
             User=User,
             Message=Message,
-            Group=Group
+            Group=Group,
         )
 
     @app.context_processor
@@ -144,10 +144,7 @@ def register_context(app: Flask) -> None:
         posts = Post.query.order_by(Post.timestamp.desc()).all()
         feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
         if current_user.is_authenticated:
-            notification_count = (
-                Notification.query.with_parent(current_user)
-                .count()
-            )
+            notification_count = Notification.query.with_parent(current_user).count()
         else:
             notification_count = None
         return dict(

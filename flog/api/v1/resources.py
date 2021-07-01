@@ -15,7 +15,6 @@ from .schemas import comment_schema, user_schema, post_schema
 from flog.models import db, User, Post, Comment, Notification, Image
 from flog.utils import clean_html, get_image_path_and_url
 from ..api_utils import get_post_data, can_edit_post, can_edit_profile
-import bleach
 
 
 class IndexAPI(MethodView):
@@ -69,9 +68,9 @@ class PostAPI(MethodView):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
         if (
-                (not post.private)
-                or g.current_user.is_administrator()
-                or (post.author == g.current_user)
+            (not post.private)
+            or g.current_user.is_administrator()
+            or (post.author == g.current_user)
         ):
             return jsonify(post_schema(post))
         else:
@@ -199,17 +198,11 @@ class NotificationAPI(MethodView):
 
     def get(self):
         # fmt: off
-        unread_num = (
-            Notification.query
-                .with_parent(g.current_user)
-                .count()
-        )
+        unread_num = Notification.query.with_parent(g.current_user).count()
         unread_items = [
             (notification.message, notification.id)
             for notification in
-            Notification.query
-                .with_parent(g.current_user)
-                .all()
+            Notification.query.with_parent(g.current_user).all()
         ]
         # fmt: on
         return jsonify({"unread_num": unread_num, "unread_items": unread_items})

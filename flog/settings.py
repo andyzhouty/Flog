@@ -4,7 +4,6 @@ Copyright (c) 2020 Andy Zhou
 """
 import os
 from os.path import join, abspath, dirname
-from flask_babel import lazy_gettext as _l
 
 
 def generate_sqlite_filename(filename: str):

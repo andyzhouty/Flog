@@ -3,7 +3,6 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from random import randint
-import click
 from faker import Faker
 from .utils import lower_username
 from .models import db, Post, Feedback, User, Role, Comment, Notification, Group
@@ -66,7 +65,7 @@ def comments(count: int = 10) -> None:
         filt = Post.query.filter(~Post.private)
         comment = Comment(
             author=User.query.get(randint(1, User.query.count())),
-            post=filt.all()[randint(1, filt.count()-1)],
+            post=filt.all()[randint(1, filt.count() - 1)],
             body=fake.text(),
         )
         db.session.add(comment)

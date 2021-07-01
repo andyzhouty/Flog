@@ -2,11 +2,9 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from flask.helpers import url_for
-from flog.utils import redirect_back
 from flask import abort
 from . import testing_bp
-from ..utils import redirect_back
+from flog.utils import redirect_back
 
 
 @testing_bp.route("/400")

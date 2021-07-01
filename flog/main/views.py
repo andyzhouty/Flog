@@ -34,8 +34,8 @@ def main():
     else:
         pagination = (
             Post.query.filter(~Post.private)
-                .order_by(Post.timestamp.desc())
-                .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
+            .order_by(Post.timestamp.desc())
+            .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
         )
     posts = pagination.items
     return render_template("main/main.html", pagination=pagination, posts=posts)
@@ -76,16 +76,16 @@ def full_post(id: int):
     current_app.config["CKEDITOR_PKG_TYPE"] = "basic"
     post = Post.query.get_or_404(id)
     if (
-            (not post.private)
-            or post.author == current_user
-            or current_user.is_administrator()
+        (not post.private)
+        or post.author == current_user
+        or current_user.is_administrator()
     ):
         page = request.args.get("page", 1, type=int)
         per_page = current_app.config["COMMENTS_PER_PAGE"]
         pagination = (
             Comment.query.with_parent(post)
-                .order_by(Comment.timestamp.asc())
-                .paginate(page, per_page)
+            .order_by(Comment.timestamp.asc())
+            .paginate(page, per_page)
         )
         comments = pagination.items
         form = CommentForm()
@@ -156,8 +156,8 @@ def manage_posts():
     page = request.args.get("page", 1, type=int)
     pagination = (
         Post.query.filter_by(author=current_user)
-            .order_by(Post.timestamp.desc())
-            .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
+        .order_by(Post.timestamp.desc())
+        .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
     )
     return render_template("main/personal_posts.html", pagination=pagination)
 
@@ -210,9 +210,9 @@ def edit_post(id):
 def collect_post(id):
     post = Post.query.get(id)
     if (
-            not post.private
-            and post.author != current_user
-            and not current_user.is_collecting(post)
+        not post.private
+        and post.author != current_user
+        and not current_user.is_collecting(post)
     ):
         current_user.collect(post)
         push_collect_notification(
@@ -261,7 +261,6 @@ def unpick(id: int):
     db.session.commit()
     flash(_("Unpicked post %d" % id))
     return redirect_back()
-
 
 
 @main_bp.route("/post/collected/")
@@ -342,7 +341,9 @@ def create_column():
 def view_column(id: int):
     column = Column.query.get_or_404(id)
     page = request.args.get("page", 1)
-    pagination = Post.query.with_parent(column).order_by(Post.timestamp.desc()).paginate(
-        page, per_page=current_app.config["POSTS_PER_PAGE"]
+    pagination = (
+        Post.query.with_parent(column)
+        .order_by(Post.timestamp.desc())
+        .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
     )
     return render_template("main/column.html", column=column, pagination=pagination)

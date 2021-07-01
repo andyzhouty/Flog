@@ -8,7 +8,6 @@ from flask_babel import lazy_gettext as _l
 from wtforms import (
     StringField,
     SubmitField,
-    TextAreaField,
     BooleanField,
     SelectMultipleField,
 )

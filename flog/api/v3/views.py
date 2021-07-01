@@ -5,7 +5,21 @@ Copyright(c) 2021 Andy Zhou
 from apiflask import input, output, abort
 from flask import url_for, jsonify, g
 from flask.views import MethodView
-from .schemas import *
+from .schemas import (
+    IndexSchema,
+    UserInSchema,
+    UserOutSchema,
+    PostInSchema,
+    PostOutSchema,
+    CommentInSchema,
+    CommentOutSchema,
+    ColumnInSchema,
+    ColumnOutSchema,
+    TokenInSchema,
+    TokenOutSchema,
+    VerifyTokenInSchema,
+    VerifyTokenOutSchema,
+)
 from flog.models import db, User, Post, Comment, Permission, Column
 from flog.utils import clean_html
 from . import api_v3
@@ -74,9 +88,14 @@ class UserPostAPI(MethodView):
     @output(PostOutSchema(many=True))
     def get(self, user_id):
         user = User.query.get_or_404(user_id)
-        permitted = (get_current_user() is not None and (
-                get_current_user() == user or get_current_user().is_administrator()))
-        return user.posts if permitted else [post for post in user.posts if not post.private]
+        permitted = get_current_user() is not None and (
+            get_current_user() == user or get_current_user().is_administrator()
+        )
+        return (
+            user.posts
+            if permitted
+            else [post for post in user.posts if not post.private]
+        )
 
 
 @api_v3.route("/register", endpoint="register")
@@ -104,7 +123,11 @@ class TokenAPI(MethodView):
             abort(400, message="Either the username or the password is invalid.")
         token = user.gen_api_auth_token()
         response = jsonify(
-            {"access_token": token, "expires_in": "exactly a year", "token_type": "Bearer"}
+            {
+                "access_token": token,
+                "expires_in": "exactly a year",
+                "token_type": "Bearer",
+            }
         )
         response.headers["Cache-Control"] = "no-store"
         response.headers["Pragma"] = "no-cache"

@@ -7,8 +7,21 @@
     :copyright: Andy Zhou
     :license: MIT
 """
+from flask import jsonify
 from . import api_v2
-from .resources import *
+from .resources import (
+    IndexAPI,
+    UserAPI,
+    TokenAPI,
+    PostAPI,
+    NotificationAPI,
+    FollowAPI,
+    CommentAPI,
+    ImageAPI,
+    CollectionAPI,
+)
+from .schemas import user_schema, post_schema, comment_schema
+from flog.models import User, Post
 
 # index
 api_v2.add_url_rule("/", view_func=IndexAPI.as_view("index"), methods=["GET"])

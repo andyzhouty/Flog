@@ -1,4 +1,3 @@
-from flask import jsonify
 from . import api_v2
 from flog.errors import api_error_handler
 
