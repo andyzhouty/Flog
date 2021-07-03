@@ -88,5 +88,3 @@ webencodings==0.5.1
 Werkzeug~=2.0.1
 wrapt==1.12.1
 WTForms==2.3.3
-Faker>=8.8.2
-pytest>=6.2.4

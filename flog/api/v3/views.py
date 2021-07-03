@@ -90,8 +90,7 @@ class UserPostAPI(MethodView):
         current_user = get_current_user()
         permitted = (
             current_user is not None
-            and (current_user == user
-            or current_user.is_administrator())
+            and (current_user == user or current_user.is_administrator())
         )
         return (
             user.posts
