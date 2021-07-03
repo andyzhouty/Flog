@@ -152,7 +152,7 @@ MIT License
         <div class="d-flex align-items-center">
             <a href="{{ url_for('user.profile', username=user.username) }}">
                 <img src="{{ user.avatar_url() }}" class="profile-popover mr-3"
-                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" style="height: 50px !important">
+                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
             </a>
             <a style="font-size: 2em;"
                class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% else %} text-primary {% endif %}"

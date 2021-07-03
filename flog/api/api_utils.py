@@ -34,12 +34,9 @@ def can_edit_profile(user: User) -> bool:
 
 def get_current_user():
     auth = request.headers.get("Authorization")
-    print(1)
     if auth:
         if not auth.startswith("Bearer"):
-            print(2)
             return None
-        print(3)
         token = auth[7:]
         user = User.verify_auth_token_api(token)
         return user

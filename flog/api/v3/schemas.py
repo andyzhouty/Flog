@@ -3,7 +3,17 @@ MIT License
 Copyright(c) 2021 Andy Zhou
 """
 from apiflask import Schema
-from apiflask.fields import Integer, Boolean, String, URL, DateTime, Email, Nested, List
+from apiflask.fields import (
+    Integer,
+    Boolean,
+    String,
+    URL,
+    DateTime,
+    Email,
+    Nested,
+    List,
+    Raw,
+)
 from flog.extensions import ma
 
 
@@ -106,3 +116,13 @@ class PostOutSchema(Schema):
     comments = List(Nested(CommentOutSchema, exclude=("post",)))
     columns = List(Nested(ColumnOutSchema, exclude=("posts", "author")))
     self = ma.URLFor(".post", values=dict(post_id="<id>"))
+
+
+class ImageInSchema(Schema):
+    upload = Raw(type="file", required=True)
+
+
+class ImageOutSchema(Schema):
+    id = Integer()
+    filename = String()
+    image_url = URL()

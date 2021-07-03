@@ -22,8 +22,14 @@ Both api v1 and api v2 users can follow the following instructions.
   | ------ | -------------------- |
   | upload | \<file:picture.png\> |
 
-URL: /api/v1/image/{image_id} or /api/v2/image{image_id}
+  Returns:
+  - image_url: URL
+  - image_id: Integer
+  - filename: String
+  - message: String
 
+
+URL: /api/v1/image/{image_id} or /api/v2/image/{image_id}
 - **DELETE**: Delete an Image
 
   Requires Authentication

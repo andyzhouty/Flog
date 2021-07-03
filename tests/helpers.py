@@ -176,9 +176,10 @@ def api_upload_image(client, api_bp_prefix: str, headers: dict) -> dict:
     image_obj = open("test.png", "rb")
     os.chdir(os.path.dirname(os.path.dirname(__file__)))
     response = client.post(
-        f"{api_bp_prefix}/image/upload/",
+        f"{api_bp_prefix}/image/upload",
         headers=headers,
         data=dict(upload=image_obj),
+        follow_redirects=True
     )
     return {
         "response": response,

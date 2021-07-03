@@ -2,26 +2,25 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
+import pdb
+
 from apiflask import input, output, abort
-from flask import url_for, jsonify, g
+from flask import url_for, jsonify, g, request
 from flask.views import MethodView
+
+# fmt: off
 from .schemas import (
     IndexSchema,
-    UserInSchema,
-    UserOutSchema,
-    PostInSchema,
-    PostOutSchema,
-    CommentInSchema,
-    CommentOutSchema,
-    ColumnInSchema,
-    ColumnOutSchema,
-    TokenInSchema,
-    TokenOutSchema,
-    VerifyTokenInSchema,
-    VerifyTokenOutSchema,
+    UserInSchema, UserOutSchema,
+    PostInSchema, PostOutSchema,
+    CommentInSchema, CommentOutSchema,
+    ColumnInSchema, ColumnOutSchema,
+    TokenInSchema, TokenOutSchema,
+    VerifyTokenInSchema, VerifyTokenOutSchema, ImageInSchema, ImageOutSchema,
 )
-from flog.models import db, User, Post, Comment, Permission, Column
-from flog.utils import clean_html
+# fmt: on
+from flog.models import db, User, Post, Comment, Permission, Column, Image
+from flog.utils import clean_html, get_image_path_and_url
 from . import api_v3
 from .decorators import can_edit, permission_required
 from ..api_utils import get_current_user
@@ -88,8 +87,11 @@ class UserPostAPI(MethodView):
     @output(PostOutSchema(many=True))
     def get(self, user_id):
         user = User.query.get_or_404(user_id)
-        permitted = get_current_user() is not None and (
-            get_current_user() == user or get_current_user().is_administrator()
+        current_user = get_current_user()
+        permitted = (
+            current_user is not None
+            and (current_user == user
+            or current_user.is_administrator())
         )
         return (
             user.posts
@@ -204,6 +206,17 @@ class PostAddAPI(MethodView):
         db.session.add(post)
         db.session.commit()
         return post
+
+
+@api_v3.route("/post/all", endpoint="all_posts")
+class AllPostAPI(MethodView):
+    @output(PostOutSchema(many=True))
+    def get(self):
+        current_user = get_current_user()
+        posts = Post.query.filter(~Post.private).all()
+        if current_user is not None:
+            posts += Post.query.with_parent(current_user).filter(Post.private).all()
+        return posts
 
 
 @api_v3.route("/comment/<int:comment_id>", endpoint="comment")
@@ -324,3 +337,29 @@ class ColumnAddAPI(MethodView):
         db.session.add(column)
         db.session.commit()
         return column
+
+
+class ImageAPI(MethodView):
+    @api_v3.post("/image/upload", endpoint="image_upload")
+    @auth.login_required
+    @input(ImageInSchema, location="files")
+    @output(ImageOutSchema, 201)
+    def post(self):
+        image = request.files.get("upload")
+        data = get_image_path_and_url(image, g.current_user)
+        if data.get("error") is not None:
+            abort(400, data["error"])
+        return {
+            "id": data["image_id"],
+            "filename": data["filename"],
+            "url": data["image_url"]
+        }
+
+
+@api_v3.route("/image/<int:image_id>", endpoint="image_delete")
+class ImageDeleteAPI(MethodView):
+    @auth.login_required
+    @output({}, 204)
+    def delete(self, image_id: int):
+        image = Image.query.get_or_404(image_id)
+        image.delete()

@@ -1,5 +1,5 @@
 from flask import current_app
-from .helpers import register, login, get_api_v3_headers, generate_post
+from .helpers import register, login, get_api_v3_headers, generate_post, api_upload_image
 from flog.models import User, Post, Comment, db, Column
 
 
@@ -104,22 +104,24 @@ def test_post(client):
     assert response.status_code == 200
     data = response.get_json()
     assert data == []  # should be empty since the user has no public posts
-    # test get private posts with another user's authentication
+    # test get private posts with ANOTHER user's authentication
     response = client.get(f"/api/v3/user/{user.id}/posts",
                           headers=get_api_v3_headers(client, "test2", "123456", "InvalidToken"))
     data = response.get_json()
     assert data == []
-    # test get private posts with author's authentication
+    # test get private posts WITH author's authentication
     response = client.get(f"/api/v3/user/{user.id}/posts", headers=get_api_v3_headers(client))
     data = response.get_json()
     assert any(post["title"] == "ABCD" for post in data)
 
+    # test get private posts WITHOUT authentication
     response = client.get(f"/api/v3/post/{post.id}")
     assert response.status_code == 403
 
     response = client.get(f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client))
     assert response.status_code == 200
 
+    # test get private post with admin permission
     response = client.get(
         f"/api/v3/post/{post.id}",
         headers=get_api_v3_headers(
@@ -130,6 +132,16 @@ def test_post(client):
     )
     assert response.status_code == 200
 
+    # test get ALL posts with/without author's authentication
+    response = client.get("/api/v3/post/all", headers=get_api_v3_headers(client))
+    data = response.get_json()
+    assert any(post["title"] == "ABCD" for post in data)
+
+    response = client.get("/api/v3/post/all")
+    data = response.get_json()
+    assert not any(post["title"] == "ABCD" for post in data)
+
+    # test add posts
     response = client.post(
         "/api/v3/post/add",
         json=dict(title="abcd", content="test content", private=False),
@@ -140,6 +152,7 @@ def test_post(client):
     assert query.count() == 1
     post = query.first()
 
+    # test delete posts
     response = client.delete(f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client))
     assert response.status_code == 204
     assert query.count() == 0
@@ -261,3 +274,12 @@ def test_self(client):
 
     response = client.get("/api/v3/self/posts", headers=get_api_v3_headers(client))
     assert response.get_json()[0]["title"] == "1234"
+
+
+def test_image(client):
+    register(client)
+    data = api_upload_image(client, "/api/v3", get_api_v3_headers(client, content_type="multipart/form-data"))["data"]
+    assert data["filename"] == "test_test.png"
+    image_id = data["id"]
+    response = client.delete(f"/api/v3/image/{image_id}", headers=get_api_v3_headers(client))
+    assert response.status_code == 204

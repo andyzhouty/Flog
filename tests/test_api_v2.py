@@ -301,7 +301,7 @@ def test_image(client):
     response = image_dict["response"]
     data = image_dict["data"]
     assert response.status_code == 201
-    assert data["image_url"] == f"/image/{admin_username}_test.png"
+    assert data["filename"] == f"{admin_username}_test.png"
     response = client.get(f"/image/{admin_username}_test.png")
     assert response.status_code == 200
     image_id = data["image_id"]

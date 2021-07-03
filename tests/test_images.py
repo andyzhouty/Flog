@@ -23,7 +23,7 @@ def test_basic_operations(client_with_request_ctx):
     image = Image.query.filter_by(filename=filename).first()
     assert image is not None
     assert image.path() == uploaded_path
-    assert image.url() == f"/image/{image.filename}"
+    assert image.url().endswith(f"/image/{image.filename}")
     assert not image.private
     response = client.post(f"/image/toggle/{image.id}/", follow_redirects=True)
     assert response.status_code == 200
@@ -53,7 +53,7 @@ def test_manage_images(client):
     response = client.get("/image/manage/")
     data = response.get_data(as_text=True)
     filename = current_app.config["FLOG_ADMIN"] + "_" + "test.png"
-    assert f'src="/image/{filename}"' in data
+    assert f'/image/{filename}' in data
     image = Image.query.filter_by(filename=filename).first()
     delete_image(client, image.id)
     logout(client)
@@ -66,7 +66,7 @@ def test_manage_images(client):
     filename = "test_test.png"
     print(data)
 
-    assert f'src="/image/{filename}"' in data
+    assert f'/image/{filename}' in data
     image = Image.query.filter_by(filename=filename).first()
     delete_image(client, image.id)
 
