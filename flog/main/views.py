@@ -185,6 +185,7 @@ def edit_post(id):
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     form = PostForm()
+    form.columns.choices = [(column.id, column.name) for column in current_user.columns]
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
@@ -200,8 +201,6 @@ def edit_post(id):
     form.title.data = post.title
     form.content.data = post.content
     form.private.data = post.private
-    print([column.id for column in current_user.columns])
-    form.columns.choices = [(column.id, column.name) for column in current_user.columns]
     return render_template("main/edit_post.html", form=form)
 
 

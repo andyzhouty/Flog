@@ -257,6 +257,9 @@ def test_create_column(client):
     assert "Your column was successfully created." in res_data
 
 
+    form.title.data = post.title
+    form.content.data = post.content
+    form.private.data = post.private
 def test_view_column(client):
     register(client)
     login(client, "test", "password")
