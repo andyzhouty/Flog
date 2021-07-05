@@ -268,12 +268,13 @@ class CommentAddAPI(MethodView):
                 if post.private:
                     abort(400, "the post is private")
                 comment.post = post
-                comment.replied = Comment.query.get_or_404(data["reply_id"])
-                if comment.replied not in comment.post.comments:
-                    abort(
-                        400,
-                        "the comment you want to reply does not belongs to the post",
-                    )
+                if data.get("reply_id"):
+                    comment.replied = Comment.query.get_or_404(data["reply_id"])
+                    if comment.replied not in comment.post.comments:
+                        abort(
+                            400,
+                            "the comment you want to reply does not belongs to the post",
+                        )
             elif attr == "body":
                 comment.body = clean_html(value)
             else:

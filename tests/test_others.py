@@ -2,7 +2,8 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from flask import current_app, request
+from flask import current_app
+from .helpers import login
 
 
 def test_change_theme_fail(client):
@@ -32,3 +33,9 @@ def test_redirections(client_with_request_ctx):
     register_response = client.get("/auth/register/")
     assert response.status_code == 200
     assert response.get_data(as_text=True) == register_response.get_data(as_text=True)
+
+    login(client)
+    response = client.get("/admin/", follow_redirects=True)
+    main_response = client.get("/")
+    assert response.status_code == 200
+    assert response.get_data(as_text=True) == main_response.get_data(as_text=True)

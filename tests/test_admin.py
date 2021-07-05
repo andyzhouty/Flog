@@ -4,7 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 from random import randint
 from faker import Faker
-from flog.models import Post
+from flog.models import Post, User
 from flog.utils import lower_username
 from .helpers import generate_post, login
 
@@ -35,3 +35,21 @@ def test_admin_edit_user_profile(client):
     assert data["about_me"] in response_data
     assert data["location"] in response_data
     assert data["custom_avatar_url"] in response_data
+
+    data["username"] = User.query.get(1).username
+    data["email"] = User.query.get(1).email
+    response = client.post(
+        f"/admin/user/{user_id}/profile/edit/", data=data, follow_redirects=True
+    )
+    data = response.get_data(as_text=True)
+    assert "already registered" in data
+
+
+def test_user_delete(client):
+    login(client)
+    user_id = randint(2, 5)
+    response = client.post(
+        f"/admin/users/delete/{user_id}/", follow_redirects=True
+    )
+    assert response.status_code == 200
+    assert User.query.get(user_id) is None

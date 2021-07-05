@@ -92,7 +92,7 @@ def edit_profile(id):
     return render_template("admin/edit_user_profile.html", form=form, user=user)
 
 
-@admin_bp.route("/users/delete/<int:id>", methods=["POST"])
+@admin_bp.route("/users/delete/<int:id>/", methods=["POST"])
 @admin_required
 def delete_account(id):
     User.query.get(id).delete()
