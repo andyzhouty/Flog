@@ -221,7 +221,7 @@ MIT License
             {% endif %}
         </h4>
         <div class="post-container">
-            <div class="post-content">{{ post.content | striptags | truncate(220) }}</div>
+            <div class="post-content">{{ post.content | truncate(220) | striptags }}</div>
         </div>
         <div>
             <a href="{{ url_for('main.full_post', id=post.id) }}"
