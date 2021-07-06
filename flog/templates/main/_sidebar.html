@@ -8,10 +8,14 @@ MIT License
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
             <div class="card-header">{{ _("Quick Actions") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-vector-pen", _("Write"), url_for("main.write")) }}
                 {{ action_card("bi-images", _("Images"), url_for("image.manage")) }}
                 {{ action_card("bi-collection", _("Collections"), url_for("main.collected_posts")) }}
             </div>
+        </div>
+        <div class="card mb-3 d-flex flex-wrap justify-content-between">
+            <div class="card-header">{{ _("Post") }}</div>
+            {{ action_card("bi-vector-pen", _("Write"), url_for("main.write")) }}
+            {{ action_card("bi-files", _("Yours"), url_for("main.manage_posts") )}}
         </div>
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
             <div class="card-header">{{ _("Group") }}</div>
