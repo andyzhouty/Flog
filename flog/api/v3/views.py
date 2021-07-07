@@ -322,7 +322,7 @@ class ColumnAPI(MethodView):
 class ColumnAddAPI(MethodView):
     @permission_required(Permission.WRITE)
     @input(ColumnInSchema)
-    @output(CommentOutSchema)
+    @output(ColumnOutSchema)
     def post(self, data):
         column = Column(author=g.current_user)
         for attr, value in data.items():

@@ -243,6 +243,7 @@ def test_column(client):
     column2 = dict(name="column2", post_ids=[post2.id])
     response = client.post("/api/v3/column/create", headers=get_api_v3_headers(client), json=column2)
     assert response.status_code == 200
+    assert "posts" in response.get_json()
     column2 = Column.query.filter_by(name="column2").first()
     assert post2 in column2.posts
 
