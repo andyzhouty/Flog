@@ -34,4 +34,5 @@ def test_search(client):
 
     generate_column(client, "foobar")
     response_data = client.get("/search/?q=foobar&category=column").get_data(as_text=True)
-    assert "Column name: foobar" in response_data
+    assert "Column name: " in response_data
+    assert "foobar" in response_data
