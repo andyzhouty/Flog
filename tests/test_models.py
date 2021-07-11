@@ -3,7 +3,18 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flog import db
-from flog.models import *
+from flog.models import (
+    User,
+    Post,
+    Notification,
+    Group,
+    Message,
+    Follow,
+    Column,
+    AnonymousUser,
+    Permission,
+)
+
 
 def test_password_setter(client):
     u = User()

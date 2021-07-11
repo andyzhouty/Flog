@@ -41,7 +41,19 @@ def register_commands(app: Flask, db):  # noqa: C901
     @click.option("--comments", default=20, help="Generates fake comments")
     @click.option("--notifications", default=5, help="Generates fake notifications")
     @click.option("--groups", default=20, help="Generates fake groups")
-    def forge(users, posts, feedbacks, follows, comments, notifications, groups):
+    @click.option("--columns", default=20, help="Generate fake columns")
+    @click.option("--messages", default=20, help="Generate fake messages")
+    def forge(
+        users,
+        posts,
+        feedbacks,
+        follows,
+        comments,
+        notifications,
+        groups,
+        columns,
+        messages,
+    ):
         """Generates fake data"""
         from . import fakes as fake
         from .models import Role
@@ -54,6 +66,8 @@ def register_commands(app: Flask, db):  # noqa: C901
         fake.follows(follows)
         fake.notifications(notifications)
         fake.groups(groups)
+        fake.columns(columns)
+        fake.messages(messages)
 
     @app.cli.command()
     @click.option("--drop/--no-drop", help="Drop database or not")

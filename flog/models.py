@@ -96,6 +96,7 @@ class Column(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    topped = db.Column(db.Boolean, default=False)
 
     def delete(self):
         if self in db.session:

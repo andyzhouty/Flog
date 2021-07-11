@@ -3,7 +3,8 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from flask import current_app
-from .helpers import login
+from flog.models import User
+from .helpers import login, logout
 
 
 def test_change_theme_fail(client):
@@ -39,3 +40,15 @@ def test_redirections(client_with_request_ctx):
     main_response = client.get("/")
     assert response.status_code == 200
     assert response.get_data(as_text=True) == main_response.get_data(as_text=True)
+
+
+def test_about(client):
+    login(client)
+    admin = User.query.get(1)
+    admin.locale = "en_US"
+    response = client.get("/about/")
+    assert response.status_code == 200
+    logout(client)
+
+    response2 = client.get("/about/")
+    assert response2.status_code == 200

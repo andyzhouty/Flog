@@ -33,11 +33,7 @@ def test_create_post(client):
 
     # test add post to column when submit
     title = fake.sentence()
-    data = dict(
-        title=title,
-        content=fake.text(),
-        columns=[column.id]
-    )
+    data = dict(title=title, content=fake.text(), columns=[column.id])
     response = client.post("/write/", data=data, follow_redirects=True)
     assert response.status_code == 200
 
@@ -91,8 +87,8 @@ def test_collect_uncollect(client):
         as_text=True
     )
     assert (
-            "The author has set this post to invisible. So you cannot collect this post."
-            in data
+        "The author has set this post to invisible. So you cannot collect this post."
+        in data
     )
     assert not admin.is_collecting(private_post)
 
@@ -189,7 +185,7 @@ def test_get_urls(client):
     assert response.status_code == 200
     response = client.get(f"/post/edit/{post.id}/")
     assert response.status_code == 200
-    response = client.get(f"/post/manage/")
+    response = client.get("/post/manage/")
     assert response.status_code == 200
 
 
@@ -211,8 +207,9 @@ def test_comments(client_with_request_ctx):
     assert post.title in response2.get_data(as_text=True)
 
     reply = {"body": "reply"}
-    response = client.post(f"/post/{post.id}/?reply={comment.id}", data=reply,
-                           follow_redirects=True)
+    response = client.post(
+        f"/post/{post.id}/?reply={comment.id}", data=reply, follow_redirects=True
+    )
     assert response.status_code == 200
     assert len(comment.replies) == 1
 
@@ -225,9 +222,7 @@ def test_comments(client_with_request_ctx):
 def test_comment_posts_of_deleted_users(client):
     register(client)
     login(client, "test", "password")
-    title = generate_post(client, username="test", password="password")["post"][
-        "title"
-    ]
+    title = generate_post(client, username="test", password="password")["post"]["title"]
     logout(client)
     post = Post.query.filter_by(title=title).first()
     user = User.query.filter_by(username="test").first()
@@ -265,6 +260,21 @@ def test_view_column(client):
     response = client.get(f"/column/{column.id}/", follow_redirects=True)
     assert response.status_code == 200
     assert col_name in response.get_data(as_text=True)
+    response = client.get("/column/all/")
+    assert response.status_code == 200
+    assert col_name in response.get_data(as_text=True)
+
+    response = client.post(f"/column/top/{column.id}/", follow_redirects=True)
+    assert response.status_code == 403
+    logout(client)
+
+    login(client)
+    response = client.post(f"/column/top/{column.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert column.topped
+    response = client.post(f"/column/untop/{column.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert not column.topped
 
 
 def test_picks(client):
@@ -274,11 +284,11 @@ def test_picks(client):
     assert response.status_code == 200
     assert post.picked
 
-    response = client.get(f"/post/picks/")
+    response = client.get("/post/picks/")
     assert post.title in response.get_data(as_text=True)
 
     response = client.get(f"/post/unpick/{post.id}/", follow_redirects=True)
     assert response.status_code == 200
 
-    response = client.get(f"/post/picks/")
+    response = client.get("/post/picks/")
     assert post.title not in response.get_data(as_text=True)

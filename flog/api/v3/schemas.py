@@ -126,3 +126,10 @@ class ImageOutSchema(Schema):
     id = Integer()
     filename = String()
     image_url = URL()
+
+
+class NotificationOutSchema(Schema):
+    id = Integer()
+    message = String()
+    receiver = Nested(UserOutSchema)
+    timestamp = DateTime()

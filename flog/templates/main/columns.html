@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import column_card with context %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block title %}
+    All columns
+{% endblock title %}
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ _("All columns") }}</h1>
+            {% for column in pagination.items %}
+                {% if column.topped %}
+                    {{ column_card(column, "border-warning") }}
+                {% else %}
+                    {{ column_card(column) }}
+                {% endif %}
+            {% endfor %}
+            {{ render_pagination(pagination) }}
+        </div>
+        {% include 'main/_sidebar.html' %}
+    </div>
+{% endblock page_content %}

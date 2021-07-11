@@ -106,10 +106,13 @@ def invite_user(user_id: int):
 @login_required
 def info(id: int):
     group = Group.query.get_or_404(id)
+    if group.private:
+        abort(403)
     return render_template("group/info.html", group=group)
 
 
 @group_bp.route("/<int:id>/discussion/", methods=["GET", "POST"])
+@login_required
 def discussion(id: int):
     group = Group.query.get_or_404(id)
     if current_user not in group.members:

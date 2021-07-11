@@ -70,7 +70,7 @@ def test_group_invite(client):
     response_data = response.get_data(as_text=True)
     assert response.status_code == 200
     assert Notification.query.count() == notification_count + 1
-    assert f"Notification sent to user" in response_data
+    assert "Notification sent to user" in response_data
 
 
 def test_group_hint_ajax(client):
@@ -135,7 +135,6 @@ def test_group_discussions(client):
     c = Notification.query.count()
     response = client.post(f"/group/{g.id}/discussion/", data=dict(body="hello"))
     assert Notification.query.count() == c + 1
-    
 
 
 def test_group_all(client):
@@ -144,9 +143,9 @@ def test_group_all(client):
     data = dict(group_name="test_group", private=True)
     client.post("/group/create/", data=data, follow_redirects=True)
     g1 = Group.query.filter_by(name="test_group").first()
-    response = client.get(f"/group/all/")
+    response = client.get("/group/all/")
     assert g1.name not in response.get_data(as_text=True)
     logout(client)
-    login(client) # login as administrator
-    response = client.get(f"/group/all/")
+    login(client)  # login as administrator
+    response = client.get("/group/all/")
     assert g1.name in response.get_data(as_text=True)

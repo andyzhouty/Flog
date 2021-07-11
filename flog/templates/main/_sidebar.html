@@ -44,8 +44,9 @@ MIT License
         </div>
         <div class="card mb-3">
             <div class="card-header">{{ _("Column") }}</div>
-            <ul class="list-group list-group-flush">
+            <ul class="d-flex flex-fill">
                 {{ action_card("bi-plus", _("Create"), url_for("main.create_column")) }}
+                {{ action_card("bi-journals", _("All"), url_for("main.all_columns")) }}
             </ul>
         </div>
     {% endif %}

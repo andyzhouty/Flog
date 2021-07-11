@@ -2,7 +2,6 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-import pdb
 
 from apiflask import input, output, abort
 from flask import url_for, jsonify, g, request
@@ -16,10 +15,12 @@ from .schemas import (
     CommentInSchema, CommentOutSchema,
     ColumnInSchema, ColumnOutSchema,
     TokenInSchema, TokenOutSchema,
-    VerifyTokenInSchema, VerifyTokenOutSchema, ImageInSchema, ImageOutSchema,
+    VerifyTokenInSchema, VerifyTokenOutSchema,
+    ImageInSchema, ImageOutSchema,
+    NotificationOutSchema
 )
 # fmt: on
-from flog.models import db, User, Post, Comment, Permission, Column, Image
+from flog.models import db, User, Post, Comment, Permission, Column, Image, Notification
 from flog.utils import clean_html, get_image_path_and_url
 from . import api_v3
 from .decorators import can_edit, permission_required
@@ -208,7 +209,7 @@ class PostAddAPI(MethodView):
 
 
 @api_v3.route("/post/all", endpoint="all_posts")
-class AllPostAPI(MethodView):
+class AllPostPI(MethodView):
     @output(PostOutSchema(many=True))
     def get(self):
         current_user = get_current_user()
@@ -363,3 +364,12 @@ class ImageDeleteAPI(MethodView):
     def delete(self, image_id: int):
         image = Image.query.get_or_404(image_id)
         image.delete()
+
+
+@api_v3.route("/notification/all", endpoint="all_notifications")
+class SelfNotificationsAPI(MethodView):
+    @auth.login_required
+    @output(NotificationOutSchema(many=True, exclude=("receiver",)))
+    def get(self):
+        notifications = Notification.query.with_parent(g.current_user).all()
+        return notifications

@@ -271,9 +271,9 @@ MIT License
     </li>
 {% endmacro %}
 
-{% macro column_card(column) %}
-    <li class="list-group-item">
-        <h3>{{ _("Column name:") }} {{ column.name }}</h3>
+{% macro column_card(column, extra_classes="") %}
+    <li class="list-group-item {{ extra_classes }}">
+        <h3>{{ _("Column name:") }} <a href="{{ url_for('main.view_column', id=column.id) }}">{{ column.name }}</a></h3>
         <h4>{{ _("Author: ") }}
             <a href="{{ column.author.profile_url() }}"
                class="text-muted profile-popover"
@@ -283,7 +283,26 @@ MIT License
         </h4>
         <h4>
             {{ _("Created") }} {{ moment(column.timestamp).fromNow(refresh=True) }}
-        </h4>
+    </h4>
+    <div>
+    {% if current_user.can(Permission.MODERATE) %}
+        {% if not column.topped %}
+        <form method="POST" action="{{ url_for('main.top_column', id=column.id) }}">
+            <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi-arrow-bar-up">{{ _("Top") }}</i>
+            </button>
+        </form>
+        {% else %}
+        <form method="POST" action="{{ url_for('main.untop_column', id=column.id) }}">
+            <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi-arrow-bar-down">{{ _("Untop") }}</i>
+            </button>
+        </form>
+        {% endif %}
+    {% endif %}
+    </div>
     </li>
 {% endmacro %}
 

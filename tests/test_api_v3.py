@@ -284,3 +284,4 @@ def test_image(client):
     image_id = data["id"]
     response = client.delete(f"/api/v3/image/{image_id}", headers=get_api_v3_headers(client))
     assert response.status_code == 204
+

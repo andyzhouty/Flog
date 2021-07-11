@@ -24,13 +24,3 @@ def permission_required(permission):
 def admin_required(f):
     return permission_required(Permission.ADMIN)(f)
 
-
-def group_login_required(f):
-    @login_required
-    @wraps(f)
-    def decorator(*args, **kwargs):
-        if not isinstance(current_user, Group):
-            return current_app.login_manager.unauthorized()
-        return f(*args, **kwargs)
-
-    return decorator

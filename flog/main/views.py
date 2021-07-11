@@ -346,3 +346,37 @@ def view_column(id: int):
         .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
     )
     return render_template("main/column.html", column=column, pagination=pagination)
+
+
+@main_bp.route("/column/top/<int:id>/", methods=["POST"])
+@login_required
+@permission_required(Permission.MODERATE)
+def top_column(id: int):
+    column = Column.query.get_or_404(id)
+    column.topped = True
+    db.session.commit()
+    flash(_("Topped column <%s>" % column.name))
+    return redirect_back()
+
+
+@main_bp.route("/column/untop/<int:id>/", methods=["POST"])
+@login_required
+@permission_required(Permission.MODERATE)
+def untop_column(id: int):
+    column = Column.query.get_or_404(id)
+    column.topped = False
+    db.session.commit()
+    flash(_("Topped column <%s>" % column.name))
+    return redirect_back()
+
+
+@main_bp.route("/column/all/")
+@login_required
+def all_columns():
+    page = request.args.get("page", type=int)
+    pagination = (
+        Column.query
+              .order_by(Column.topped.desc(), Column.timestamp.desc())
+              .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
+    )
+    return render_template("main/columns.html", pagination=pagination)

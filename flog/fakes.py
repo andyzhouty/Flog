@@ -5,14 +5,25 @@ Copyright (c) 2020 Andy Zhou
 from random import randint
 from faker import Faker
 from .utils import lower_username
-from .models import db, Post, Feedback, User, Role, Comment, Notification, Group
+from .models import (
+    db,
+    Post,
+    Feedback,
+    User,
+    Role,
+    Comment,
+    Notification,
+    Group,
+    Column,
+    Message,
+)
 
 fake = Faker()
 
 
 def users(count: int = 10) -> None:
     """Generates fake users"""
-    for i in range(count):
+    for _ in range(count):
         name = fake.name()
         username = lower_username(name)
         # Ensure the username is unique.
@@ -47,7 +58,7 @@ def posts(count: int = 10) -> None:
         private=False,
     )
     db.session.add_all([not_private, private])
-    for i in range(count - 2):
+    for _ in range(count - 2):
         post = Post(
             title=fake.word() + " " + fake.word(),
             content=fake.text(randint(100, 300)),
@@ -61,7 +72,7 @@ def posts(count: int = 10) -> None:
 
 def comments(count: int = 10) -> None:
     """Generates fake comments for posts."""
-    for i in range(count):
+    for _ in range(count):
         filt = Post.query.filter(~Post.private)
         comment = Comment(
             author=User.query.get(randint(1, User.query.count())),
@@ -74,7 +85,7 @@ def comments(count: int = 10) -> None:
 
 def feedbacks(count: int = 10) -> None:
     """Generates fake feedbacks"""
-    for i in range(count):
+    for _ in range(count):
         feedback = Feedback(
             author=User.query.get(randint(0, User.query.count())),
             body=fake.sentence(),
@@ -88,7 +99,7 @@ def follows(count: int = 100) -> None:
     """Generates fake follow relationships"""
     admin_role = Role.query.filter_by(name="Administrator").first()
     admin = User.query.filter_by(role=admin_role).first()
-    for i in range(count):
+    for _ in range(count):
         user1 = User.query.get(randint(1, User.query.count()))
         user2 = User.query.get(randint(1, User.query.count()))
         if not (user1 and user2):
@@ -101,7 +112,7 @@ def follows(count: int = 100) -> None:
 
 def notifications(count: int, receiver: User = None) -> None:
     """Generates fake notifications"""
-    for i in range(count):
+    for _ in range(count):
         if receiver is None:
             admin_role = Role.query.filter_by(name="Administrator").first()
             admin = User.query.filter_by(role=admin_role).first()
@@ -116,10 +127,34 @@ def notifications(count: int, receiver: User = None) -> None:
 
 def groups(count: int) -> None:
     """Generates fake user groups"""
-    for i in range(count):
+    for _ in range(count):
         manager = User.query.get(randint(1, User.query.count()))
         group = Group(name=fake.sentence(), manager=manager)
         if manager:
             manager.join_group(group)
             db.session.add(group)
+    db.session.commit()
+
+
+def columns(count: int) -> None:
+    for _ in range(count):
+        posts = list(set(
+            Post.query.get(randint(1, Post.query.count())) for _ in range(5)
+        ))
+        author = User.query.get(randint(1, User.query.count()))
+        column = Column(name=fake.sentence(), author=author, posts=posts)
+        db.session.add(column)
+    db.session.commit()
+    top = Column.query.get(randint(1, Column.query.count()))
+    while top is None:
+        top = Column.query.get(randint(1, Column.query.count()))
+    top.topped = True
+    db.session.commit()
+
+
+def messages(count: int) -> None:
+    for _ in range(count):
+        group = Group.query.get(randint(1, Group.query.count()))
+        message = Message(group=group, body=fake.sentence())
+        db.session.add(message)
     db.session.commit()
