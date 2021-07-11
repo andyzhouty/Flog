@@ -339,7 +339,7 @@ def create_column():
 @login_required
 def view_column(id: int):
     column = Column.query.get_or_404(id)
-    page = request.args.get("page", 1)
+    page = request.args.get("page", 1, type=int)
     pagination = (
         Post.query.with_parent(column)
         .order_by(Post.timestamp.desc())
@@ -373,7 +373,7 @@ def untop_column(id: int):
 @main_bp.route("/column/all/")
 @login_required
 def all_columns():
-    page = request.args.get("page", type=int)
+    page = request.args.get("page", default=1, type=int)
     pagination = (
         Column.query
               .order_by(Column.topped.desc(), Column.timestamp.desc())
