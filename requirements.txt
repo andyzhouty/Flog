@@ -1,6 +1,6 @@
 alembic~=1.6.5
-APIFlask==0.7.0
-apispec==4.4.1
+APIFlask==0.8.0
+apispec==4.7.1
 appdirs==1.4.4
 attrs==21.2.0
 Babel==2.9.1
@@ -9,7 +9,7 @@ blinker==1.4
 Bootstrap-Flask==1.5.2
 Brotli==1.0.9
 certifi==2020.12.5
-cffi==1.14.5
+cffi==1.14.6
 chardet==4.0.0
 click~=8.0.1
 colorama==0.4.4
@@ -20,7 +20,6 @@ docopt==0.6.2
 docutils==0.16
 email-validator==1.1.2
 fett==0.3.2
-flake8==3.9.2
 Flask~=2.0.1
 flask-apispec==0.11.0
 Flask-Babel==2.0.0
@@ -59,12 +58,8 @@ pathspec==0.8.1
 pluggy==0.13.1
 psycopg2-binary==2.8.6
 py==1.10.0
-pycodestyle==2.7.0
 pycparser==2.20
-pyflakes==2.3.1
 Pygments==2.9.0
-pylint==2.8.2
-pymongo==3.11.3
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-dotenv~=0.18.0
@@ -72,7 +67,6 @@ python-editor==1.0.4
 python-jsonrpc-server==0.3.4
 pytz==2021.1
 PyYAML==5.4.1
-recommonmark==0.7.1
 regex==2021.4.4
 six==1.16.0
 snowballstemmer==2.1.0
