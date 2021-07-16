@@ -1,6 +1,13 @@
 from flask import current_app
-from .helpers import register, login, get_api_v3_headers, generate_post, api_upload_image
-from flog.models import User, Post, Comment, db, Column
+from .helpers import (
+    register,
+    login,
+    get_api_v3_headers,
+    generate_post,
+    api_upload_image,
+)
+from flog.models import User, Post, Comment, db, Column, Notification
+from flog.fakes import fake
 
 
 def test_api_index(client):
@@ -22,14 +29,10 @@ def test_token(client):
     assert isinstance(data.get("access_token"), str)
 
     response = client.post(
-        "/api/v3/token/verify",
-        data=dict(token=data.get("access_token"))
+        "/api/v3/token/verify", data=dict(token=data.get("access_token"))
     )
     assert response.status_code == 200
-    response = client.post(
-        "/api/v3/token/verify",
-        data=dict(token="FAKE-TOKEN")
-    )
+    response = client.post("/api/v3/token/verify", data=dict(token="FAKE-TOKEN"))
     assert response.status_code == 401
 
 
@@ -105,12 +108,16 @@ def test_post(client):
     data = response.get_json()
     assert data == []  # should be empty since the user has no public posts
     # test get private posts with ANOTHER user's authentication
-    response = client.get(f"/api/v3/user/{user.id}/posts",
-                          headers=get_api_v3_headers(client, "test2", "123456", "InvalidToken"))
+    response = client.get(
+        f"/api/v3/user/{user.id}/posts",
+        headers=get_api_v3_headers(client, "test2", "123456", "InvalidToken"),
+    )
     data = response.get_json()
     assert data == []
     # test get private posts WITH author's authentication
-    response = client.get(f"/api/v3/user/{user.id}/posts", headers=get_api_v3_headers(client))
+    response = client.get(
+        f"/api/v3/user/{user.id}/posts", headers=get_api_v3_headers(client)
+    )
     data = response.get_json()
     assert any(post["title"] == "ABCD" for post in data)
 
@@ -153,7 +160,9 @@ def test_post(client):
     post = query.first()
 
     # test delete posts
-    response = client.delete(f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client))
+    response = client.delete(
+        f"/api/v3/post/{post.id}", headers=get_api_v3_headers(client)
+    )
     assert response.status_code == 204
     assert query.count() == 0
 
@@ -163,7 +172,7 @@ def test_comments(client):
     comment = Comment.query.get(1)
     comment.author = User.query.filter_by(username="test").first()
     db.session.commit()
-    response = client.get(f"/api/v3/comment/1")
+    response = client.get("/api/v3/comment/1")
     data = response.get_json()
     assert data["body"] == comment.body
 
@@ -223,16 +232,18 @@ def test_comments(client):
 
 def test_column(client):
     register(client)
-    data = {
-        "name": "test-column"
-    }
-    response = client.post("/api/v3/column/create", headers=get_api_v3_headers(client), json=data)
+    data = {"name": "test-column"}
+    response = client.post(
+        "/api/v3/column/create", headers=get_api_v3_headers(client), json=data
+    )
     assert response.status_code == 200
     assert response.get_json()["author"]["username"] == "test"
     column = Column.query.filter_by(name="test-column").first()
 
     post = dict(title="1234", content="content", column_ids=[column.id])
-    response = client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post)
+    response = client.post(
+        "/api/v3/post/add", headers=get_api_v3_headers(client), json=post
+    )
     assert response.status_code == 200
     data = response.get_json()
     assert data["columns"][0]["id"] == column.id
@@ -241,7 +252,9 @@ def test_column(client):
     client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post2)
     post2 = Post.query.filter_by(title="abcd").first()
     column2 = dict(name="column2", post_ids=[post2.id])
-    response = client.post("/api/v3/column/create", headers=get_api_v3_headers(client), json=column2)
+    response = client.post(
+        "/api/v3/column/create", headers=get_api_v3_headers(client), json=column2
+    )
     assert response.status_code == 200
     assert "posts" in response.get_json()
     column2 = Column.query.filter_by(name="column2").first()
@@ -255,14 +268,21 @@ def test_column(client):
     client.post("/api/v3/post/add", headers=get_api_v3_headers(client), json=post3)
     post3 = Post.query.filter_by(title="efgh").first()
 
-    response = client.put(f"/api/v3/column/{column2.id}", json=dict(name="foobar", post_ids=[post2.id, post3.id]),
-                          headers=get_api_v3_headers(client))
+    response = client.put(
+        f"/api/v3/column/{column2.id}",
+        json=dict(name="foobar", post_ids=[post2.id, post3.id]),
+        headers=get_api_v3_headers(client),
+    )
     assert response.status_code == 200
     assert response.get_json()["name"] == "foobar"
 
-    response = client.delete(f"/api/v3/column/{column2.id}", headers=get_api_v3_headers(client))
+    response = client.delete(
+        f"/api/v3/column/{column2.id}", headers=get_api_v3_headers(client)
+    )
     assert response.status_code == 204
-    assert Column.query.filter_by(name="foobar").count() == 0  # ensure the column is deleted.
+    assert (
+        Column.query.filter_by(name="foobar").count() == 0
+    )  # ensure the column is deleted.
 
 
 def test_self(client):
@@ -279,9 +299,49 @@ def test_self(client):
 
 def test_image(client):
     register(client)
-    data = api_upload_image(client, "/api/v3", get_api_v3_headers(client, content_type="multipart/form-data"))["data"]
+    data = api_upload_image(
+        client,
+        "/api/v3",
+        get_api_v3_headers(client, content_type="multipart/form-data"),
+    )["data"]
     assert data["filename"] == "test_test.png"
     image_id = data["id"]
-    response = client.delete(f"/api/v3/image/{image_id}", headers=get_api_v3_headers(client))
+    response = client.delete(
+        f"/api/v3/image/{image_id}", headers=get_api_v3_headers(client)
+    )
     assert response.status_code == 204
 
+
+def test_notifications(client):
+    register(client)
+    user = User.query.filter_by(username="test").first()
+    notification_array = []
+    for _ in range(5):
+        n = Notification(receiver=user, message=fake.sentence())
+        db.session.add(n)
+        db.session.commit()
+        notification_array.append(n)
+    response = client.get(
+        "/api/v3/notification/all", headers=get_api_v3_headers(client)
+    )
+    assert response.status_code == 200
+    assert len(response.get_json()) == 5
+
+    response = client.get("/api/v3/notification/1", headers=get_api_v3_headers(client))
+    assert response.status_code == 200
+    assert response.get_json()["id"] == notification_array[0].id
+
+    register(client, "Test2", "test2", "pwd", "t@example.com")
+    response = client.get(
+        "/api/v3/notification/1", headers=get_api_v3_headers(client, "test2", "pwd")
+    )
+    assert response.status_code == 403
+    response = client.delete(
+        "/api/v3/notification/1", headers=get_api_v3_headers(client, "test2", "pwd")
+    )
+    assert response.status_code == 403
+
+    response = client.delete(
+        "/api/v3/notification/1", headers=get_api_v3_headers(client)
+    )
+    assert response.status_code == 204

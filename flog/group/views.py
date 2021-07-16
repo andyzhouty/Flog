@@ -106,7 +106,7 @@ def invite_user(user_id: int):
 @login_required
 def info(id: int):
     group = Group.query.get_or_404(id)
-    if group.private:
+    if group.private and current_user not in group.members:
         abort(403)
     return render_template("group/info.html", group=group)
 

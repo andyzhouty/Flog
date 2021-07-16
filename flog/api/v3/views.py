@@ -89,9 +89,8 @@ class UserPostAPI(MethodView):
     def get(self, user_id):
         user = User.query.get_or_404(user_id)
         current_user = get_current_user()
-        permitted = (
-            current_user is not None
-            and (current_user == user or current_user.is_administrator())
+        permitted = current_user is not None and (
+            current_user == user or current_user.is_administrator()
         )
         return (
             user.posts
@@ -353,7 +352,7 @@ class ImageAPI(MethodView):
         return {
             "id": data["image_id"],
             "filename": data["filename"],
-            "url": data["image_url"]
+            "url": data["image_url"],
         }
 
 
@@ -373,3 +372,23 @@ class SelfNotificationsAPI(MethodView):
     def get(self):
         notifications = Notification.query.with_parent(g.current_user).all()
         return notifications
+
+
+@api_v3.route("/notification/<int:notification_id>", endpoint="notification")
+class NotificationAPI(MethodView):
+    @auth.login_required
+    @output(NotificationOutSchema(exclude=("receiver",)))
+    def get(self, notification_id):
+        notification = Notification.query.get_or_404(notification_id)
+        if notification.receiver != g.current_user:
+            abort(403)
+        return notification
+
+    @auth.login_required
+    @output({}, 204)
+    def delete(self, notification_id):
+        notification = Notification.query.get_or_404(notification_id)
+        if notification.receiver != g.current_user:
+            abort(403)
+        db.session.delete(notification)
+        db.session.commit()
