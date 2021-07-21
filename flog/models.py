@@ -78,9 +78,8 @@ class Post(db.Model):
         return f"<Post {self.title}>"
 
     def delete(self):
-        if self in db.session:
-            db.session.delete(self)
-            db.session.commit()
+        db.session.delete(self)
+        db.session.commit()
 
     def url(self):
         return url_for("main.full_post", id=self.id, _external=True)
@@ -99,9 +98,8 @@ class Column(db.Model):
     topped = db.Column(db.Boolean, default=False)
 
     def delete(self):
-        if self in db.session:
-            db.session.delete(self)
-            db.session.commit()
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Comment(db.Model):
@@ -206,6 +204,10 @@ class Group(db.Model):
 
     def info_url(self):
         return url_for("group.info", id=self.id)
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     @staticmethod
     def verify_join_token(token):

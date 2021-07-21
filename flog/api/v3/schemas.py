@@ -133,3 +133,16 @@ class NotificationOutSchema(Schema):
     message = String()
     receiver = Nested(UserOutSchema)
     timestamp = DateTime()
+
+
+class GroupInSchema(Schema):
+    name = String(required=True)
+    members = List(Integer())
+    private = Boolean()
+
+
+class GroupOutSchema(Schema):
+    name = String()
+    members = List(Nested(UserOutSchema))
+    manager = Nested(UserOutSchema)
+    private = Boolean()

@@ -1,7 +1,7 @@
 from apiflask import abort
 from flask import g
 from functools import wraps
-from flog.models import User, Post, Comment, Column
+from flog.models import User, Post, Comment, Column, Group
 from .authentication import auth
 
 
@@ -35,6 +35,8 @@ def check_permission(permission_type: str, model_id: int) -> bool:
         permitted = Comment.query.get_or_404(model_id) in g.current_user.comments
     elif permission_type == "column":
         permitted = Column.query.get_or_404(model_id) in g.current_user.columns
+    elif permission_type == "group":
+        permitted = g.current_user == Group.query.get_or_404(model_id).manager
     return permitted
 
 

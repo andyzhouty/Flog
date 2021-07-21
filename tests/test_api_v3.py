@@ -1,12 +1,11 @@
 from flask import current_app
 from .helpers import (
     register,
-    login,
     get_api_v3_headers,
     generate_post,
     api_upload_image,
 )
-from flog.models import User, Post, Comment, db, Column, Notification
+from flog.models import User, Post, Comment, db, Column, Notification, Group
 from flog.fakes import fake
 
 
@@ -343,5 +342,55 @@ def test_notifications(client):
 
     response = client.delete(
         "/api/v3/notification/1", headers=get_api_v3_headers(client)
+    )
+    assert response.status_code == 204
+
+
+def test_group(client):
+    register(client)
+    u2 = User(username="u2", email="u2@example.com")
+    u2.set_password("123456")
+    db.session.add(u2)
+    db.session.commit()
+
+    # test create group with private
+    g_dict = dict(name="test-group", private=True)
+    response = client.post(
+        "/api/v3/group/create", json=g_dict, headers=get_api_v3_headers(client)
+    )
+    assert response.status_code == 200
+    g = Group.query.filter_by(name="test-group").first()
+
+    response = client.get(
+        f"/api/v3/group/{g.id}", headers=get_api_v3_headers(client, "u2", "123456")
+    )
+    assert response.status_code == 403
+
+    # test create group with members
+    g_dict = dict(name="test-group2", members=[u2.id])
+    response = client.post(
+        "/api/v3/group/create", json=g_dict, headers=get_api_v3_headers(client)
+    )
+    assert response.status_code == 200
+    g = Group.query.filter_by(name="test-group2").first()
+
+    response = client.get(
+        f"/api/v3/group/{g.id}", headers=get_api_v3_headers(client, "u2", "123456")
+    )
+    assert response.status_code == 200
+
+    # test PUT group
+    modified = dict(members=[u2.id])
+    response = client.put(
+        f"/api/v3/group/{g.id}", headers=get_api_v3_headers(client), json=modified
+    )
+    assert response.status_code == 200
+    data = response.get_json()
+    
+    assert any(u2.id == u["id"] for u in data["members"])
+
+    # test DELETE group
+    response = client.delete(
+        f"/api/v3/group/{g.id}", headers=get_api_v3_headers(client)
     )
     assert response.status_code == 204

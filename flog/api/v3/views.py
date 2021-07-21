@@ -17,10 +17,21 @@ from .schemas import (
     TokenInSchema, TokenOutSchema,
     VerifyTokenInSchema, VerifyTokenOutSchema,
     ImageInSchema, ImageOutSchema,
-    NotificationOutSchema
+    NotificationOutSchema,
+    GroupInSchema, GroupOutSchema,
 )
 # fmt: on
-from flog.models import db, User, Post, Comment, Permission, Column, Image, Notification
+from flog.models import (
+    db,
+    User,
+    Post,
+    Comment,
+    Permission,
+    Column,
+    Image,
+    Notification,
+    Group,
+)
 from flog.utils import clean_html, get_image_path_and_url
 from . import api_v3
 from .decorators import can_edit, permission_required
@@ -392,3 +403,55 @@ class NotificationAPI(MethodView):
             abort(403)
         db.session.delete(notification)
         db.session.commit()
+
+
+@api_v3.route("/group/create", endpoint="group_create")
+class GroupCreateAPI(MethodView):
+    @auth.login_required
+    @input(GroupInSchema)
+    @output(GroupOutSchema)
+    def post(self, data):
+        group = Group(manager=g.current_user)
+        for attr, value in data.items():
+            if attr == "private":
+                group.private = value
+            elif attr == "members":
+                for member_id in data[attr]:
+                    group.members.append(User.query.get_or_404(member_id))
+            else:
+                group.__setattr__(attr, value)
+        db.session.add(group)
+        db.session.commit()
+        return group
+
+
+@api_v3.route("/group/<int:group_id>", endpoint="group")
+class GroupCreateAPI(MethodView):
+    @output(GroupOutSchema)
+    def get(self, group_id: int):
+        group = Group.query.get_or_404(group_id)
+        if group.private and get_current_user() not in group.members:
+            abort(403)
+        return group
+
+    @can_edit("group")
+    @input(GroupInSchema(partial=True))
+    @output(GroupOutSchema)
+    def put(self, group_id: int, data: dict):
+        group = Group.query.get_or_404(group_id)
+        for attr, value in data.items():
+            if attr == "private":
+                group.private = value
+            elif attr == "members":
+                for member_id in data[attr]:
+                    group.members.append(User.query.get_or_404(member_id))
+            else:
+                group.__setattr__(attr, value)
+        db.session.commit()
+        return group
+
+    @can_edit("group")
+    @output({}, 204)
+    def delete(self, group_id: int):
+        group = Group.query.get_or_404(group_id)
+        group.delete()
