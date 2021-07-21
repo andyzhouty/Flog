@@ -374,9 +374,7 @@ def untop_column(id: int):
 @login_required
 def all_columns():
     page = request.args.get("page", default=1, type=int)
-    pagination = (
-        Column.query
-              .order_by(Column.topped.desc(), Column.timestamp.desc())
-              .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
-    )
+    pagination = Column.query.order_by(
+        Column.topped.desc(), Column.timestamp.desc()
+    ).paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
     return render_template("main/columns.html", pagination=pagination)

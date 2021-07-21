@@ -426,7 +426,7 @@ class GroupCreateAPI(MethodView):
 
 
 @api_v3.route("/group/<int:group_id>", endpoint="group")
-class GroupCreateAPI(MethodView):
+class GroupAPI(MethodView):
     @output(GroupOutSchema)
     def get(self, group_id: int):
         group = Group.query.get_or_404(group_id)

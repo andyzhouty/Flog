@@ -138,9 +138,9 @@ def groups(count: int) -> None:
 
 def columns(count: int) -> None:
     for _ in range(count):
-        posts = list(set(
-            Post.query.get(randint(1, Post.query.count())) for _ in range(5)
-        ))
+        posts = list(
+            set(Post.query.get(randint(1, Post.query.count())) for _ in range(5))
+        )
         author = User.query.get(randint(1, User.query.count()))
         column = Column(name=fake.sentence(), author=author, posts=posts)
         db.session.add(column)

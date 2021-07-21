@@ -221,7 +221,12 @@ class ImageAPI(MethodView):
         image_url = response["image_url"]
         image_id = response["image_id"]
         return (
-            jsonify(message="Upload Success", image_url=image_url, image_id=image_id, filename=response["filename"]),
+            jsonify(
+                message="Upload Success",
+                image_url=image_url,
+                image_id=image_id,
+                filename=response["filename"],
+            ),
             201,
         )
 
