@@ -23,20 +23,18 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ matrix.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
+          key: ${{ matrix.os }}-pip-${{ hashFiles('Pipfile.lock') }}
           restore-keys: |
             ${{ matrix.os }}-pip-
             ${{ matrix.os }}-
       - name: Install dependencies
         run: |
-          python -m venv venv
-          . venv/bin/activate
-          pip3 install -r requirements-dev.txt
+          pip3 install pipenv
+          pipenv install --dev --system
       - name: Test with pytest
         run: |
-          . venv/bin/activate
-          flask translate compile
-          pytest --cov-report=xml
+          pipenv run flask translate compile
+          pipenv run pytest --cov-report=xml
       - name: Submit coverage data
         if: ${{ matrix.python-version == 3.9 && matrix.os == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v1
