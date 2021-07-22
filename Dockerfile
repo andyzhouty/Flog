@@ -1,11 +1,10 @@
-FROM python:3.9
+FROM python:3.9-slim
 
 WORKDIR /usr/src/flog/
 
-COPY requirements.txt ./
-COPY requirements-dev.txt ./
-RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
-RUN pip install -r requirements-dev.txt
+COPY Pipfile* ./
+RUN pip install pipenv -i https://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+RUN pipenv install --system --deploy
 
 COPY flog/ flog/
 COPY migrations/ migrations/

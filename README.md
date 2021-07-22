@@ -73,25 +73,7 @@ api v3
 
 ## Run Flog locally
 
-### venv + pip
-
-If you prefer to use pip + requirements.txt, then:
-
-```shell
-git clone https://github.com/z-t-y/Flog.git ./flog
-cd flog/
-python3 -m venv venv # or `python -m venv venv` on windows
-source ./venv/bin/activate # or `./venv/Scripts/activate` on windows
-pip3 install -r requirements-dev.txt
-flask deploy # initialize database
-flask forge # generates fake data
-flask create-admin
-flask run
-```
-
-### pipenv
-
-Or if you prefer to use pipenv, then:
+I recommend you to use pipenv to manage your dependencies. For example:
 
 ```shell
 # clone the project and change to that directory

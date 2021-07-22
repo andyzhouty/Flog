@@ -61,25 +61,7 @@ api v3
 
 ## 在本地运行这个网站
 
-### venv + pip
-
-如果你使用venv和pip来管理虚拟环境，命令如下：
-
-```shell
-git clone https://github.com/z-t-y/Flog.git ./flog # 或git clone https://gitee.com/andyzhouty/Flog.git ./flog
-cd flog/
-python3 -m venv venv # 如果你使用Windows,请替换为 python -m venv venv
-source ./venv/bin/activate # 如果你使用Windows，请替换为 ./venv/Scripts/activate
-pip3 install -r requirements-dev.txt # 安装相关依赖
-flask deploy # 初始化数据库
-flask forge # 生成虚拟数据
-flask create-admin
-flask run
-```
-
-### Pipenv
-
-如果你使用pipenv，命令如下：
+本人推荐你使用pipenv管理依赖，命令如下：
 
 ```shell
 # 克隆项目并切换到相应目录（如上）
