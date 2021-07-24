@@ -147,7 +147,7 @@ MIT License
     {%- endif %}
 {% endmacro %}
 
-{% macro user_card(user) %}
+{% macro user_card(user, group=None) %}
     <li class="list-group-item d-flex">
         <div class="d-flex align-items-center">
             <a href="{{ url_for('user.profile', username=user.username) }}">
@@ -158,6 +158,7 @@ MIT License
                class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% else %} text-primary {% endif %}"
                href="{{ url_for('user.profile', username=user.username) }}">{{ user.username }}</a>
         </div>
+        {% if not group %}
         <span class="text-white align-items-end flex-column ml-auto">
             {% if current_user.is_administrator() -%}
                 <a class="btn btn-sm btn-outline-secondary flex-fill"
@@ -197,6 +198,25 @@ MIT License
                     </form>
                 {% endif %}
             {%- endif %}
+        {% endif %}
+        {% if group and current_user == group.manager -%}
+            <div class="align-items-end flex-column ml-auto">
+            <form class="form-inline" method="GET" action="{{ url_for('group.set_manager', user_id=user.id, group_id=group.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-warning flex-fill">
+                    <i class="bi-kanban"></i>SET AS MANAGER
+                </button>
+            </form>
+            {% if user != current_user %}
+            <form class="form-inline" method="POST" action="{{ url_for('group.kick_out', user_id=user.id, group_id=group.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-sm btn-outline-danger flex-fill" onclick="return confirm('{{ _('Are you sure?') }}');">
+                    <i class="bi-person-x"></i>KICK OUT
+                </button>
+            </form>
+            {% endif %}
+            </div>
+        {% endif %}
     </span>
     </li>
 {% endmacro %}

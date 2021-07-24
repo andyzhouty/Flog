@@ -4,7 +4,14 @@ Copyright (c) 2021 Andy Zhou
 """
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, SelectField, BooleanField
+from wtforms import (
+    StringField,
+    SubmitField,
+    ValidationError,
+    SelectField,
+    BooleanField,
+    PasswordField,
+)
 from wtforms.validators import Length
 from ..models import Group
 
@@ -35,3 +42,8 @@ class GroupInviteForm(FlaskForm):
     def validate_group_id(self, field):
         if Group.query.get(field.data) is None:
             raise ValidationError(_l("No such group"))
+
+
+class ManagerConfirmForm(FlaskForm):
+    password = PasswordField(_l("Confirm your password"))
+    submit = SubmitField(_l("Submit"))

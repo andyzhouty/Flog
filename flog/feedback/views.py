@@ -30,6 +30,6 @@ def feedback():
             author=current_user.username,
             content=body,
         )
-        flash(_("Your feedback has been sent to the admins!"), "success")
+        flash(_("Your feedback has been sent to the site owner!"), "success")
         return redirect(url_for("feedback.feedback"))
     return render_template("feedback/feedback.html", form=form, feedbacks=feedbacks)

@@ -274,7 +274,7 @@ def collected_posts():
 @login_required
 def picks():
     posts = Post.query.filter_by(picked=True).all()
-    return render_template("main/recommended.html", posts=posts)
+    return render_template("main/picked.html", posts=posts)
 
 
 @main_bp.route("/search/")

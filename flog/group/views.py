@@ -6,7 +6,7 @@ from flask import render_template, flash, abort, request
 from flask_babel import _
 from flask_login import login_required, current_user
 from . import group_bp
-from .forms import GroupCreationForm, GroupFindForm, GroupInviteForm
+from .forms import GroupCreationForm, GroupFindForm, GroupInviteForm, ManagerConfirmForm
 from ..models import db, Group, User, Message
 from ..utils import redirect_back
 from ..notifications import (
@@ -126,3 +126,30 @@ def discussion(id: int):
             if member != current_user:
                 push_new_message_notification(current_user, member, group)
     return render_template("group/discussion.html", group=group)
+
+
+@group_bp.route("/<int:group_id>/kick/<int:user_id>/", methods=["POST"])
+@login_required
+def kick_out(group_id: int, user_id: int):
+    group = Group.query.get_or_404(group_id)
+    if current_user != group.manager:
+        abort(403)
+    user = User.query.get_or_404(user_id)
+    group.members.remove(user)
+    db.session.commit()
+    return redirect_back()
+
+
+@group_bp.route("/<int:group_id>/set-manager/<int:user_id>/", methods=["GET", "POST"])
+@login_required
+def set_manager(group_id: int, user_id: int):
+    group = Group.query.get_or_404(group_id)
+    if current_user != group.manager:
+        abort(403)
+    form = ManagerConfirmForm()
+    if request.method == "POST":
+        user = User.query.get_or_404(user_id)
+        group.manager = user
+        db.session.commit()
+        return redirect_back()
+    return render_template("group/set_manager.html", form=form)

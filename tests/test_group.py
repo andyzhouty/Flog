@@ -1,4 +1,6 @@
-from flog.models import User, Role, Group, Notification, Message
+import random
+
+from flog.models import db, User, Role, Group, Notification, Message
 from .helpers import register, login, logout
 
 
@@ -149,3 +151,48 @@ def test_group_all(client):
     login(client)  # login as administrator
     response = client.get("/group/all/")
     assert g1.name in response.get_data(as_text=True)
+
+
+def test_kick_out(client):
+    register(client)
+    g = Group()
+    u = User.query.filter_by(username="test").first()
+    g.members.append(u)
+    g.manager = u
+    u2 = User.query.get(random.randint(2, 5))
+    g.members.append(u2)
+    db.session.commit()
+
+    login(client, u2.username, "123456")
+    response = client.post(f"/group/{g.id}/kick/{u.id}/")
+    assert response.status_code == 403
+    logout(client)
+
+    login(client, "test", "password")
+    response = client.post(f"/group/{g.id}/kick/{u2.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert u2 not in g.members
+
+
+def test_set_manager(client):
+    register(client)
+    g = Group()
+    u = User.query.filter_by(username="test").first()
+    g.members.append(u)
+    g.manager = u
+    u2 = User.query.get(random.randint(2, 5))
+    g.members.append(u2)
+    db.session.commit()
+
+    login(client, u2.username, "123456")
+    response = client.get(f"/group/{g.id}/set-manager/{u.id}/")
+    assert response.status_code == 403
+    logout(client)
+
+    login(client, "test", "password")
+    response = client.get(f"/group/{g.id}/set-manager/{u2.id}/")
+    assert response.status_code == 200
+    response = client.post(f"/group/{g.id}/set-manager/{u2.id}/", follow_redirects=True)
+    assert response.status_code == 200
+    assert g.manager == u2
+ 

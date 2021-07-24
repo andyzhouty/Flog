@@ -195,7 +195,7 @@ class Group(db.Model):
     messages = db.relationship("Message", back_populates="group")
     private = db.Column(db.Boolean, default=False)
 
-    def generate_join_token(self, expiration: int = 3600):
+    def generate_join_token(self, expiration: int = 3600 * 24 * 30):
         s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
         return s.dumps({"group_id": self.id}).decode("utf-8")
 
