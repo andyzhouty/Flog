@@ -192,7 +192,17 @@ def test_set_manager(client):
     login(client, "test", "password")
     response = client.get(f"/group/{g.id}/set-manager/{u2.id}/")
     assert response.status_code == 200
-    response = client.post(f"/group/{g.id}/set-manager/{u2.id}/", follow_redirects=True)
+    response = client.post(
+        f"/group/{g.id}/set-manager/{u2.id}/",
+        data={"password": "invalid"},
+        follow_redirects=True,
+    )
+    assert response.status_code == 403
+
+    response = client.post(
+        f"/group/{g.id}/set-manager/{u2.id}/",
+        data={"password": "password"},
+        follow_redirects=True,
+    )
     assert response.status_code == 200
     assert g.manager == u2
- 

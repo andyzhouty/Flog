@@ -12,9 +12,10 @@ from wtforms import (
     BooleanField,
     PasswordField,
 )
-from wtforms.validators import Length
+from wtforms.validators import Length, DataRequired
 from ..models import Group
 
+dr_message = _l("Please fill out this field with valid values.")
 l_message = _l("Field must be between %(min)d and %(max)d characters long.")
 
 
@@ -27,7 +28,7 @@ class GroupCreationForm(FlaskForm):
 
 
 class GroupFindForm(FlaskForm):
-    group_name = StringField(_l("Group Name"))
+    group_name = StringField(_l("Group Name"), validators=[DataRequired(message=dr_message)])
     submit = SubmitField(_l("Submit"))
 
     def validate_group_name(self, field):
@@ -45,5 +46,5 @@ class GroupInviteForm(FlaskForm):
 
 
 class ManagerConfirmForm(FlaskForm):
-    password = PasswordField(_l("Confirm your password"))
+    password = PasswordField(_l("Password"), validators=[DataRequired(message=dr_message)])
     submit = SubmitField(_l("Submit"))

@@ -147,7 +147,9 @@ def set_manager(group_id: int, user_id: int):
     if current_user != group.manager:
         abort(403)
     form = ManagerConfirmForm()
-    if request.method == "POST":
+    if form.validate_on_submit():
+        if not current_user.verify_password(form.password.data):
+            abort(403)
         user = User.query.get_or_404(user_id)
         group.manager = user
         db.session.commit()
