@@ -79,7 +79,10 @@ def edit_profile(id):
         user.custom_avatar_url = form.custom_avatar_url.data
         db.session.add(user)
         db.session.commit()
-        flash(_("%(username)s's profile has been updated.", username=user.username), "info")
+        flash(
+            _("%(username)s's profile has been updated.", username=user.username),
+            "info",
+        )
         return redirect(url_for("user.profile", username=user.username))
     form.email.data = user.email
     form.username.data = user.username
