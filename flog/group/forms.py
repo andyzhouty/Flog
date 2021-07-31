@@ -28,7 +28,9 @@ class GroupCreationForm(FlaskForm):
 
 
 class GroupFindForm(FlaskForm):
-    group_name = StringField(_l("Group Name"), validators=[DataRequired(message=dr_message)])
+    group_name = StringField(
+        _l("Group Name"), validators=[DataRequired(message=dr_message)]
+    )
     submit = SubmitField(_l("Submit"))
 
     def validate_group_name(self, field):
@@ -46,5 +48,7 @@ class GroupInviteForm(FlaskForm):
 
 
 class ManagerConfirmForm(FlaskForm):
-    password = PasswordField(_l("Password"), validators=[DataRequired(message=dr_message)])
+    password = PasswordField(
+        _l("Password"), validators=[DataRequired(message=dr_message)]
+    )
     submit = SubmitField(_l("Submit"))

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-07-24 21:22+0800\n"
+"POT-Creation-Date: 2021-07-31 21:31+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -47,43 +47,59 @@ msgid "500 Internal Server Error"
 msgstr "500 服务器内部错误"
 
 #: flog/notifications.py:16
-msgid "User <a href=\"{0}\">{1}</a> followed you."
-msgstr "用户 <a href=\"{0}\">{1}</a>关注了你。"
+#, python-format
+msgid "User <a href=\"%(profile_url)s\">%(username)s</a> followed you."
+msgstr "用户 <a href=\"%(profile_url)s\">%(username)s</a>关注了你。"
 
 #: flog/notifications.py:31
-msgid "<a href=\"{0}\">This post</a> has a new comment/reply."
-msgstr "<a href=\"{0}\">这篇文章</a>有一个新的评论/评论的回复。"
+#, python-format
+msgid "<a href=\"%(post_url)s\">This post</a> has a new comment/reply."
+msgstr "<a href=\"%(post_url)s\">这篇文章</a>有一个新的评论/评论的回复。"
 
-#: flog/notifications.py:45
-msgid "User <a href=\"{0}\">{1}</a> collected your <a href=\"{2}\">post</a>"
-msgstr "用户<a href=\"{0}\">{1}</a>收藏了你的<a href=\"{2}\">这篇文章</a>"
-
-#: flog/notifications.py:61
+#: flog/notifications.py:44
+#, python-format
 msgid ""
-"User <a href=\"{0}\">{1}</a> wants to join your group {2}.\n"
-"                    Click <a href=\"{3}\">Here</a> to approve."
+"User <a href=\"%(profile_url)s\">%(username)s</a> collected your <a "
+"href=\"%(post_url)s\">post</a>"
 msgstr ""
-"用户<a href=\"{0}\">{1}</a>要加入您的群{2}。\n"
-"点击<a href=\"{3}\">此处</a>进行批准。"
+"用户<a href=\"%(profile_url)s\">%(username)s</a>收藏了你的<a "
+"href=\"%(post_url)s\">这篇文章</a>"
 
-#: flog/notifications.py:77
+#: flog/notifications.py:59
+#, python-format
 msgid ""
-"User <a href=\"{0}\">{1}</a> invited you to group {2}.\n"
-"           Click <a href=\"{3}\">Here</a> to join it."
+"User <a href=\"%(profile_url)s\">%(username)s</a> wants to join your "
+"group %(name)s.\n"
+"                    Click <a href=\"%(join_url)s\">Here</a> to approve."
 msgstr ""
-"用户<a href=\"{0}\">{1}</a>要加入您的群{2}。\n"
-"点击<a href=\"{3}\">此处</a>进行批准。"
+"用户<a href=\"%(profile_url)s\">%(username)s</a>要加入您的群%(name)s。\n"
+"点击<a href=\"%(join_url)s\">此处</a>进行批准。"
 
-#: flog/notifications.py:88
-msgid "<a href=\"{0}\">{1}</a> send a message in <a href=\"{2}\">Group {3}</a>"
-msgstr "用户<a href=\"{0}\">{1}</a>在<a href=\"{2}\">群组{3}</a>中发布了一条消息"
+#: flog/notifications.py:74
+#, python-format
+msgid ""
+"User <a href=\"%(profile_url)s\">%(username)s</a> invited you to group "
+"%(name)s.\n"
+"           Click <a href=\"%(join_url)s\">Here</a> to join it."
+msgstr ""
+"用户<a href=\"%(profile_url)s\">%(username)s</a>邀请您加入群%(name)s。\n"
+"点击<a href=\"%(join_url)s\">此处</a>进行批准。"
+
+#: flog/notifications.py:86
+#, python-format
+msgid ""
+"<a href=\"%(profile_url)s\">%(username)s</a> send a message in <a "
+"href=\"%(info_url)s\">Group %(name)s</a>"
+msgstr ""
+"用户<a href=\"%(profile_url)s\">%(username)s</a>在<a "
+"href=\"%(info_url)s\">群组%(name)s</a>中发布了一条消息"
 
 #: flog/admin/forms.py:13 flog/auth/forms.py:21 flog/feedback/forms.py:11
 msgid "Please fill out this field."
 msgstr "请填充这个输入框。"
 
 #: flog/admin/forms.py:14 flog/auth/forms.py:23 flog/feedback/forms.py:12
-#: flog/group/forms.py:18 flog/main/forms.py:20 flog/user/forms.py:12
+#: flog/group/forms.py:19 flog/main/forms.py:20 flog/user/forms.py:12
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
 msgstr "字段长度必须在%(min)d和%(max)d之间。"
@@ -132,8 +148,8 @@ msgstr "关于自己"
 msgid "Avatar URL"
 msgstr "头像网址"
 
-#: flog/admin/forms.py:44 flog/group/forms.py:26 flog/group/forms.py:31
-#: flog/group/forms.py:40 flog/group/forms.py:49 flog/main/forms.py:38
+#: flog/admin/forms.py:44 flog/group/forms.py:27 flog/group/forms.py:34
+#: flog/group/forms.py:43 flog/group/forms.py:54 flog/main/forms.py:38
 #: flog/main/forms.py:52 flog/user/forms.py:22 flog/user/forms.py:30
 #: flog/user/forms.py:35
 msgid "Submit"
@@ -148,22 +164,24 @@ msgid "Username already in use."
 msgstr "该用户名正在被其他用户使用。"
 
 #: flog/admin/views.py:26
-msgid "User {0} blocked."
-msgstr "用户{0}已封禁"
+#, python-format
+msgid "User %(username)s blocked."
+msgstr "用户%(username)s已封禁"
 
 #: flog/admin/views.py:35
-msgid "User {0} unblocked."
-msgstr "用户{0}已解除封禁"
+#, python-format
+msgid "User %(username)s unblocked."
+msgstr "用户%(username)s已解除封禁"
 
 #: flog/admin/views.py:51
 #, python-format
-msgid "%s deleted."
-msgstr "%s 已被删除。"
+msgid "%(feedback)s deleted."
+msgstr "%(feedback)s 已被删除。"
 
 #: flog/admin/views.py:82
 #, python-format
-msgid "%s's profile has been updated."
-msgstr "%s的个人信息已被更新。"
+msgid "%(username)s's profile has been updated."
+msgstr "%(username)s的个人信息已被更新。"
 
 #: flog/admin/views.py:99
 msgid "User Deleted"
@@ -174,6 +192,7 @@ msgid "Email (Requires Verification)"
 msgstr "电子邮箱（用于验证）"
 
 #: flog/auth/forms.py:54 flog/auth/forms.py:77 flog/auth/forms.py:83
+#: flog/group/forms.py:52
 msgid "Password"
 msgstr "密码"
 
@@ -257,27 +276,28 @@ msgstr "反馈"
 msgid "Your feedback has been sent to the site owner!"
 msgstr "你的反馈已经发送给站长了！"
 
-#: flog/group/forms.py:23 flog/group/forms.py:30 flog/group/forms.py:39
+#: flog/group/forms.py:18 flog/main/forms.py:19
+msgid "Please fill out this field with valid values."
+msgstr "请用正确的值填充这个输入框。"
+
+#: flog/group/forms.py:24 flog/group/forms.py:32 flog/group/forms.py:42
 msgid "Group Name"
 msgstr "群的名字"
 
-#: flog/group/forms.py:25 flog/main/forms.py:26
+#: flog/group/forms.py:26 flog/main/forms.py:26
 #: flog/templates/image/manage.html:17 flog/templates/macros.html:227
 #: flog/templates/macros.html:274
 msgid "Private"
 msgstr "个人的"
 
-#: flog/group/forms.py:35 flog/group/forms.py:44
+#: flog/group/forms.py:38 flog/group/forms.py:47
 msgid "No such group"
 msgstr "没有叫这个名字的群"
 
-#: flog/group/forms.py:48
-msgid "Confirm your password"
-msgstr "确认密码"
-
 #: flog/group/views.py:37
-msgid "Created group {0}."
-msgstr "创建了群{0}"
+#, python-format
+msgid "Created group %(name)s"
+msgstr "创建了群%(name)s"
 
 #: flog/group/views.py:52
 msgid ""
@@ -286,8 +306,9 @@ msgid ""
 msgstr "我们已经向这个群的管理者发了一个通知，你只需等待回复即可。"
 
 #: flog/group/views.py:74
-msgid "Joined group {0}"
-msgstr "加入了群{0}"
+#, python-format
+msgid "Joined group %(name)s"
+msgstr "加入了群%(name)s"
 
 #: flog/group/views.py:88
 msgid ""
@@ -297,29 +318,28 @@ msgid ""
 "        "
 msgstr "你不在管理任何群，请创建一个群来邀请其他用户入群"
 
-#: flog/group/views.py:100
-msgid "Notification sent to user {0}"
-msgstr "消息已经发送给了用户{0}"
+#: flog/group/views.py:101
+#, python-format
+msgid "Notification sent to user %(username)s"
+msgstr "消息已经发送给了用户%(username)s"
 
 #: flog/image/views.py:33
 msgid "No image uploaded!"
 msgstr "没有上传的图片！"
 
 #: flog/image/views.py:69
-msgid "Image {filename} visibility toggled"
-msgstr "图片 {filename} 的私有状态已切换"
+#, python-format
+msgid "Image %(filename)s visibility toggled"
+msgstr "图片%(filename)s的私有状态已切换"
 
 #: flog/image/views.py:87
-msgid "Image {filename} deleted"
-msgstr "图片 {filename} 已删除"
+#, python-format
+msgid "Image %(filename)s deleted"
+msgstr "图片%(filename)s已删除"
 
 #: flog/language/views.py:24
 msgid "Language updated."
 msgstr "语言设置已更新。"
-
-#: flog/main/forms.py:19
-msgid "Please fill out this field with valid values."
-msgstr "请用正确的值填充这个输入框。"
 
 #: flog/main/forms.py:24
 msgid "Title"
@@ -379,8 +399,8 @@ msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
 #: flog/main/views.py:173
 #, python-format
-msgid "Post id %d deleted"
-msgstr "Id为%d的文章已被删除"
+msgid "Post id %(id)d deleted"
+msgstr "ID为%(id)d的文章已被删除"
 
 #: flog/main/views.py:199
 msgid "Edit Succeeded!"
@@ -410,13 +430,13 @@ msgstr "文章已取消收藏。"
 
 #: flog/main/views.py:251
 #, python-format
-msgid "Picked post %d"
-msgstr "加精了ID为%d文章"
+msgid "Picked post %(id)d"
+msgstr "加精了ID为%(id)d的文章"
 
 #: flog/main/views.py:261
 #, python-format
-msgid "Unpicked post %d"
-msgstr "取精了ID为%d的文章"
+msgid "Unpicked post %(id)d"
+msgstr "取精了ID为%(id)d的文章"
 
 #: flog/main/views.py:286
 msgid "Enter keyword about post or user."
@@ -430,10 +450,15 @@ msgstr "你不可以把其他人的文章加入到你的专栏！"
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
-#: flog/main/views.py:358 flog/main/views.py:369
+#: flog/main/views.py:358
 #, python-format
-msgid "Topped column <%s>"
-msgstr "置顶了专栏<%s>"
+msgid "Topped column <%(name)s>"
+msgstr "置顶了专栏<%(name)s>"
+
+#: flog/main/views.py:369
+#, python-format
+msgid "Untopped column <%(name)s>"
+msgstr "置顶了专栏<%(name)s>"
 
 #: flog/notification/views.py:46
 msgid "All notifications are read."
@@ -1090,4 +1115,10 @@ msgstr "你的密码已更改"
 #: flog/user/views.py:126
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
+
+#~ msgid "Confirm your password"
+#~ msgstr "确认密码"
+
+#~ msgid "Picked post %d"
+#~ msgstr "加精了ID为%d文章"
 

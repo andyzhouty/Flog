@@ -170,7 +170,7 @@ def delete_post(id):
     if not (current_user.is_administrator() or current_user == post.author):
         abort(403)
     post.delete()
-    flash(_("Post id %d deleted" % id), "success")
+    flash(_("Post id %(id)d deleted", id=id), "success")
     post_str = str(post)
     current_app.logger.info(f"{post_str} deleted.")
     return redirect(url_for("main.main"))
@@ -248,7 +248,7 @@ def pick(id: int):
     post = Post.query.get_or_404(id)
     post.picked = True
     db.session.commit()
-    flash(_("Picked post %d" % id))
+    flash(_("Picked post %(id)d", id=id))
     return redirect_back()
 
 
@@ -258,7 +258,7 @@ def unpick(id: int):
     post = Post.query.get_or_404(id)
     post.picked = False
     db.session.commit()
-    flash(_("Unpicked post %d" % id))
+    flash(_("Unpicked post %(id)d", id=id))
     return redirect_back()
 
 
@@ -355,7 +355,7 @@ def top_column(id: int):
     column = Column.query.get_or_404(id)
     column.topped = True
     db.session.commit()
-    flash(_("Topped column <%s>" % column.name))
+    flash(_("Topped column <%(name)s>", name=column.name))
     return redirect_back()
 
 
@@ -366,7 +366,7 @@ def untop_column(id: int):
     column = Column.query.get_or_404(id)
     column.topped = False
     db.session.commit()
-    flash(_("Topped column <%s>" % column.name))
+    flash(_("Untopped column <%(name)s>", name=column.name))
     return redirect_back()
 
 

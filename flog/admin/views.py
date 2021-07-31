@@ -23,7 +23,7 @@ def admin():
 def unblock_user(user_id: int):
     user = User.query.get_or_404(user_id)
     user.lock()
-    flash(_("User {0} blocked.".format(user.username)))
+    flash(_("User %(username)s blocked.", username=user.username))
     return redirect_back()
 
 
@@ -32,7 +32,7 @@ def unblock_user(user_id: int):
 def block_user(user_id: int):
     user = User.query.get_or_404(user_id)
     user.unlock()
-    flash(_("User {0} unblocked.".format(user.username)))
+    flash(_("User %(username)s unblocked.", username=user.username))
     return redirect_back()
 
 
@@ -48,7 +48,7 @@ def delete_feedback(id):
     feedback = Feedback.query.get(id)
     feedback.delete()
     feedback_str = str(feedback)
-    flash(_("%s deleted." % feedback_str), "success")
+    flash(_("%(feedback)s deleted.", feedback=feedback_str), "success")
     current_app.logger.info(f"Feedback id {id} deleted.")
     return redirect(url_for("admin.manage_feedback"))
 
@@ -79,7 +79,7 @@ def edit_profile(id):
         user.custom_avatar_url = form.custom_avatar_url.data
         db.session.add(user)
         db.session.commit()
-        flash(_("%s's profile has been updated." % user.username), "info")
+        flash(_("%(username)s's profile has been updated.", username=user.username), "info")
         return redirect(url_for("user.profile", username=user.username))
     form.email.data = user.email
     form.username.data = user.username

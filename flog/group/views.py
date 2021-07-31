@@ -34,7 +34,7 @@ def create():
         current_user.join_group(group)
         group.manager = current_user
         db.session.commit()
-        flash(_("Created group {0}.".format(group.name)))
+        flash(_("Created group %(name)s", name=group.name))
         return redirect_back()
     return render_template("group/create.html", form=form)
 
@@ -71,7 +71,7 @@ def join(token):
         else:
             user = User.query.get(user_id)
         user.join_group(group)
-        flash(_("Joined group {0}".format(group.name)))
+        flash(_("Joined group %(name)s", name=group.name))
         return redirect_back()
 
 
@@ -97,7 +97,9 @@ def invite_user(user_id: int):
         group = Group.query.get_or_404(form.group_id.data)
         invited_user = User.query.get_or_404(user_id)
         push_group_invite_notification(current_user, group, invited_user)
-        flash(_("Notification sent to user {0}".format(invited_user.username)))
+        flash(
+            _("Notification sent to user %(username)s", username=invited_user.username)
+        )
         return redirect_back()
     return render_template("group/invite.html", form=form)
 

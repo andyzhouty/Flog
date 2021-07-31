@@ -66,7 +66,7 @@ def toggle_visibility(id: int):
         abort(403)
     image.private = not image.private
     db.session.commit()
-    flash(_("Image {filename} visibility toggled".format(filename=image.filename)))
+    flash(_("Image %(filename)s visibility toggled", filename=image.filename))
     return redirect_back()
 
 
@@ -84,5 +84,5 @@ def delete(id: int):
     finally:
         db.session.delete(image)
         db.session.commit()
-        flash(_("Image {filename} deleted".format(filename=filename)))
+        flash(_("Image %(filename)s deleted", filename=filename))
         return redirect_back()

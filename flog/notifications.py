@@ -12,9 +12,9 @@ def push_follow_notification(follower, receiver):
     Push a notification when someone is followed by another user.
     """
     message = _(
-        """User <a href="{0}">{1}</a> followed you.""".format(
-            url_for("user.profile", username=follower.username), follower.username
-        )
+        """User <a href="%(profile_url)s">%(username)s</a> followed you.""",
+        profile_url=url_for("user.profile", username=follower.username),
+        username=follower.username,
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
@@ -27,9 +27,8 @@ def push_comment_notification(comment, receiver, page=1):
     a comment is replied.
     """
     message = _(
-        """<a href="{0}">This post</a> has a new comment/reply.""".format(
-            url_for("main.full_post", id=comment.post.id, page=page)
-        )
+        """<a href="%(post_url)s">This post</a> has a new comment/reply.""",
+        post_url=url_for("main.full_post", id=comment.post.id, page=page),
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
@@ -39,11 +38,10 @@ def push_comment_notification(comment, receiver, page=1):
 def push_collect_notification(collector, post, receiver):
     """Push a notification when a post is collected."""
     message = _(
-        """User <a href="{0}">{1}</a> collected your <a href="{2}">post</a>""".format(
-            url_for("user.profile", username=collector.username),
-            collector.username,
-            post.url(),
-        )
+        """User <a href="%(profile_url)s">%(username)s</a> collected your <a href="%(post_url)s">post</a>""",
+        profile_url=url_for("user.profile", username=collector.username),
+        username=collector.username,
+        post_url=post.url(),
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
@@ -53,13 +51,12 @@ def push_collect_notification(collector, post, receiver):
 def push_group_join_notification(joiner, group, receiver):
     """Push a notification to the manager of a group when another user wants to join it."""
     message = _(
-        """User <a href="{0}">{1}</a> wants to join your group {2}.
-                    Click <a href="{3}">Here</a> to approve.""".format(
-            joiner.profile_url(),
-            joiner.username,
-            group.name,
-            group.join_url(user_id=joiner.id),
-        )
+        """User <a href="%(profile_url)s">%(username)s</a> wants to join your group %(name)s.
+                    Click <a href="%(join_url)s">Here</a> to approve.""",
+        profile_url=joiner.profile_url(),
+        username=joiner.username,
+        name=group.name,
+        join_url=group.join_url(user_id=joiner.id),
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
@@ -69,13 +66,12 @@ def push_group_join_notification(joiner, group, receiver):
 def push_group_invite_notification(inviter, group, receiver):
     """Push a notification to the invited user."""
     message = _(
-        """User <a href="{0}">{1}</a> invited you to group {2}.
-           Click <a href="{3}">Here</a> to join it.""".format(
-            inviter.profile_url(),
-            inviter.username,
-            group.name,
-            group.join_url(user_id=receiver.id),
-        )
+        """User <a href="%(profile_url)s">%(username)s</a> invited you to group %(name)s.
+           Click <a href="%(join_url)s">Here</a> to join it.""",
+        profile_url=inviter.profile_url(),
+        username=inviter.username,
+        name=group.name,
+        join_url=group.join_url(user_id=receiver.id),
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
@@ -84,9 +80,11 @@ def push_group_invite_notification(inviter, group, receiver):
 
 def push_new_message_notification(sender, receiver, group):
     message = _(
-        """<a href="{0}">{1}</a> send a message in <a href="{2}">Group {3}</a>""".format(
-            sender.profile_url(), sender.username, group.info_url(), group.name
-        )
+        """<a href="%(profile_url)s">%(username)s</a> send a message in <a href="%(info_url)s">Group %(name)s</a>""",
+        profile_url=sender.profile_url(),
+        username=sender.username,
+        info_url=group.info_url(),
+        name=group.name,
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)

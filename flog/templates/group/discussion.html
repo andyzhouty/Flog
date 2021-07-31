@@ -9,9 +9,9 @@
             {{ message_card(message) }}
         {% endfor %}
     </div>
-    <form class="form-inline d-flex justify-content-lg-center" method="POST">
+    <form style="width: 100%" class="form-inline d-flex" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="text" name="body" class="form-control" required>
+        <input type="text" name="body" class="form-control btn-block flex-grow-1" required>
         <input type="submit" name="submit" class="form-control btn btn-success" value="{{ _('Send') }}">
     </form>
 {% endblock page_content %}
