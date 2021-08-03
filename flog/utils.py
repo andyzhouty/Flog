@@ -40,7 +40,7 @@ def get_image_path_and_url(image_obj, current_user) -> dict:
     last_dot_in_filename = filename.rfind(".")
     # get the filename(without extension) and the extension
     filename_without_ext = filename[:last_dot_in_filename]
-    extension = filename[last_dot_in_filename + 1 :]
+    extension = filename[last_dot_in_filename + 1 :]  # noqa
     if extension not in ["jpg", "gif", "png", "jpeg", "jpg"]:
         return dict(error="Images only!")
     # get the absolute image path for the new image

@@ -8,9 +8,7 @@ from flask_wtf.csrf import CSRFError
 from flask_babel import _
 
 
-def api_err_response(
-    err_code: int, short_message: str, long_message: str = None
-):
+def api_err_response(err_code: int, short_message: str, long_message: str = None):
     if (
         request.accept_mimetypes.accept_json
         and not request.accept_mimetypes.accept_html
