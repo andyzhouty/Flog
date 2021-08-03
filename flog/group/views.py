@@ -96,7 +96,7 @@ def invite_user(user_id: int):
     if form.validate_on_submit():
         group = Group.query.get_or_404(form.group_id.data)
         invited_user = User.query.get_or_404(user_id)
-        push_group_invite_notification(current_user, group, invited_user)
+        push_group_invite_notification(current_user, invited_user, group)
         flash(
             _("Notification sent to user %(username)s", username=invited_user.username)
         )

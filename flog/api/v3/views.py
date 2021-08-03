@@ -416,8 +416,9 @@ class GroupCreateAPI(MethodView):
             if attr == "private":
                 group.private = value
             elif attr == "members":
-                for member_id in data[attr]:
-                    group.members.append(User.query.get_or_404(member_id))
+                group.members = [
+                    User.query.get_or_404(member_id) for member_id in data[attr]
+                ]
             else:
                 group.__setattr__(attr, value)
         db.session.add(group)

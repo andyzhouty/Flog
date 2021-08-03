@@ -32,7 +32,7 @@ def test_push_notifications(client_with_request_ctx):
     collector = User.query.get(random_user_id)
     receiver = User.query.get(random_user_id + 1)
     post = Post.query.get(random_post_id)
-    push_collect_notification(collector, post, receiver)
+    push_collect_notification(collector, receiver, post)
 
     assert Notification.query.count() == 1
     follower = collector

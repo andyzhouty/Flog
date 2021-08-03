@@ -59,9 +59,7 @@ def create_post():
             content=cleaned_content,
             private=form.private.data,
         )
-        for col_id in form.columns.data:
-            column = Column.query.get(col_id)
-            post.columns.append(column)
+        post.columns += [Column.query.get(column_id) for column_id in form.columns.data]
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
@@ -191,9 +189,7 @@ def edit_post(id):
         post.content = form.content.data
         post.timestamp = datetime.utcnow()
         post.private = form.private.data
-        for col_id in form.columns.data:
-            column = Column.query.get(col_id)
-            post.columns.append(column)
+        post.columns += [Column.query.get(col_id) for col_id in form.columns.data]
         db.session.commit()
         current_app.logger.info(f"Post id {id} editted.")
         flash(_("Edit Succeeded!"), "success")
@@ -280,8 +276,7 @@ def picks():
 @main_bp.route("/search/")
 @login_required
 def search():
-    q = request.args.get("q", "")
-    q = q.lower()
+    q = request.args.get("q", "").lower()
     if q == "":
         flash(_("Enter keyword about post or user."), "warning")
         return redirect_back()

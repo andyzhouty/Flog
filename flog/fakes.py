@@ -58,6 +58,9 @@ def posts(count: int = 10) -> None:
         private=False,
     )
     db.session.add_all([not_private, private])
+    if count < 2:
+        db.session.commit()
+        return
     for _ in range(count - 2):
         post = Post(
             title=fake.word() + " " + fake.word(),

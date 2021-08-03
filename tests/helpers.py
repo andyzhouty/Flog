@@ -64,6 +64,7 @@ def generate_post(
         "response": client.post("/write/", data=data, follow_redirects=True),
         "post": data,
         "text": text,
+        "title": title
     }
 
 

@@ -318,8 +318,9 @@ def test_notifications(client):
     for _ in range(5):
         n = Notification(receiver=user, message=fake.sentence())
         db.session.add(n)
-        db.session.commit()
         notification_array.append(n)
+    db.session.commit()
+
     response = client.get(
         "/api/v3/notification/all", headers=get_api_v3_headers(client)
     )
