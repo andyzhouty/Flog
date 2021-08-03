@@ -251,8 +251,6 @@ class CommentAPI(MethodView):
                 comment.post = post
             elif attr == "body":
                 comment.body = clean_html(value)
-            else:
-                comment.__setattr__(attr, value)
         db.session.commit()
         return comment
 

@@ -16,6 +16,12 @@ def test_language_selection(client):
     assert admin.locale == "zh_Hans_CN"
 
 
+def test_language_selection_404(client):
+    login(client)
+    response = client.get("/language/set-locale/fake-language/", follow_redirects=True)
+    assert response.status_code == 404
+
+
 def test_no_login_language_selection(client):
     client.get("/language/set-locale/zh_Hans_CN/", follow_redirects=True)
     data = client.get("/").get_data(as_text=True)

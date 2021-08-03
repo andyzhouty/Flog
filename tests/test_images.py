@@ -37,11 +37,15 @@ def test_basic_operations(client_with_request_ctx):
 def test_get_image(client):
     login(client)
     upload_image(client)
+    # test duplicate images
+    upload_image(client)
     logout(client)
     # test if the image can be got without authentication
     filename = current_app.config["FLOG_ADMIN"] + "_" + "test.png"
     response = client.get(f"/image/{filename}")
     assert response.status_code == 200
+    filename = current_app.config["FLOG_ADMIN"] + "_" + "test_.png"
+    response = client.get(f"/image/{filename}")
     login(client)
     image = Image.query.filter_by(filename=filename).first()
     delete_image(client, image.id)

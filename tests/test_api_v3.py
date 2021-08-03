@@ -33,6 +33,11 @@ def test_token(client):
     assert response.status_code == 200
     response = client.post("/api/v3/token/verify", data=dict(token="FAKE-TOKEN"))
     assert response.status_code == 401
+    response = client.get(
+        "/api/v3/self/posts",
+        headers=get_api_v3_headers(client, custom_token="FAKE-TOKEN"),
+    )
+    assert response.status_code == 401
 
 
 def test_user(client):
@@ -387,7 +392,7 @@ def test_group(client):
     )
     assert response.status_code == 200
     data = response.get_json()
-    
+
     assert any(u2.id == u["id"] for u in data["members"])
 
     # test DELETE group

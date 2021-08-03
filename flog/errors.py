@@ -9,7 +9,7 @@ from flask_babel import _
 
 
 def api_err_response(
-    err_code: int, short_message: str, long_message: str = None, headers: dict = None
+    err_code: int, short_message: str, long_message: str = None
 ):
     if (
         request.accept_mimetypes.accept_json
@@ -23,9 +23,6 @@ def api_err_response(
             response["message"] = long_message
         response = jsonify(response)
         response.status_code = err_code
-        if headers:
-            for key, value in headers:
-                response.headers[key] = value
         return response
     return None  # explicitly return None
 
