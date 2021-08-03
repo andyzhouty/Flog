@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-07-31 21:31+0800\n"
+"POT-Creation-Date: 2021-08-03 13:42+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -22,41 +22,41 @@ msgstr ""
 msgid "Please log in to access this page"
 msgstr "登录后才能查看此页面"
 
-#: flog/errors.py:39
-msgid "400 Bad Request"
+#: flog/errors.py:49
+msgid "Bad Request"
 msgstr "400 服务器没有获取到所需信息"
 
-#: flog/errors.py:51
+#: flog/errors.py:56
 msgid "403 You do not have the permission to access this page"
 msgstr "403 你没有权限查看这个页面"
 
-#: flog/errors.py:64
+#: flog/errors.py:61
 msgid "404 Not Found"
 msgstr "404 没有找到所需页面"
 
-#: flog/errors.py:73
+#: flog/errors.py:65
 msgid "405 Method Not Allowed"
 msgstr "405 访问方法错误"
 
-#: flog/errors.py:86
-msgid "The file you uploaded was larger than the 1M limit"
+#: flog/errors.py:72
+msgid "413 The file you uploaded was larger than the 1M limit"
 msgstr "你上传的文件超过了服务器限制（1M）"
 
-#: flog/errors.py:98
+#: flog/errors.py:77
 msgid "500 Internal Server Error"
 msgstr "500 服务器内部错误"
 
-#: flog/notifications.py:16
+#: flog/notifications.py:36
 #, python-format
 msgid "User <a href=\"%(profile_url)s\">%(username)s</a> followed you."
 msgstr "用户 <a href=\"%(profile_url)s\">%(username)s</a>关注了你。"
 
-#: flog/notifications.py:31
+#: flog/notifications.py:52
 #, python-format
 msgid "<a href=\"%(post_url)s\">This post</a> has a new comment/reply."
 msgstr "<a href=\"%(post_url)s\">这篇文章</a>有一个新的评论/评论的回复。"
 
-#: flog/notifications.py:44
+#: flog/notifications.py:66
 #, python-format
 msgid ""
 "User <a href=\"%(profile_url)s\">%(username)s</a> collected your <a "
@@ -65,7 +65,7 @@ msgstr ""
 "用户<a href=\"%(profile_url)s\">%(username)s</a>收藏了你的<a "
 "href=\"%(post_url)s\">这篇文章</a>"
 
-#: flog/notifications.py:59
+#: flog/notifications.py:82
 #, python-format
 msgid ""
 "User <a href=\"%(profile_url)s\">%(username)s</a> wants to join your "
@@ -75,7 +75,7 @@ msgstr ""
 "用户<a href=\"%(profile_url)s\">%(username)s</a>要加入您的群%(name)s。\n"
 "点击<a href=\"%(join_url)s\">此处</a>进行批准。"
 
-#: flog/notifications.py:74
+#: flog/notifications.py:98
 #, python-format
 msgid ""
 "User <a href=\"%(profile_url)s\">%(username)s</a> invited you to group "
@@ -85,7 +85,7 @@ msgstr ""
 "用户<a href=\"%(profile_url)s\">%(username)s</a>邀请您加入群%(name)s。\n"
 "点击<a href=\"%(join_url)s\">此处</a>进行批准。"
 
-#: flog/notifications.py:86
+#: flog/notifications.py:111
 #, python-format
 msgid ""
 "<a href=\"%(profile_url)s\">%(username)s</a> send a message in <a "
@@ -178,12 +178,12 @@ msgstr "用户%(username)s已解除封禁"
 msgid "%(feedback)s deleted."
 msgstr "%(feedback)s 已被删除。"
 
-#: flog/admin/views.py:82
+#: flog/admin/views.py:83
 #, python-format
 msgid "%(username)s's profile has been updated."
 msgstr "%(username)s的个人信息已被更新。"
 
-#: flog/admin/views.py:99
+#: flog/admin/views.py:102
 msgid "User Deleted"
 msgstr "用户已删除"
 
@@ -377,85 +377,85 @@ msgstr "专栏名称"
 msgid "Posts to add (optional)"
 msgstr "你想把哪些文章加入这个专栏（可选）？"
 
-#: flog/main/views.py:69
+#: flog/main/views.py:67
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:95
+#: flog/main/views.py:93
 msgid "Blocked users cannot post a comment!"
 msgstr "被封禁的用户不能发评论！"
 
-#: flog/main/views.py:98 flog/templates/main/_comments.html:81
+#: flog/main/views.py:96 flog/templates/main/_comments.html:81
 msgid "You cannot comment a private post!"
 msgstr "你不能评论私有的文章!"
 
-#: flog/main/views.py:113
+#: flog/main/views.py:111
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:128
+#: flog/main/views.py:126
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:173
+#: flog/main/views.py:171
 #, python-format
 msgid "Post id %(id)d deleted"
 msgstr "ID为%(id)d的文章已被删除"
 
-#: flog/main/views.py:199
+#: flog/main/views.py:195
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:222
+#: flog/main/views.py:218
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:224
+#: flog/main/views.py:220
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:226
+#: flog/main/views.py:222
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:229
+#: flog/main/views.py:225
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:241
+#: flog/main/views.py:237
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:251
+#: flog/main/views.py:247
 #, python-format
 msgid "Picked post %(id)d"
 msgstr "加精了ID为%(id)d的文章"
 
-#: flog/main/views.py:261
+#: flog/main/views.py:257
 #, python-format
 msgid "Unpicked post %(id)d"
 msgstr "取精了ID为%(id)d的文章"
 
-#: flog/main/views.py:286
+#: flog/main/views.py:281
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
-#: flog/main/views.py:328
+#: flog/main/views.py:323
 msgid "You can't add others' posts to your column!"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:333
+#: flog/main/views.py:328
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
-#: flog/main/views.py:358
+#: flog/main/views.py:353
 #, python-format
 msgid "Topped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:369
+#: flog/main/views.py:364
 #, python-format
 msgid "Untopped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
@@ -1115,10 +1115,3 @@ msgstr "你的密码已更改"
 #: flog/user/views.py:126
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
-
-#~ msgid "Confirm your password"
-#~ msgstr "确认密码"
-
-#~ msgid "Picked post %d"
-#~ msgstr "加精了ID为%d文章"
-
