@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'macros.html' import user_card, message_card with context %}
+{% from 'macros.html' import user_card, message_card, static_file with context %}
 {% block title %} Group: {{ group.name }} {% endblock %}
 {% block page_content %}
     <h2>{{ group.name }}{{ _("'s chatting room") }}</h2>
@@ -14,4 +14,11 @@
         <input type="text" name="body" class="form-control btn-block flex-grow-1" required>
         <input type="submit" name="submit" class="form-control btn btn-success" value="{{ _('Send') }}">
     </form>
+    <button id="back-to-top" class="btn" style="display: none">
+        <i class="bi-arrow-up"></i><br>
+    </button>
 {% endblock page_content %}
+{% block scripts %}
+    {{ super() }}
+    {{ static_file('js', 'js/discussion.js') }}
+{% endblock scripts %}

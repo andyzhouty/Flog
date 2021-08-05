@@ -26,7 +26,16 @@
     position: fixed;
     z-index: 1;
     left: 50%;
-    bottom: 30px
+    bottom: 30px;
+}
+
+#back-to-top {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    right: 50px;
+    bottom: 180px;
+    padding: 5px;
 }
 
 .image-normal {
@@ -40,7 +49,9 @@
     cursor: zoom-in;
 }
 
-.profile-popover, .popup-avatar, .avatar {
+.profile-popover,
+.popup-avatar,
+.avatar {
     height: 36px !important;
     width: 36px !important;
 }
@@ -53,7 +64,8 @@
     word-break: break-all;
 }
 
-a, .private-post-title {
+a,
+.private-post-title {
     font-weight: 500;
 }
 
@@ -78,10 +90,27 @@ a, .private-post-title {
     transform: scale(2);
 }
 
-.btn, .btn:hover,
-.navbar-brand, .navbar-brand:hover,
-.nav-link, .nav-link:hover,
-.profile-popover, .profile-popover:hover,
-.action-link, .action-link:hover {
+.btn,
+.btn:hover,
+.navbar-brand,
+.navbar-brand:hover,
+.nav-link,
+.nav-link:hover,
+.profile-popover,
+.profile-popover:hover,
+.action-link,
+.action-link:hover {
     text-decoration: none;
+}
+
+.message-card {
+    word-break: break-all;
+}
+
+.message-body {
+    color: #effffe;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    max-width: 500px;
 }

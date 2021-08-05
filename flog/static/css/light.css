@@ -1,3 +1,7 @@
+#back-to-top {
+    background: #dee;
+}
+
 a {
     color: var(--dark);
     text-decoration: underline;
