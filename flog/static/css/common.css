@@ -108,9 +108,14 @@ a,
 }
 
 .message-body {
-    color: #effffe;
     border-radius: 5px;
     padding: 10px;
     margin: 5px;
     max-width: 500px;
+}
+.self {
+    color: #effffe;
+}
+.others {
+    color: #233333;
 }

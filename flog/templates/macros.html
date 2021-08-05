@@ -336,7 +336,7 @@ MIT License
         </div>
         {% if message.author == current_user %}
             <div class="d-flex justify-content-end mb-3">
-                <span class="bg-success message-body">
+                <span class="bg-success message-body self">
                     {{ message.body }}
                 </span>
                 <a href="{{ url_for('user.profile', username=user.username) }}">
@@ -350,7 +350,7 @@ MIT License
                     <img src="{{ user.avatar_url() }}" class="profile-popover" alt="{{ user.username }}"
                          data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}" height="30px" width="auto">
                 </a>
-                <span class="bg-light message-body">
+                <span class="bg-light message-body others">
                     {{ message.body }}
                 </span>
             </div>
