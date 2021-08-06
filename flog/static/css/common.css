@@ -41,8 +41,8 @@
 .image-normal {
     max-height: 100px;
     max-width: 500px;
-    height: auto;
-    width: auto;
+    height: auto !important;
+    width: auto !important;
 }
 
 .image-normal:hover {
