@@ -39,7 +39,7 @@
 }
 
 .image-normal {
-    max-height: 100px;
+    max-height: 200px;
     max-width: 500px;
     height: auto !important;
     width: auto !important;
