@@ -359,11 +359,17 @@ MIT License
 {% endmacro %}
 
 {% macro action_card(icon, text, link) %}
-    <div class="d-inline-flex action justify-content-lg-center flex-fill">
+    <div class="d-inline-flex action justify-content-center flex-fill">
         <a class="action-link" href="{{ link }}">
             <div class="action-icon flex-grow-2 align-self-center">
                 <i class="{{ icon }}"></i>
             </div>
             {{ text }}</a>
     </div>
+{% endmacro %}
+
+{% macro load_ckeditor() %}
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name="content") }}
+    {{ ckeditor.config(custom_config="extraAllowedContent: '"+allowed_tags+"'") }}
 {% endmacro %}

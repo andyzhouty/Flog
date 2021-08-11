@@ -113,9 +113,16 @@ a,
     margin: 5px;
     max-width: 500px;
 }
+
 .self {
     color: #effffe;
 }
+
 .others {
     color: #233333;
+}
+
+.card,
+.list-group {
+    box-shadow: 1px 1px rgba(90, 90, 90, .1), -1px -1px rgba(90, 90, 90, .1);
 }

@@ -143,6 +143,7 @@ def register_context(app: Flask) -> None:
     def make_template_context():
         posts = Post.query.order_by(Post.timestamp.desc()).all()
         feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
+        allowed_tags = " ".join(app.config["FLOG_ALLOWED_TAGS"])
         if current_user.is_authenticated:
             notification_count = Notification.query.with_parent(current_user).count()
         else:
@@ -153,4 +154,5 @@ def register_context(app: Flask) -> None:
             Permission=Permission,
             current_app=app,
             notification_count=notification_count,
+            allowed_tags=allowed_tags
         )

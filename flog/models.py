@@ -171,7 +171,10 @@ class Image(db.Model):
         db.session.commit()
 
     def delete(self) -> None:
-        os.remove(self.path())
+        try:
+            os.remove(self.path())
+        except FileNotFoundError:
+            pass
         db.session.delete(self)
         db.session.commit()
 

@@ -4,6 +4,7 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
+{% from 'macros.html' import load_ckeditor with context %}
 {% block title %} {{ _("Edit post") }} {% endblock %}
 {% block page_content %}
     <h1 class="display-4">{{ _("Edit post") }}</h1>
@@ -11,6 +12,5 @@ MIT License
 {% endblock %}
 {% block scripts %}
     {{ super() }}
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(name='content') }}
+    {{ load_ckeditor() }}
 {% endblock %}
