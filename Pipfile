@@ -18,7 +18,6 @@ docutils = "*"
 pytest-cov = "*"
 pymysql = "*"
 black = "*"
-pytest-xdist = "*"
 
 [packages]
 alembic = "*"
