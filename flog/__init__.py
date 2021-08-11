@@ -154,5 +154,5 @@ def register_context(app: Flask) -> None:
             Permission=Permission,
             current_app=app,
             notification_count=notification_count,
-            allowed_tags=allowed_tags
+            allowed_tags=allowed_tags,
         )
