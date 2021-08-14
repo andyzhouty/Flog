@@ -73,6 +73,7 @@ flask-compress = "*"
 apiflask = "==0.7.0"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
+pytest-xdist = "*"
 
 [pipenv]
 allow_prereleases = true

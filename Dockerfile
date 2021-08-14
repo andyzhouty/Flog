@@ -9,13 +9,13 @@ RUN pipenv install --dev --system --deploy
 COPY flog/ flog/
 COPY migrations/ migrations/
 COPY wsgi.py ./
-COPY docker_boot.sh ./
 COPY tests/ tests/
-RUN chmod +x docker_boot.sh
+COPY scripts/ scripts/
+RUN chmod +x scripts/docker_boot.sh
 
 ENV FLASK_APP wsgi.py
 
 EXPOSE 5000
 
 LABEL com.circleci.preserve-entrypoint=true
-ENTRYPOINT ["./docker_boot.sh"]
+ENTRYPOINT ["scripts/docker_boot.sh"]

@@ -305,19 +305,6 @@ class APIV3TestCase(Testing):
         )
         assert response.get_json()[0]["title"] == "1234"
 
-    def test_image(self):
-        self.register()
-        data = self.api_upload_image(
-            "/api/v3",
-            self.get_api_v3_headers(content_type="multipart/form-data"),
-        )["data"]
-        assert data["filename"] == "test_test.png"
-        image_id = data["id"]
-        response = self.client.delete(
-            f"/api/v3/image/{image_id}", headers=self.get_api_v3_headers()
-        )
-        assert response.status_code == 204
-
     def test_notifications(self):
         self.register()
         user = User.query.filter_by(username="test").first()

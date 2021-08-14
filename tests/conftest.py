@@ -16,7 +16,7 @@ class Base(unittest.TestCase):
     app = None
 
     def commonSetUp(self):
-        warnings.simplefilter('ignore')
+        warnings.simplefilter("ignore")
         self.context = self.app.test_request_context()
         self.client = self.app.test_client()
         self.context.push()

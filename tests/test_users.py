@@ -12,6 +12,7 @@ from .conftest import Testing
 
 fake = Faker()
 
+
 class UserTestCase(Testing):
     def test_register(self):
         response = self.client.get("/auth/register/")
@@ -27,12 +28,12 @@ class UserTestCase(Testing):
         main_response = self.client.get("/")
         assert reg_response.get_data() == main_response.get_data()
 
-
     def test_login_logout(self):
         response = self.login()
         response_data = response.get_data(as_text=True)
         assert (
-            f'Welcome, Administrator\n {current_app.config["FLOG_ADMIN"]}' in response_data
+            f'Welcome, Administrator\n {current_app.config["FLOG_ADMIN"]}'
+            in response_data
         )
         # test if the login redirection works
         login_response = self.client.get("/auth/login/", follow_redirects=True)
@@ -43,12 +44,10 @@ class UserTestCase(Testing):
         response = self.logout()
         assert "You have been logged out" in response.get_data(as_text=True)
 
-
     def test_fail_login(self):
         fail_login_res = self.login(password="wrong_password")
         res_data = fail_login_res.get_data(as_text=True)
         assert "Invalid username or password!" in res_data
-
 
     def test_register_login_and_confirm(self):
         self.register()
@@ -58,14 +57,16 @@ class UserTestCase(Testing):
         response = self.client.get(f"/auth/confirm/resend/", follow_redirects=True)
         assert response.status_code == 200
         self.client.get(
-            f"/auth/confirm/{user.generate_confirmation_token()}/", follow_redirects=True
+            f"/auth/confirm/{user.generate_confirmation_token()}/",
+            follow_redirects=True,
         )
         assert user.confirmed
 
-
     def test_edit_profile(self):
 
-        user = User(name="abcd", username="abcd", email="test@example.com", confirmed=True)
+        user = User(
+            name="abcd", username="abcd", email="test@example.com", confirmed=True
+        )
         user.role = Role.query.filter_by(name="User").first()
         user.set_password("123456")
         db.session.add(user)
@@ -97,7 +98,9 @@ class UserTestCase(Testing):
         assert response.get_data(as_text=True) == response2.get_data(as_text=True)
         self.logout()
 
-        user = User(name="xyz", username="xyz", email="test@example.com", confirmed=False)
+        user = User(
+            name="xyz", username="xyz", email="test@example.com", confirmed=False
+        )
         user.set_password("secret")
         db.session.add(user)
         db.session.commit()
@@ -106,7 +109,6 @@ class UserTestCase(Testing):
         response = self.client.get("/profile/edit/", follow_redirects=True)
         response_data = response.get_data(as_text=True)
         assert "Your email has not been confirmed yet!" in response_data
-
 
     def test_delete_account(self):
         self.login()
@@ -119,29 +121,29 @@ class UserTestCase(Testing):
         assert response.status_code == 200
         assert User.query.count() == user_count - 1
 
-
     def test_follow(self):
 
         self.login()
         admin = User.query.filter_by(
             role=Role.query.filter_by(name="Administrator").first()
         ).first()
-        user = User.query.filter_by(role=Role.query.filter_by(name="User").first()).first()
-        data = self.client.post(f"/follow/{user.username}", follow_redirects=True).get_data(
-            as_text=True
-        )
+        user = User.query.filter_by(
+            role=Role.query.filter_by(name="User").first()
+        ).first()
+        data = self.client.post(
+            f"/follow/{user.username}", follow_redirects=True
+        ).get_data(as_text=True)
         assert "User followed." in data
         assert self.admin.is_following(user)
-        data = self.client.post(f"/follow/{user.username}", follow_redirects=True).get_data(
-            as_text=True
-        )
+        data = self.client.post(
+            f"/follow/{user.username}", follow_redirects=True
+        ).get_data(as_text=True)
         assert "Already followed" in data
-        data = self.client.post(f"/unfollow/{user.username}", follow_redirects=True).get_data(
-            as_text=True
-        )
+        data = self.client.post(
+            f"/unfollow/{user.username}", follow_redirects=True
+        ).get_data(as_text=True)
         assert "User unfollowed." in data
         assert not self.admin.is_following(user)
-
 
     def test_all_users(self):
         self.login()
@@ -150,14 +152,14 @@ class UserTestCase(Testing):
         assert response.status_code == 200
         assert f'<p style="display: none">{User.query.count()}</p>' in data
 
-
     def test_change_password_with_auth(self):
         self.login()
         form_data = {"password": "abcd1234", "password_again": "abcd1234"}
-        response = self.client.post("/password/change/", data=form_data, follow_redirects=True)
+        response = self.client.post(
+            "/password/change/", data=form_data, follow_redirects=True
+        )
         assert response.status_code == 200
         assert self.admin.verify_password("abcd1234")
-
 
     def test_reset_password_without_auth(self):
         random_user_id = randint(1, User.query.count())
@@ -179,7 +181,6 @@ class UserTestCase(Testing):
         assert "Password Changed" in data
         assert request.path == "/"
         assert user.verify_password("abcd1234")
-
 
     def test_block_user(self):
         user = User(name="xyz", username="xyz", email="test@example.com")

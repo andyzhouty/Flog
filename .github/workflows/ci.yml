@@ -34,7 +34,7 @@ jobs:
       - name: Test with pytest
         run: |
           pipenv run flask translate compile
-          pipenv run pytest --cov-report=xml
+          pipenv run sh scripts/coverage.sh
       - name: Submit coverage data
         if: ${{ matrix.python-version == 3.9 && matrix.os == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v1

@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import json
 import random
 from flask import current_app
-from flog.models import User, Comment, Post, Image
+from flog.models import User, Comment, Post
 from flog import fakes as fake
 from .conftest import Testing
 
@@ -283,33 +283,6 @@ class APIV2TestCase(Testing):
         )
         assert response.status_code == 200
         assert not user.is_collecting(post)
-
-    def test_image(self):
-        admin_username = current_app.config["FLOG_ADMIN"]
-        admin_password = current_app.config["FLOG_ADMIN_PASSWORD"]
-        image_dict = self.api_upload_image(
-            "/api/v2",
-            headers=self.get_api_v2_headers(
-                username=admin_username,
-                password=admin_password,
-                content_type="multipart/form-data",
-            ),
-        )
-        response = image_dict["response"]
-        data = image_dict["data"]
-        assert response.status_code == 201
-        assert data["filename"] == f"{admin_username}_test.png"
-        response = self.client.get(f"/image/{admin_username}_test.png")
-        assert response.status_code == 200
-        image_id = data["image_id"]
-        response = self.client.delete(
-            f"/api/v2/image/{image_id}/",
-            headers=self.get_api_v2_headers(
-                username=admin_username, password=admin_password
-            ),
-        )
-        assert response.status_code == 204
-        assert Image.query.get(image_id) is None
 
     def test_folder_like_urls(self):
         self.register()
