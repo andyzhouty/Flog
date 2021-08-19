@@ -24,9 +24,9 @@ def upgrade():
     sa.ForeignKeyConstraint(['owner_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['post_id'], ['post.id'], )
     )
-    op.add_column('user', sa.Column('coins', sa.Float(), nullable=True))
-    op.add_column('user', sa.Column('experience', sa.Integer(), nullable=True))
-    op.add_column('post', sa.Column('coins', sa.Integer(), nullable=True))
+    op.add_column('user', sa.Column('coins', sa.Float(), nullable=True, default=3))
+    op.add_column('user', sa.Column('experience', sa.Integer(), nullable=True, default=0))
+    op.add_column('post', sa.Column('coins', sa.Integer(), nullable=True, default=0))
     # ### end Alembic commands ###
 
 
