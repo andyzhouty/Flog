@@ -281,10 +281,10 @@ def picks():
 @csrf.exempt
 def coin_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post in current_user.coined_posts: # pragma: no cover
+    if post in current_user.coined_posts:  # pragma: no cover
         abort(400)
     coins = request.form.get("coins", type=int)
-    if coins is None or coins < 1 or coins > 2: # pragma: no cover
+    if coins is None or coins < 1 or coins > 2:  # pragma: no cover
         abort(400)
     if current_user.coins <= coins:
         abort(400)
@@ -311,9 +311,11 @@ def search():
     page = request.args.get("page", 1, type=int)
     per_page = current_app.config["SEARCH_RESULT_PER_PAGE"]
     name_key = dict(user="username", group="name", column="name", post="title")
-    query = eval("{0}.query.filter({0}.{1}.ilike('%{2}%'))".format(
-        category.capitalize(), name_key[category], q
-    ))
+    query = eval(
+        "{0}.query.filter({0}.{1}.ilike('%{2}%'))".format(
+            category.capitalize(), name_key[category], q
+        )
+    )
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 

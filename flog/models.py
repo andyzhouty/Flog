@@ -28,6 +28,7 @@ coin_table = db.Table(
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
 )
 
+
 class Collect(db.Model):
     """Collect Model"""
 
@@ -75,7 +76,9 @@ class Post(db.Model):
     )
     picked = db.Column(db.Boolean, default=False)
     coins = db.Column(db.Integer, default=0)
-    coiners = db.relationship("User", secondary=coin_table, back_populates="coined_posts")
+    coiners = db.relationship(
+        "User", secondary=coin_table, back_populates="coined_posts"
+    )
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
@@ -357,8 +360,9 @@ class User(db.Model, UserMixin):
 
     coins = db.Column(db.Float, default=3)
     experience = db.Column(db.Integer, default=0)
-    coined_posts = db.relationship("Post", secondary=coin_table, back_populates="coiners")
-
+    coined_posts = db.relationship(
+        "Post", secondary=coin_table, back_populates="coiners"
+    )
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
