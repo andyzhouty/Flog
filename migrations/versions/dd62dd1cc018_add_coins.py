@@ -26,6 +26,7 @@ def upgrade():
     )
     op.add_column('user', sa.Column('coins', sa.Float(), nullable=True))
     op.add_column('user', sa.Column('experience', sa.Integer(), nullable=True))
+    op.add_column('post', sa.Column('coins', sa.Integer(), nullable=True))
     # ### end Alembic commands ###
 
 
@@ -34,4 +35,5 @@ def downgrade():
     op.drop_table('coin_table')
     op.drop_column('user', 'coins')
     op.drop_column('user', 'experience')
+    op.drop_column('post', 'coins')
     # ### end Alembic commands ###
