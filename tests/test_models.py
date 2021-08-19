@@ -2,6 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
+from datetime import date, datetime
 from flog import db
 from flog.models import (
     User,
@@ -120,3 +121,14 @@ class ModelTestCase(Testing):
         m = Message()
         g.messages.append(m)
         assert m.group == g
+
+    def test_coins(self):
+        u = User()
+        u.last_seen = datetime(2021, 8, 13, 23, 59, 59)
+        force_time = datetime(2021, 8, 14, 23, 59, 59)
+        u.ping(force_time)
+        assert u.coins == 4
+
+        u.last_seen = datetime(2021, 8, 14)
+        u.ping(force_time)
+        assert u.coins == 4

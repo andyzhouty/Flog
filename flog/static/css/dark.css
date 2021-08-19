@@ -14,3 +14,11 @@ a:hover {
     text-decoration: underline;
     background-color: var(--purple);
 }
+
+.link-action {
+    color: #aaa;
+}
+
+.link-action:hover {
+    color: #ccc;
+}

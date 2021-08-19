@@ -2,15 +2,6 @@
     background: #dee;
 }
 
-a {
-    color: var(--dark);
-    text-decoration: underline;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
 .private-post-title {
     color: var(--light);
     background-color: var(--dark);
@@ -19,4 +10,20 @@ a:hover {
 .private-post-title:hover {
     text-decoration: underline;
     color: var(--light);
+}
+
+.link-action {
+    color: #888;
+}
+
+.link-action-activated {
+    color: var(--blue);
+}
+
+.coin-option {
+    background-color: var(--light);
+}
+
+a {
+    color: var(--dark);
 }

@@ -2,7 +2,7 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% macro static_file(type, filename_or_url, local=True, alt=None) %}
+{% macro static_file(type, filename_or_url, local=True, alt=None, width=None, height=None) %}
     {% if local -%}
         {% set filename_or_url = url_for('static', filename=filename_or_url) %}
     {%- endif %}
@@ -12,6 +12,12 @@ MIT License
         <script src="{{ filename_or_url }}"></script>
     {% elif type == 'icon' -%}
         <link rel="icon" href="{{ filename_or_url }}">
+    {% elif type == "svg" -%}
+        <img src="{{ filename_or_url }}"
+             type="image/svg+xml"
+             {% if width %}width="{{ width }}"{% endif %}
+             {% if height %}height="{{ height }}"{% endif %}
+             class="pi-icon">
     {%- endif %}
 {% endmacro %}
 
@@ -80,30 +86,69 @@ MIT License
     {%- endif %}
 {% endmacro %}
 
-{% macro post_actions(post, can_edit=True, can_delete=True, can_collect=True, show_collectors=None, collectors=0) %}
+{% macro post_actions(post, can_edit=True, can_delete=True, show_collectors=None, collectors=0) %}
     {% if current_user.is_authenticated -%}
         <div class="d-flex justify-content-start align-items-center">
-            {% if can_collect and post.author != current_user -%}
+            {% if post.author != current_user -%}
                 {% if not current_user.is_collecting(post) -%}
-                    <a class="btn btn-sm btn-success mr-1" href="{{ url_for('main.collect_post', id=post.id) }}">
+                    <a class="btn-action" href="{{ url_for('main.collect_post', id=post.id) }}">
                         <i class="bi-star-fill"></i>
                         {{ _("Collect") }}
+                        {{ post.collectors | length }}
                     </a>
                 {% else -%}
-                    <a class="btn btn-sm mr-1 text-white" href="{{ url_for('main.uncollect_post', id=post.id) }}" style="background-color: var(--orange);">
+                    <a class="btn-action-activated" href="{{ url_for('main.uncollect_post', id=post.id) }}" style="background-color: var(--orange);">
                         <i class="bi-bookmark-x-fill"></i>
                         {{ _("Uncollect") }}
+                        {{ post.collectors | length }}
+                    </a>
+                {%- endif %}
+                {% if not post in current_user.coined_posts -%}
+                    <a class="link-action link-coin" data-toggle="modal" data-target="#coin{{ post.id }}">
+                        {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
+                        {{ post.coins }}
+                    </a>
+                    <div class="modal fade" id="coin{{ post.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">{{ _("How many coins?") }}</h4>
+                                    <a class="close text-right" data-dismiss="modal">&times;</a>
+                                </div>
+                                <div id="coinForm" data-post-id="{{ post.id }}" data-error-message="{{ _('Please select how many coins you want to give out.') }}">
+                                    <div class="modal-body d-flex">
+                                        <button id="coinOne{{ post.id }}" class="btn flex-fill coin-option coin-one mr-1" name="coins" value="1">
+                                            <span class="coin-text">1 coin</span><br>
+                                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" type="image/svg+xml" class="coin-one-img">
+                                        </button>
+                                        <button id="coinTwo{{ post.id }}" class="btn flex-fill coin-option coin-two ml-1" name="coins" value="2">
+                                            <span class="coin-text">2 coins</span><br>
+                                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" type="image/svg+xml" class="coin-two-img">
+                                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" type="image/svg+xml" class="coin-two-img">
+                                        </button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary m-auto coin-submit">{{ _("Submit") }}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else -%}
+                    <a class="link-action-activated">
+                        {{ static_file("svg", "svg/pi-activated.svg", width=15, height=15) }}
+                        {{ post.coiners | length }}
                     </a>
                 {%- endif %}
             {%- endif %}
             {% if current_user.can(Permission.MODERATE) %}
                 {% if not post.picked or post.private %}
-                    <a class="btn btn-sm mr-1 text-white" href="{{ url_for('main.pick', id=post.id) }}" style="background-color: var(--purple);">
-                        <i class="bi-x-diamond-fill"></i>
+                    <a class="link-action" href="{{ url_for('main.pick', id=post.id) }}">
+                        <i class="bi-patch-plus"></i>
                         {{ _("Pick") }}
                     </a>
                 {% else %}
-                    <a class="btn btn-sm mr-1" href="{{ url_for('main.unpick', id=post.id) }}" style="background-color: yellow; color: black;">
+                    <a class="link-action-activated" href="{{ url_for('main.unpick', id=post.id) }}">
                         <i class="bi-patch-minus"></i>
                         {{ _("Unpick") }}
                     </a>
@@ -111,11 +156,9 @@ MIT License
             {% endif %}
             {% if current_user.is_administrator() or post.author == current_user
                   and can_edit -%}
-                <a href="{{ url_for('main.edit_post', id=post.id) }}">
-                    <button class="btn btn-sm btn-primary mr-1">
-                        <i class="bi-pencil-square"></i>
-                        {{ _("EDIT") }}
-                    </button>
+                <a class="link-action" href="{{ url_for('main.edit_post', id=post.id) }}">
+                    <i class="bi-pencil-square"></i>
+                    {{ _("Edit") }}
                 </a>
             {%- endif %}
             {% if post.author -%}

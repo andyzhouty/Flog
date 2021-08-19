@@ -4,7 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 import os
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, url_for
 from flask_login import UserMixin
@@ -22,7 +22,11 @@ column_post_table = db.Table(
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
     db.Column("column_id", db.Integer, db.ForeignKey("column.id")),
 )
-
+coin_table = db.Table(
+    "coin_table",
+    db.Column("owner_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+)
 
 class Collect(db.Model):
     """Collect Model"""
@@ -70,6 +74,8 @@ class Post(db.Model):
         "Column", secondary=column_post_table, back_populates="posts"
     )
     picked = db.Column(db.Boolean, default=False)
+    coins = db.Column(db.Integer, default=0)
+    coiners = db.relationship("User", secondary=coin_table, back_populates="coined_posts")
 
     def __init__(self, **kwargs):
         super(Post, self).__init__(**kwargs)
@@ -342,15 +348,17 @@ class User(db.Model, UserMixin):
         "Notification", back_populates="receiver", cascade="all"
     )
     images = db.relationship("Image", back_populates="author", cascade="all")
-
     groups = db.relationship(
         "Group", secondary=group_user_table, back_populates="members"
     )
     managed_groups = db.relationship("Group", back_populates="manager")
-
     custom_avatar_url = db.Column(db.String(128), default="")
-
     sent_messages = db.relationship("Message", back_populates="author")
+
+    coins = db.Column(db.Float, default=3)
+    experience = db.Column(db.Integer, default=0)
+    coined_posts = db.relationship("Post", secondary=coin_table, back_populates="coiners")
+
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -388,9 +396,14 @@ class User(db.Model, UserMixin):
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}&d={default}&r={rating}"
 
-    def ping(self):
-        self.last_seen = datetime.utcnow()
-        db.session.add(self)
+    def ping(self, force_time=None):
+        now = datetime.utcnow() if force_time is None else force_time
+        last_seen_day = datetime(
+            self.last_seen.year, self.last_seen.month, self.last_seen.day
+        )
+        if now - last_seen_day >= timedelta(days=1):
+            self.coins += 1
+        self.last_seen = now
         db.session.commit()
 
     def generate_confirmation_token(self, expiration=3600):

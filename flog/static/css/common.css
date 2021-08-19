@@ -126,3 +126,49 @@ a,
 .list-group {
     box-shadow: 1px 1px rgba(90, 90, 90, .1), -1px -1px rgba(90, 90, 90, .1);
 }
+
+.link-action,
+.link-action-activated,
+.btn-action {
+    margin-right: 1rem;
+}
+
+.coin-option {
+    height: 200px;
+    border-radius: 5px;
+}
+
+.coin-option.selected {
+    border: 2px solid #09b3eb;
+}
+
+.coin-one-img, .coin-two-img {
+    margin: auto;
+}
+
+.coin-one-img {
+    width: 60%;
+    height: 60%;
+}
+
+.coin-two-img {
+    width: 45%;
+    height: 45%;
+}
+
+.pi-icon {
+    margin-top: -0.25rem;
+}
+
+a:not([class]) {
+    color: var(--dark);
+    text-decoration: underline;
+}
+
+a:not([class]):hover {
+    text-decoration: underline !important;
+}
+
+a:hover {
+    text-decoration: none;
+}

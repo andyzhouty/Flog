@@ -3,7 +3,6 @@ MIT License
 Copyright(c) 2021 Andy Zhou
 """
 from datetime import datetime
-from flog.decorators import permission_required
 from flask import (
     render_template,
     redirect,
@@ -15,6 +14,8 @@ from flask import (
 )
 from flask_babel import _
 from flask_login import current_user, login_required
+from flog.decorators import permission_required
+from flog.extensions import csrf
 from ..models import Permission, db, Post, Comment, User, Group, Column
 from ..utils import redirect_back, clean_html
 from ..notifications import push_collect_notification, push_comment_notification
@@ -63,6 +64,8 @@ def create_post():
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
+        if not post.private:
+            current_user.experience += 5
         current_app.logger.info(f"{str(post)} is added.")
         flash(_("Your post has been added"), "success")
         return redirect(url_for("main.main"))
@@ -273,6 +276,29 @@ def picks():
     return render_template("main/picked.html", posts=posts)
 
 
+@main_bp.route("/post/coin/<int:post_id>/", methods=["POST"])
+@login_required
+@csrf.exempt
+def coin_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post in current_user.coined_posts: # pragma: no cover
+        abort(400)
+    coins = request.form.get("coins", type=int)
+    if coins is None or coins < 1 or coins > 2: # pragma: no cover
+        abort(400)
+    if current_user.coins <= coins:
+        abort(400)
+    post.coins += coins
+    if post.author:
+        post.author.coins += coins / 4
+        post.author.experience += 10
+    current_user.coined_posts.append(post)
+    current_user.coins -= coins
+    current_user.experience += 10
+    db.session.commit()
+    return redirect_back()
+
+
 @main_bp.route("/search/")
 @login_required
 def search():
@@ -284,14 +310,10 @@ def search():
     category = request.args.get("category", "post")
     page = request.args.get("page", 1, type=int)
     per_page = current_app.config["SEARCH_RESULT_PER_PAGE"]
-    if category == "user":
-        query = User.query.filter(User.username.ilike(f"%{q}%"))
-    elif category == "group":
-        query = Group.query.filter(Group.name.ilike(f"%{q}%"))
-    elif category == "column":
-        query = Column.query.filter(Column.name.ilike(f"%{q}%"))
-    else:
-        query = Post.query.filter(Post.title.ilike(f"%{q}%"))
+    name_key = dict(user="username", group="name", column="name", post="title")
+    query = eval("{0}.query.filter({0}.{1}.ilike('%{2}%'))".format(
+        category.capitalize(), name_key[category], q
+    ))
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 

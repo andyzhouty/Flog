@@ -21,10 +21,10 @@ function show_profile_popover(e) {
                     trigger: 'manual',
                     animation: false
                 });
-                $el.popover("show");
-                $('.popover').on("mouseleave", function () {
+                $el.popover('show');
+                $('.popover').on('mouseleave', function () {
                     setTimeout(function () {
-                        $el.popover("hide");
+                        $el.popover('hide');
                     }, 200);
                 });
             },
@@ -44,7 +44,7 @@ function hide_profile_popover(e) {
     } else {
         setTimeout(function () {
             if (!$('.popover:hover').length) {
-                $el.popover("hide");
+                $el.popover('hide');
             }
         }, 200);
     }
@@ -72,8 +72,53 @@ function largeImage(e) {
 }
 
 $(function () {
-    $('img').addClass('image-normal');
-    $("img[alt='identicon']").removeClass('image-normal');
+    $('img:not([class])').addClass('image-normal');
+    $('.btn-action').addClass('btn btn-light btn-sm');
+    $('.link-coin').hover(function () {
+        $(this).children('img').attr('src', '/static/svg/pi-activated.svg');
+    });
+    $('.link-coin').mouseleave(function () {
+        $(this).children('img').attr('src', '/static/svg/pi.svg');
+    });
+    $('.coin-option').click(function () {
+        $(this).addClass('selected');
+        $(this).siblings().removeClass('selected');
+    })
+    $('.coin-option .selected').click(function () {
+        $(this).removeClass('selected');
+    });
+    $('.coin-submit').click(function () {
+        form = $(this).parent().parent();
+        let postId = parseInt(form.data('post-id'));
+        let selectedElement;
+        for (let element of form.children().children('.coin-option')) {
+            if ($(element).attr('class').split(' ').indexOf('selected') !== -1) {
+                selectedElement = $(element);
+                break;
+            }
+        }
+        if (selectedElement === undefined) {
+            toastr.error(form.data('error-message'));
+        }
+        let coins = parseInt(selectedElement.val());
+        console.log({ 'coins': coins });
+        $.ajax({
+            type: 'POST',
+            url: '/post/coin/' + postId + '/',
+            data: { 'coins': coins },
+            dataType: 'json',
+            success: function (data, status) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                if (error == "BAD REQUEST") {
+                    toastr.error(error);
+                }
+            }
+        });
+    });
+    $('.btn-action-activated').addClass('btn btn-primary btn-sm mr-1');
+    $('img[alt="identicon"]').removeClass('image-normal');
     $('.image-normal').click(largeImage.bind(this));
     $('#image-large').click(function () {
         $('.content').removeClass('shadow');

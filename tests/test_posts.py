@@ -6,7 +6,7 @@ from tests.conftest import Testing
 from flog import fakes
 from faker import Faker
 from sqlalchemy import and_
-from flog.models import Comment, User, Role, Post, Column
+from flog.models import Comment, User, Post, Column, db
 
 fake = Faker()
 
@@ -297,3 +297,34 @@ class PostTestCase(Testing):
 
         response = self.client.get("/post/picks/")
         assert post.title not in response.get_data(as_text=True)
+
+    def test_publish_experience(self):
+        """test if the user receives 5 exp when publishing a post"""
+        self.login()
+        self.generate_post()
+        assert self.admin.experience == 5
+
+    def test_coin_experience(self):
+        """test if the user and the author both receive 10exp when 'inserting' a coin."""
+        self.register()
+        self.login("test", "password")
+        title = self.generate_post()["title"]
+        p = Post.query.filter_by(title=title).first()
+        self.logout()
+        self.login()
+        self.client.post(f"/post/coin/{p.id}/", data={"coins": 2})
+        u_test = User.query.filter_by(username="test").first()
+        assert u_test.experience == 15
+        assert self.admin.experience == 10
+
+    def test_no_enough_coins(self):
+        """test if the app will return a 400 response when there isn't enough coins."""
+        self.register()
+        self.login("test", "password")
+        u = User.query.filter_by(username="test").first()
+        u.coins = 1
+        db.session.commit()
+        title = self.generate_post()["title"]
+        p = Post.query.filter_by(title=title).first()
+        response = self.client.post(f"/post/coin/{p.id}/", data={"coins": 2})
+        assert response.status_code == 400

@@ -18,6 +18,7 @@ docutils = "*"
 pytest-cov = "*"
 pymysql = "*"
 black = "*"
+pytest-xdist = "*"
 
 [packages]
 alembic = "*"
@@ -68,12 +69,10 @@ Flask-Cors = "*"
 flask-httpauth = "*"
 bleach = "*"
 flask-apispec = "*"
-flask-caching = "*"
 flask-compress = "*"
-apiflask = "==0.7.0"
+apiflask = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
-pytest-xdist = "*"
 
 [pipenv]
 allow_prereleases = true
