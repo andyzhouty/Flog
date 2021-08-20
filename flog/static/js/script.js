@@ -13,7 +13,7 @@ const levelExperiences = {
     5: 800,
     6: 1100,
     7: 1500,
-    8: 2000,
+    8: 2500,
 }
 
 function show_profile_popover(e) {
