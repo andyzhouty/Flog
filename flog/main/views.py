@@ -296,10 +296,10 @@ def coin_post(post_id):
     post.coins += coins
     if post.author:
         post.author.coins += coins / 4
-        post.author.experience += 10
+        post.author.experience += 10 * coins
     current_user.coined_posts.append(post)
     current_user.coins -= coins
-    current_user.experience += 10
+    current_user.experience += 10 * coins
     db.session.commit()
     return redirect_back()
 
