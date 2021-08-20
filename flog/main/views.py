@@ -246,7 +246,10 @@ def uncollect_post(id: int):
 def pick(id: int):
     post = Post.query.get_or_404(id)
     post.picked = True
+    post.author.experience += 20
     db.session.commit()
+    if post.author:
+        post.author.experience += 20
     flash(_("Picked post %(id)d", id=id))
     return redirect_back()
 
@@ -257,6 +260,8 @@ def unpick(id: int):
     post = Post.query.get_or_404(id)
     post.picked = False
     db.session.commit()
+    if post.author:
+        post.author.experience -= 20
     flash(_("Unpicked post %(id)d", id=id))
     return redirect_back()
 
