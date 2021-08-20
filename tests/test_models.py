@@ -132,3 +132,24 @@ class ModelTestCase(Testing):
         u.last_seen = datetime(2021, 8, 14)
         u.ping(force_time)
         assert u.coins == 4
+
+    def test_level(self):
+        experience_level_table = {
+            0: (1, "eee"),
+            100: (2, "ff9"),
+            200: (3, "afa"),
+            350: (4, "5d5"),
+            550: (5, "0dd"),
+            800: (6, "00f"),
+            1100: (7, "da3"),
+            1500: (8, "f00"),
+            2500: (9, "808"),
+        }
+        u = User()
+        for k, v in experience_level_table.items():
+            u.experience = k
+            assert u.level() == v[0]
+            assert (
+                u.level_badge_link()
+                == "https://img.shields.io/badge/Lv" + str(v[0]) + "-" + v[1]
+            )

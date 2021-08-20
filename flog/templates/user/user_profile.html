@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-{% from 'macros.html' import role_label_of, follow_area with context %}
+{% from 'macros.html' import render_user_role, follow_area, static_file, level_badge with context %}
 {% set locale = 'en_US' if not current_user.locale else current_user.locale %}
 {% block title %}
     Flog - {{ user.username }}
@@ -11,7 +11,22 @@
         <img class="img-fluid" src="{{ user.avatar_url() }}" width="200px" height="200px">
     </div>
     <div class="col-lg-10">
-        <h1>{{ user.username }}</h1>{{ role_label_of(user) }}
+        <h1>
+            {{ render_user_role(user) }}
+            {{ level_badge(user) }}
+        </h1>
+        {% if current_user.can(Permission.MODERATE) or user == current_user %}
+            <div class="d-flex">
+                <div class="mr-2">{{ static_file("svg", "svg/pi-empty.svg", width=20, height=20) }}</div>
+                <div>{{ current_user.coins | round(2) }}</div>
+            </div>
+            <div class="d-flex">
+                <div id="current-level-full">
+                    <div id="current-level-progress" data-experience="{{ user.experience }}" data-level="{{ user.level() }}">
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         {% if user.name or user.location %}
         <p>
             {% if user.name and current_user.can(Permission.MODERATE) %}{{ user.name }}{% endif %}

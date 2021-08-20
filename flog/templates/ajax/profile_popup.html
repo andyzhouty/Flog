@@ -2,7 +2,7 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% from 'macros.html' import follow_area, render_user_role with context %}
+{% from 'macros.html' import follow_area, render_user_role, level_badge with context %}
 <div class="popup-card">
     <div class="popup-profile">
         <img class="img-circle popup-avatar p-2" src="{{ user.avatar_url() }}" style="width: 50px !important; height: 50px !important;">
@@ -11,6 +11,11 @@ MIT License
             <small class="text-muted">{{ user.name }}</small>
         {% endif %}
     </div>
-    <a href="{{ url_for('user.profile', username=user.username) }}"
-       class="btn btn-light btn-sm">{{ _("Homepage") }}</a>
+    <div>
+        {{ level_badge(user) }}
+    </div>
+    <div>
+        <a href="{{ url_for('user.profile', username=user.username) }}"
+           class="btn btn-light btn-sm">{{ _("Homepage") }}</a>
+   </div>
 </div>

@@ -508,6 +508,50 @@ class User(db.Model, UserMixin):
         self.role = Role.query.filter_by(name="User").first()
         db.session.commit()
 
+    def level(self) -> int:
+        if self.experience < 100:
+            return 1
+        elif self.experience < 200:
+            return 2
+        elif self.experience < 350:
+            return 3
+        elif self.experience < 550:
+            return 4
+        elif self.experience < 800:
+            return 5
+        elif self.experience < 1100:
+            return 6
+        elif self.experience < 1500:
+            return 7
+        elif self.experience < 2500:
+            return 8
+        else:
+            return 9
+
+    def level_badge_link(self) -> str:
+        prefix = "https://img.shields.io/badge/Lv" + str(self.level()) + "-"
+        lv = self.level()
+        color = ""
+        if lv == 1:
+            color = "eee"
+        elif lv == 2:
+            color = "ff9"
+        elif lv == 3:
+            color = "afa"
+        elif lv == 4:
+            color = "5d5"
+        elif lv == 5:
+            color = "0dd"
+        elif lv == 6:
+            color = "00f"
+        elif lv == 7:
+            color = "da3"
+        elif lv == 8:
+            color = "f00"
+        else:
+            color = "808"
+        return prefix + color
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):

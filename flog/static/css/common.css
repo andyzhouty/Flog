@@ -38,6 +38,22 @@
     padding: 5px;
 }
 
+#current-level-full,
+#current-level-progress {
+    height: 15px;
+}
+
+#current-level-full {
+    margin-top: 3px;
+    margin-right: 10px;
+    width: 350px;
+    background-color: #bbb;
+}
+
+#current-level-progress {
+    background-color: #09b3eb;
+}
+
 .image-normal {
     max-height: 200px;
     max-width: 500px;
@@ -142,7 +158,8 @@ a,
     border: 2px solid #09b3eb;
 }
 
-.coin-one-img, .coin-two-img {
+.coin-one-img,
+.coin-two-img {
     margin: auto;
 }
 
@@ -159,6 +176,8 @@ a,
 .pi-icon {
     margin-top: -0.25rem;
 }
+
+
 
 a:not([class]) {
     color: var(--dark);

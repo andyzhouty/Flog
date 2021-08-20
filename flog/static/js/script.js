@@ -3,14 +3,24 @@
 * Copyright (c) 2020 All rights reserved
 * MIT License
 */
-let hover_timer = null;
+let hoverTimer = null;
 let flash = null;
+const levelExperiences = {
+    1: 100,
+    2: 200,
+    3: 350,
+    4: 550,
+    5: 800,
+    6: 1100,
+    7: 1500,
+    8: 2000,
+}
 
 function show_profile_popover(e) {
     let $el = $(e.target);
 
-    hover_timer = setTimeout(function () {
-        hover_timer = null;
+    hoverTimer = setTimeout(function () {
+        hoverTimer = null;
         $.ajax({
             type: 'GET',
             url: $el.data('href'),
@@ -38,9 +48,9 @@ function show_profile_popover(e) {
 function hide_profile_popover(e) {
     let $el = $(e.target);
 
-    if (hover_timer) {
-        clearTimeout(hover_timer);
-        hover_timer = null;
+    if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
     } else {
         setTimeout(function () {
             if (!$('.popover:hover').length) {
@@ -87,6 +97,19 @@ $(function () {
     $('.coin-option .selected').click(function () {
         $(this).removeClass('selected');
     });
+    $('#current-level-progress').each(function () {
+        experience = $(this).data('experience');
+        level = $(this).data('level');
+        if ($(this).data('level') < 9) {
+            $(this).css(
+                'width',
+                experience / levelExperiences[level] * 100 + '%'
+            );
+        } else {
+            $(this).css('width', '100%');
+        }
+        $(this).parent().parent().append('<div>' + experience + ' / ' + levelExperiences[level] + '</div>');
+    });
     $('.coin-submit').click(function () {
         form = $(this).parent().parent();
         let postId = parseInt(form.data('post-id'));
@@ -107,7 +130,7 @@ $(function () {
             url: '/post/coin/' + postId + '/',
             data: { 'coins': coins },
             dataType: 'json',
-            success: function (data, status) {
+            complete: function (xhr, status) {
                 window.location.reload();
             },
             error: function (xhr, status, error) {

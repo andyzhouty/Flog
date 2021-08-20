@@ -38,23 +38,15 @@ MIT License
     {%- endif %}
 {% endmacro %}
 
-{% macro role_label_of(user) %}
-    <span class="text-white p-2" style="font-size: 1.5em">
-    {% if user.is_administrator() -%}
-        <span class="badge badge-danger">{{ _("Admin") }}</span>
-    {% elif user.can(Permission.MODERATE) -%}
-        <span class="badge badge-warning">{{ _("Moderator") }}</span>
-    {% elif user.can(Permission.WRITE) -%}
-        <span class="badge badge-primary">{{ _("User") }}</span>
-    {% else %}
-        <span class="badge badge-dark">{{ _("Blocked") }}</span>
-    {%- endif %}
+{% macro render_user_role(user) %}
+    <span class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% elif user.locked %} text-muted {% endif %}">
+        {{ user.username }}
     </span>
 {% endmacro %}
 
-{% macro render_user_role(user) %}
-    <span class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% endif %}">
-        {{ user.username }}
+{% macro level_badge(user) %}
+    <span class="level-badge">
+        <img src="{{ user.level_badge_link() }}" alt="level-badge">
     </span>
 {% endmacro %}
 
