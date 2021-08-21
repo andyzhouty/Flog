@@ -97,15 +97,14 @@ MIT License
                 {%- endif %}
             {%- endif %}
             {% if post.author == current_user %}
-                <a class="disabled" href="javascript:void(0)">
+                <a class="link-action" href="javascript:void(0)">
                     {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
                     {{ post.coins }}
-                    &nbsp;&nbsp;&nbsp;
                 </a>
             {% endif %}
             {% if post.author != current_user %}
                 {% if not post in current_user.coined_posts -%}
-                    <a class="link-action link-coin" data-toggle="modal" data-target="#coin{{ post.id }}">
+                    <a class="link-action link-coin" href="javascript:void(0)" data-toggle="modal" data-target="#coin{{ post.id }}">
                         {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
                         {{ post.coins }}
                     </a>
@@ -114,7 +113,7 @@ MIT License
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title">{{ _("How many coins?") }}</h4>
-                                    <a class="close text-right" data-dismiss="modal">&times;</a>
+                                    <a class="close text-right" href="javascript:void(0)" data-dismiss="modal">&times;</a>
                                 </div>
                                 <div id="coinForm" data-post-id="{{ post.id }}" data-error-message="{{ _('Please select how many coins you want to give out.') }}">
                                     <div class="modal-body d-flex">
