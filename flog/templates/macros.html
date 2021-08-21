@@ -95,12 +95,14 @@ MIT License
                         {{ post.collectors | length }}
                     </a>
                 {%- endif %}
-                {% if post.author == current_user %}
-                    <a class="disabled" href="javascript:void(0)">
-                        {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
-                        {{ post.coins }}
-                    </a>
-                {% endif %}
+            {%- endif %}
+            {% if post.author == current_user %}
+                <a class="disabled" href="javascript:void(0)">
+                    {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
+                    {{ post.coins }}
+                </a>
+            {% endif %}
+            {% if post.author != current_user %}
                 {% if not post in current_user.coined_posts -%}
                     <a class="link-action link-coin" data-toggle="modal" data-target="#coin{{ post.id }}">
                         {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
