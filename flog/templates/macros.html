@@ -153,6 +153,12 @@ MIT License
                     {{ _("Edit") }}
                 </a>
             {%- endif %}
+            {% if post.author == current_user %}
+                <a class="disabled" href="javascript:void(0)">
+                    {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
+                    {{ post.coins }}
+                </a>
+            {% endif %}
             {% if post.author -%}
                 {% set post_author_can_moderate = post.author.can(Permission.MODERATE) %}
             {% else -%}
