@@ -266,7 +266,7 @@ MIT License
 
 {% macro post_card(post) %}
     <li class="list-group-item">
-        <h3 style="color: #5050bb" class="flex-grow-1">
+        <h3 class="flex-grow-1 post-title-small">
             <a href="{{ post.url() }}" title="{{ post.title }} {% if post.private %}({{ _("Private") }}){% endif %}">
                 {% if post.private %}<i class="bi-eye-slash-fill"></i>{% endif %}
                 {{ post.title }}

@@ -180,7 +180,6 @@ a,
 
 
 a:not([class]) {
-    color: var(--dark);
     text-decoration: underline;
 }
 

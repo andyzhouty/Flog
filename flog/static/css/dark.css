@@ -2,7 +2,7 @@
     background: #555;
 }
 
-a {
+a:not([class]) {
     color: var(--light);
 }
 

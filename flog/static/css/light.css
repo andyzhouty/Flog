@@ -2,6 +2,10 @@
     background: #dee;
 }
 
+a:not([class]) {
+    color: var(--dark);
+}
+
 .private-post-title {
     color: var(--light);
     background-color: var(--dark);
