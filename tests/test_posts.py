@@ -314,8 +314,10 @@ class PostTestCase(Testing):
         self.login()
         self.client.post(f"/post/coin/{p.id}/", data={"coins": 2})
         u_test = User.query.filter_by(username="test").first()
-        assert u_test.experience == 15
-        assert self.admin.experience == 10
+        response = self.client.get(f"/user/{u_test.id}/")
+        assert "1" in response.get_data(as_text=True)
+        assert u_test.experience == 25
+        assert self.admin.experience == 20
 
     def test_no_enough_coins(self):
         """test if the app will return a 400 response when there isn't enough coins."""
