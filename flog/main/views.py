@@ -247,7 +247,6 @@ def pick(id: int):
     post = Post.query.get_or_404(id)
     if not post.picked:
         post.picked = True
-        db.session.commit()
         try:
             if post.author and not post.has_been_picked_before:
                 post.author.experience += 20
@@ -256,6 +255,7 @@ def pick(id: int):
             post.has_been_picked_before = True
             if post.author:
                 post.author.experience += 20
+        db.session.commit()
         flash(_("Picked post %(id)d", id=id))
     return redirect_back()
 
