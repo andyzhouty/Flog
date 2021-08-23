@@ -379,7 +379,7 @@ MIT License
         </div>
         {% if message.author == current_user %}
             <div class="d-flex justify-content-end mb-3">
-                <span class="bg-success message-body self">
+                <span class="bg-primary message-body self">
                     {{ message.body }}
                 </span>
                 <a href="{{ url_for('user.profile', username=user.username) }}">
