@@ -285,14 +285,14 @@ class PostTestCase(Testing):
     def test_picks(self):
         self.login()
         post = Post.query.filter(and_(~Post.picked, ~Post.private)).first()
-        response = self.client.get(f"/post/pick/{post.id}/", follow_redirects=True)
+        response = self.client.post(f"/post/pick/{post.id}/", follow_redirects=True)
         assert response.status_code == 200
         assert post.picked
 
         response = self.client.get("/post/picks/")
         assert post.title in response.get_data(as_text=True)
 
-        response = self.client.get(f"/post/unpick/{post.id}/", follow_redirects=True)
+        response = self.client.post(f"/post/unpick/{post.id}/", follow_redirects=True)
         assert response.status_code == 200
 
         response = self.client.get("/post/picks/")
