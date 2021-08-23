@@ -248,8 +248,9 @@ def pick(id: int):
     if not post.picked:
         post.picked = True
         db.session.commit()
-        if post.author:
+        if post.author and not post.has_been_picked_before:
             post.author.experience += 20
+            post.has_been_picked_before = True
         flash(_("Picked post %(id)d", id=id))
     return redirect_back()
 
@@ -261,8 +262,6 @@ def unpick(id: int):
     if post.picked:
         post.picked = False
         db.session.commit()
-        if post.author:
-            post.author.experience -= 20
         flash(_("Unpicked post %(id)d", id=id))
     return redirect_back()
 
