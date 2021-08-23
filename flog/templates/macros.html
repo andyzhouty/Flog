@@ -143,15 +143,21 @@ MIT License
             {%- endif %}
             {% if current_user.can(Permission.MODERATE) %}
                 {% if not post.picked or post.private %}
-                    <a class="link-action" href="{{ url_for('main.pick', id=post.id) }}">
-                        <i class="bi-patch-plus"></i>
-                        {{ _("Pick") }}
-                    </a>
+                    <form class="form-inline" method="POST" action="{{ url_for('main.pick', id=post.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-light">
+                            <i class="bi-patch-plus"></i>
+                            {{ _("Pick") }}
+                        </button>
+                    </form>
                 {% else %}
-                    <a class="link-action-activated" href="{{ url_for('main.unpick', id=post.id) }}">
+                <form class="form-inline" method="POST" action="{{ url_for('main.unpick', id=post.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-primary">
                         <i class="bi-patch-minus"></i>
                         {{ _("Unpick") }}
-                    </a>
+                    </button>
+                </form>
                 {% endif %}
             {% endif %}
             {% if current_user.is_administrator() or post.author == current_user

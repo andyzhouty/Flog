@@ -241,28 +241,29 @@ def uncollect_post(id: int):
     return redirect_back()
 
 
-@main_bp.route("/post/pick/<int:id>/")
+@main_bp.route("/post/pick/<int:id>/", methods=["POST"])
 @permission_required(Permission.MODERATE)
 def pick(id: int):
     post = Post.query.get_or_404(id)
-    post.picked = True
-    post.author.experience += 20
-    db.session.commit()
-    if post.author:
-        post.author.experience += 20
-    flash(_("Picked post %(id)d", id=id))
+    if not post.picked:
+        post.picked = True
+        db.session.commit()
+        if post.author:
+            post.author.experience += 20
+        flash(_("Picked post %(id)d", id=id))
     return redirect_back()
 
 
-@main_bp.route("/post/unpick/<int:id>/")
+@main_bp.route("/post/unpick/<int:id>/", methods=["POST"])
 @permission_required(Permission.MODERATE)
 def unpick(id: int):
     post = Post.query.get_or_404(id)
-    post.picked = False
-    db.session.commit()
-    if post.author:
-        post.author.experience -= 20
-    flash(_("Unpicked post %(id)d", id=id))
+    if post.picked:
+        post.picked = False
+        db.session.commit()
+        if post.author:
+            post.author.experience -= 20
+        flash(_("Unpicked post %(id)d", id=id))
     return redirect_back()
 
 
