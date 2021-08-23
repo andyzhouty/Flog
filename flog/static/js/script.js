@@ -84,6 +84,7 @@ function largeImage(e) {
 $(function () {
     $('img:not([class])').addClass('image-normal');
     $('.btn-action').addClass('btn btn-light btn-sm');
+    $('.btn-action-activated').addClass('btn btn-primary btn-sm');
     $('.link-coin').hover(function () {
         $(this).children('img').attr('src', '/static/svg/pi-activated.svg');
     });
@@ -140,7 +141,6 @@ $(function () {
             }
         });
     });
-    $('.btn-action-activated').addClass('btn btn-primary btn-sm mr-1');
     $('img[alt="identicon"]').removeClass('image-normal');
     $('.image-normal').click(largeImage.bind(this));
     $('#image-large').click(function () {

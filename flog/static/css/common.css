@@ -145,7 +145,8 @@ a,
 
 .link-action,
 .link-action-activated,
-.btn-action {
+.btn-action,
+.btn-action-activated {
     margin-right: 1rem;
 }
 
