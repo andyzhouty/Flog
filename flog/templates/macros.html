@@ -145,7 +145,7 @@ MIT License
                 {% if not post.picked or post.private %}
                     <form class="form-inline" method="POST" action="{{ url_for('main.pick', id=post.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-sm btn-light">
+                        <button class="btn btn-sm btn-light btn-action">
                             <i class="bi-patch-plus"></i>
                             {{ _("Pick") }}
                         </button>
@@ -153,7 +153,7 @@ MIT License
                 {% else %}
                 <form class="form-inline" method="POST" action="{{ url_for('main.unpick', id=post.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-primary">
+                    <button class="btn btn-sm btn-primary btn-action">
                         <i class="bi-patch-minus"></i>
                         {{ _("Unpick") }}
                     </button>
