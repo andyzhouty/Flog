@@ -75,6 +75,7 @@ class Post(db.Model):
         "Column", secondary=column_post_table, back_populates="posts"
     )
     picked = db.Column(db.Boolean, default=False)
+    has_been_picked = db.Column(db.Boolean, default=False)
     coins = db.Column(db.Integer, default=0)
     coiners = db.relationship(
         "User", secondary=coin_table, back_populates="coined_posts"
