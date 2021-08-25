@@ -238,7 +238,7 @@ class PostCoinAPI(MethodView):
     @input(CoinInSchema)
     @output(PostOutSchema)
     def post(self, post_id, data):
-        post = Post.query.get_or_404(post_id)        
+        post = Post.query.get_or_404(post_id)
         if post in g.current_user.coined_posts:
             abort(400, "Already coined the post")
         amount = data["amount"]
@@ -247,7 +247,7 @@ class PostCoinAPI(MethodView):
         g.current_user.coins -= amount
         g.current_user.experience += amount * 10
         if post.author:
-            post.author.coins += amount  / 4
+            post.author.coins += amount / 4
             post.author.experience += amount * 10
         db.session.commit()
         return post
