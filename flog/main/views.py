@@ -61,11 +61,11 @@ def create_post():
             private=form.private.data,
         )
         post.columns += [Column.query.get(column_id) for column_id in form.columns.data]
+        if not post.private:
+            current_user.experience += 5
         db.session.add(post)
         # Add the post to the database.
         db.session.commit()
-        if not post.private:
-            current_user.experience += 5
         current_app.logger.info(f"{str(post)} is added.")
         flash(_("Your post has been added"), "success")
         return redirect(url_for("main.main"))
