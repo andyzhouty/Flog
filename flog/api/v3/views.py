@@ -4,13 +4,15 @@ Copyright(c) 2021 Andy Zhou
 """
 
 from apiflask import input, output, abort
+from apiflask.decorators import doc
 from flask import url_for, jsonify, g, request
 from flask.views import MethodView
 
 # fmt: off
 from .schemas import (
     IndexSchema,
-    UserInSchema, UserOutSchema,
+    UserInSchema, PublicUserOutSchema, PrivateUserOutSchema,
+    CoinInSchema,
     PostInSchema, PostOutSchema,
     CommentInSchema, CommentOutSchema,
     ColumnInSchema, ColumnOutSchema,
@@ -53,7 +55,7 @@ class IndexAPI(MethodView):
 @api_v3.route("/self", endpoint="self")
 class SelfAPI(MethodView):
     @auth.login_required
-    @output(UserOutSchema)
+    @output(PrivateUserOutSchema)
     def get(self):
         return g.current_user
 
@@ -63,19 +65,20 @@ class SelfPostsAPI(MethodView):
     @auth.login_required
     @output(PostOutSchema(many=True))
     def get(self):
+        """Return the full information of a certain user themself"""
         return g.current_user.posts
 
 
 @api_v3.route("/user/<int:user_id>", endpoint="user")
 class UserAPI(MethodView):
-    @output(UserOutSchema)
+    @output(PublicUserOutSchema)
     def get(self, user_id: int):
-        """Return the schema of a certain user"""
+        """Return the public information of a certain user"""
         return User.query.get_or_404(user_id)
 
     @can_edit("profile")
     @input(UserInSchema(partial=True))
-    @output(UserOutSchema)
+    @output(PublicUserOutSchema)
     def put(self, user_id: int, data):
         """Edit a user's profile if permitted"""
         user = User.query.get_or_404(user_id)
@@ -86,7 +89,7 @@ class UserAPI(MethodView):
         return user
 
     @can_edit("profile")
-    @output(UserOutSchema)
+    @output(PublicUserOutSchema)
     def patch(self, user_id: int):
         """Lock or unlock a user"""
         user = User.query.get_or_404(user_id)
@@ -113,7 +116,7 @@ class UserPostAPI(MethodView):
 @api_v3.route("/register", endpoint="register")
 class RegistrationAPI(MethodView):
     @input(UserInSchema, location="form")
-    @output(UserOutSchema)
+    @output(PublicUserOutSchema)
     def post(self, data):
         """Register a new user"""
         user = User()
@@ -227,6 +230,27 @@ class AllPostPI(MethodView):
         if current_user is not None:
             posts += Post.query.with_parent(current_user).filter(Post.private).all()
         return posts
+
+
+@api_v3.route("/post/coin/<int:post_id>", endpoint="post_coin")
+class PostCoinAPI(MethodView):
+    @auth.login_required
+    @input(CoinInSchema)
+    @output(PostOutSchema)
+    def post(self, post_id, data):
+        post = Post.query.get_or_404(post_id)        
+        if post in g.current_user.coined_posts:
+            abort(400, "Already coined the post")
+        amount = data["amount"]
+        post.coins += amount
+        g.current_user.coined_posts.append(post)
+        g.current_user.coins -= amount
+        g.current_user.experience += amount * 10
+        if post.author:
+            post.author.coins += amount  / 4
+            post.author.experience += amount * 10
+        db.session.commit()
+        return post
 
 
 @api_v3.route("/comment/<int:comment_id>", endpoint="comment")

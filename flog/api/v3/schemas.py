@@ -7,6 +7,7 @@ from apiflask.fields import (
     Integer,
     Boolean,
     String,
+    Float,
     URL,
     DateTime,
     Email,
@@ -22,7 +23,16 @@ class IndexSchema(Schema):
     api_base_url = URL()
 
 
-class UserOutSchema(Schema):
+class UserInSchema(Schema):
+    username = String(required=True)
+    email = Email(required=True)
+    password = String(required=True)
+    name = String()
+    location = String()
+    about_me = String()
+
+
+class PublicUserOutSchema(Schema):
     id = Integer()
     username = String()
     name = String()
@@ -35,13 +45,23 @@ class UserOutSchema(Schema):
     self = ma.URLFor(".user", values=dict(user_id="<id>"))
 
 
-class UserInSchema(Schema):
-    username = String(required=True)
-    email = Email(required=True)
-    password = String(required=True)
+class PrivateUserOutSchema(Schema):
+    id = Integer()
+    username = String()
     name = String()
+    coins = Float()
+    experience = Float()
     location = String()
     about_me = String()
+    confirmed = Boolean()
+    blocked = Boolean()
+    member_since = DateTime()
+    last_seen = DateTime()
+    self = ma.URLFor(".user", values=dict(user_id="<id>"))
+
+
+class CoinInSchema(Schema):
+    amount = Integer()
 
 
 class TokenInSchema(Schema):
@@ -73,7 +93,7 @@ class CommentInSchema(Schema):
 class CommentOutSchema(Schema):
     id = Integer()
     body = String()
-    author = Nested(UserOutSchema)
+    author = Nested(PublicUserOutSchema)
     post = Nested(
         lambda: PostOutSchema(
             only=(
@@ -95,7 +115,7 @@ class ColumnInSchema(Schema):
 class ColumnOutSchema(Schema):
     id = Integer()
     name = String()
-    author = Nested(UserOutSchema)
+    author = Nested(PublicUserOutSchema)
     posts = List(Nested(lambda: PostOutSchema(only=("id", "title", "self"))))
     self = ma.URLFor(".column", values=dict(column_id="<id>"))
 
@@ -111,8 +131,9 @@ class PostOutSchema(Schema):
     id = Integer()
     title = String()
     content = String()
+    coins = Integer()
     private = Boolean()
-    author = Nested(UserOutSchema)
+    author = Nested(PublicUserOutSchema)
     comments = List(Nested(CommentOutSchema, exclude=("post",)))
     columns = List(Nested(ColumnOutSchema, exclude=("posts", "author")))
     self = ma.URLFor(".post", values=dict(post_id="<id>"))
@@ -131,7 +152,7 @@ class ImageOutSchema(Schema):
 class NotificationOutSchema(Schema):
     id = Integer()
     message = String()
-    receiver = Nested(UserOutSchema)
+    receiver = Nested(PublicUserOutSchema)
     timestamp = DateTime()
 
 
@@ -143,6 +164,6 @@ class GroupInSchema(Schema):
 
 class GroupOutSchema(Schema):
     name = String()
-    members = List(Nested(UserOutSchema))
-    manager = Nested(UserOutSchema)
+    members = List(Nested(PublicUserOutSchema))
+    manager = Nested(PublicUserOutSchema)
     private = Boolean()

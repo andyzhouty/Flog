@@ -292,7 +292,7 @@ def coin_post(post_id):
     coins = request.form.get("coins", type=int)
     if coins is None or coins < 1 or coins > 2:  # pragma: no cover
         abort(400)
-    if current_user.coins <= coins:
+    if current_user.coins < coins:
         abort(400)
     post.coins += coins
     if post.author:

@@ -5,6 +5,10 @@ from .conftest import Testing
 
 
 class APIV3TestCase(Testing):
+    def setUp(self):
+        super().setUp()
+        self.register()
+
     def test_api_index(self):
         response = self.client.get("/api/v3")
         data = response.get_json()
@@ -38,14 +42,14 @@ class APIV3TestCase(Testing):
 
     def test_user(self):
         test_user_data = {
-            "username": "test",
+            "username": "test2",
             "password": "password",
             "email": "test@example.com",
         }
         response = self.client.post("/api/v3/register", data=test_user_data)
         assert response.status_code == 200
 
-        user = User.query.filter_by(username="test").first()
+        user = User.query.filter_by(username="test2").first()
         response = self.client.get(f"/api/v3/user/{user.id}")
         data = response.get_json()
         assert data["id"] == user.id
@@ -57,7 +61,9 @@ class APIV3TestCase(Testing):
             "password": "new_password",
         }
         response = self.client.put(
-            f"/api/v3/user/{user.id}", json=user_data, headers=self.get_api_v3_headers()
+            f"/api/v3/user/{user.id}",
+            json=user_data,
+            headers=self.get_api_v3_headers(username="test2"),
         )
         assert response.status_code == 200
         assert user.name == user_data["name"]
@@ -75,7 +81,7 @@ class APIV3TestCase(Testing):
         assert user.locked
 
     def test_post(self):
-        self.register()
+
         self.register("test2", "test2", "123456", "test2@example.com")
         user = User.query.filter_by(username="test").first()
         post = Post(
@@ -167,7 +173,7 @@ class APIV3TestCase(Testing):
         assert query.count() == 0
 
     def test_comments(self):
-        self.register()
+
         comment = Comment.query.get(1)
         comment.author = User.query.filter_by(username="test").first()
         db.session.commit()
@@ -233,7 +239,7 @@ class APIV3TestCase(Testing):
         assert response.status_code == 400
 
     def test_column(self):
-        self.register()
+
         data = {"name": "test-column"}
         response = self.client.post(
             "/api/v3/column/create", headers=self.get_api_v3_headers(), json=data
@@ -291,7 +297,7 @@ class APIV3TestCase(Testing):
         )  # ensure the column is deleted.
 
     def test_self(self):
-        self.register()
+
         response = self.client.get("/api/v3/self", headers=self.get_api_v3_headers())
         assert response.get_json()["username"] == "test"
 
@@ -306,7 +312,7 @@ class APIV3TestCase(Testing):
         assert response.get_json()[0]["title"] == "1234"
 
     def test_notifications(self):
-        self.register()
+
         user = User.query.filter_by(username="test").first()
         notification_array = []
         for _ in range(5):
@@ -343,7 +349,7 @@ class APIV3TestCase(Testing):
         assert response.status_code == 204
 
     def test_group(self):
-        self.register()
+
         u2 = User(username="u2", email="u2@example.com")
         u2.set_password("123456")
         db.session.add(u2)
@@ -390,3 +396,23 @@ class APIV3TestCase(Testing):
             f"/api/v3/group/{g.id}", headers=self.get_api_v3_headers()
         )
         assert response.status_code == 204
+
+    def test_coins(self):
+        p = Post(title="title", content="content")
+        db.session.add(p)
+        db.session.commit()
+        response = self.client.post(
+            f"/api/v3/post/coin/{p.id}",
+            json=dict(amount=1),
+            headers=self.get_api_v3_headers(),
+        )
+        assert response.status_code == 200
+        response = self.client.post(
+            f"/api/v3/post/coin/{p.id}",
+            json=dict(amount=1),
+            headers=self.get_api_v3_headers(),
+        )
+        assert response.status_code == 400
+        u = User.query.filter_by(username="test").first()
+        assert u.coins == 2
+        assert u.experience == 10
