@@ -24,6 +24,8 @@ from .extensions import (
     share,
 )
 from flask_babel import lazy_gettext as _l
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from .models import Post, Feedback, Role, Permission, User, Notification, Message, Group
 from .settings import config
 from .errors import register_error_handlers
@@ -49,6 +51,11 @@ def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_CONFIG", "development")
     app = APIFlask("flog")
+    limiter = Limiter(
+        app,
+        key_func = get_remote_address
+        default_limits = ["8640 per day", "720 per hour"] # 10s in average per day, while the most active hour is 5s.
+    )
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
