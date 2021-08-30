@@ -6,6 +6,7 @@ from flask import url_for, flash, redirect, request, render_template, abort
 from flask.globals import current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_babel import _
+from ... import limiter
 from . import auth_bp
 from .forms import DeleteAccountForm, LoginForm, RegisterationForm
 from ..models import User, db
@@ -17,7 +18,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.ping()
 
-
+@limiter.limit("60 per hour", override_default=False)
 @auth_bp.route("/register/", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
@@ -48,6 +49,7 @@ def register():
     return render_template("auth/register.html", form=form)
 
 
+@limiter.limit("60 per hour", override_default=False)
 @auth_bp.route("/login/", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
@@ -79,6 +81,7 @@ def logout():
     return redirect(url_for("main.main"))
 
 
+@limiter.limit("60 per hour", override_default=False)
 @auth_bp.route("/confirm/<token>/")
 @login_required
 def confirm(token):
@@ -92,6 +95,7 @@ def confirm(token):
     return redirect(url_for("main.main"))
 
 
+@limiter.limit("60 per hour", override_default=False)
 @auth_bp.route("/confirm/resend/")
 @login_required
 def resend_confirmation():
