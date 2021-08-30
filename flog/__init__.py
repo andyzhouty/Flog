@@ -46,16 +46,10 @@ from .others import others_bp
 from .testing import testing_bp
 from .user import user_bp
 
-
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_CONFIG", "development")
     app = APIFlask("flog")
-    limiter = Limiter(
-        app,
-        key_func = get_remote_address
-        default_limits = ["8640 per day", "720 per hour"] # 10s in average per day, while the most active hour is 5s.
-    )
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
@@ -65,6 +59,11 @@ def create_app(config_name=None) -> Flask:
     register_context(app)
     return app
 
+limiter = Limiter(
+    create_app(),
+    key_func = get_remote_address
+    default_limits = ["8640 per day", "720 per hour"] # 10s in average per day, while the most active hour is 5s.
+)
 
 def register_config(app: Flask, config_name: str):
     app.config.from_object(config[config_name])
