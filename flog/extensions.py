@@ -9,6 +9,8 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_compress import Compress
 from flask_login import LoginManager, current_user
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask_mail import Mail
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
@@ -23,6 +25,9 @@ ckeditor = CKEditor()
 compress = Compress()
 csrf = CSRFProtect()
 db = SQLAlchemy()
+limiter = Limiter(
+    default_limits=["17280 per day", "1440 per hour"], key_func=get_remote_address
+)
 login_manager = LoginManager()
 ma = Marshmallow()
 mail = Mail()

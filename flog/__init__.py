@@ -16,6 +16,7 @@ from .extensions import (
     compress,
     csrf,
     db,
+    limiter,
     login_manager,
     ma,
     mail,
@@ -71,8 +72,10 @@ def register_logger(app: Flask):
         "%(asctime)s - %(name)s - %(levelname)s " "%(message)s"
     )
     if app.debug or app.testing:
-        if not os.path.exists("logs"):
+        try:
             os.mkdir("logs")
+        except:  # noqa: E722
+            pass
         file_handler = RotatingFileHandler(
             filename="logs/flog.log", maxBytes=10 * 1024 * 1024, backupCount=10
         )
@@ -94,6 +97,7 @@ def register_extensions(app: Flask) -> None:
     csrf.exempt(api_v2)
     csrf.exempt(api_v3)
     db.init_app(app)
+    limiter.init_app(app)
     login_manager.login_view = "auth.login"
     login_manager.login_message = _l("Please log in to access this page")
     login_manager.init_app(app)

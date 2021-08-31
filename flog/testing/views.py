@@ -32,6 +32,11 @@ def trigger_payload_too_large():
     abort(413)
 
 
+@testing_bp.route("/429")
+def trigger_too_many_requests():
+    abort(429)
+
+
 @testing_bp.route("/500")
 def trigger_server_error():
     abort(500)
