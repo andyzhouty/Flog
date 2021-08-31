@@ -17,6 +17,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.ping()
 
+
 @auth_bp.route("/register/", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:

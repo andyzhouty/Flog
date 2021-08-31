@@ -2,7 +2,7 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from flask import render_template, request
+from flask import render_template, request, abort
 from flask.json import jsonify
 from flask_wtf.csrf import CSRFError
 from flask_babel import _
@@ -69,11 +69,7 @@ def register_error_handlers(app):  # noqa: C901
     
     @app.errorhandler(429) # handle when IP is limited
     def too_many_requests(e):
-        return err_handler(
-            429,
-            "too many requests",
-            _("429 Too Many Requests")
-        )
+        abort(403)
 
     @app.errorhandler(500)
     def internal_server_error(e):

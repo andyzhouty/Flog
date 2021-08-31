@@ -26,8 +26,8 @@ compress = Compress()
 csrf = CSRFProtect()
 db = SQLAlchemy()
 limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=['17280 per day', '1440 per hour']
+    default_limits=['17280 per day', '1440 per hour'],
+    key_func=get_remote_address
 )
 login_manager = LoginManager()
 ma = Marshmallow()

@@ -45,6 +45,7 @@ from .others import others_bp
 from .testing import testing_bp
 from .user import user_bp
 
+
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_CONFIG", "development")
@@ -57,6 +58,7 @@ def create_app(config_name=None) -> Flask:
     register_error_handlers(app)
     register_context(app)
     return app
+
 
 def register_config(app: Flask, config_name: str):
     app.config.from_object(config[config_name])

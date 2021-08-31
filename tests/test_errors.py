@@ -50,14 +50,6 @@ class ErrorTestCase(Testing):
         data = response.get_json()
         assert data["error"] == "image file too large"
 
-    def test_429(self):
-        response = self.client.get("/429")
-        assert response.status_code == 429
-
-        response = self.client.get("/429", headers=JSON_HEADERS)
-        data = response.get_json()
-        assert data["error"] == "too many requests"
-
     def test_500(self):
         response = self.client.get("/500")
         assert response.status_code == 500
@@ -70,6 +62,6 @@ class ErrorTestCase(Testing):
 class ErrorProdTestCase(Production):
     def test_production_errors(self):
         """set the testing error pages to 404 when production"""
-        for error in ["/400", "/401", "/403", "/404", "/405", "/413", "/429" , "/500"]:
+        for error in ["/400", "/401", "/403", "/404", "/405", "/413", "/500"]:
             response = self.client.get(error)
             assert response.status_code == 404
