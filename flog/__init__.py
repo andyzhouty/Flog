@@ -17,6 +17,7 @@ from .extensions import (
     csrf,
     db,
     login_manager,
+    limiter,
     ma,
     mail,
     migrate,
@@ -24,8 +25,6 @@ from .extensions import (
     share,
 )
 from flask_babel import lazy_gettext as _l
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from .models import Post, Feedback, Role, Permission, User, Notification, Message, Group
 from .settings import config
 from .errors import register_error_handlers
@@ -58,12 +57,6 @@ def create_app(config_name=None) -> Flask:
     register_error_handlers(app)
     register_context(app)
     return app
-
-limiter = Limiter(
-    create_app(),
-    key_func = get_remote_address
-    default_limits = ["8640 per day", "720 per hour"] # 10s in average per day, while the most active hour is 5s.
-)
 
 def register_config(app: Flask, config_name: str):
     app.config.from_object(config[config_name])
@@ -100,6 +93,7 @@ def register_extensions(app: Flask) -> None:
     csrf.exempt(api_v2)
     csrf.exempt(api_v3)
     db.init_app(app)
+    limiter.init_app(app)
     login_manager.login_view = "auth.login"
     login_manager.login_message = _l("Please log in to access this page")
     login_manager.init_app(app)
