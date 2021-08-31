@@ -72,8 +72,10 @@ def register_logger(app: Flask):
         "%(asctime)s - %(name)s - %(levelname)s " "%(message)s"
     )
     if app.debug or app.testing:
-        if not os.path.exists("logs"):
+        try:
             os.mkdir("logs")
+        except:  # noqa: E722
+            pass
         file_handler = RotatingFileHandler(
             filename="logs/flog.log", maxBytes=10 * 1024 * 1024, backupCount=10
         )

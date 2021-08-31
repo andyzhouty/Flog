@@ -66,10 +66,14 @@ def register_error_handlers(app):  # noqa: C901
             "image file too large",
             _("413 The file you uploaded was larger than the 1M limit"),
         )
-    
-    @app.errorhandler(429) # handle when IP is limited
+
+    @app.errorhandler(429)  # handle when IP is limited
     def too_many_requests(e):
-        abort(403)
+        return err_handler(
+            429,
+            "too many requests",
+            _("429 Too Many Requests"),
+        )
 
     @app.errorhandler(500)
     def internal_server_error(e):
