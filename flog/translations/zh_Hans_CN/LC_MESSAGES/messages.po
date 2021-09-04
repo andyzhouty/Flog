@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-09-04 10:11+0800\n"
+"POT-Creation-Date: 2021-09-04 10:41+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -99,7 +99,7 @@ msgstr ""
 "href=\"%(info_url)s\">群组%(name)s</a>中发布了一条消息"
 
 #: flog/notifications.py:128
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "<a href=\"%(profile_url)s\">%(username)s</a> gives %(num)s coin to your "
 "post\n"
@@ -1132,3 +1132,4 @@ msgstr "你的密码已更改"
 #: flog/user/views.py:126
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
+

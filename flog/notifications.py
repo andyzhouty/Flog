@@ -127,7 +127,7 @@ def push_coin_notification(sender, receiver, post, amount):
         username=sender.username,
         post_url=post.url(),
         post_title=post.title,
-        __num=amount,
+        num=amount,
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
