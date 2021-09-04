@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 from functools import wraps
-from flask_babel import _, force_locale
+from flask_babel import _, force_locale, ngettext
 from flask import url_for
 from .models import db, Notification
 
@@ -118,14 +118,16 @@ def push_new_message_notification(sender, receiver, group):
 
 @with_receiver_locale
 def push_coin_notification(sender, receiver, post, amount):
-    message = _(
-        """<a href="%(profile_url)s">%(username)s</a> gives %(coins)s coin to your post
+    message = ngettext(
+        """<a href="%(profile_url)s">%(username)s</a> gives %(num)s coin to your post
+           <a href="%(post_url)s">%(post_title)s</a>.""",
+        """<a href="%(profile_url)s">%(username)s</a> gives %(num)s coins to your post
            <a href="%(post_url)s">%(post_title)s</a>.""",
         profile_url=sender.profile_url(),
         username=sender.username,
-        coins=amount,
         post_url=post.url(),
-        post_title=post.title
+        post_title=post.title,
+        __num=amount,
     )
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
