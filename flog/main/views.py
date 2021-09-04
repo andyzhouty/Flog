@@ -16,6 +16,7 @@ from flask_babel import _
 from flask_login import current_user, login_required
 from flog.decorators import permission_required
 from flog.extensions import csrf
+# User and Group are necessary for line 328
 from ..models import Permission, db, Post, Comment, User, Group, Column
 from ..utils import redirect_back, clean_html
 from ..notifications import (
@@ -111,6 +112,9 @@ def full_post(id: int):
             if replied_id:
                 replied_comment = Comment.query.get_or_404(replied_id)
                 comment.replied = replied_comment
+                push_comment_notification(
+                    comment=replied_comment, receiver=replied_comment.author
+                )
             db.session.add(comment)
             db.session.commit()
             if post.author is not None and post.author != current_user:

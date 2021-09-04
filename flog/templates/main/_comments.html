@@ -64,6 +64,7 @@
             </li>
         {% endfor %}
         </ul>
+        {{ render_pagination(pagination) }}
         {% if request.args.get('reply') %}
         <div class="alert alert-dark" id="reply-comment-form">
             <i class="bi-mail-reply"></i>{{ _("Reply to") }}

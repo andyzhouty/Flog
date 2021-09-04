@@ -5,6 +5,7 @@ MIT License
 {% extends 'base.html' %}
 {% from 'macros.html' import post_actions with context %}
 {% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block title %} Post - {{ post.title }} {% endblock %}
 {% block page_content %}
     <div class="row">
