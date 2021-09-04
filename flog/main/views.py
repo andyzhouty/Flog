@@ -18,7 +18,7 @@ from flog.decorators import permission_required
 from flog.extensions import csrf
 from ..models import Permission, db, Post, Comment, User, Group, Column
 from ..utils import redirect_back, clean_html
-from ..notifications import push_collect_notification, push_comment_notification
+from ..notifications import push_coin_notification, push_collect_notification, push_comment_notification
 from .forms import ColumnForm, PostForm, CommentForm
 from . import main_bp
 
@@ -295,12 +295,13 @@ def coin_post(post_id):
     if current_user.coins < coins:
         abort(400)
     post.coins += coins
-    if post.author:
-        post.author.coins += coins / 4
-        post.author.experience += 10 * coins
     current_user.coined_posts.append(post)
     current_user.coins -= coins
     current_user.experience += 10 * coins
+    if post.author:
+        post.author.coins += coins / 4
+        post.author.experience += 10 * coins
+        push_coin_notification(current_user, post.author, post, coins)
     db.session.commit()
     return redirect_back()
 

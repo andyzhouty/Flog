@@ -114,3 +114,19 @@ def push_new_message_notification(sender, receiver, group):
     notification = Notification(message=message, receiver=receiver)
     db.session.add(notification)
     db.session.commit()
+
+
+@with_receiver_locale
+def push_coin_notification(sender, receiver, post, amount):
+    message = _(
+        """<a href="%(profile_url)s">%(username)s</a> gives %(coins)s coin to your post
+           <a href="%(post_url)s">%(post_title)s</a>.""",
+        profile_url=sender.profile_url(),
+        username=sender.username,
+        coins=amount,
+        post_url=post.url(),
+        post_title=post.title
+    )
+    notification = Notification(message=message, receiver=receiver)
+    db.session.add(notification)
+    db.session.commit()
