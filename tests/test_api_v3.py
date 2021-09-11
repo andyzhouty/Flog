@@ -399,11 +399,13 @@ class APIV3TestCase(Testing):
 
     def test_coins(self):
         p = Post(title="title", content="content")
+        p2 = Post(title="title2", content="content2")
         db.session.add(p)
+        db.session.add(p2)
         db.session.commit()
         response = self.client.post(
             f"/api/v3/post/coin/{p.id}",
-            json=dict(amount=1),
+            json=dict(amount=2),
             headers=self.get_api_v3_headers(),
         )
         assert response.status_code == 200
@@ -414,5 +416,12 @@ class APIV3TestCase(Testing):
         )
         assert response.status_code == 400
         u = User.query.filter_by(username="test").first()
-        assert u.coins == 2
-        assert u.experience == 10
+        assert u.coins == 1
+        assert u.experience == 20
+
+        response = self.client.post(
+            f"/api/v3/post/coin/{p.id}",
+            json=dict(amount=2),
+            headers=self.get_api_v3_headers(),
+        )
+        assert response.status_code == 400

@@ -222,7 +222,7 @@ class PostAddAPI(MethodView):
 
 
 @api_v3.route("/post/all", endpoint="all_posts")
-class AllPostPI(MethodView):
+class AllPostAPI(MethodView):
     @output(PostOutSchema(many=True))
     def get(self):
         current_user = get_current_user()
@@ -243,6 +243,8 @@ class PostCoinAPI(MethodView):
             abort(400, "Already coined the post")
         amount = data["amount"]
         post.coins += amount
+        if g.current_user.coins < amount:
+            abort(400, "Not enough coins")
         g.current_user.coined_posts.append(post)
         g.current_user.coins -= amount
         g.current_user.experience += amount * 10

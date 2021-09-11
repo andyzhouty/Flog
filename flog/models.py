@@ -67,7 +67,7 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     collectors = db.relationship("Collect", back_populates="collected", cascade="all")
     comments = db.relationship("Comment", back_populates="post")
-    content = db.Column(db.Text)
+    content = db.Column(db.UnicodeText)
     private = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
@@ -113,7 +113,7 @@ class Column(db.Model):
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
+    body = db.Column(db.UnicodeText)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     flag = db.Column(db.Integer, default=0)
 
