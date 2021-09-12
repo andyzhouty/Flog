@@ -15,7 +15,7 @@
     {% endif %}
     {% if comments %}
         <ul class="list-group">
-        {% for comment in comments %}
+        {% for comment in pagination.items %}
             <li class="list-group-item list-group-item-action flex-column">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">
@@ -46,34 +46,36 @@
             </div>
             {% endif %}
             <p class="mb-1">{{ comment.body | safe }}</p>
-            <div class="d-flex justify-content-end">
-                {% if current_user.is_administrator() or current_user == comment.author %}
-                <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
-                        <i class="bi-trash"></i>
-                        {{ _("DELETE") }}
-                    </button>
-                </form>
-                {% endif %}
-                <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
-                    <i class="bi-reply"></i>
-                    {{ _("Reply") }}
-                </a>
-            </div>
+            {% if current_user.is_authenticated %}
+                <div class="d-flex justify-content-end">
+                    {% if current_user.is_administrator() or current_user == comment.author %}
+                    <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
+                            <i class="bi-trash"></i>
+                            {{ _("DELETE") }}
+                        </button>
+                    </form>
+                    {% endif %}
+                    <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
+                        <i class="bi-reply"></i>
+                        {{ _("Reply") }}
+                    </a>
+                </div>
+            {% endif %}
             </li>
         {% endfor %}
         </ul>
         {{ render_pagination(pagination) }}
-        {% if request.args.get('reply') %}
-        <div class="alert alert-dark" id="reply-comment-form">
-            <i class="bi-mail-reply"></i>{{ _("Reply to") }}
-            <b>{{ replied_comment.author.username }}</b>:
-            <a class="float-right btn btn-light btn-sm" href="{{ post.url() }}">
-                <i class="bi-x"></i>
-            </a>
-            {{ render_form(form) }}
-        </div>
+        {% if request.args.get('reply') and current_user.is_authenticated %}
+            <div class="alert alert-dark" id="reply-comment-form">
+                <i class="bi-mail-reply"></i>{{ _("Reply to") }}
+                <b>{{ replied_comment.author.username }}</b>:
+                <a class="float-right btn btn-light btn-sm" href="{{ post.url() }}">
+                    <i class="bi-x"></i>
+                </a>
+                {{ render_form(form) }}
+            </div>
         {% endif %}
     {% else %}
         {{ _("No comments yet.") }}

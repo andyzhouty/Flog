@@ -73,7 +73,7 @@ def create_post():
         db.session.commit()
         current_app.logger.info(f"{str(post)} is added.")
         flash(_("Your post has been added"), "success")
-        return redirect(url_for("main.main"))
+        return redirect(url_for(".full_post", id=post.id))
     return render_template("main/new_post.html", form=form)
 
 
@@ -93,7 +93,6 @@ def full_post(id: int):
             .order_by(Comment.timestamp.asc())
             .paginate(page, per_page)
         )
-        comments = pagination.items
         form = CommentForm()
 
         if form.validate_on_submit():
@@ -125,7 +124,7 @@ def full_post(id: int):
         kwargs = dict(
             post=post,
             pagination=pagination,
-            comments=comments,
+            comments=Comment.query.with_parent(post).all(),
             form=form,
         )
         replied_id = request.args.get("reply")

@@ -46,11 +46,9 @@ MIT License
                 </p>
             {% endif %}
             {{ post_actions(post, show_collectors=True) }}
-            {% if current_user.is_authenticated %}
-                <div class="comments" id="comments">
-                    {% include 'main/_comments.html' %}
-                </div>
-            {% endif %}
+            <div class="comments" id="comments">
+                {% include 'main/_comments.html' %}
+            </div>
         </div>
         {% include 'main/_sidebar.html' %}
     </div>
