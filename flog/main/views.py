@@ -16,6 +16,7 @@ from flask_babel import _
 from flask_login import current_user, login_required
 from flog.decorators import permission_required
 from flog.extensions import csrf
+
 # User and Group are necessary for line 328
 from ..models import Permission, db, Post, Comment, User, Group, Column
 from ..utils import redirect_back, clean_html

@@ -106,10 +106,12 @@ $(function () {
                 'width',
                 experience / levelExperiences[level] * 100 + '%'
             );
+            $(this).parent().parent().append('<div>' + experience + ' / ' + levelExperiences[level] + '</div>');
         } else {
             $(this).css('width', '100%');
+            $(this).parent().parent().append('<div>' + experience + ' / 2500' + '</div>');
         }
-        $(this).parent().parent().append('<div>' + experience + ' / ' + levelExperiences[level] + '</div>');
+        
     });
     $('.coin-submit').click(function () {
         form = $(this).parent().parent();
