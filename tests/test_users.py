@@ -105,10 +105,6 @@ class UserTestCase(Testing):
         db.session.add(user)
         db.session.commit()
 
-        self.login("xyz", "secret")
-        response = self.client.get("/profile/edit/", follow_redirects=True)
-        response_data = response.get_data(as_text=True)
-        assert "Your email has not been confirmed yet!" in response_data
 
     def test_delete_account(self):
         self.login()

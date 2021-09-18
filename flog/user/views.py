@@ -25,23 +25,20 @@ from ..emails import send_email
 def edit_profile():
     if current_user.is_administrator():
         return redirect(url_for("admin.edit_profile", id=current_user.id))
-    if current_user.confirmed:
-        form = EditProfileForm()
-        if form.validate_on_submit():
-            current_user.name = form.name.data
-            current_user.location = form.location.data
-            current_user.about_me = form.about_me.data
-            current_user.custom_avatar_url = form.custom_avatar_url.data
-            db.session.add(current_user._get_current_object())
-            db.session.commit()
-            flash(_("Your profile has been updated!"), "success")
-            return redirect(url_for("main.main"))
-        form.name.data = current_user.name
-        form.location.data = current_user.location
-        form.about_me.data = current_user.about_me
-        return render_template("user/edit_profile.html", form=form)
-    flash(_("Your email has not been confirmed yet!"), "warning")
-    return redirect(url_for("main.main"))
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.location = form.location.data
+        current_user.about_me = form.about_me.data
+        current_user.custom_avatar_url = form.custom_avatar_url.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+        flash(_("Your profile has been updated!"), "success")
+        return redirect(url_for("main.main"))
+    form.name.data = current_user.name
+    form.location.data = current_user.location
+    form.about_me.data = current_user.about_me
+    return render_template("user/edit_profile.html", form=form)
 
 
 @user_bp.route("/follow/<username>/", methods=["POST"])
