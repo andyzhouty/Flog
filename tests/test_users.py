@@ -77,12 +77,14 @@ class UserTestCase(Testing):
         assert "abcd" in response_data
 
         data = {
+            "username": "abcd",
             "name": fake.name(),
             "location": fake.address(),
             "about_me": fake.sentence(),
             "custom_avatar_url": "https://example.com/test.png",
         }
         response = self.client.post("/profile/edit/", data=data, follow_redirects=True)
+        assert response.status_code == 200
         user = User.query.filter_by(username="abcd").first()
         assert user.name == data["name"]
         assert user.location == data["location"]

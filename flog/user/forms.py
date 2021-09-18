@@ -16,7 +16,6 @@ from wtforms.validators import (
 )
 from ..models import User
 
-dr_message = _l("Please fill out this field.")
 # l_message is short for 'length_message'
 l_message = _l("Field must be between %(min)d and %(max)d characters long.")
 e_message = _l("Invalid email.")
@@ -27,10 +26,9 @@ class EditProfileForm(FlaskForm):
     username = StringField(
         _l("Username"),
         validators=[
-            DataRequired(dr_message),
-            Length(1, 32),
+            Length(0, 32),
             Regexp(
-                r"^[A-Za-z][A-Za-z0-9_\-.]*$",
+                r"^([A-Za-z][A-Za-z0-9_\-.])*$",
                 0,
                 _l(
                     "Usernames must have only letters, numbers, dots, underscores or dashes"
@@ -38,7 +36,6 @@ class EditProfileForm(FlaskForm):
             ),
         ],
     )
-
     name = StringField(_l("Real Name"), validators=[Length(0, 64, l_message)])
     location = StringField(_l("Location"), validators=[Length(0, 64, l_message)])
     about_me = TextAreaField(_l("About me"), validators=[Length(0, 300, l_message)])
