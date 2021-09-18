@@ -5,9 +5,18 @@ Copyright (c) 2020 Andy Zhou
 from flask_wtf import FlaskForm
 from flask_babel import lazy_gettext as _l
 from wtforms import StringField, TextAreaField, SubmitField, PasswordField
-from wtforms.validators import Length, EqualTo, Email, ValidationError, URL
+from wtforms.validators import (
+    Length,
+    EqualTo,
+    Email,
+    ValidationError,
+    URL,
+    DataRequired,
+    Regexp,
+)
 from ..models import User
 
+dr_message = _l("Please fill out this field.")
 # l_message is short for 'length_message'
 l_message = _l("Field must be between %(min)d and %(max)d characters long.")
 e_message = _l("Invalid email.")
@@ -15,6 +24,21 @@ u_message = _l("Invalid url.")
 
 
 class EditProfileForm(FlaskForm):
+    username = StringField(
+        _l("Username"),
+        validators=[
+            DataRequired(dr_message),
+            Length(1, 32),
+            Regexp(
+                r"^[A-Za-z][A-Za-z0-9_\-.]*$",
+                0,
+                _l(
+                    "Usernames must have only letters, numbers, dots, underscores or dashes"
+                ),
+            ),
+        ],
+    )
+
     name = StringField(_l("Real Name"), validators=[Length(0, 64, l_message)])
     location = StringField(_l("Location"), validators=[Length(0, 64, l_message)])
     about_me = TextAreaField(_l("About me"), validators=[Length(0, 300, l_message)])
