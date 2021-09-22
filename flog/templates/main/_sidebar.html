@@ -4,6 +4,14 @@ MIT License
 #}
 {% from 'macros.html' import action_card %}
 <div class="col-md-4">
+    <a href="https://rice0208.pythonanywhere.com/icons" target="_blank">
+        <img src="https://rice0208.pythonanywhere.com/ads/icons"
+             style="
+                    width: 100%;
+                    height: auto;
+                    border-radius: 1em;
+        ">
+    </a>
     {% if current_user.is_authenticated %}
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
             <div class="card-header">{{ _("Quick Actions") }}</div>
