@@ -7,5 +7,15 @@ MIT License
 {% block title %}{{ _("Edit Profile") }}{% endblock title %}
 {% block page_content %}
     <h1 class="display-3">{{ _("Edit Profile") }}</h1>
+    <a class="col-md-8 offset-md-2" href="https://rice0208.pythonanywhere.com/icons" target="_blank">
+        <img src="https://rice0208.pythonanywhere.com/ads/icons"
+             style="
+                    width: 100% !important;
+                    height: auto;
+                    border-radius: 1em;
+                    margin-top: 30px;
+                    margin-bottom: 30px;
+        ">
+    </a>
     {{ render_form(form) }}
 {% endblock page_content %}
