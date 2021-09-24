@@ -30,7 +30,7 @@ class PostForm(FlaskForm):
             Columns to add this post to (this field is optional)<br>
             Tip: You might need to <kbd>Ctrl</kbd> + &lt;Mouse Click&gt; to select the columns
             you want the post to be added to. If you have not created a column yet,
-            you can go to <a href="/form/create/">this page</a> to create one.
+            you can go to <a href="/column/create/">this page</a> to create one.
             """)),
         coerce=int,
     )
