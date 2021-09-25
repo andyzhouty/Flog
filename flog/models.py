@@ -93,6 +93,9 @@ class Post(db.Model):
     def url(self):
         return url_for("main.full_post", id=self.id, _external=True)
 
+    def approve_url(self, column_id):
+        return url_for("main.approve_column", post_id=self.id, column_id=column_id, _external=True)
+
 
 class Column(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -109,6 +112,9 @@ class Column(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def approve_url(self, column_id):
+        return url_for("main.approve_post", post_id=self.id, column_id=column_id, _external=True)
 
 
 class Comment(db.Model):
@@ -396,7 +402,7 @@ class User(db.Model, UserMixin):
     def avatar_url(self, size=30):
         if self.custom_avatar_url:
             return self.custom_avatar_url
-        url = "https://silicon.pythonanywhere.com/silicon/v1"  # use silicon generator
+        url = "https://rice0208.pythonanywhere.com/silicon/v1"  # use silicon generator
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}"
 

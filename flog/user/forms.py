@@ -11,7 +11,6 @@ from wtforms.validators import (
     Email,
     ValidationError,
     URL,
-    DataRequired,
     Regexp,
 )
 from ..models import User
@@ -28,7 +27,7 @@ class EditProfileForm(FlaskForm):
         validators=[
             Length(0, 32),
             Regexp(
-                r"^([A-Za-z][A-Za-z0-9_\-.])*$",
+                r"^[A-Za-z][A-Za-z0-9_\-.]*$",
                 0,
                 _l(
                     "Usernames must have only letters, numbers, dots, underscores or dashes"
