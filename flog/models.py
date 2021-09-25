@@ -396,7 +396,7 @@ class User(db.Model, UserMixin):
     def avatar_url(self, size=30):
         if self.custom_avatar_url:
             return self.custom_avatar_url
-        url = "https://rice0208.pythonanywhere.com/silicon/v1"  # use silicon generator
+        url = "https://silicon.pythonanywhere.com/silicon/v1"  # use silicon generator
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}"
 
