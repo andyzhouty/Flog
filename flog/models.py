@@ -393,12 +393,12 @@ class User(db.Model, UserMixin):
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
 
-    def avatar_url(self, size=30, default="identicon", rating="g"):
+    def avatar_url(self, size=30):
         if self.custom_avatar_url:
             return self.custom_avatar_url
-        url = "https://sdn.geekzu.org/avatar"  # use gravatar cdn by geekzu.cn
+        url = "https://rice0208.pythonanywhere.com/silicon/v1"  # use silicon generator
         hash = self.avatar_hash or self.gravatar_hash()
-        return f"{url}/{hash}?s={size}&d={default}&r={rating}"
+        return f"{url}/{hash}?s={size}"
 
     def ping(self, force_time=None):
         now = datetime.utcnow() if force_time is None else force_time
