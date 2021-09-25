@@ -427,14 +427,19 @@ def request_post_to_column(column_id: int, post_id: int):
         flash(_("The post is already in the column."))
         return redirect_back()
     if column.author is not None:
-        push_submitting_post_to_column_notification(current_user, column.author, post, column)
+        push_submitting_post_to_column_notification(
+            current_user, column.author, post, column
+        )
     flash(_("Your request has been submitted to the manager of the column."))
     return redirect_back()
 
 
 @main_bp.route("/post/<int:post_id>/transpost/<int:column_id>/", method=["POST"])
 @login_required
-def transpost_post_to_column(post_id: int, column_id: int, ):
+def transpost_post_to_column(
+    post_id: int,
+    column_id: int,
+):
     post = Post.query.get_or_404(post_id)
     column = Column.query.get_or_404(column_id)
     if current_user != column.author:
@@ -444,7 +449,9 @@ def transpost_post_to_column(post_id: int, column_id: int, ):
         flash(_("The post is already in the column."))
         return redirect_back()
     if post.author is not None:
-        push_transposting_to_column_notification(current_user, post.author, post, column)
+        push_transposting_to_column_notification(
+            current_user, post.author, post, column
+        )
     flash(_("Your request has been submitted to the column"))
     return redirect_back()
 

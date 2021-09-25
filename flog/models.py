@@ -94,7 +94,9 @@ class Post(db.Model):
         return url_for("main.full_post", id=self.id, _external=True)
 
     def approve_url(self, column_id):
-        return url_for("main.approve_column", post_id=self.id, column_id=column_id, _external=True)
+        return url_for(
+            "main.approve_column", post_id=self.id, column_id=column_id, _external=True
+        )
 
 
 class Column(db.Model):
@@ -114,7 +116,9 @@ class Column(db.Model):
         db.session.commit()
 
     def approve_url(self, column_id):
-        return url_for("main.approve_post", post_id=self.id, column_id=column_id, _external=True)
+        return url_for(
+            "main.approve_post", post_id=self.id, column_id=column_id, _external=True
+        )
 
 
 class Comment(db.Model):

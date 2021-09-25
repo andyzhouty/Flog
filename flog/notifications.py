@@ -146,12 +146,12 @@ def push_transposting_to_column_notification(sender, receiver, post, column):
            <a href="%(post_url)s">Post %(post_title)s</a> to
            <a href="%(column_url)s">&lt; Column %(column_name)s &lgt;</a>.
            Click <a href="%(approve_url)s">here</a> to approve""",
-           profile_url=sender.profile_url(),
-           username=sender.username,
-           post_url=post.url(),
-           post_title=post.title,
-           column_url=column.url(),
-           column_name=column.name,
-           approve_url=post.approve_url(column.id),
+        profile_url=sender.profile_url(),
+        username=sender.username,
+        post_url=post.url(),
+        post_title=post.title,
+        column_url=column.url(),
+        column_name=column.name,
+        approve_url=post.approve_url(column.id),
     )
     Notification(message=message, receiver=receiver).push()
