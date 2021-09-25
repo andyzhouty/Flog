@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from functools import wraps
 from flask_babel import _, force_locale, ngettext
 from flask import url_for
-from .models import Message, db, Notification
+from .models import Notification
 
 
 def with_receiver_locale(f):

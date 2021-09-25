@@ -165,6 +165,10 @@ class Notification(db.Model):
     receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     receiver = db.relationship("User", back_populates="notifications")
 
+    def push(self):
+        db.session.add(self)
+        db.session.commit()
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
