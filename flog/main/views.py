@@ -416,7 +416,7 @@ def all_columns():
     return render_template("main/columns.html", pagination=pagination)
 
 
-@main_bp.route("/column/<int:column_id>/request/<int:post_id>/", method=["POST"])
+@main_bp.route("/column/<int:column_id>/request/<int:post_id>/", methods=["POST"])
 @login_required
 def request_post_to_column(column_id: int, post_id: int):
     post = Post.query.get_or_404(post_id)
@@ -434,7 +434,7 @@ def request_post_to_column(column_id: int, post_id: int):
     return redirect_back()
 
 
-@main_bp.route("/post/<int:post_id>/transpost/<int:column_id>/", method=["POST"])
+@main_bp.route("/post/<int:post_id>/transpost/<int:column_id>/", methods=["POST"])
 @login_required
 def transpost_post_to_column(
     post_id: int,
