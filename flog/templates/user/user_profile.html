@@ -67,9 +67,11 @@
                 {{ _("Edit Profile [Admin]") }}
             </a>
         {% endif %}
-        <a class="btn btn-outline-primary" href="{{ url_for('group.invite_user', user_id=user.id) }}">
-            {{ _("Invite this user to your group.") }}
-        </a>
+        {% if not current_user == user %}
+            <a class="btn btn-outline-primary" href="{{ url_for('group.invite_user', user_id=user.id) }}">
+                {{ _("Invite this user to your group.") }}
+            </a>
+        {% endif %}
     </div>
 </div>
 {% endblock page_content %}

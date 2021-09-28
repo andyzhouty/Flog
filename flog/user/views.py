@@ -40,6 +40,7 @@ def edit_profile():
     form.name.data = current_user.name
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
+    form.custom_avatar_url.data = current_user.custom_avatar_url
     return render_template("user/edit_profile.html", form=form)
 
 
