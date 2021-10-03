@@ -333,6 +333,10 @@ def search():
             category.capitalize(), name_key[category], q
         )
     )
+    if (
+        category == "post" or category == "group"
+    ) and not current_user.is_administrator():
+        query = query.filter_by(private=False)
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 
@@ -459,7 +463,10 @@ def transpost_post_to_column(
 @main_bp.route("/post/<int:post_id>/approve/<int:column_id>/")
 @login_required
 def approve_column(post_id: int, column_id: int):
-    """Allow transposting post to column"""
+    """
+    Allow transposting the post to a column.
+    This route should only be visited by the post's author.
+    """
     post = Post.query.get_or_404(post_id)
     column = Column.query.get_or_404(column_id)
     if current_user != post.author:
@@ -472,10 +479,13 @@ def approve_column(post_id: int, column_id: int):
     return redirect_back()
 
 
-@main_bp.route("/post/<int:post_id>/approve/<int:column_id>/")
+@main_bp.route("/column/<int:column_id>/approve/<int:post_id>/")
 @login_required
 def approve_post(post_id: int, column_id: int):
-    """Allow post to be added to column"""
+    """
+    Allow a post to be added to the column.
+    This route should only be visited by the column's author.
+    """
     post = Post.query.get_or_404(post_id)
     column = Column.query.get_or_404(column_id)
     if current_user != column.author:

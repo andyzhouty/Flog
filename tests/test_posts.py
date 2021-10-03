@@ -6,7 +6,7 @@ from tests.conftest import Testing
 from flog import fakes
 from faker import Faker
 from sqlalchemy import and_
-from flog.models import Comment, User, Post, Column, db
+from flog.models import Comment, Notification, User, Post, Column, db
 
 fake = Faker()
 
@@ -237,51 +237,6 @@ class PostTestCase(Testing):
         )
         assert response.status_code == 200
 
-    def test_create_column(self):
-        self.register()
-        self.login("test", "password")
-        self.generate_post(login=False)
-        response = self.client.get("/column/create/")
-        assert response.status_code == 200
-
-        user = User.query.filter_by(username="test").first()
-        column = dict(
-            name="test",
-            posts=[post.id for post in Post.query.filter_by(author=user).all()],
-        )
-        response = self.client.post(
-            "/column/create/", data=column, follow_redirects=True
-        )
-        assert response.status_code == 200
-        res_data = response.get_data(as_text=True)
-        assert "Your column was successfully created." in res_data
-
-    def test_view_column(self):
-        self.register()
-        self.login("test", "password")
-        col_name = self.generate_column()["column_name"]
-        column = Column.query.filter_by(name=col_name).first()
-        response = self.client.get(f"/column/{column.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert col_name in response.get_data(as_text=True)
-        response = self.client.get("/column/all/")
-        assert response.status_code == 200
-        assert col_name in response.get_data(as_text=True)
-
-        response = self.client.post(f"/column/top/{column.id}/", follow_redirects=True)
-        assert response.status_code == 403
-        self.logout()
-
-        self.login()
-        response = self.client.post(f"/column/top/{column.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert column.topped
-        response = self.client.post(
-            f"/column/untop/{column.id}/", follow_redirects=True
-        )
-        assert response.status_code == 200
-        assert not column.topped
-
     def test_picks(self):
         self.login()
         post = Post.query.filter(and_(~Post.picked, ~Post.private)).first()
@@ -342,3 +297,111 @@ class PostTestCase(Testing):
         # test if picking a post twice will increase the author's experience twice
         self.client.post(f"/post/pick/{p.id}/")
         assert self.admin.experience == 25
+
+
+class ColumnTestCase(Testing):
+    def setUp(self):
+        super().setUp()
+        self.register()
+        self.login("test", "password")
+
+    def test_create_column(self):
+        self.generate_post(login=False)
+        response = self.client.get("/column/create/")
+        assert response.status_code == 200
+
+        user = User.query.filter_by(username="test").first()
+        column = dict(
+            name="test",
+            posts=[post.id for post in Post.query.filter_by(author=user).all()],
+        )
+        response = self.client.post(
+            "/column/create/", data=column, follow_redirects=True
+        )
+        assert response.status_code == 200
+        res_data = response.get_data(as_text=True)
+        assert "Your column was successfully created." in res_data
+
+    def test_view_column(self):
+        col_name = self.generate_column()["column_name"]
+        column = Column.query.filter_by(name=col_name).first()
+        response = self.client.get(f"/column/{column.id}/", follow_redirects=True)
+        assert response.status_code == 200
+        assert col_name in response.get_data(as_text=True)
+        response = self.client.get("/column/all/")
+        assert response.status_code == 200
+        assert col_name in response.get_data(as_text=True)
+
+        response = self.client.post(f"/column/top/{column.id}/", follow_redirects=True)
+        assert response.status_code == 403
+        self.logout()
+
+        self.login()
+        response = self.client.post(f"/column/top/{column.id}/", follow_redirects=True)
+        assert response.status_code == 200
+        assert column.topped
+        response = self.client.post(
+            f"/column/untop/{column.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert not column.topped
+
+    def test_request_post_to_column(self):
+        notification_count = Notification.query.count()
+        col_name = self.generate_column()["column_name"]
+        self.logout()
+        self.login()
+        post = Post.query.filter_by(title=self.generate_post()["title"]).first()
+        column = Column.query.filter_by(name=col_name).first()
+        response = self.client.post(
+            f"/column/{column.id}/request/{post.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert Notification.query.count() == notification_count + 1
+        self.logout()
+        self.login("test", "password")
+        response = self.client.post(
+            f"/column/{column.id}/approve/{post.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert post in column.posts
+
+    def test_request_post_to_column(self):
+        notification_count = Notification.query.count()
+        col_name = self.generate_column()["column_name"]
+        self.logout()
+        self.login()
+        post = Post.query.filter_by(title=self.generate_post()["title"]).first()
+        column = Column.query.filter_by(name=col_name).first()
+        response = self.client.post(
+            f"/column/{column.id}/request/{post.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert Notification.query.count() == notification_count + 1
+        self.logout()
+        self.login("test", "password")
+        response = self.client.post(
+            f"/column/{column.id}/approve/{post.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert post in column.posts
+
+    def test_transpost_post_to_column(self):
+        notification_count = Notification.query.count()
+        col_name = self.generate_post()["column_name"]
+        self.logout()
+        self.login()
+        post = Post.query.filter_by(title=self.generate_post()["title"]).first()
+        column = Column.query.filter_by(name=col_name).first()
+        response = self.client.post(
+            f"/column/{column.id}/request/{post.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert Notification.query.count() == notification_count + 1
+        self.logout()
+        self.login("test", "password")
+        response = self.client.post(
+            f"/column/{column.id}/approve/{post.id}/", follow_redirects=True
+        )
+        assert response.status_code == 200
+        assert post in column.posts

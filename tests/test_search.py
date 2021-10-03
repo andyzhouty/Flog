@@ -8,9 +8,12 @@ from .conftest import Testing
 
 
 class SearchTestCase(Testing):
-    def test_search(self):
+    def setUp(self):
+        super().setUp()
+        self.register()
         self.login()
 
+    def test_post_public(self):
         self.generate_post("abcd")
         self.generate_post("efgh")
         self.generate_post("ijklmn")
@@ -20,6 +23,18 @@ class SearchTestCase(Testing):
         assert "abcd" in response_data
         assert "efgh" not in response_data
         assert "ijklmn" not in response_data
+
+    def test_post_private(self):
+        self.generate_post("abcd", private=True)
+        response = self.client.get("/search/?q=ab&category=post")
+        assert "abcd" in response.get_data(as_text=True)
+        self.logout()
+
+        self.login("test", "password")
+        response = self.client.get("/search/?q=ab&category=post")
+        assert "abcd" not in response.get_data(as_text=True)
+
+    def test_group_public(self):
         group1 = Group(manager=self.admin, name="xyz")
         db.session.add(group1)
         db.session.commit()
@@ -42,3 +57,16 @@ class SearchTestCase(Testing):
         )
         assert "Column name: " in response_data
         assert "foobar" in response_data
+
+    def test_group_private(self):
+        group = Group(manager=self.admin, name="xyz", private=True)
+        db.session.add(group)
+        db.session.commit()
+
+        response = self.client.get("/search/?q=xy&category=group")
+        assert "xyz" in response.get_data(as_text=True)
+        self.logout()
+
+        self.login("test", "password")
+        response = self.client.get("/search/?q=xy&category=group")
+        assert "xyz" not in response.get_data(as_text=True)

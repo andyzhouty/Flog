@@ -115,9 +115,12 @@ class Column(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def approve_url(self, column_id):
+    def url(self):
+        return url_for("main.view_column", id=self.id, _external=True)
+
+    def approve_url(self, post_id):
         return url_for(
-            "main.approve_post", post_id=self.id, column_id=column_id, _external=True
+            "main.approve_post", post_id=post_id, column_id=self.id, _external=True
         )
 
 
