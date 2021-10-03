@@ -452,6 +452,7 @@ def transpost_post_to_column(
     if post in column.posts:
         flash(_("The post is already in the column."))
         return redirect_back()
+    current_app.logger.debug(post.author)
     if post.author is not None:
         push_transposting_to_column_notification(
             current_user, post.author, post, column
@@ -481,7 +482,7 @@ def approve_column(post_id: int, column_id: int):
 
 @main_bp.route("/column/<int:column_id>/approve/<int:post_id>/")
 @login_required
-def approve_post(post_id: int, column_id: int):
+def approve_post(column_id: int, post_id: int):
     """
     Allow a post to be added to the column.
     This route should only be visited by the column's author.

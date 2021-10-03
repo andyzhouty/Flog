@@ -380,28 +380,29 @@ class ColumnTestCase(Testing):
         assert Notification.query.count() == notification_count + 1
         self.logout()
         self.login("test", "password")
-        response = self.client.post(
+        response = self.client.get(
             f"/column/{column.id}/approve/{post.id}/", follow_redirects=True
         )
         assert response.status_code == 200
         assert post in column.posts
 
     def test_transpost_post_to_column(self):
-        notification_count = Notification.query.count()
-        col_name = self.generate_post()["column_name"]
-        self.logout()
-        self.login()
         post = Post.query.filter_by(title=self.generate_post()["title"]).first()
+        notification_count = Notification.query.count()
+        self.logout()
+
+        self.login()
+        col_name = self.generate_column()["column_name"]
         column = Column.query.filter_by(name=col_name).first()
         response = self.client.post(
-            f"/column/{column.id}/request/{post.id}/", follow_redirects=True
+            f"/post/{post.id}/transpost/{column.id}/", follow_redirects=True
         )
         assert response.status_code == 200
         assert Notification.query.count() == notification_count + 1
         self.logout()
         self.login("test", "password")
-        response = self.client.post(
-            f"/column/{column.id}/approve/{post.id}/", follow_redirects=True
+        response = self.client.get(
+            f"/post/{post.id}/approve/{column.id}/", follow_redirects=True
         )
         assert response.status_code == 200
         assert post in column.posts

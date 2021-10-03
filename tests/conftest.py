@@ -94,11 +94,15 @@ class Base(unittest.TestCase):
             follow_redirects=True,
         )
 
-    def generate_post(self, title=fake.sentence(), text=fake.text(), private=False, **kwargs) -> dict:
+    def generate_post(
+        self, title=fake.sentence(), text=fake.text(), private=False, **kwargs
+    ) -> dict:
         """Create a post for test use"""
         if kwargs.get("login") is True:
             self.login(**kwargs)
-        data = dict(title=title, content=f"<p>{text}</p>", private=private)
+        data = dict(
+            title=title, content=f"<p>{text}</p>", private=private if private else None
+        )
 
         return {
             "response": self.client.post("/write/", data=data, follow_redirects=True),

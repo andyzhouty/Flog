@@ -23,7 +23,7 @@ l_message = _l("Field must be between %(min)d and %(max)d characters long.")
 class PostForm(FlaskForm):
     title = StringField(_l("Title"), validators=[DataRequired(dr_message)])
     content = CKEditorField(_l("Content"), validators=[DataRequired(dr_message)])
-    private = BooleanField(_l("Private"))
+    private = BooleanField(_l("Private"), default=False)
     # fmt: off
     columns = SelectMultipleField(
         Markup(_l("""

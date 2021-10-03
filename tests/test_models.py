@@ -143,7 +143,6 @@ class ModelTestCase(Testing):
             800: (6, "00f"),
             1100: (7, "da3"),
             1500: (8, "f00"),
-            2500: (9, "808"),
         }
         u = User()
         for k, v in experience_level_table.items():
@@ -153,3 +152,11 @@ class ModelTestCase(Testing):
                 u.level_badge_link()
                 == "https://img.shields.io/badge/Lv" + str(v[0]) + "-" + v[1]
             )
+
+    def test_lv9(self):
+        u = User()
+        u.experience = 2700
+        assert u.level() == 10
+        u.experience = 3100
+        assert u.level() == 11
+        assert u.level_badge_link().endswith(" %2B2-808")

@@ -544,14 +544,13 @@ class User(db.Model, UserMixin):
             return 8
         else:
             lv = 9
-            while (lv - 8) * (lv - 7) * 100 + 2500 < self.experience:
+            while (lv - 8) * (lv - 7) * 100 + 2500 <= self.experience:
                 lv += 1
             return lv
 
-
     def level_badge_link(self) -> str:
         lv = self.level()
-        prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9)) + "-"
+        prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9))
         if lv <= 8:
             color = ""
             if lv == 1:
@@ -570,9 +569,10 @@ class User(db.Model, UserMixin):
                 color = "da3"
             elif lv == 8:
                 color = "f00"
+            return prefix + "-" + color
         else:
             plus = lv - 9
-            return prefix + '%2B' + str(plus) + "-808"
+            return prefix + " %2B" + str(plus) + "-808"
 
 
 class AnonymousUser(AnonymousUserMixin):
