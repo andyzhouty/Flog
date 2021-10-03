@@ -108,8 +108,11 @@ $(function () {
             );
             $(this).parent().parent().append('<div>' + experience + ' / ' + levelExperiences[level] + '</div>');
         } else {
-            $(this).css('width', '100%');
-            $(this).parent().parent().append('<div>' + experience + ' / 2500' + '</div>');
+            $(this).css(
+                'width',
+                (experience / ((level - 8) * (level - 7) * 100 + 2500)) * 100 + '%'
+            );
+            $(this).parent().parent().append('<div>' + experience + ' / ' + ((level - 8) * (level - 7) * 100 + 2500) + '</div>');
         }
         
     });
