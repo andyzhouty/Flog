@@ -531,7 +531,6 @@ class User(db.Model, UserMixin):
                 lv += 1
             return lv
 
-
     def level_badge_link(self) -> str:
         lv = self.level()
         prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9)) + "-"
@@ -555,7 +554,7 @@ class User(db.Model, UserMixin):
                 color = "f00"
         else:
             plus = lv - 9
-            return prefix + '%2B' + str(plus) + "-808"
+            return prefix + "%2B" + str(plus) + "-808"
 
 
 class AnonymousUser(AnonymousUserMixin):
