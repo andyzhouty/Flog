@@ -143,7 +143,7 @@ class ModelTestCase(Testing):
             800: (6, "00f"),
             1100: (7, "da3"),
             1500: (8, "f00"),
-            2500: ('9-%2B0', "808"),
+            2500: ("9-%2B0", "808"),
         }
         u = User()
         for k, v in experience_level_table.items():
