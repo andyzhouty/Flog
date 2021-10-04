@@ -196,16 +196,32 @@ MIT License
     {%- endif %}
 {% endmacro %}
 
+{% macro avatar(user, class="", style="", size=36) %} <!-- Style must be nothing or end with ";" -->
+    <div style="
+        width: {{ size }}px;
+        height: {{ size }}px;
+        border-radius: {{ size // 2 }}px;
+        background-image: url('{{ user.avatar_url() }}');
+        background-size: 100% 100%;
+        {{ style }}
+        {{ user.load_avatar_style() }}
+    " data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></div>
+{% endmacro %}
+
 {% macro user_card(user, group=None) %}
     <li class="list-group-item d-flex">
         <div class="d-flex align-items-center">
             <a href="{{ url_for('user.profile', username=user.username) }}">
-                <img src="{{ user.avatar_url() }}" class="profile-popover mr-3"
-                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}">
+                {{ avatar(user, class="profile-popover mr-3", size=48) }}
             </a>
-            <a style="font-size: 2em;"
-               class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% else %} text-primary {% endif %}"
-               href="{{ url_for('user.profile', username=user.username) }}">{{ user.username }}</a>
+            <a style="font-size: 2em; text-decoration: none;" href="{{ url_for('user.profile', username=user.username) }}">{{ user.username }}
+            </a>
+            {% if user.is_administrator() %}
+                <img src="https://img.shields.io/badge/role-admin-d24">
+            {% elif user.can(Permission.MODERATE) %}
+                <img src="https://img.shields.io/badge/role-moderator-eb3">
+            {% endif %}
+            {{ level_badge(user) }}
         </div>
         {% if not group %}
         <span class="text-white align-items-end flex-column ml-auto">

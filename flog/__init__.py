@@ -42,6 +42,7 @@ from .language import language_bp
 from .main import main_bp
 from .notification import notification_bp
 from .others import others_bp
+from .shop import shop_bp
 from .testing import testing_bp
 from .user import user_bp
 
@@ -123,6 +124,7 @@ def register_blueprints(app: APIFlask) -> None:
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(language_bp, url_prefix="/language")
     app.register_blueprint(notification_bp, url_prefix="/notification")
+    app.register_blueprint(shop_bp, url_prefix="/shop")
 
     if app.testing:
         app.register_blueprint(testing_bp)

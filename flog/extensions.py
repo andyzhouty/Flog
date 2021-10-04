@@ -31,7 +31,7 @@ limiter = Limiter(
 login_manager = LoginManager()
 ma = Marshmallow()
 mail = Mail()
-migrate = Migrate()
+migrate = Migrate(render_as_batch=True)
 moment = Moment()
 share = Share()
 

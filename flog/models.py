@@ -12,22 +12,59 @@ from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
+
+def items(id: int):
+    item_list = {
+        0: {
+            "style": ""
+        },
+        1: {
+            "expires": timedelta(days = 30),
+            "price": 30,
+            "style": "border: .3em solid rgb(18, 108, 216);",
+            "name": "Blue",
+            "class": "Classic"
+        }
+    }
+    return item_list[id]
+
+
 group_user_table = db.Table(
     "group_user",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("group_id", db.Integer, db.ForeignKey("group.id")),
+    extend_existing = True
 )
 column_post_table = db.Table(
     "column_post",
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
     db.Column("column_id", db.Integer, db.ForeignKey("column.id")),
+    extend_existing = True
 )
 coin_table = db.Table(
     "coin_table",
     db.Column("owner_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+    extend_existing = True
 )
 
+
+class Belong(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    owner_id = db.Column(db.Integer(), db.ForeignKey("user.id"),)
+    goods_id = db.Column(db.Integer(),)
+    expires = db.Column(db.DateTime)
+
+    owner = db.relationship(
+        "User", back_populates="belongings"
+    )
+
+    def __str__(self):
+        return f"<Belong relationship {self.goods_id} -> User {self.owner_id}>"
+
+    def load_expiration_delta(self):
+        delta = self.expires - datetime.utcnow()
+        return delta
 
 class Collect(db.Model):
     """Collect Model"""
@@ -364,6 +401,14 @@ class User(db.Model, UserMixin):
         "Post", secondary=coin_table, back_populates="coiners"
     )
 
+    belongings = db.relationship(
+        "Belong", back_populates="owner"
+    )
+
+    avatar_style_id = db.Column(
+        db.Integer(), default=0
+    )
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -555,6 +600,22 @@ class User(db.Model, UserMixin):
         else:
             plus = lv - 9
             return prefix + "%2B" + str(plus) + "-808"
+
+    def load_belongings(self):
+        belongings = [
+            item for item in self.belongings if item.expires > datetime.utcnow()
+        ]
+        return belongings
+
+    def load_avatar_style(self):
+        if self.avatar_style_id is None:
+            self.avatar_style_id = 0
+            db.session.commit()
+        style = items(self.avatar_style_id)["style"]
+        if self.avatar_style_id in [item.goods_id for item in self.load_belongings()]:
+            print(style)
+            return style
+        return ""
 
 
 class AnonymousUser(AnonymousUserMixin):
