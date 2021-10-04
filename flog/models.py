@@ -130,6 +130,11 @@ class Post(db.Model):
     def url(self):
         return url_for("main.full_post", id=self.id, _external=True)
 
+    def approve_url(self, column_id):
+        return url_for(
+            "main.approve_column", post_id=self.id, column_id=column_id, _external=True
+        )
+
 
 class Column(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -146,6 +151,14 @@ class Column(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    def url(self):
+        return url_for("main.view_column", id=self.id, _external=True)
+
+    def approve_url(self, post_id):
+        return url_for(
+            "main.approve_post", post_id=post_id, column_id=self.id, _external=True
+        )
 
 
 class Comment(db.Model):
@@ -191,6 +204,10 @@ class Notification(db.Model):
 
     receiver_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     receiver = db.relationship("User", back_populates="notifications")
+
+    def push(self):
+        db.session.add(self)
+        db.session.commit()
 
     def delete(self):
         db.session.delete(self)
@@ -441,7 +458,7 @@ class User(db.Model, UserMixin):
     def avatar_url(self, size=30):
         if self.custom_avatar_url:
             return self.custom_avatar_url
-        url = "https://silicon.pythonanywhere.com/silicon/v1"  # use silicon generator
+        url = "https://rice0208.pythonanywhere.com/silicon/v1"  # use silicon generator
         hash = self.avatar_hash or self.gravatar_hash()
         return f"{url}/{hash}?s={size}"
 
@@ -572,13 +589,13 @@ class User(db.Model, UserMixin):
             return 8
         else:
             lv = 9
-            while (lv - 8) * (lv - 7) * 100 + 2500 < self.experience:
+            while (lv - 8) * (lv - 7) * 100 + 2500 <= self.experience:
                 lv += 1
             return lv
 
     def level_badge_link(self) -> str:
         lv = self.level()
-        prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9)) + "-"
+        prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9))
         if lv <= 8:
             color = ""
             if lv == 1:
@@ -597,6 +614,7 @@ class User(db.Model, UserMixin):
                 color = "da3"
             elif lv == 8:
                 color = "f00"
+            return prefix + "-" + color
         else:
             plus = lv - 9
             return prefix + "%2B" + str(plus) + "-808"

@@ -11,7 +11,6 @@ from wtforms.validators import (
     Email,
     ValidationError,
     URL,
-    DataRequired,
     Regexp,
 )
 from ..models import User

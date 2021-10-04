@@ -50,7 +50,7 @@ class PrivateUserOutSchema(Schema):
     username = String()
     name = String()
     coins = Float()
-    experience = Float()
+    experience = Integer()
     location = String()
     about_me = String()
     confirmed = Boolean()

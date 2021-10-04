@@ -24,6 +24,8 @@ from ..notifications import (
     push_coin_notification,
     push_collect_notification,
     push_comment_notification,
+    push_submitting_post_to_column_notification,
+    push_transposting_to_column_notification,
 )
 from .forms import ColumnForm, PostForm, CommentForm
 from . import main_bp
@@ -331,6 +333,10 @@ def search():
             category.capitalize(), name_key[category], q
         )
     )
+    if (
+        category == "post" or category == "group"
+    ) and not current_user.is_administrator():
+        query = query.filter_by(private=False)
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 
@@ -412,3 +418,82 @@ def all_columns():
         Column.topped.desc(), Column.timestamp.desc()
     ).paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
     return render_template("main/columns.html", pagination=pagination)
+
+
+@main_bp.route("/column/<int:column_id>/request/<int:post_id>/", methods=["POST"])
+@login_required
+def request_post_to_column(column_id: int, post_id: int):
+    post = Post.query.get_or_404(post_id)
+    column = Column.query.get_or_404(column_id)
+    if current_user != post.author:
+        flash(_("You can't request others' posts to the column"))
+    if post in column.posts:
+        flash(_("The post is already in the column."))
+        return redirect_back()
+    if column.author is not None:
+        push_submitting_post_to_column_notification(
+            current_user, column.author, post, column
+        )
+    flash(_("Your request has been submitted to the manager of the column."))
+    return redirect_back()
+
+
+@main_bp.route("/post/<int:post_id>/transpost/<int:column_id>/", methods=["POST"])
+@login_required
+def transpost_post_to_column(
+    post_id: int,
+    column_id: int,
+):
+    post = Post.query.get_or_404(post_id)
+    column = Column.query.get_or_404(column_id)
+    if current_user != column.author:
+        flash(_("You are not the manager of the column."))
+        return redirect_back()
+    if post in column.posts:
+        flash(_("The post is already in the column."))
+        return redirect_back()
+    current_app.logger.debug(post.author)
+    if post.author is not None:
+        push_transposting_to_column_notification(
+            current_user, post.author, post, column
+        )
+    flash(_("Your request has been submitted to the column"))
+    return redirect_back()
+
+
+@main_bp.route("/post/<int:post_id>/approve/<int:column_id>/")
+@login_required
+def approve_column(post_id: int, column_id: int):
+    """
+    Allow transposting the post to a column.
+    This route should only be visited by the post's author.
+    """
+    post = Post.query.get_or_404(post_id)
+    column = Column.query.get_or_404(column_id)
+    if current_user != post.author:
+        abort(403)
+    if post not in column.posts:
+        column.posts.append(post)
+        db.session.commit()
+        return redirect_back()
+    flash(_("The post is already in the column."))
+    return redirect_back()
+
+
+@main_bp.route("/column/<int:column_id>/approve/<int:post_id>/")
+@login_required
+def approve_post(column_id: int, post_id: int):
+    """
+    Allow a post to be added to the column.
+    This route should only be visited by the column's author.
+    """
+    post = Post.query.get_or_404(post_id)
+    column = Column.query.get_or_404(column_id)
+    if current_user != column.author:
+        abort(403)
+    if post not in column.posts:
+        column.posts.append(post)
+        db.session.commit()
+        return redirect_back()
+    flash(_("The post is already in the column."))
+    return redirect_back()

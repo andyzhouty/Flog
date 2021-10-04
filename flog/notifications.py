@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from functools import wraps
 from flask_babel import _, force_locale, ngettext
 from flask import url_for
-from .models import db, Notification
+from .models import Notification
 
 
 def with_receiver_locale(f):
@@ -36,9 +36,7 @@ def push_follow_notification(follower, receiver):
         profile_url=url_for("user.profile", username=follower.username),
         username=follower.username,
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
 
 
 @with_receiver_locale
@@ -51,9 +49,7 @@ def push_comment_notification(comment, receiver, page=1):
         """<a href="%(post_url)s">This post</a> has a new comment/reply.""",
         post_url=url_for("main.full_post", id=comment.post.id, page=page),
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
 
 
 @with_receiver_locale
@@ -65,9 +61,7 @@ def push_collect_notification(collector, receiver, post):
         username=collector.username,
         post_url=post.url(),
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
 
 
 @with_receiver_locale
@@ -81,9 +75,7 @@ def push_group_join_notification(joiner, receiver, group):
         name=group.name,
         join_url=group.join_url(user_id=joiner.id),
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
 
 
 @with_receiver_locale
@@ -97,9 +89,7 @@ def push_group_invite_notification(inviter, receiver, group):
         name=group.name,
         join_url=group.join_url(user_id=receiver.id),
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
 
 
 @with_receiver_locale
@@ -111,9 +101,7 @@ def push_new_message_notification(sender, receiver, group):
         info_url=group.info_url(),
         name=group.name,
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
 
 
 @with_receiver_locale
@@ -129,6 +117,41 @@ def push_coin_notification(sender, receiver, post, amount):
         post_title=post.title,
         num=amount,
     )
-    notification = Notification(message=message, receiver=receiver)
-    db.session.add(notification)
-    db.session.commit()
+    Notification(message=message, receiver=receiver).push()
+
+
+@with_receiver_locale
+def push_submitting_post_to_column_notification(sender, receiver, post, column):
+    message = _(
+        """<a href="%(profile_url)s">%(username)s</a> wanted to add post
+           <a href="%(post_url)s">%(post_title)s</a> to
+           <a href="%(column_url)s">&lt; Column %(column_name)s &lgt;</a>.
+           Click <a href="%(approve_url)s">here</a> to approve.
+           """,
+        profile_url=sender.profile_url(),
+        username=sender.username,
+        post_url=post.url(),
+        post_title=post.title,
+        column_url=column.url(),
+        column_name=column.name,
+        approve_url=column.approve_url(post.id),
+    )
+    Notification(message=message, receiver=receiver).push()
+
+
+@with_receiver_locale
+def push_transposting_to_column_notification(sender, receiver, post, column):
+    message = _(
+        """<a href="%(profile_url)s">%(username)s</a> wanted to transpost your
+           <a href="%(post_url)s">Post %(post_title)s</a> to
+           <a href="%(column_url)s">&lt; Column %(column_name)s &lgt;</a>.
+           Click <a href="%(approve_url)s">here</a> to approve""",
+        profile_url=sender.profile_url(),
+        username=sender.username,
+        post_url=post.url(),
+        post_title=post.title,
+        column_url=column.url(),
+        column_name=column.name,
+        approve_url=post.approve_url(column.id),
+    )
+    Notification(message=message, receiver=receiver).push()
