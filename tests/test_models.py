@@ -159,4 +159,4 @@ class ModelTestCase(Testing):
         assert u.level() == 10
         u.experience = 3100
         assert u.level() == 11
-        assert u.level_badge_link().endswith(" %2B2-808")
+        assert u.level_badge_link().endswith("%20%2B2-808")
