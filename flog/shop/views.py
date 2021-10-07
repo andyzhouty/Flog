@@ -79,19 +79,5 @@ def use(id):
     return redirect(url_for("shop.shop_index"))
 
 
-@shop_bp.route("/add")  # dev
-def add():
-    admin = User.query.filter_by(username="flog_admin").first_or_404()
-    admin.coins += 1000
-    db.session.commit()
-    return str(admin.coins)
-
-
-@shop_bp.route("/clear")
-def clear():
-    all = Belong.query.delete()
-    db.session.commit()
-    return {"status": "OK!"}
-
-
 # note that moderator permission do not have access to users' belongings.
+# and also, only consoles have access to users' belongings, but it is not so easy to get them!
