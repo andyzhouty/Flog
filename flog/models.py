@@ -13,68 +13,65 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
 
-def items(id: int, mode='get'):
+def items(id: int, mode="get"):
     item_list = {
-        0: {
-            "style": "",
-            "text_style": "color: inherit;"
-        },
+        0: {"style": "", "text_style": "color: inherit;"},
         1: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 7.99,
             "exp": 0,
             "style": "background-color: #DE2344;",
             "text_style": "color: #DE2344;",
             "name": "Rose",
-            "class": "Classic"
+            "class": "Classic",
         },
         2: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 7.99,
             "exp": 0,
             "style": "background-color: #FE9A2E;",
             "text_style": "color: #FE9A2E;",
             "name": "Orange",
-            "class": "Classic"
+            "class": "Classic",
         },
         3: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 7.99,
             "exp": 0,
             "style": "background-color: #EBBC34;",
             "text_style": "color: #EBBC34;",
             "name": "Sun",
-            "class": "Classic"
+            "class": "Classic",
         },
         4: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 7.99,
             "exp": 0,
             "style": "background-color: #2EFE9A;",
             "text_style": "color: #2EFE9A;",
             "name": "Mint",
-            "class": "Classic"
+            "class": "Classic",
         },
         5: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 7.99,
             "exp": 100,
             "style": "background-color: #2E64FE;",
             "text_style": "color: #2E64FE;",
             "name": "Copper 2+",
-            "class": "Classic"
+            "class": "Classic",
         },
         6: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 7.99,
             "exp": 0,
             "style": "background-color: #7401DF;",
             "text_style": "color: #7401DF;",
             "name": "Violet",
-            "class": "Classic"
+            "class": "Classic",
         },
         7: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 14.99,
             "exp": 0,
             "style": """
@@ -86,10 +83,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Fire",
-            "class": "Rare"
+            "class": "Rare",
         },
         8: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 14.99,
             "exp": 0,
             "style": """
@@ -101,10 +98,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Frozen",
-            "class": "Rare"
+            "class": "Rare",
         },
         9: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 14.99,
             "exp": 0,
             "style": """
@@ -116,10 +113,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Shore",
-            "class": "Rare"
+            "class": "Rare",
         },
         10: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 14.99,
             "exp": 0,
             "style": """
@@ -131,10 +128,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Aurora",
-            "class": "Rare"
+            "class": "Rare",
         },
         11: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 19.99,
             "exp": 0,
             "style": """
@@ -146,10 +143,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Sweet",
-            "class": "Rare"
+            "class": "Rare",
         },
         12: {
-            "expires": timedelta(days = 30),
+            "expires": timedelta(days=30),
             "price": 19.99,
             "exp": 0,
             "style": """
@@ -161,10 +158,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Helium",
-            "class": "Rare"
+            "class": "Rare",
         },
         13: {
-            "expires": timedelta(days = 99999),
+            "expires": timedelta(days=99999),
             "price": 0,
             "exp": 1100,
             "style": """
@@ -176,10 +173,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Seven",
-            "class": "Leveled"
+            "class": "Leveled",
         },
         14: {
-            "expires": timedelta(days = 99999),
+            "expires": timedelta(days=99999),
             "price": 0,
             "exp": 2500,
             "style": """
@@ -191,10 +188,10 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Crown",
-            "class": "Leveled"
+            "class": "Leveled",
         },
         15: {
-            "expires": timedelta(days = 99999),
+            "expires": timedelta(days=99999),
             "price": 0,
             "exp": 3100,
             "style": """
@@ -206,41 +203,46 @@ def items(id: int, mode='get'):
                 color: transparent;
             """,
             "name": "Iron 2+",
-            "class": "Leveled"
+            "class": "Leveled",
         },
     }
-    return item_list[id] if mode == 'get' else (len(item_list) if mode == 'len' else None)
+    return (
+        item_list[id] if mode == "get" else (len(item_list) if mode == "len" else None)
+    )
 
 
 group_user_table = db.Table(
     "group_user",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("group_id", db.Integer, db.ForeignKey("group.id")),
-    extend_existing = True
+    extend_existing=True,
 )
 column_post_table = db.Table(
     "column_post",
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
     db.Column("column_id", db.Integer, db.ForeignKey("column.id")),
-    extend_existing = True
+    extend_existing=True,
 )
 coin_table = db.Table(
     "coin_table",
     db.Column("owner_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
-    extend_existing = True
+    extend_existing=True,
 )
 
 
 class Belong(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    owner_id = db.Column(db.Integer(), db.ForeignKey("user.id"),)
-    goods_id = db.Column(db.Integer(),)
+    owner_id = db.Column(
+        db.Integer(),
+        db.ForeignKey("user.id"),
+    )
+    goods_id = db.Column(
+        db.Integer(),
+    )
     expires = db.Column(db.DateTime)
 
-    owner = db.relationship(
-        "User", back_populates="belongings"
-    )
+    owner = db.relationship("User", back_populates="belongings")
 
     def __str__(self):
         return f"<Belong relationship {self.goods_id} -> User {self.owner_id}>"
@@ -248,6 +250,7 @@ class Belong(db.Model):
     def load_expiration_delta(self):
         delta = self.expires - datetime.utcnow()
         return delta
+
 
 class Collect(db.Model):
     """Collect Model"""
@@ -601,13 +604,9 @@ class User(db.Model, UserMixin):
         "Post", secondary=coin_table, back_populates="coiners"
     )
 
-    belongings = db.relationship(
-        "Belong", back_populates="owner"
-    )
+    belongings = db.relationship("Belong", back_populates="owner")
 
-    avatar_style_id = db.Column(
-        db.Integer(), default=0
-    )
+    avatar_style_id = db.Column(db.Integer(), default=0)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

@@ -53,11 +53,10 @@ class ErrorTestCase(Testing):
     def test_429(self):
         response = self.client.get("/429")
         assert response.status_code == 429
-        
+
         response = self.client.get("/429", headers=JSON_HEADERS)
         data = response.get_json()
         assert data["error"] == "too many requests"
-
 
     def test_500(self):
         response = self.client.get("/500")
