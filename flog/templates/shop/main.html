@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import shop_card %}
+
+{% block page_content %}
+    <h1 style="font-size: 350%">Flog BetaShop</h1>
+    <p>Your coins: {{ current_user.coins }}</p>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link
+            {% if filter == 'all' %}
+                active
+            {% endif %}
+            " href="{{ url_for('shop.shop_index') }}">All Items</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link
+            {% if filter == 'yours' %}
+                active
+            {% endif %}
+            " href="{{ url_for('shop.shop_index', filter='yours') }}">Your own</a>
+        </li>
+    </ul>
+    <div style="height: 30px;"></div>
+    <div class="row">
+        <div class="col-lg-4">
+            <ul class="nav nav-pills flex-column" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#all">All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#classic">Classic</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#rare">Rare</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#leveled">Leveled</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-8 tab-content">
+        <div style="height: 20px;"></div>
+            <ul id="all" class="tab-pane active">
+                {% for id in goods.keys() %}
+                    {{ shop_card(user=current_user, id=id, goods=goods) }}
+                {% endfor %}
+            </ul>
+            <ul id="classic" class="tab-pane fade">
+                {% for id in goods.keys() %}
+                    {% if goods[id]['class'] == "Classic" %}
+                        {{ shop_card(user=current_user, id=id, goods=goods) }}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <ul id="rare" class="tab-pane fade">
+                {% for id in goods.keys() %}
+                    {% if goods[id]['class'] == "Rare" %}
+                        {{ shop_card(user=current_user, id=id, goods=goods) }}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <ul id="leveled" class="tab-pane fade">
+                {% for id in goods.keys() %}
+                    {% if goods[id]['class'] == "Leveled" %}
+                        {{ shop_card(user=current_user, id=id, goods=goods) }}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

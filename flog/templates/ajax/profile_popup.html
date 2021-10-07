@@ -2,17 +2,10 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% from 'macros.html' import follow_area, render_user_role, level_badge with context %}
+{% from 'macros.html' import avatar_username with context %}
 <div class="popup-card">
     <div class="popup-profile">
-        <img class="img-circle popup-avatar p-2" src="{{ user.avatar_url() }}" style="width: 50px !important; height: 50px !important;">
-        {{ render_user_role(user) }}<br>
-        {% if current_user.can(Permission.MODERATE) %}
-            <small class="text-muted">{{ user.name }}</small>
-        {% endif %}
-    </div>
-    <div>
-        {{ level_badge(user) }}
+        {{ avatar_username(user, avatar_size=20) }}
     </div>
     <div>
         <a href="{{ url_for('user.profile', username=user.username) }}"

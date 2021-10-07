@@ -46,7 +46,7 @@ MIT License
 
 {% macro level_badge(user) %}
     <span class="level-badge">
-        <img src="{{ user.level_badge_link() }}" alt="level-badge">
+        <img src="{{ user.level_badge_link() }}" alt="level-badge" style="margin:.5em;">
     </span>
 {% endmacro %}
 
@@ -196,33 +196,57 @@ MIT License
     {%- endif %}
 {% endmacro %}
 
-{% macro avatar(user, class="", style="", size=36) %} <!-- Style must be nothing or end with ";" -->
+{% macro avatar(user, class="", style="", size=40) %} {# Style must be nothing or end with ";" #}
     <div style="
-        width: {{ size }}px;
-        height: {{ size }}px;
-        border-radius: {{ size // 2 }}px;
-        background-image: url('{{ user.avatar_url() }}');
-        background-size: 100% 100%;
-        {{ style }}
-        {{ user.load_avatar_style() }}
-    " data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"></div>
+        width: {{ size + size // 5 }}px !important;
+        height: {{ size + size // 5 }}px !important;
+        padding: {{ size // 10 }}px;
+        border-radius: {{ size // 2 + size // 10 }}px;
+        margin: 0 !important;
+        {{ user.load_avatar_style(size + size // 5) }}
+    ">
+        <img
+            src="{{ user.avatar_url() }}"
+            style="
+                width: {{ size }}px !important;
+                height: {{ size }}px !important;
+                border-radius: {{ size // 2 }}px;
+                {{ style }}
+            "
+            data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"
+            alt="identicon"
+        >
+    </div>
+{% endmacro %}
+
+{% macro username(user, class="", style="", size="100%", link=True, badge=True) %} {# Style must be nothing or end with ";" #}
+    <a style="font-size: {{ size }}; text-decoration: none; margin: .5em;{{ style }}
+            {{ user.load_username_style() }}
+            margin-bottom: 0 !important;"
+        {% if link %}
+            href="{{ url_for('user.profile', username=user.username) }}"
+        {% endif %} class="{{ class }}"
+    >{{ user.username }}</a>
+    {% if badge %}
+        {% if user.is_administrator() %}
+            <img src="https://img.shields.io/badge/admin-d24" style="margin:.5em;">
+        {% elif user.can(Permission.MODERATE) %}
+            <img src="https://img.shields.io/badge/moderator-eb3" style="margin:.5em;">
+        {% endif %}
+        {{ level_badge(user) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro avatar_username(user, avatar_size=30, username_size="100%", badge=True) %}
+    <div class="d-flex align-items-center">
+        {{ avatar(user, size=avatar_size) }}
+        {{ username(user, size=username_size, badge=badge) }}
+    </div>
 {% endmacro %}
 
 {% macro user_card(user, group=None) %}
     <li class="list-group-item d-flex">
-        <div class="d-flex align-items-center">
-            <a href="{{ url_for('user.profile', username=user.username) }}">
-                {{ avatar(user, class="profile-popover mr-3", size=48) }}
-            </a>
-            <a style="font-size: 2em; text-decoration: none;" href="{{ url_for('user.profile', username=user.username) }}">{{ user.username }}
-            </a>
-            {% if user.is_administrator() %}
-                <img src="https://img.shields.io/badge/role-admin-d24">
-            {% elif user.can(Permission.MODERATE) %}
-                <img src="https://img.shields.io/badge/role-moderator-eb3">
-            {% endif %}
-            {{ level_badge(user) }}
-        </div>
+        {{ avatar_username(user, avatar_size=40, username_size="150%") }}
         {% if not group %}
         <span class="text-white align-items-end flex-column ml-auto">
             {% if current_user.is_administrator() -%}
@@ -296,11 +320,7 @@ MIT License
         </h3>
         <h4 class="text-muted">
             {% if post.author %}
-                <a href="{{ url_for('user.profile', username=post.author.username) }}"
-                   class="profile-popover"
-                   data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                    {{ post.author.username }}
-                </a>
+                {{ avatar_username(post.author, avatar_size=30, username_size="100%", badge=False) }}
             {% else %}
                 {{ _("Deleted Flog User") }}
             {% endif %}
@@ -359,12 +379,8 @@ MIT License
 {% macro column_card(column, extra_classes="") %}
     <li class="list-group-item {{ extra_classes }}">
         <h3>{{ _("Column name:") }} <a href="{{ url_for('main.view_column', id=column.id) }}">{{ column.name }}</a></h3>
-        <h4>{{ _("Author: ") }}
-            <a href="{{ column.author.profile_url() }}"
-               class="text-muted profile-popover"
-               data-href="{{ url_for('ajax.get_profile', user_id=column.author.id) }}">
-                {{ column.author.username }}
-            </a>
+        <h4>
+            {{ avatar_username(column.author, avatar_size=30, username_size="100%", badge=False) }}
         </h4>
         <h4>
             {{ _("Created") }} {{ moment(column.timestamp).fromNow(refresh=True) }}
@@ -437,4 +453,82 @@ MIT License
     {{ ckeditor.load() }}
     {{ ckeditor.config(name="content") }}
     {{ ckeditor.config(custom_config="extraAllowedContent: '"+allowed_tags+"'") }}
+{% endmacro %}
+
+{% macro shop_card(user, id, goods) %}
+    <li class="list-group-item d-flex">
+        <div class="d-flex align-items-center">
+            <div style="
+                width: 44px !important;
+                height: 44px !important;
+                padding: 4px;
+                border-radius: 22px;
+                {{ goods[id]['style'] }}
+            ">
+                <img
+                    src="{{ user.avatar_url() }}"
+                    style="
+                        width: 36px !important;
+                        height: 36px !important;
+                        border-radius: 18px;
+                    "
+                    data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"
+                    alt="identicon"
+                >
+            </div>
+            <h3 style="
+                {{ goods[id]['text_style'] }}
+            ">
+                <strong>&nbsp;&nbsp;&nbsp;{{ goods[id]["name"] }}</strong>
+            </h3>
+        </div>
+        <span class="text-white align-items-end flex-column ml-auto">
+            {% if id not in user.load_belongings_id() %}
+                {% if goods[id]["expires"].__str__()[0:2] != "99" %}
+                    <span class="text-muted">
+                    {% if goods[id]["price"] == 0 %}
+                        free
+                    {% else %}
+                        {{ goods[id]['price'] }}pi
+                    {% endif %}
+                    / {{ goods[id]['expires'].__str__()[:7] }}</span>
+                {% else %}
+                    <span class="text-muted">
+                    {% if goods[id]["price"] == 0 %}
+                        free
+                    {% else %}
+                        {{ goods[id]['price'] }}pi
+                    {% endif %}
+                    for lifetime</span>
+                {% endif %}
+                {% if goods[id]["price"] != 0 %}
+                    <br><span class="
+                        {% if user.coins>=goods[id]['price'] %}
+                            text-success
+                        {% else %}
+                            text-danger
+                        {% endif %}
+                    ">({{ user.coins.__float__() }} / {{ goods[id]['price'].__float__() }})</span>
+                {% endif %}
+                <br><span class="text-muted">Required Exp: {{ goods[id]['exp'] }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <a class="btn btn-sm btn-primary flex-fill
+                    {% if user.coins < goods[id]['price'] or user.experience < goods[id]['exp'] %}
+                        disabled
+                    {% endif %}
+                "
+                    href="{{ url_for('shop.buy', id=id) }}">
+                    <b>Buy</b>
+                </a>
+            {% elif id == user.avatar_style_id %}
+                <a class="btn btn-sm btn-success flex-fill disabled">
+                    <b>In Use</b>
+                </a>
+            {% else %}
+                <a class="btn btn-sm btn-success flex-fill"
+                    href="{{ url_for('shop.use', id=id) }}">
+                    <b>Use</b>
+                </a>
+            {% endif %}
+        </span>
+    </li>
 {% endmacro %}
