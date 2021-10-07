@@ -150,7 +150,7 @@ class ModelTestCase(Testing):
             assert u.level() == v[0]
             assert (
                 u.level_badge_link()
-                == "https://img.shields.io/badge/Lv" + str(v[0]) + "-" + v[1]
+                == "https://img.shields.io/badge/Lv" + str(v[0]) + "%20-" + v[1]
             )
 
     def test_lv9(self):
