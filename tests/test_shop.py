@@ -14,13 +14,13 @@ class ShopTestCase(Testing):
     def test_buy(self):
         self.login()
         response = self.client.get("/shop/buy/1")
-        assert response.status_code == 200
+        assert response.status_code == 302
         response_data = response.get_data(as_text=True)
         assert "Success" in response_data
 
     def test_use(self):
         self.login()
         response = self.client.get("/shop/use/1")
-        assert response.status_code == 200
+        assert response.status_code == 302
         response_data = response.get_data(as_text=True)
         assert "Success" in response_data
