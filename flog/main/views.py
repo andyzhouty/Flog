@@ -14,6 +14,7 @@ from flask import (
 )
 from flask_babel import _
 from flask_login import current_user, login_required
+from sqlalchemy import or_
 from flog.decorators import permission_required
 from flog.extensions import csrf
 
@@ -42,7 +43,7 @@ def main():
         )
     else:
         pagination = (
-            Post.query.filter(~Post.private)
+            Post.query.filter(or_(~Post.private, Post.author == current_user))
             .order_by(Post.timestamp.desc())
             .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
         )
@@ -336,7 +337,7 @@ def search():
     if (
         category == "post" or category == "group"
     ) and not current_user.is_administrator():
-        query = query.filter_by(private=False)
+        query = eval("query.filter(or_(~{0}.private, {0}.author==current_user))")
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 
