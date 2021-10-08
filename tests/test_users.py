@@ -107,7 +107,6 @@ class UserTestCase(Testing):
         db.session.add(user)
         db.session.commit()
 
-
     def test_delete_account(self):
         self.login()
         user_count = User.query.count()

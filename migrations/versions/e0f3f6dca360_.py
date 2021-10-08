@@ -11,15 +11,17 @@ from sqlalchemy.dialects import mysql
 
 
 # revision identifiers, used by Alembic.
-revision = 'e0f3f6dca360'
-down_revision = '642b68fd39fe'
+revision = "e0f3f6dca360"
+down_revision = "642b68fd39fe"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.add_column('group', sa.Column('password_hash', mysql.VARCHAR(length=128), nullable=True))
+    op.add_column(
+        "group", sa.Column("password_hash", mysql.VARCHAR(length=128), nullable=True)
+    )
 
 
 def downgrade():
-    op.drop_column('group', 'password_hash')
+    op.drop_column("group", "password_hash")

@@ -12,21 +12,259 @@ from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
+
+def items(id: int, mode="get"):
+    item_list = {
+        0: {"style": "", "text_style": "color: inherit;"},
+        1: {
+            "expires": timedelta(days=30),
+            "price": 7.99,
+            "exp": 0,
+            "style": "background-color: #DE2344;",
+            "text_style": "color: #DE2344;",
+            "name": "Rose",
+            "class": "Classic",
+        },
+        2: {
+            "expires": timedelta(days=30),
+            "price": 7.99,
+            "exp": 0,
+            "style": "background-color: #FE9A2E;",
+            "text_style": "color: #FE9A2E;",
+            "name": "Orange",
+            "class": "Classic",
+        },
+        3: {
+            "expires": timedelta(days=30),
+            "price": 7.99,
+            "exp": 0,
+            "style": "background-color: #EBBC34;",
+            "text_style": "color: #EBBC34;",
+            "name": "Sun",
+            "class": "Classic",
+        },
+        4: {
+            "expires": timedelta(days=30),
+            "price": 7.99,
+            "exp": 0,
+            "style": "background-color: #2EFE9A;",
+            "text_style": "color: #2EFE9A;",
+            "name": "Mint",
+            "class": "Classic",
+        },
+        5: {
+            "expires": timedelta(days=30),
+            "price": 7.99,
+            "exp": 100,
+            "style": "background-color: #2E64FE;",
+            "text_style": "color: #2E64FE;",
+            "name": "Copper 2+",
+            "class": "Classic",
+        },
+        6: {
+            "expires": timedelta(days=30),
+            "price": 7.99,
+            "exp": 0,
+            "style": "background-color: #7401DF;",
+            "text_style": "color: #7401DF;",
+            "name": "Violet",
+            "class": "Classic",
+        },
+        7: {
+            "expires": timedelta(days=30),
+            "price": 14.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(45deg, #8000FF, #FE2E64, #FE9A2E);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #8000FF, #FE2E64, #FE9A2E);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Fire",
+            "class": "Rare",
+        },
+        8: {
+            "expires": timedelta(days=30),
+            "price": 14.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(45deg, #5882FA, #81F7F3);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #5882FA, #81F7F3);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Frozen",
+            "class": "Rare",
+        },
+        9: {
+            "expires": timedelta(days=30),
+            "price": 14.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(45deg, #04B486, #04B486, #F2F5A9);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #04B486, #04B486, #F2F5A9);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Shore",
+            "class": "Rare",
+        },
+        10: {
+            "expires": timedelta(days=30),
+            "price": 14.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(45deg, #08088A, #04B486);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #08088A, #04B486);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Aurora",
+            "class": "Rare",
+        },
+        11: {
+            "expires": timedelta(days=30),
+            "price": 19.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(45deg, #F5A9D0, #BE81F7);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #F5A9D0, #BE81F7);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Sweet",
+            "class": "Rare",
+        },
+        12: {
+            "expires": timedelta(days=30),
+            "price": 19.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(#FF8000, #FF8000, #F6E3CE, #FF8000, #FF8000);
+            """,
+            "text_style": """
+                background: linear-gradient(#FF8000, #FF8000, #F6E3CE, #FF8000, #FF8000);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Helium",
+            "class": "Rare",
+        },
+        13: {
+            "expires": timedelta(days=30),
+            "price": 19.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(#FFFF00, #FF00FF, #00FFFF);
+            """,
+            "text_style": """
+                background: linear-gradient(#FFFF00, #FF00FF, #00FFFF);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Rainbow",
+            "class": "Rare",
+        },
+        14: {
+            "expires": timedelta(days=99999),
+            "price": 0,
+            "exp": 1100,
+            "style": """
+                background-image: linear-gradient(45deg, #00FFBF, #2E64FE);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #00FFBF, #2E64FE);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Seven",
+            "class": "Leveled",
+        },
+        15: {
+            "expires": timedelta(days=99999),
+            "price": 0,
+            "exp": 2500,
+            "style": """
+                background-image: linear-gradient(45deg, #4000FF, #DF01A5);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #4000FF, #DF01A5);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Crown",
+            "class": "Leveled",
+        },
+        16: {
+            "expires": timedelta(days=99999),
+            "price": 0,
+            "exp": 3100,
+            "style": """
+                background-image: linear-gradient(45deg, #2EFE2E, #0B614B);
+            """,
+            "text_style": """
+                background: linear-gradient(45deg, #2EFE2E, #0B614B);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Iron 2+",
+            "class": "Leveled",
+        },
+    }
+    return (
+        item_list[id] if mode == "get" else (len(item_list) if mode == "len" else None)
+    )
+
+
 group_user_table = db.Table(
     "group_user",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("group_id", db.Integer, db.ForeignKey("group.id")),
+    extend_existing=True,
 )
 column_post_table = db.Table(
     "column_post",
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
     db.Column("column_id", db.Integer, db.ForeignKey("column.id")),
+    extend_existing=True,
 )
 coin_table = db.Table(
     "coin_table",
     db.Column("owner_id", db.Integer, db.ForeignKey("user.id")),
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+    extend_existing=True,
 )
+
+
+class Belong(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    owner_id = db.Column(
+        db.Integer(),
+        db.ForeignKey("user.id"),
+    )
+    goods_id = db.Column(
+        db.Integer(),
+    )
+    expires = db.Column(db.DateTime)
+
+    owner = db.relationship("User", back_populates="belongings")
+
+    def __str__(self):
+        return f"<Belong relationship {self.goods_id} -> User {self.owner_id}>"
+
+    def load_expiration_delta(self):
+        delta = self.expires - datetime.utcnow()
+        return delta
 
 
 class Collect(db.Model):
@@ -381,6 +619,10 @@ class User(db.Model, UserMixin):
         "Post", secondary=coin_table, back_populates="coiners"
     )
 
+    belongings = db.relationship("Belong", back_populates="owner")
+
+    avatar_style_id = db.Column(db.Integer(), default=0)
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -550,7 +792,7 @@ class User(db.Model, UserMixin):
 
     def level_badge_link(self) -> str:
         lv = self.level()
-        prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9))
+        prefix = "https://img.shields.io/badge/Lv" + str(min(lv, 9)) + "%20"
         if lv <= 8:
             color = ""
             if lv == 1:
@@ -572,7 +814,34 @@ class User(db.Model, UserMixin):
             return prefix + "-" + color
         else:
             plus = lv - 9
-            return prefix + " %2B" + str(plus) + "-808"
+            return prefix + "%2B" + str(plus) + "-808"
+
+    def load_belongings(self):
+        belongings = [
+            item for item in self.belongings if item.expires > datetime.utcnow()
+        ]
+        return belongings
+
+    def load_belongings_id(self):
+        return [item.goods_id for item in self.load_belongings()]
+
+    def load_avatar_style(self, size=36):
+        if self.avatar_style_id is None:
+            self.avatar_style_id = 0
+            db.session.commit()
+        style = items(self.avatar_style_id)["style"]
+        if self.avatar_style_id in [item.goods_id for item in self.load_belongings()]:
+            return style.format(size / 160)
+        return ""
+
+    def load_username_style(self):
+        if self.avatar_style_id is None:
+            self.avatar_style_id = 0
+            db.session.commit()
+        style = items(self.avatar_style_id)["text_style"]
+        if self.avatar_style_id in [item.goods_id for item in self.load_belongings()]:
+            return style
+        return ""
 
 
 class AnonymousUser(AnonymousUserMixin):

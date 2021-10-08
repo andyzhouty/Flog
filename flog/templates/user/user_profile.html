@@ -1,20 +1,17 @@
 
 {% extends 'base.html' %}
-{% from 'macros.html' import render_user_role, follow_area, static_file, level_badge with context %}
+{% from 'macros.html' import render_user_role, follow_area, static_file, level_badge, username, avatar with context %}
 {% set locale = 'en_US' if not current_user.locale else current_user.locale %}
 {% block title %}
     Flog - {{ user.username }}
 {% endblock title %}
 {% block page_content %}
 <div class="row container">
-    <div class="col-lg-2">
-        <img class="img-fluid" src="{{ user.avatar_url() }}" width="200px" height="200px">
+    <div class="col-lg-4" style="margin-top: 3em; margin-bottom: 3em;">
+        {{ avatar(user, size=200) }}
     </div>
-    <div class="col-lg-10">
-        <h1>
-            {{ render_user_role(user) }}
-            {{ level_badge(user) }}
-        </h1>
+    <div class="col-lg-8">
+        {{ username(user, size="250%", link=False) }}
         {% if current_user.can(Permission.MODERATE) or user == current_user %}
             <div class="d-flex">
                 <div class="mr-2">{{ static_file("svg", "svg/pi-empty.svg", width=20, height=20) }}</div>

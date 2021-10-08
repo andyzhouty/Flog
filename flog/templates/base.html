@@ -3,7 +3,7 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 {% from 'bootstrap/nav.html' import render_nav_item %}
-{% from 'macros.html' import static_file, change_theme %}
+{% from 'macros.html' import static_file, change_theme, avatar %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,6 +45,9 @@ MIT License
                     {{ render_nav_item('main.main', _('Main')) }}
                     {{ render_nav_item('feedback.feedback', _('Feedback')) }}
                     {{ render_nav_item('others.about_us', _('About Us')) }}
+                    <li>
+                        <a class="btn btn-outline-light" href="{{ url_for('shop.shop_index') }}">Flog BetaShop</a>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav align-items-center">
                     {% if current_user.is_authenticated %}
@@ -59,11 +62,9 @@ MIT License
                             </form>
                         {% endblock %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="account">
-                                {# Display user identicon as a circle here #}
-                                <img src="{{ current_user.avatar_url(size=30) }}" alt="identicon" class="rounded-circle"
-                                    style="height: 40px !important; width: 40px !important;">
-                            </a>
+                            <button class="btn nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="account">
+                                {{ avatar(current_user) }}
+                            </button>
                             <div class="dropdown-menu">
                                 <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item"
                                    id="edit-profile-link">{{ _("Edit Profile") }}</a>
