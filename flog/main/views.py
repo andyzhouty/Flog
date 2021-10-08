@@ -334,10 +334,11 @@ def search():
             category.capitalize(), name_key[category], q
         )
     )
-    if (
-        category == "post" or category == "group"
-    ) and not current_user.is_administrator():
-        query = eval("query.filter(or_(~{0}.private, {0}.author==current_user))")
+    if not current_user.is_administrator():
+        if category == "post":
+            query = query.filter(or_(~Post.private, Post.author == current_user))
+        elif category == "group":
+            query = query.filter(or_(~Group.private, Group in current_user.groups))
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 
