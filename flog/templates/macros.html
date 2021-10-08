@@ -220,7 +220,7 @@ MIT License
 {% endmacro %}
 
 {% macro username(user, class="", style="", size="100%", link=True, badge=True) %} {# Style must be nothing or end with ";" #}
-    <a style="font-size: {{ size }}; text-decoration: none; margin: .5em;{{ style }}
+    <a style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
             {{ user.load_username_style() }}
             margin-bottom: 0 !important;"
         {% if link %}
@@ -320,7 +320,7 @@ MIT License
         </h3>
         <h4 class="text-muted">
             {% if post.author %}
-                {{ avatar_username(post.author, avatar_size=30, username_size="100%", badge=False) }}
+                {{ avatar_username(post.author, avatar_size=32, username_size="100%", badge=False) }}
             {% else %}
                 {{ _("Deleted Flog User") }}
             {% endif %}
