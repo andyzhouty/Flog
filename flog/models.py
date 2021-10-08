@@ -161,6 +161,21 @@ def items(id: int, mode="get"):
             "class": "Rare",
         },
         13: {
+            "expires": timedelta(days=30),
+            "price": 19.99,
+            "exp": 0,
+            "style": """
+                background-image: linear-gradient(#FFFF00, #FF00FF, #00FFFF);
+            """,
+            "text_style": """
+                background: linear-gradient(#FFFF00, #FF00FF, #00FFFF);
+                -webkit-background-clip: text;
+                color: transparent;
+            """,
+            "name": "Rainbow",
+            "class": "Rare",
+        },
+        14: {
             "expires": timedelta(days=99999),
             "price": 0,
             "exp": 1100,
@@ -175,7 +190,7 @@ def items(id: int, mode="get"):
             "name": "Seven",
             "class": "Leveled",
         },
-        14: {
+        15: {
             "expires": timedelta(days=99999),
             "price": 0,
             "exp": 2500,
@@ -190,7 +205,7 @@ def items(id: int, mode="get"):
             "name": "Crown",
             "class": "Leveled",
         },
-        15: {
+        16: {
             "expires": timedelta(days=99999),
             "price": 0,
             "exp": 3100,
