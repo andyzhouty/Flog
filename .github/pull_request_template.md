@@ -31,3 +31,4 @@ If you changed the html templates or css/js, you must:
 
 If you changed the Python code, you must:
 - [ ] Add tests that demonstrate the correct behavior of the change. Tests should fail without the change.
+- [ ] Run `flask db upgrade`, no error code is returned.
