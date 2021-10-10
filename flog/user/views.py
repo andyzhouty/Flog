@@ -105,6 +105,7 @@ def change_password():
     form = PasswordChangeForm()
     if form.validate_on_submit():
         current_user.set_password(form.password.data)
+        db.session.commit()
         flash(_("Password Changed"))
         return redirect(url_for("user.profile", username=current_user.username))
     return render_template("user/change_password.html", form=form)
