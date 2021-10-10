@@ -13,63 +13,66 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
 
+def render_style(mode, args: tuple):
+    """
+    mode "simple":
+        args -> (fill: str,)
+        e.g. : render_style(mode="simple", args=("#FFFFFF",))
+    mode "gradient":
+        args -> (fill: tuple, rotation: str)
+            fill -> (color1: str, color2: str, ...)
+            rotation -> this must be supported by css. for example: "45deg".
+        e.g. : render_style(
+            mode="gradient",
+            args=(
+                ("#FFFF00", "#FF00FF", "#00FFFF",),
+                "135deg",
+            )
+        )
+    """
+    if mode == "simple":
+        return f"background-color: {args[0]};"
+    elif mode == "gradient":
+        gradient = "linear-gradient(" + ", ".join([args[1]] + [item for item in args[0]]) + ")"
+        return f"background-image: {gradient}"
+
+def render_text_style(mode, args: tuple):
+    """
+    The use of args(tuple) is the same as function: render_style().
+    """
+    if mode == "simple":
+        return f"color: {args[0]};"
+    elif mode == "gradient":
+        gradient = "linear-gradient(" + ", ".join([args[1]] + [item for item in args[0]]) + ")"
+        return f"background: {gradient}; -webkit-background-clip: text; color: transparent;"
+
+def render_shop_dict(name, mode, price: int, exp: int, expires: timedelta, class_: str, args: tuple):
+    """
+    mode(str) and args(tuple) are the same use as function: render_style().
+    """
+    return {
+        "expires": expires,
+        "price": price,
+        "exp": exp,
+        "style": render_style(mode=mode, args=args),
+        "text_style": render_text_style(mode=mode, args=args),
+        "name": name,
+        "class": class_,
+    }
+
 def items(id: int, mode="get"):
     item_list = {
         0: {"style": "", "text_style": "color: inherit;"},
-        1: {
-            "expires": timedelta(days=30),
-            "price": 7.99,
-            "exp": 0,
-            "style": "background-color: #DE2344;",
-            "text_style": "color: #DE2344;",
-            "name": "Rose",
-            "class": "Classic",
-        },
-        2: {
-            "expires": timedelta(days=30),
-            "price": 7.99,
-            "exp": 0,
-            "style": "background-color: #FE9A2E;",
-            "text_style": "color: #FE9A2E;",
-            "name": "Orange",
-            "class": "Classic",
-        },
-        3: {
-            "expires": timedelta(days=30),
-            "price": 7.99,
-            "exp": 0,
-            "style": "background-color: #EBBC34;",
-            "text_style": "color: #EBBC34;",
-            "name": "Sun",
-            "class": "Classic",
-        },
-        4: {
-            "expires": timedelta(days=30),
-            "price": 7.99,
-            "exp": 0,
-            "style": "background-color: #2EFE9A;",
-            "text_style": "color: #2EFE9A;",
-            "name": "Mint",
-            "class": "Classic",
-        },
-        5: {
-            "expires": timedelta(days=30),
-            "price": 7.99,
-            "exp": 100,
-            "style": "background-color: #2E64FE;",
-            "text_style": "color: #2E64FE;",
-            "name": "Copper 2+",
-            "class": "Classic",
-        },
-        6: {
-            "expires": timedelta(days=30),
-            "price": 7.99,
-            "exp": 0,
-            "style": "background-color: #7401DF;",
-            "text_style": "color: #7401DF;",
-            "name": "Violet",
-            "class": "Classic",
-        },
+
+        # put your Classics here
+        1: render_shop_dict("Rose", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#DE2344",)),
+        2: render_shop_dict("Orange", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#FE9A2E",)),
+        3: render_shop_dict("Sun", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#EBBC34",)),
+        4: render_shop_dict("Mint", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#2EFE9A",)),
+        5: render_shop_dict("Copper", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#2E64FE",)),
+        6: render_shop_dict("Violet", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#7401DF",)),
+
+        # put your Rares here
         7: {
             "expires": timedelta(days=30),
             "price": 14.99,
