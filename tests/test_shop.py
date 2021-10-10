@@ -1,7 +1,3 @@
-from random import randint
-from flask import current_app, request
-from flog.models import db, Belong
-from flog.extensions import mail
 from .conftest import Testing
 
 

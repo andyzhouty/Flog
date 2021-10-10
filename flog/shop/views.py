@@ -1,8 +1,8 @@
 from flask_login import login_required, current_user
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask import redirect, flash, url_for, render_template, request
 
-from ..models import db, User, Belong, items
+from ..models import db, Belong, items
 from . import shop_bp
 
 
@@ -31,14 +31,14 @@ def buy(id):
         if id == 0:
             raise KeyError(0)
         if not Belong.query.filter_by(owner_id=current_user.id, goods_id=id).scalar():
-            if items(id)["exp"] <= current_user.experience:
-                if items(id)["price"] <= current_user.coins:
+            if items(id).exp <= current_user.experience:
+                if items(id).price <= current_user.coins:
                     ownership = Belong(
                         owner_id=current_user.id,
                         goods_id=id,
-                        expires=items(id)["expires"] + datetime.utcnow(),
+                        expires=items(id).expires + datetime.utcnow(),
                     )
-                    current_user.coins -= items(id)["price"]
+                    current_user.coins -= items(id).price
                     db.session.add(ownership)
                     db.session.commit()
                     flash("Success! Use it and check out!")
