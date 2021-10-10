@@ -126,7 +126,7 @@ def items(id: int, mode="get"):
             category="Rare",
         ),
         Item(
-            name="Helium",
+            name="Rainbow",
             expires=30,
             color="#FFFF00, #FF00FF, #00FFFF",
             gradient_deg="",
