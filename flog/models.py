@@ -22,6 +22,7 @@ class Item:
         gradient_deg: str = "45deg, ",
         expires: int = 0,
         color: str = "",
+        **kwargs,
     ):
         self.name = name
         self.category = category
@@ -34,7 +35,7 @@ class Item:
         if category == "Classic":
             self.style = f"background-color: {color};"
             self.text_style = f"color: {color};"
-            self.price = 8 * (expires / 30) - 2 * (expires / 30 - 1) - 0.01
+            self.price = 5 * (expires / 30) - 2 * (expires / 30 - 1) - 0.01
         elif category == "Rare" or category == "Leveled":
             # gradient color
             gradient = f"linear-gradient({gradient_deg}{color})"
@@ -45,7 +46,9 @@ class Item:
                 color: transparent;
             """
             if category == "Rare":
-                self.price = 15 * (expires / 30) - 2 * (expires / 30 - 1) - 0.01
+                self.price = 9 * (expires / 30) - 2 * (expires / 30 - 1) - 0.01
+        if "price" in kwargs.keys():
+            self.price = kwargs["price"]
 
 
 def items(id: int, mode="get"):
@@ -129,7 +132,6 @@ def items(id: int, mode="get"):
             name="Rainbow",
             expires=30,
             color="#FFFF00, #FF00FF, #00FFFF",
-            gradient_deg="",
             category="Rare",
         ),
         Item(
@@ -137,14 +139,6 @@ def items(id: int, mode="get"):
             expires=99999,
             color="#00FFBF, #2E64FE",
             exp=1100,
-            category="Leveled",
-        ),
-        Item(
-            name="Ripe Malinka",
-            expires=99999,
-            exp=1500,
-            color="#f77062, #fe5196",
-            gradient_deg="to top, ",
             category="Leveled",
         ),
         Item(
@@ -161,7 +155,58 @@ def items(id: int, mode="get"):
             color="#2CD8D5, #6B8DD6, #8E37D7",
             gradient_deg="-225deg, ",
             category="Leveled",
+            price=16.66
         ),
+        Item(
+            name="Sky Five",
+            expires=99999,
+            exp=5500,
+            color="#D4FFEC 0%, #57F2CC 48%, #4596FB 100%",
+            gradient_deg="-225deg, ",
+            category="Leveled",
+            price=16.66
+        ),
+        Item(
+            name="Amour",
+            expires=99999,
+            exp=1500,
+            color="#f77062, #fe5196",
+            gradient_deg="to top, ",
+            category="Leveled",
+        ),
+        Item(
+            name="Harmony",
+            expires=30,
+            exp=0,
+            color="#3D4E81 0%, #5753C9 48%, #6E7FF3 100%",
+            gradient_deg="-225deg, ",
+            category="Rare",
+        ),
+        Item(
+            name="Phoenix",
+            expires=30,
+            exp=0,
+            color="#f83600, #f9d423",
+            gradient_deg="to right, ",
+            category="Rare",
+        ),
+        Item(
+            name="Life",
+            expires=60,
+            exp=0,
+            color="#43e97b, #38f9d7",
+            gradient_deg="to right, ",
+            category="Rare",
+        ),
+        Item(
+            name="Beach",
+            expires=60,
+            exp=0,
+            color="#4facfe, #00f2fe",
+            gradient_deg="to right, ",
+            category="Rare",
+        ),
+
     )
     return (
         item_list[id] if mode == "get" else (len(item_list) if mode == "len" else None)
