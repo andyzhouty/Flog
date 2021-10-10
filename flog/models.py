@@ -155,7 +155,7 @@ def items(id: int, mode="get"):
             color="#2CD8D5, #6B8DD6, #8E37D7",
             gradient_deg="-225deg, ",
             category="Leveled",
-            price=16.66
+            price=16.66,
         ),
         Item(
             name="Sky Five",
@@ -164,7 +164,7 @@ def items(id: int, mode="get"):
             color="#D4FFEC 0%, #57F2CC 48%, #4596FB 100%",
             gradient_deg="-225deg, ",
             category="Leveled",
-            price=16.66
+            price=16.66,
         ),
         Item(
             name="Amour",
@@ -206,7 +206,6 @@ def items(id: int, mode="get"):
             gradient_deg="to right, ",
             category="Rare",
         ),
-
     )
     return (
         item_list[id] if mode == "get" else (len(item_list) if mode == "len" else None)
