@@ -13,217 +13,148 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
 
 
-def render_style(mode, args: tuple):
-    """
-    mode "simple":
-        args -> (fill: str,)
-        e.g. : render_style(mode="simple", args=("#FFFFFF",))
-    mode "gradient":
-        args -> (fill: tuple, rotation: str)
-            fill -> (color1: str, color2: str, ...)
-            rotation -> this must be supported by css. for example: "45deg".
-        e.g. : render_style(
-            mode="gradient",
-            args=(
-                ("#FFFF00", "#FF00FF", "#00FFFF",),
-                "135deg",
-            )
-        )
-    """
-    if mode == "simple":
-        return f"background-color: {args[0]};"
-    elif mode == "gradient":
-        gradient = "linear-gradient(" + ", ".join([args[1]] + [item for item in args[0]]) + ")"
-        return f"background-image: {gradient}"
+class Item:
+    def __init__(
+        self,
+        name: str = "",
+        category: str = "",
+        exp: int = 0,
+        gradient_deg: str = "45deg, ",
+        expires: int = 0,
+        color: str = "",
+    ):
+        self.name = name
+        self.category = category
+        self.exp = 0 if not exp else exp
+        self.price = 0
+        self.expires = timedelta(days=expires)
+        if category == "":
+            self.style = ""
+            self.text_style = "color: inherit;"
+        if category == "Classic":
+            self.style = f"background-color: {color};"
+            self.text_style = f"color: {color};"
+            self.price = 8 * (expires / 30) - 2 * (expires / 30 - 1) - 0.01
+        elif category == "Rare" or category == "Leveled":
+            # gradient color
+            gradient = f"linear-gradient({gradient_deg}{color})"
+            self.style = f"background-image: {gradient};"
+            self.text_style = f"""
+                background: {gradient};
+                -webkit-background-clip: text;
+                color: transparent;
+            """
+            if category == "Rare":
+                self.price = 15 * (expires / 30) - 2 * (expires / 30 - 1) - 0.01
 
-def render_text_style(mode, args: tuple):
-    """
-    The use of args(tuple) is the same as function: render_style().
-    """
-    if mode == "simple":
-        return f"color: {args[0]};"
-    elif mode == "gradient":
-        gradient = "linear-gradient(" + ", ".join([args[1]] + [item for item in args[0]]) + ")"
-        return f"background: {gradient}; -webkit-background-clip: text; color: transparent;"
-
-def render_shop_dict(name, mode, price: int, exp: int, expires: timedelta, class_: str, args: tuple):
-    """
-    mode(str) and args(tuple) are the same use as function: render_style().
-    """
-    return {
-        "expires": expires,
-        "price": price,
-        "exp": exp,
-        "style": render_style(mode=mode, args=args),
-        "text_style": render_text_style(mode=mode, args=args),
-        "name": name,
-        "class": class_,
-    }
 
 def items(id: int, mode="get"):
-    item_list = {
-        0: {"style": "", "text_style": "color: inherit;"},
-
-        # put your Classics here
-        1: render_shop_dict("Rose", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#DE2344",)),
-        2: render_shop_dict("Orange", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#FE9A2E",)),
-        3: render_shop_dict("Sun", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#EBBC34",)),
-        4: render_shop_dict("Mint", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#2EFE9A",)),
-        5: render_shop_dict("Copper", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#2E64FE",)),
-        6: render_shop_dict("Violet", "simple", 5.99, 0, timedelta(days=30), "Classic", ("#7401DF",)),
-
-        # put your Rares here
-        7: {
-            "expires": timedelta(days=30),
-            "price": 14.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(45deg, #8000FF, #FE2E64, #FE9A2E);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #8000FF, #FE2E64, #FE9A2E);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Fire",
-            "class": "Rare",
-        },
-        8: {
-            "expires": timedelta(days=30),
-            "price": 14.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(45deg, #5882FA, #81F7F3);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #5882FA, #81F7F3);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Frozen",
-            "class": "Rare",
-        },
-        9: {
-            "expires": timedelta(days=30),
-            "price": 14.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(45deg, #04B486, #04B486, #F2F5A9);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #04B486, #04B486, #F2F5A9);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Shore",
-            "class": "Rare",
-        },
-        10: {
-            "expires": timedelta(days=30),
-            "price": 14.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(45deg, #08088A, #04B486);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #08088A, #04B486);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Aurora",
-            "class": "Rare",
-        },
-        11: {
-            "expires": timedelta(days=30),
-            "price": 19.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(45deg, #F5A9D0, #BE81F7);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #F5A9D0, #BE81F7);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Sweet",
-            "class": "Rare",
-        },
-        12: {
-            "expires": timedelta(days=30),
-            "price": 19.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(#FF8000, #FF8000, #F6E3CE, #FF8000, #FF8000);
-            """,
-            "text_style": """
-                background: linear-gradient(#FF8000, #FF8000, #F6E3CE, #FF8000, #FF8000);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Helium",
-            "class": "Rare",
-        },
-        13: {
-            "expires": timedelta(days=30),
-            "price": 19.99,
-            "exp": 0,
-            "style": """
-                background-image: linear-gradient(#FFFF00, #FF00FF, #00FFFF);
-            """,
-            "text_style": """
-                background: linear-gradient(#FFFF00, #FF00FF, #00FFFF);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Rainbow",
-            "class": "Rare",
-        },
-        14: {
-            "expires": timedelta(days=99999),
-            "price": 0,
-            "exp": 1100,
-            "style": """
-                background-image: linear-gradient(45deg, #00FFBF, #2E64FE);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #00FFBF, #2E64FE);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Seven",
-            "class": "Leveled",
-        },
-        15: {
-            "expires": timedelta(days=99999),
-            "price": 0,
-            "exp": 2500,
-            "style": """
-                background-image: linear-gradient(45deg, #4000FF, #DF01A5);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #4000FF, #DF01A5);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Crown",
-            "class": "Leveled",
-        },
-        16: {
-            "expires": timedelta(days=99999),
-            "price": 0,
-            "exp": 3100,
-            "style": """
-                background-image: linear-gradient(45deg, #2EFE2E, #0B614B);
-            """,
-            "text_style": """
-                background: linear-gradient(45deg, #2EFE2E, #0B614B);
-                -webkit-background-clip: text;
-                color: transparent;
-            """,
-            "name": "Iron 2+",
-            "class": "Leveled",
-        },
-    }
+    item_list = (
+        Item(category=""),
+        Item(
+            name="Rose",
+            expires=30,
+            color="#DE2344",
+            category="Classic",
+        ),
+        Item(
+            name="Orange",
+            expires=30,
+            color="#FE9A2E",
+            category="Classic",
+        ),
+        Item(
+            name="Sun",
+            expires=30,
+            color="#EBBC34",
+            category="Classic",
+        ),
+        Item(
+            name="Mint",
+            expires=30,
+            color="#2EFE9A",
+            category="Classic",
+        ),
+        Item(
+            name="Copper 2+",
+            expires=30,
+            exp=100,
+            color="#2E64FE",
+            category="Classic",
+        ),
+        Item(
+            name="Violet",
+            expires=30,
+            color="#7401DF",
+            category="Classic",
+        ),
+        Item(
+            name="Fire",
+            expires=30,
+            color="#8000FF, #FE2E64, #FE9A2E",
+            category="Rare",
+        ),
+        Item(
+            name="Frozen",
+            expires=30,
+            color="#5882FA, #81F7F3",
+            category="Rare",
+        ),
+        Item(
+            name="Shore",
+            expires=30,
+            color="#04B486, #04B486, #F2F5A9",
+            category="Rare",
+        ),
+        Item(
+            name="Aurora",
+            expires=30,
+            color="#08088A, #04B486",
+            category="Rare",
+        ),
+        Item(
+            name="Sweet",
+            expires=30,
+            color="#F5A9D0, #BE81F7",
+            category="Rare",
+        ),
+        Item(
+            name="Helium",
+            expires=30,
+            color="#FF8000, #FF8000, #F6E3CE, #FF8000, #FF8000",
+            gradient_deg="",
+            category="Rare",
+        ),
+        Item(
+            name="Rainbow",
+            expires=30,
+            color="#FFFF00, #FF00FF, #00FFFF",
+            gradient_deg="",
+            category="Rare",
+        ),
+        Item(
+            name="Seven",
+            expires=99999,
+            color="#00FFBF, #2E64FE",
+            exp=1100,
+            category="Leveled",
+        ),
+        Item(
+            name="Crown",
+            expires=99999,
+            exp=2500,
+            color="#4000FF, #DF01A5",
+            category="Leveled",
+        ),
+        Item(
+            name="Black Sea",
+            expires=99999,
+            exp=3100,
+            color="#2CD8D5, #6B8DD6, #8E37D7",
+            gradient_deg="-225deg, ",
+            category="Leveled",
+        ),
+    )
     return (
         item_list[id] if mode == "get" else (len(item_list) if mode == "len" else None)
     )
@@ -832,7 +763,7 @@ class User(db.Model, UserMixin):
         if self.avatar_style_id is None:
             self.avatar_style_id = 0
             db.session.commit()
-        style = items(self.avatar_style_id)["style"]
+        style = items(self.avatar_style_id).style
         if self.avatar_style_id in [item.goods_id for item in self.load_belongings()]:
             return style.format(size / 160)
         return ""
@@ -841,7 +772,7 @@ class User(db.Model, UserMixin):
         if self.avatar_style_id is None:
             self.avatar_style_id = 0
             db.session.commit()
-        style = items(self.avatar_style_id)["text_style"]
+        style = items(self.avatar_style_id).text_style
         if self.avatar_style_id in [item.goods_id for item in self.load_belongings()]:
             return style
         return ""

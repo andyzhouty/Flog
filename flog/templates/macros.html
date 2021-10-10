@@ -463,7 +463,7 @@ MIT License
                 height: 44px !important;
                 padding: 4px;
                 border-radius: 22px;
-                {{ goods[id]['style'] }}
+                {{ goods[id].style }}
             ">
                 <img
                     src="{{ user.avatar_url() }}"
@@ -476,43 +476,41 @@ MIT License
                     alt="identicon"
                 >
             </div>
-            <h3 style="
-                {{ goods[id]['text_style'] }}
-            ">
+            <h3 style="{{ goods[id].text_style }}">
                 <strong>&nbsp;&nbsp;&nbsp;{{ goods[id]["name"] }}</strong>
             </h3>
         </div>
         <span class="text-white align-items-end flex-column ml-auto">
             {% if id not in user.load_belongings_id() %}
-                {% if goods[id]["expires"].__str__()[0:2] != "99" %}
+                {% if goods[id].expires.__str__()[:2] != "99" %}
                     <span class="text-muted">
-                    {% if goods[id]["price"] == 0 %}
+                    {% if goods[id].price == 0 %}
                         free
                     {% else %}
-                        {{ goods[id]['price'] }}pi
+                        {{ goods[id].price }}pi
                     {% endif %}
-                    / {{ goods[id]['expires'].__str__()[:7] }}</span>
+                    / {{ goods[id].expires.__str__()[:7] }}</span>
                 {% else %}
                     <span class="text-muted">
-                    {% if goods[id]["price"] == 0 %}
+                    {% if goods[id].price == 0 %}
                         free
                     {% else %}
-                        {{ goods[id]['price'] }}pi
+                        {{ goods[id].price }}pi
                     {% endif %}
                     for lifetime</span>
                 {% endif %}
-                {% if goods[id]["price"] != 0 %}
+                {% if goods[id].price != 0 %}
                     <br><span class="
-                        {% if user.coins>=goods[id]['price'] %}
+                        {% if user.coins>=goods[id].price %}
                             text-success
                         {% else %}
                             text-danger
                         {% endif %}
-                    ">({{ user.coins.__float__() }} / {{ goods[id]['price'].__float__() }})</span>
+                    ">({{ user.coins.__float__() }} / {{ goods[id].price.__float__() }})</span>
                 {% endif %}
-                <br><span class="text-muted">Required Exp: {{ goods[id]['exp'] }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <br><span class="text-muted">Required Exp: {{ goods[id].exp }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <a class="btn btn-sm btn-primary flex-fill
-                    {% if user.coins < goods[id]['price'] or user.experience < goods[id]['exp'] %}
+                    {% if user.coins < goods[id].price or user.experience < goods[id].exp %}
                         disabled
                     {% endif %}
                 "

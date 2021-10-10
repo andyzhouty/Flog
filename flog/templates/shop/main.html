@@ -47,21 +47,21 @@
             </ul>
             <ul id="classic" class="tab-pane fade">
                 {% for id in goods.keys() %}
-                    {% if goods[id]['class'] == "Classic" %}
+                    {% if goods[id].category == "Classic" %}
                         {{ shop_card(user=current_user, id=id, goods=goods) }}
                     {% endif %}
                 {% endfor %}
             </ul>
             <ul id="rare" class="tab-pane fade">
                 {% for id in goods.keys() %}
-                    {% if goods[id]['class'] == "Rare" %}
+                    {% if goods[id].category == "Rare" %}
                         {{ shop_card(user=current_user, id=id, goods=goods) }}
                     {% endif %}
                 {% endfor %}
             </ul>
             <ul id="leveled" class="tab-pane fade">
                 {% for id in goods.keys() %}
-                    {% if goods[id]['class'] == "Leveled" %}
+                    {% if goods[id].category == "Leveled" %}
                         {{ shop_card(user=current_user, id=id, goods=goods) }}
                     {% endif %}
                 {% endfor %}
