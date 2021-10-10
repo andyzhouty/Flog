@@ -140,6 +140,14 @@ def items(id: int, mode="get"):
             category="Leveled",
         ),
         Item(
+            name="Ripe Malinka",
+            expires=99999,
+            exp=1500,
+            color="#f77062, #fe5196",
+            gradient_deg="to top, ",
+            category="Leveled",
+        ),
+        Item(
             name="Crown",
             expires=99999,
             exp=2500,
