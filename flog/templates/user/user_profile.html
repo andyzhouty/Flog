@@ -85,7 +85,7 @@
     <div class="tab-content col-lg-8 pl-0 ml-0">
         <div id="posts" class="tab-pane active">
             <ul class="list-group">
-                {% for post in pagination.items %}
+                {% for post in post_pagination.items %}
                     {{ post_card(post, no_author=True) }}
                 {% endfor %}
             </ul>
