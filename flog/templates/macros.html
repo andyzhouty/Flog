@@ -318,7 +318,7 @@ MIT License
                 {{ post.title }}
             </a>
         </h3>
-        {% if no_author %}
+        {% if not no_author %}
             <h4 class="text-muted">
                 {% if post.author %}
                     {{ avatar_username(post.author, avatar_size=32, username_size="100%", badge=False) }}
