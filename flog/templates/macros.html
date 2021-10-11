@@ -310,7 +310,7 @@ MIT License
     </li>
 {% endmacro %}
 
-{% macro post_card(post) %}
+{% macro post_card(post, no_author=False) %}
     <li class="list-group-item">
         <h3 class="flex-grow-1 post-title-small">
             <a href="{{ post.url() }}" title="{{ post.title }} {% if post.private %}({{ _("Private") }}){% endif %}">
@@ -318,13 +318,15 @@ MIT License
                 {{ post.title }}
             </a>
         </h3>
-        <h4 class="text-muted">
-            {% if post.author %}
-                {{ avatar_username(post.author, avatar_size=32, username_size="100%", badge=False) }}
-            {% else %}
-                {{ _("Deleted Flog User") }}
-            {% endif %}
-        </h4>
+        {% if no_author %}
+            <h4 class="text-muted">
+                {% if post.author %}
+                    {{ avatar_username(post.author, avatar_size=32, username_size="100%", badge=False) }}
+                {% else %}
+                    {{ _("Deleted Flog User") }}
+                {% endif %}
+            </h4>
+        {% endif %}
         <div class="post-container">
             <div class="post-content">{{ post.content | striptags | truncate(220) }}</div>
         </div>
