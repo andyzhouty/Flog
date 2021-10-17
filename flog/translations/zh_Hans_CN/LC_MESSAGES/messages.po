@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-11 20:55+0800\n"
+"POT-Creation-Date: 2021-10-17 09:33+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -535,6 +535,10 @@ msgstr "主页"
 msgid "About Us"
 msgstr "关于我们"
 
+#: flog/templates/base.html:49
+msgid "Flog BetaShop"
+msgstr "头像框商店"
+
 #: flog/templates/base.html:57
 msgid "Search user, post, group or column"
 msgstr "搜索用户、文章、群组或专栏"
@@ -955,7 +959,7 @@ msgid "View"
 msgstr "查看"
 
 #: flog/templates/main/_sidebar.html:58
-#: flog/templates/main/notifications.html:11
+#: flog/templates/main/notifications.html:11 flog/templates/shop/main.html:28
 msgid "All"
 msgstr "全部"
 
@@ -1043,6 +1047,26 @@ msgstr[0] "条结果"
 #: flog/templates/main/search.html:60
 msgid "No results"
 msgstr "没有结果"
+
+#: flog/templates/shop/main.html:13
+msgid "All Items"
+msgstr "所有头像框"
+
+#: flog/templates/shop/main.html:20
+msgid "Your own"
+msgstr "你拥有的"
+
+#: flog/templates/shop/main.html:31
+msgid "Classic"
+msgstr "经典"
+
+#: flog/templates/shop/main.html:34
+msgid "Rare"
+msgstr "稀有"
+
+#: flog/templates/shop/main.html:37
+msgid "Leveled"
+msgstr "等级"
 
 #: flog/templates/user/all.html:8
 msgid "All users"
