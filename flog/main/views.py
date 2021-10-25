@@ -302,12 +302,15 @@ def picks():
 @csrf.exempt
 def coin_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post in current_user.coined_posts:  # pragma: no cover
-        abort(400)
     coins = request.form.get("coins", type=int)
-    if coins is None or coins < 1 or coins > 2:  # pragma: no cover
-        abort(400)
-    if current_user.coins < coins:
+    if (
+        post.author == current_user
+        or post in current_user.coined_posts
+        or coins is None
+        or coins < 1
+        or coins > 2
+        or current_user.coins < coins
+    ):  # pragma: no cover
         abort(400)
     post.coins += coins
     current_user.coined_posts.append(post)
