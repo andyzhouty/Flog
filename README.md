@@ -1,4 +1,4 @@
-# <img src="https://flog.pythonanywhere.com/static/favicon/favicon.svg" width="50px"> Flog
+# <img src="https://i.loli.net/2021/10/17/JapyT37XknzoHQS.png" width="50px"> Flog
 [中文版 README](./README_zh.md)
 
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs)](https://flog.readthedocs.io/en/latest/?badge=latest)
