@@ -3,6 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 
+from flog.models import db, Post
 from tests.conftest import Production, Testing
 
 
@@ -33,6 +34,17 @@ class ErrorTestCase(Testing):
         response = self.client.get("/404", headers=JSON_HEADERS)
         data = response.get_json()
         assert data["error"] == "not found"
+
+    def test_special_404(self):
+        self.login()
+        t2 = self.generate_post()["post"]["title"]
+        self.generate_post()["post"]["title"]
+        p = Post.query.filter_by(title=t2).first()
+        self.client.post(f"/post/delete/{p.id}/", follow_redirects=True)
+
+        response = self.client.get(f"/post/{p.id}/")
+        assert response.status_code == 404
+        assert "player.bilibili.com" in response.get_data(as_text=True)
 
     def test_405(self):
         response = self.client.get("/405")

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-17 09:33+0800\n"
+"POT-Creation-Date: 2021-10-25 12:25+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -99,7 +99,6 @@ msgstr ""
 "href=\"%(info_url)s\">群组%(name)s</a>中发布了一条消息"
 
 #: flog/notifications.py:116
-#, fuzzy, python-format
 msgid ""
 "<a href=\"%(profile_url)s\">%(username)s</a> gives %(num)s coin to your "
 "post\n"
@@ -389,7 +388,6 @@ msgid "Content"
 msgstr "内容"
 
 #: flog/main/forms.py:29
-#, fuzzy
 msgid ""
 "\n"
 "            Columns to add this post to (this field is optional)<br>\n"
@@ -421,105 +419,103 @@ msgstr "你想把哪些文章加入这个专栏（可选）？"
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:104
+#: flog/main/views.py:108
 msgid "Blocked users cannot post a comment!"
 msgstr "被封禁的用户不能发评论！"
 
-#: flog/main/views.py:107 flog/templates/main/_comments.html:84
+#: flog/main/views.py:111 flog/templates/main/_comments.html:84
 msgid "You cannot comment a private post!"
 msgstr "你不能评论私有的文章!"
 
-#: flog/main/views.py:125
+#: flog/main/views.py:129
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:140
+#: flog/main/views.py:144
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:185
+#: flog/main/views.py:189
 #, python-format
 msgid "Post id %(id)d deleted"
 msgstr "ID为%(id)d的文章已被删除"
 
-#: flog/main/views.py:209
+#: flog/main/views.py:213
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:232
+#: flog/main/views.py:236
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:234
+#: flog/main/views.py:238
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:236
+#: flog/main/views.py:240
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:239
+#: flog/main/views.py:243
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:251
+#: flog/main/views.py:255
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:264
+#: flog/main/views.py:268
 #, python-format
 msgid "Picked post %(id)d"
 msgstr "加精了ID为%(id)d的文章"
 
-#: flog/main/views.py:277
+#: flog/main/views.py:281
 #, python-format
 msgid "Unpicked post %(id)d"
 msgstr "取精了ID为%(id)d的文章"
 
-#: flog/main/views.py:325
+#: flog/main/views.py:329
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
-#: flog/main/views.py:370
+#: flog/main/views.py:374
 msgid "You can't add others' posts to your column!"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:375
+#: flog/main/views.py:379
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
-#: flog/main/views.py:400
+#: flog/main/views.py:404
 #, python-format
 msgid "Topped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:411
+#: flog/main/views.py:415
 #, python-format
 msgid "Untopped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:431
-#, fuzzy
+#: flog/main/views.py:435
 msgid "You can't request others' posts to the column"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:433 flog/main/views.py:455 flog/main/views.py:481
-#: flog/main/views.py:500
+#: flog/main/views.py:437 flog/main/views.py:459 flog/main/views.py:485
+#: flog/main/views.py:504
 msgid "The post is already in the column."
 msgstr ""
 
-#: flog/main/views.py:439
+#: flog/main/views.py:443
 msgid "Your request has been submitted to the manager of the column."
 msgstr ""
 
-#: flog/main/views.py:452
+#: flog/main/views.py:456
 msgid "You are not the manager of the column."
 msgstr ""
 
-#: flog/main/views.py:462
-#, fuzzy
+#: flog/main/views.py:466
 msgid "Your request has been submitted to the column"
 msgstr "你的反馈已经发送给站长了！"
 
@@ -787,9 +783,9 @@ msgstr "为了验证你的账户，请复制下方的链接到浏览器"
 msgid "Replies to this email will be ignored. :)"
 msgstr "请不要回复这封邮件 :)"
 
-#: flog/templates/errors/404.html:10
-msgid "Welcome to special 404 page -- coffin dance!"
-msgstr "你查找的页面被黑人抬走了！"
+#: flog/templates/errors/404_post_deleted.html:10
+msgid "The post you want has been deleted!"
+msgstr "你查找的文章已经被删除了"
 
 #: flog/templates/feedback/feedback.html:20
 msgid "feedback"
@@ -1207,4 +1203,7 @@ msgstr "一个新的验证邮件已经发送，请查收"
 
 #~ msgid "post(s) in all"
 #~ msgstr ""
+
+#~ msgid "Welcome to special 404 page -- coffin dance!"
+#~ msgstr "你查找的页面被黑人抬走了！"
 
