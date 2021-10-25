@@ -239,6 +239,8 @@ class PostCoinAPI(MethodView):
     @output(PostOutSchema)
     def post(self, post_id, data):
         post = Post.query.get_or_404(post_id)
+        if post.author == g.current_user:  # pragma: no cover
+            abort(400, "You cannot coin your own post.")
         if post in g.current_user.coined_posts:
             abort(400, "Already coined the post")
         amount = data["amount"]
