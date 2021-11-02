@@ -29,6 +29,8 @@ class AdminTestCase(Testing):
             "location": fake.address(),
             "about_me": fake.text(),
             "custom_avatar_url": "https://example.com/test.png",
+            "coins": 5,
+            "experience": 1000,
         }
         response = self.client.post(
             f"/admin/user/{user_id}/profile/edit/", data=data, follow_redirects=True
@@ -39,6 +41,14 @@ class AdminTestCase(Testing):
         assert data["about_me"] in response_data
         assert data["location"] in response_data
         assert data["custom_avatar_url"] in response_data
+        assert str(data["coins"]) in response_data
+
+        data["coins"] = -1
+        data["experience"] = -1
+        response = self.client.post(f"/admin/user/{user_id}/profile/edit/", data=data)
+        response_data = response.get_data(as_text=True)
+        assert "Coins must be positive" in response_data
+        assert "Experience must be positive" in response_data
 
         data["username"] = User.query.get(1).username
         data["email"] = User.query.get(1).email
