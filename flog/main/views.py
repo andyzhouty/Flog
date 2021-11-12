@@ -515,5 +515,6 @@ def textools():
         return render_template(
             "main/tex.html",
             url=f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl() }",
+            tex_data=tex,
         )
-    return render_template("main/tex.html", url="")
+    return render_template("main/tex.html", url="", tex_data="")
