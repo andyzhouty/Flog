@@ -5,7 +5,13 @@ Copyright(c) 2021 Andy Zhou
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
-from wtforms.fields.core import BooleanField, StringField, SelectField
+from wtforms.fields.core import (
+    BooleanField,
+    IntegerField,
+    StringField,
+    SelectField,
+    FloatField,
+)
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError, URL
 from ..models import Role, User
@@ -40,6 +46,8 @@ class EditProfileAdminForm(FlaskForm):
     name = StringField(_l("Real Name"), validators=[Length(0, 64, l_message)])
     location = StringField(_l("Location"), validators=[Length(0, 64, l_message)])
     about_me = TextAreaField(_l("About me"))
+    coins = FloatField(_l("Coins"), validators=[DataRequired(dr_message)])
+    experience = IntegerField(_l("Experience"), validators=[DataRequired(dr_message)])
     custom_avatar_url = StringField(_l("Avatar URL"), validators=[URL(True, u_message)])
     submit = SubmitField(_l("Submit"))
 
@@ -59,3 +67,11 @@ class EditProfileAdminForm(FlaskForm):
         user = User.query.filter_by(name=field.data).first()
         if user is not None and self.user != user:
             raise ValidationError(_l("Username already in use."))
+
+    def validate_coins(self, field):
+        if field.data < 0:
+            raise ValidationError(_l("Coins must be positive."))
+
+    def validate_experience(self, field):
+        if field.data < 0:
+            raise ValidationError(_l("Experience must be positive."))

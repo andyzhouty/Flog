@@ -3,12 +3,15 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 {% extends 'errors/error.html' %}
+{% from 'macros.html' import static_file %}
 {% block title %}
     {{ error_message }}
 {% endblock title %}
 {% block page_content %}
-    <h1>{{ _("Welcome to special 404 page -- coffin dance!") }}</h1>
-    <iframe src="https://player.bilibili.com/player.html?aid=370010949&bvid=BV1NZ4y1j7nw&cid=173010772&page=2"
-            width="100%" height="800px"
-            scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+    <h1 class="d-flex align-items-center" style="text-align: center; font-size: 10em;">
+        4
+        {{ static_file("svg", "favicon/favicon.svg", height=200, width=200) }}
+        4
+        Not Found
+    </h1>
 {% endblock page_content %}

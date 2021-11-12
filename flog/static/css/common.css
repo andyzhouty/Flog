@@ -178,8 +178,6 @@ a,
     margin-top: -0.25rem;
 }
 
-
-
 a:not([class]) {
     text-decoration: underline;
 }

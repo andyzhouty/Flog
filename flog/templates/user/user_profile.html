@@ -1,6 +1,7 @@
 
 {% extends 'base.html' %}
-{% from 'macros.html' import render_user_role, follow_area, static_file, level_badge, username, avatar with context %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'macros.html' import post_card, render_user_role, follow_area, static_file, level_badge, username, avatar with context %}
 {% set locale = 'en_US' if not current_user.locale else current_user.locale %}
 {% block title %}
     Flog - {{ user.username }}
@@ -11,7 +12,8 @@
         {{ avatar(user, size=200) }}
     </div>
     <div class="col-lg-8">
-        {{ username(user, size="250%", link=False) }}
+        <div class="basic-profile">
+        {{ username(user, size="150%", link=False) }}
         {% if current_user.can(Permission.MODERATE) or user == current_user %}
             <div class="d-flex">
                 <div class="mr-2">{{ static_file("svg", "svg/pi-empty.svg", width=20, height=20) }}</div>
@@ -69,6 +71,31 @@
                 {{ _("Invite this user to your group.") }}
             </a>
         {% endif %}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <ul class="nav nav-tabs col-lg-12">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#posts">Posts</a>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div class="tab-content col-lg-8 pl-0 ml-0">
+        <div id="posts" class="tab-pane active">
+            <ul class="list-group">
+                {% for post in post_pagination.items %}
+                    {{ post_card(post, no_author=True) }}
+                {% endfor %}
+            </ul>
+            {{ render_pagination(post_pagination) }}
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <h3>
+            {{ _("%(num)d post(s) in all", num=posts | length) }}
+        </h3>
     </div>
 </div>
 {% endblock page_content %}

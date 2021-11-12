@@ -10,14 +10,14 @@
             {% if filter == 'all' %}
                 active
             {% endif %}
-            " href="{{ url_for('shop.shop_index') }}">All Items</a>
+            " href="{{ url_for('shop.shop_index') }}">{{ _("All Items") }}</a>
         </li>
         <li class="nav-item">
             <a class="nav-link
             {% if filter == 'yours' %}
                 active
             {% endif %}
-            " href="{{ url_for('shop.shop_index', filter='yours') }}">Your own</a>
+            " href="{{ url_for('shop.shop_index', filter='yours') }}">{{ _("Your own") }}</a>
         </li>
     </ul>
     <div style="height: 30px;"></div>
@@ -25,16 +25,16 @@
         <div class="col-lg-4">
             <ul class="nav nav-pills flex-column" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="pill" href="#all">All</a>
+                    <a class="nav-link active" data-toggle="pill" href="#all">{{ _("All") }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#classic">Classic</a>
+                    <a class="nav-link" data-toggle="pill" href="#classic">{{ _("Classic") }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#rare">Rare</a>
+                    <a class="nav-link" data-toggle="pill" href="#rare">{{ _("Rare") }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#leveled">Leveled</a>
+                    <a class="nav-link" data-toggle="pill" href="#leveled">{{ _("Leveled") }}</a>
                 </li>
             </ul>
         </div>

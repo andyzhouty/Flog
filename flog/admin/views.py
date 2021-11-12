@@ -77,6 +77,8 @@ def edit_profile(id):
         user.location = form.location.data
         user.about_me = form.about_me.data
         user.custom_avatar_url = form.custom_avatar_url.data
+        user.coins = form.coins.data
+        user.experience = form.experience.data
         db.session.add(user)
         db.session.commit()
         flash(

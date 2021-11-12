@@ -5,13 +5,15 @@ Copyright (c) 2021 Andy Zhou
 from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import current_user, login_required, login_user
 from flask_babel import _
+from sqlalchemy import and_
+
 from . import user_bp
 from .forms import (
     EditProfileForm,
     PasswordChangeForm,
     ValidateEmailForm,
 )
-from ..models import db, User, Permission
+from ..models import db, User, Permission, Post
 from ..decorators import permission_required
 from ..utils import redirect_back
 from ..notifications import (
@@ -73,8 +75,20 @@ def unfollow(username):
 
 @user_bp.route("/user/<username>/")
 def profile(username):
+    page = request.args.get("page", 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template("user/user_profile.html", user=user)
+    if current_user and (current_user == user or current_user.is_administrator()):
+        posts = Post.query.filter_by(author=current_user)
+    posts = Post.query.filter(and_(Post.author == user, ~Post.private))
+    post_pagination = posts.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config["POSTS_PER_PAGE"]
+    )
+    return render_template(
+        "user/user_profile.html",
+        user=user,
+        posts=posts.all(),
+        post_pagination=post_pagination,
+    )
 
 
 @user_bp.route("/user/<username>/followers/")
@@ -105,6 +119,7 @@ def change_password():
     form = PasswordChangeForm()
     if form.validate_on_submit():
         current_user.set_password(form.password.data)
+        db.session.commit()
         flash(_("Password Changed"))
         return redirect(url_for("user.profile", username=current_user.username))
     return render_template("user/change_password.html", form=form)

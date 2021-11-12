@@ -85,7 +85,11 @@ def create_post():
 @main_bp.route("/post/<int:id>/", methods=["GET", "POST"])
 def full_post(id: int):
     current_app.config["CKEDITOR_PKG_TYPE"] = "basic"
-    post = Post.query.get_or_404(id)
+    post = Post.query.get(id)
+    if post is None:
+        if id > 1 and id < Post.query.order_by(Post.id.desc()).all()[0].id:
+            return render_template("errors/404_post_deleted.html"), 404
+        abort(404)
     if (
         (not post.private)
         or post.author == current_user
@@ -299,12 +303,15 @@ def picks():
 @csrf.exempt
 def coin_post(post_id):
     post = Post.query.get_or_404(post_id)
-    if post in current_user.coined_posts:  # pragma: no cover
-        abort(400)
     coins = request.form.get("coins", type=int)
-    if coins is None or coins < 1 or coins > 2:  # pragma: no cover
-        abort(400)
-    if current_user.coins < coins:
+    if (
+        post.author == current_user
+        or post in current_user.coined_posts
+        or coins is None
+        or coins < 1
+        or coins > 2
+        or current_user.coins < coins
+    ):  # pragma: no cover
         abort(400)
     post.coins += coins
     current_user.coined_posts.append(post)
