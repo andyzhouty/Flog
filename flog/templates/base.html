@@ -84,6 +84,10 @@ MIT License
                                    class="dropdown-item text-white bg-danger">
                                     {{ _("Delete Your Account") }}
                                 </a>
+                                <hr />
+                                <a class="dropdown-item" data-toggle="modal" data-target="#tools">
+                                    Article Tools <span class="badge bg-danger text-white">New</span>
+                                </a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -153,6 +157,26 @@ MIT License
         <div id="toast"></div>
         <div class="container">
             {% block page_content %}{% endblock %}
+        </div>
+        <div class="modal model-lg fade" id="tools" tabindex="-1" aria-labelledby="toolslabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="toolslabel">Article Tools</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row container">
+                        <h5 class="col-12">Formulae Tools</h5>
+                        <p class="col-12">Type in a formula with TeX, we will generate a text for you to <b>copy + clip</b> to the editor's <b>Source Code Mode</b>.</p>
+                        <iframe src="/tools/tex" class="col-12" style="border: 0; height: 440px;">Your browser does not support <b>iframe</b>!</iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
     {% endblock %}
     <footer class="footer ml-3 p-4 mt-5 w-100">
