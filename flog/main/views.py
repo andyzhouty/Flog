@@ -15,7 +15,7 @@ from flask import (
 from flask_babel import _
 from flask_login import current_user, login_required
 from sqlalchemy import or_
-from urllib.parse import urlparse
+from urllib.parse import quote
 from flog.decorators import permission_required
 from flog.extensions import csrf
 
@@ -521,7 +521,7 @@ def textools():
         tex = request.form["tex"]
         return render_template(
             "main/tex.html",
-            url=f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl().replace('+', '%2B').replace('\n', '') }",
+            url=f"https://www.zhihu.com/equation?tex={ quote(tex) }",
             tex_data=tex,
         )
     return render_template("main/tex.html", url="", tex_data="")
