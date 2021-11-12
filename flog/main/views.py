@@ -15,6 +15,7 @@ from flask import (
 from flask_babel import _
 from flask_login import current_user, login_required
 from sqlalchemy import or_
+from urllib.parse import urlparse
 from flog.decorators import permission_required
 from flog.extensions import csrf
 
@@ -506,3 +507,20 @@ def approve_post(column_id: int, post_id: int):
         return redirect_back()
     flash(_("The post is already in the column."))
     return redirect_back()
+
+
+@main_bp.route(
+    "/tools/tex",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
+def textools():
+    if request.method == "POST":
+        tex = request.form["tex"]
+        return render_template(
+            "main/tex.html",
+            url=f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl() }",
+        )
+    return render_template("main/tex.html", url="")
