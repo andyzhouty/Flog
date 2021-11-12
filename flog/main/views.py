@@ -521,7 +521,7 @@ def textools():
         tex = request.form["tex"]
         return render_template(
             "main/tex.html",
-            url=f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl().replace('+', '%2B') }",
+            url=f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl().replace('+', '%2B').replace('\n', '') }",
             tex_data=tex,
         )
     return render_template("main/tex.html", url="", tex_data="")
