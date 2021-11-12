@@ -502,11 +502,18 @@ def approve_post(column_id: int, post_id: int):
     return redirect_back()
 
 
-@main_bp.route("/tools/tex", methods=("GET", "POST",))
+@main_bp.route(
+    "/tools/tex",
+    methods=(
+        "GET",
+        "POST",
+    ),
+)
 def textools():
     if request.method == "POST":
         tex = request.form["tex"]
-        return render_template("main/tex.html",
-            url = f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl() }"
+        return render_template(
+            "main/tex.html",
+            url=f"https://www.zhihu.com/equation?tex={ urlparse(tex).geturl() }",
         )
     return render_template("main/tex.html", url="")
