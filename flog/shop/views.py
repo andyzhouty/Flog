@@ -30,7 +30,10 @@ def buy(id):
     try:
         if id == 0:
             raise KeyError(0)
-        if not Belong.query.filter_by(owner_id=current_user.id, goods_id=id).scalar():
+        belong: Belong = Belong.query.filter_by(
+            owner_id=current_user.id, goods_id=id
+        ).first()
+        if not belong and belong.load_expiration_delta().seconds > 0:
             if items(id).exp <= current_user.experience:
                 if items(id).price <= current_user.coins:
                     ownership = Belong(

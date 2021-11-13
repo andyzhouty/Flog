@@ -51,7 +51,7 @@ class Item:
             self.price = kwargs["price"]
 
 
-def items(id: int, mode="get"):
+def items(id: int, mode="get") -> Item:
     item_list = (
         Item(category=""),
         Item(
