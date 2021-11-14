@@ -432,3 +432,11 @@ class APIV3TestCase(Testing):
             headers=self.get_api_v3_headers(),
         )
         assert response.status_code == 400
+
+    def test_register(self):
+        response = self.client.post(
+            f"/api/v3/register",
+            data=dict(username="abc", password="abc", email="abc@example.com"),
+        )
+        assert response.status_code == 200
+        assert User.query.filter_by(username="abc").count() != 0

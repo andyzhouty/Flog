@@ -132,6 +132,8 @@ class RegistrationAPI(MethodView):
             if attr == "password":
                 user.set_password(value)
             user.__setattr__(attr, value)
+        db.session.add(user)
+        db.session.commit()
         return user
 
 
