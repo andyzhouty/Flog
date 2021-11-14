@@ -4,7 +4,6 @@ Copyright(c) 2021 Andy Zhou
 """
 
 from apiflask import input, output, abort
-from apiflask.decorators import doc
 from flask import url_for, jsonify, g, request
 from flask.views import MethodView
 
@@ -65,8 +64,17 @@ class SelfPostsAPI(MethodView):
     @auth.login_required
     @output(PostOutSchema(many=True))
     def get(self):
-        """Return the full information of a certain user themself"""
+        """Return the posts of a certain user"""
         return g.current_user.posts
+
+
+@api_v3.route("/self/groups", endpoint="self_groups")
+class SelfGroupsAPI(MethodView):
+    @auth.login_required
+    @output(GroupOutSchema(many=True))
+    def get(self):
+        """Return all the groups the user is in"""
+        return g.current_user.groups
 
 
 @api_v3.route("/user/<int:user_id>", endpoint="user")

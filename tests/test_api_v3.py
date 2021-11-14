@@ -391,6 +391,13 @@ class APIV3TestCase(Testing):
 
         assert any(u2.id == u["id"] for u in data["members"])
 
+        # test GET /self/groups
+        response = self.client.get(
+            f"/api/v3/self/groups", headers=self.get_api_v3_headers("u2", "123456")
+        )
+        assert response.status_code == 200
+        assert any(g["name"] == "test-group2" for g in response.get_json())
+
         # test DELETE group
         response = self.client.delete(
             f"/api/v3/group/{g.id}", headers=self.get_api_v3_headers()
