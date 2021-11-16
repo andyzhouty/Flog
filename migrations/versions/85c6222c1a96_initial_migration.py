@@ -39,6 +39,7 @@ def upgrade():
         sa.Column("body", sa.String(length=200), nullable=True),
         sa.Column("author", sa.String(length=20), nullable=True),
         sa.Column("timestamp", sa.DateTime(), nullable=True),
+        sa.Column("author_id", sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
