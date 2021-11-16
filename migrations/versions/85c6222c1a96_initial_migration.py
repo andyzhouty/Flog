@@ -7,6 +7,7 @@ Create Date: 2021-10-08 19:45:02.273743
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy.sql.expression import null
 
 
 # revision identifiers, used by Alembic.
@@ -57,9 +58,21 @@ def upgrade():
         "user",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=True),
-        sa.Column("name", sa.String(length=20), nullable=True),
+        sa.Column("name", sa.String(length=255), nullable=True),
+        sa.Column("username", sa.String(length=255), nullable=True),
+        sa.Column("confirmed", sa.Boolean(), nullable=True),
         sa.Column("password_hash", sa.String(length=128), nullable=True),
-        sa.Column("role_id", sa.Integer(), nullable=True),
+        sa.Column("avatar_hash", sa.String(length=32), nullable=True),
+        sa.Column("locked", sa.Boolean(), nullable=True),
+        sa.Column("location", sa.String(length=64), nullable=True),
+        sa.Column("about_me", sa.Text(), nullable=True),
+        sa.Column("member_since", sa.DateTime(), nullable=True),
+        sa.Column("last_seen", sa.DateTime(), nullable=True),
+        sa.Column("locale", sa.String(length=16), nullable=True),
+        sa.Column("custom_avatar_url", sa.String(length=128), nullable=True),
+        sa.Column("coins", sa.Float(), nullable=True),
+        sa.Column("experience", sa.Integer(), nullable=True),
+        sa.Column("avatar_style_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["role_id"],
             ["roles.id"],
