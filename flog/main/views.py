@@ -50,7 +50,12 @@ def main():
         )
     notifications = Notification.query.with_parent(current_user)
     posts = pagination.items
-    return render_template("main/main.html", pagination=pagination, posts=posts, notifications=notifications)
+    return render_template(
+        "main/main.html",
+        pagination=pagination,
+        posts=posts,
+        notifications=notifications,
+    )
 
 
 @main_bp.route("/write/", endpoint="write", methods=["GET", "POST"])
