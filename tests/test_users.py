@@ -31,7 +31,7 @@ class UserTestCase(Testing):
     def test_login_logout(self):
         response = self.login()
         response_data = response.get_data(as_text=True)
-        assert 'Welcome' in response_data
+        assert "Welcome" in response_data
         # test if the login redirection works
         login_response = self.client.get("/auth/login/", follow_redirects=True)
         main_response = self.client.get("/")
