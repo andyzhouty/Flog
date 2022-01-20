@@ -237,10 +237,10 @@ MIT License
     {% endif %}
 {% endmacro %}
 
-{% macro avatar_username(user, avatar_size=30, username_size="100%", badge=True) %}
+{% macro avatar_username(user, avatar_size=30, username_size="100%", badge=True, link=True, style="", class="") %}
     <div class="d-flex align-items-center">
         {{ avatar(user, size=avatar_size) }}
-        {{ username(user, size=username_size, badge=badge) }}
+        {{ username(user, size=username_size, badge=badge, link=link, style=style, class=class) }}
     </div>
 {% endmacro %}
 
@@ -442,13 +442,9 @@ MIT License
 {% endmacro %}
 
 {% macro action_card(icon, text, link) %}
-    <div class="d-inline-flex action justify-content-center flex-fill">
-        <a class="action-link" href="{{ link }}">
-            <div class="action-icon flex-grow-2 align-self-center">
-                <i class="{{ icon }}"></i>
-            </div>
-            {{ text }}</a>
-    </div>
+    <a class="dropdown-item" href="{{ link }}">
+        <i class="{{ icon }}"></i>&nbsp;&nbsp;{{ text }}
+    </a>
 {% endmacro %}
 
 {% macro load_ckeditor() %}

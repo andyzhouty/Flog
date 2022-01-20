@@ -2,9 +2,9 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% from 'macros.html' import action_card %}
-<div class="col-md-4">
-    <a href="https://rice0208.pythonanywhere.com/icons" target="_blank">
+{% from 'macros.html' import action_card, avatar_username %}
+<div class="col-md-4 mt-md-4">
+    <a href="https://rice0208.pythonanywhere.com/icons" target="_blank" class="d-none d-lg-block">
         <img src="https://rice0208.pythonanywhere.com/ads/icons"
              style="
                     width: 100% !important;
@@ -14,48 +14,76 @@ MIT License
         ">
     </a>
     {% if current_user.is_authenticated %}
+        <div class="card mt-4 mb-3 d-flex flex-wrap justify-content-between">
+            <small class="mt-4 ml-4 mb-0">Logged in as</small>
+            <div class="d-flex flex-fill mb-0" style="padding-left: 20px;">
+                {{ avatar_username(current_user, 44, "125%", False, True) }}
+            </div>
+            <p class="text-muted ml-4 mb-4">{{ current_user.about_me }}</p>
+        </div>
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
             <div class="card-header">{{ _("Quick Actions") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-images", _("Images"), url_for("image.manage")) }}
-                {{ action_card("bi-collection", _("Collections"), url_for("main.collected_posts")) }}
+                {{ action_card("bi-images", _("Your images"), url_for("image.manage")) }}
+                {{ action_card("bi-collection", _("Your collections"), url_for("main.collected_posts")) }}
             </div>
         </div>
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
-            <div class="card-header">{{ _("Post") }}</div>
+            <div class="card-header">{{ _("Post Actions") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-vector-pen", _("Write"), url_for("main.write")) }}
-                {{ action_card("bi-files", _("Yours"), url_for("main.manage_posts") )}}
+                {{ action_card("bi-vector-pen", _("Write a new post"), url_for("main.write")) }}
+                {{ action_card("bi-files", _("Manage your posts"), url_for("main.manage_posts") )}}
             </div>
         </div>
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
-            <div class="card-header">{{ _("Group") }}</div>
+            <div class="card-header">{{ _("Group Actions") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-plus", _("Create"), url_for("group.create")) }}
-                {{ action_card("bi-person-plus", _("Join"), url_for("group.explore")) }}
-                {{ action_card("bi-diagram-3-fill", _("Yours"), url_for("user.groups")) }}
+                {{ action_card("bi-plus", _("Create a new group"), url_for("group.create")) }}
+                {{ action_card("bi-person-plus", _("Join a group"), url_for("group.explore")) }}
+                {{ action_card("bi-diagram-3-fill", _("Manage your groups"), url_for("user.groups")) }}
             </div>
         </div>
         <div class="card mb-3 d-flex flex-wrap justify-content-between">
             <div class="card-header">{{ _("Explore") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-people", _("Users"), url_for("user.all")) }}
-                {{ action_card("bi-diagram-3", _("Groups"), url_for("group.all")) }}
-                {{ action_card("bi-stars", _("Picks"), url_for("main.picks")) }}
+                {{ action_card("bi-people", _("Explore users"), url_for("user.all")) }}
+                {{ action_card("bi-diagram-3", _("Explore groups"), url_for("group.all")) }}
+                {{ action_card("bi-stars", _("Enjoy the picked posts"), url_for("main.picks")) }}
             </div>
         </div>
         <div class="card mb-3">
-            <div class="card-header">{{ _("Profile") }}</div>
+            <div class="card-header">{{ _("Personal Profile") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-person-badge", _("View"), current_user.profile_url()) }}
-                {{ action_card("bi-pencil", _("Edit"), url_for("user.edit_profile")) }}
+                {{ action_card("bi-person-badge", _("View your profile"), current_user.profile_url()) }}
+                {{ action_card("bi-pencil", _("Edit your profile"), url_for("user.edit_profile")) }}
             </div>
         </div>
         <div class="card mb-3">
-            <div class="card-header">{{ _("Column") }}</div>
+            <div class="card-header">{{ _("Column Actions") }}</div>
             <div class="d-flex flex-fill">
-                {{ action_card("bi-plus", _("Create"), url_for("main.create_column")) }}
-                {{ action_card("bi-journals", _("All"), url_for("main.all_columns")) }}
+                {{ action_card("bi-plus", _("Create a column"), url_for("main.create_column")) }}
+                {{ action_card("bi-journals", _("See all columns"), url_for("main.all_columns")) }}
+            </div>
+        </div>
+        <div class="card mb-3 d-flex flex-wrap justify-content-between">
+            <div class="card-header">{{ _("Stats") }}</div>
+            <div class="d-flex flex-fill">
+                <table>
+                    <tbody id="stat">
+                        <tr>
+                            <td>Total coins</td><td>{{ current_user.coins }}</td>
+                        </tr>
+                        <tr>
+                            <td>Experience</td><td>{{ current_user.experience }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total posts</td><td>{{ current_user.posts.__len__() }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total columns</td><td>{{ current_user.columns.__len__() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     {% endif %}

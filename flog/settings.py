@@ -35,6 +35,7 @@ class Base:
 
     # {'theme name': 'display name'}
     BOOTSTRAP_THEMES = {
+        "default": "Bootstrap",
         "cosmo": "Lite",
         "darkly": "Darkly",
         "cyborg": "Cyborg",

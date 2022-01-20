@@ -20,7 +20,7 @@ from flog.decorators import permission_required
 from flog.extensions import csrf
 
 # User and Group are necessary for line 328
-from ..models import Permission, db, Post, Comment, User, Group, Column
+from ..models import Permission, db, Post, Comment, User, Group, Column, Notification
 from ..utils import redirect_back, clean_html
 from ..notifications import (
     push_coin_notification,
@@ -48,8 +48,14 @@ def main():
             .order_by(Post.timestamp.desc())
             .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
         )
+    notifications = Notification.query.with_parent(current_user)
     posts = pagination.items
-    return render_template("main/main.html", pagination=pagination, posts=posts)
+    return render_template(
+        "main/main.html",
+        pagination=pagination,
+        posts=posts,
+        notifications=notifications,
+    )
 
 
 @main_bp.route("/write/", endpoint="write", methods=["GET", "POST"])
