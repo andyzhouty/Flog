@@ -29,12 +29,14 @@ MIT License
             </div>
             <br>
             <div id="post-content">
-                <div class="card mb-4">
-                    <div class="card-header">Tips</div>
-                    <div class="card-body p-4">
-                        <p>{{ _('Yes, and you discovered the <b>description post</b>! So now I can tell you the secret: You can now view this post at the <a href="%s" class="link">personal profile</a>.<br> If you write a post with a title of your username (%s), You can create a detailed description in the profile.' % (post.author.profile_url(), current_user.username)) }}</p>
+                {% if post.author.username == post.title %}
+                    <div class="card mb-4">
+                        <div class="card-header">Tips</div>
+                        <div class="card-body p-4">
+                            <p>{{ _('Yes, and you discovered the <b>description post</b>! So now I can tell you the secret: You can now view this post at the <a href="%s" class="link">personal profile</a>.<br> If you write a post with a title of your username (%s), You can create a detailed description in the profile.' % (post.author.profile_url(), current_user.username)) }}</p>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
                 {{ post.content | safe }}
             </div>
             {% if post.columns %}
