@@ -609,6 +609,9 @@ class User(db.Model, UserMixin):
 
     avatar_style_id = db.Column(db.Integer(), default=0)
 
+    clicks = db.Column(db.Integer(), default=0)
+    clicks_today = db.Column(db.Integer(), default=0)
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -653,6 +656,7 @@ class User(db.Model, UserMixin):
         if now - last_seen_day >= timedelta(days=1):
             self.coins += 1
         self.last_seen = now
+        self.clicks_today = 0
         db.session.commit()
 
     def generate_confirmation_token(self, expiration=3600):
