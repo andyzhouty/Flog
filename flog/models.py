@@ -655,8 +655,8 @@ class User(db.Model, UserMixin):
         )
         if now - last_seen_day >= timedelta(days=1):
             self.coins += 1
+            self.clicks_today = 0
         self.last_seen = now
-        self.clicks_today = 0
         db.session.commit()
 
     def generate_confirmation_token(self, expiration=3600):

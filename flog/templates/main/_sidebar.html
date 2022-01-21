@@ -22,8 +22,18 @@ MIT License
                 {{ avatar_username(current_user, 44, "125%", False, True) }}
             </div>
             <p class="text-muted ml-4 mb-1">{{ current_user.about_me }}</p>
-            <a class="btn btn-primary d-flex mt-3 ml-3 mr-3 mb-1 align-center" href="{{ current_user.profile_url() }}"><i class="bi bi-person"></i>&nbsp;&nbsp;{{ _("Personal Profile") }}</a>
-            <a class="btn btn-outline-primary d-flex mt-1 ml-3 mb-3 mr-3 align-center" href="{{ url_for('user.edit_profile') }}"><i class="bi bi-pencil-fill"></i>&nbsp;&nbsp;{{ _("Edit Profile") }}</a>
+            <div class="d-flex mb-1 ml-4 mr-4 mt-2 p-2 row bg-light rounded outline">
+                <div class="col-6 align-items-center mb-n4">Visits Today<br><h3>{{ current_user.clicks_today // 2 }}</h3></div>
+                <div class="col-6 align-items-center mb-n4">Visits in Total<br><h3>{{ current_user.clicks // 2 }}</h3></div>
+            </div>
+            <div class="d-flex mt-0 mb-2 mr-4 ml-4 p-2 row bg-dark rounded">
+                <div class="col-6 align-items-center text-white mb-n4">Coins<br><h3>{{ current_user.coins | round(2) }}</h3></div>
+                <div class="col-6 align-items-center text-white mb-n4">Experience<br><h3>{{ current_user.experience }}</h3></div>
+            </div>
+            <div class="d-flex">
+                <a class="btn btn-primary btn-block mt-3 ml-3 mr-3 mb-1 align-center" href="{{ current_user.profile_url() }}"><i class="bi bi-person"></i>&nbsp;&nbsp;{{ _("Personal Profile") }}</a>
+                <a class="btn btn-outline-primary btn-block mt-1 ml-3 mb-3 mr-3 align-center" href="{{ url_for('user.edit_profile') }}"><i class="bi bi-pencil-fill"></i>&nbsp;&nbsp;{{ _("Edit Profile") }}</a>
+            </div>
         </div>
         <hr>
         <h4>Actions<button data-toggle="collapse" data-target="#actions" class="btn btn-sm btn-primary float-right d-none d-lg-block"><b>—</b></button></h4>
@@ -80,11 +90,13 @@ MIT License
             <div class="d-flex flex-fill">
                 <table>
                     <tbody id="stat">
-                        {{ stats_card(_("Coins"), current_user.coins | round(2)) }}
-                        {{ stats_card(_("Experience"), current_user.experience) }}
+                        {{ stats_card(_("Total clicks"), current_user.clicks//2) }}
                         {{ stats_card(_("Total posts"), current_user.posts.__len__()) }}
                         {{ stats_card(_("Total columns"), current_user.posts.__len__()) }}
                         {{ stats_card(_("Total comments"), current_user.comments.__len__()) }}
+                        {{ stats_card(_("Coins"), current_user.coins | round(2)) }}
+                        {{ stats_card(_("Experience"), current_user.experience) }}
+                        {{ stats_card(_("Coined Post"), current_user.coined_post.__len__()) }}
                     </tbody>
                 </table>
             </div>
