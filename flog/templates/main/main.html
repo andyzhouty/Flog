@@ -4,7 +4,7 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import post_card, role_of with context %}
+{% from 'macros.html' import post_card, role_of, username with context %}
 {% block title %}{{ _("Main") }}{% endblock %}
 {% block scripts %}
     {{ super() }}
@@ -21,7 +21,7 @@ MIT License
                 <div class="page-header mb-lg-4 ml-2">
                     <h1 class="display-4">
                         {{ _("Welcome,") }}<br>
-                        <b>{{ role_of(current_user) }} {{ current_user.username }}</b>
+                        <b>{{ role_of(current_user) }} {{ username(current_user, link=False, badge=False) }}</b>
                     </h1>
                 </div>
                 <div class="m-4
@@ -48,7 +48,7 @@ MIT License
             <div class="m-4"></div>
             <ul class="list-group">
             {% for post in posts %}
-                {% if (not post.private) or post.author == current_user or current_user.is_administrator() %}
+                {% if ((not post.private) or post.author == current_user or current_user.is_administrator()) and post.title != post.author.username %}
                     {{ post_card(post) }}
                 {% endif %}
             {% endfor %}
