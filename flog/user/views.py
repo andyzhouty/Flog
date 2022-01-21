@@ -78,16 +78,18 @@ def profile(username):
     page = request.args.get("page", 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
     if current_user and (current_user == user or current_user.is_administrator()):
-        posts = Post.query.filter_by(author=current_user)
-    posts = Post.query.filter(and_(Post.author == user, ~Post.private))
+        posts = Post.query.filter(and_(Post.author == user, Post.title != user.username))
+    posts = Post.query.filter(and_(Post.author == user, ~Post.private, Post.title != user.username))
     post_pagination = posts.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config["POSTS_PER_PAGE"]
     )
+    description = Post.query.filter(and_(Post.author == user, Post.title == user.username))
     return render_template(
         "user/user_profile.html",
         user=user,
         posts=posts.all(),
         post_pagination=post_pagination,
+        description=description.first(),
     )
 
 

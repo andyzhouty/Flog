@@ -6,7 +6,7 @@ MIT License
 {% from 'macros.html' import post_actions with context %}
 {% from 'bootstrap/form.html' import render_form %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% block title %} Post - {{ post.title }} {% endblock %}
+{% block title %} Post - 「{{ post.title }}」 by {{ post.author.username }} {% endblock %}
 {% block page_content %}
     <div class="row">
         <div class="col-lg-8" style="font-size: large">
@@ -29,6 +29,12 @@ MIT License
             </div>
             <br>
             <div id="post-content">
+                <div class="card mb-4">
+                    <div class="card-header">Tips</div>
+                    <div class="card-body p-4">
+                        <p>{{ _('Yes, and you discovered the <b>description post</b>! So now I can tell you the secret: You can now view this post at the <a href="%s" class="link">personal profile</a>.<br> If you write a post with a title of your username (%s), You can create a detailed description in the profile.' % (post.author.profile_url(), current_user.username)) }}</p>
+                    </div>
+                </div>
                 {{ post.content | safe }}
             </div>
             {% if post.columns %}

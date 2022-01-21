@@ -267,12 +267,14 @@ def uncollect_post(id: int):
 @permission_required(Permission.MODERATE)
 def pick(id: int):
     post = Post.query.get_or_404(id)
-    if not post.picked:
+    if not post.picked and (post.title != post.author.username):
         post.picked = True
         db.session.commit()
         if post.author:
             post.author.experience += 20
         flash(_("Picked post %(id)d", id=id))
+    if (post.title == post.author.username):
+        flash("You cannot pick a user's description.")
     return redirect_back()
 
 

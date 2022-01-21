@@ -79,7 +79,7 @@ MIT License
 {% endmacro %}
 
 {% macro post_actions(post, can_edit=True, can_delete=True, show_collectors=None, collectors=0) %}
-    {% if current_user.is_authenticated -%}
+    {% if current_user.is_authenticated and post.title != post.author.username %}
         <div class="d-flex justify-content-start align-items-center">
             {% if post.author != current_user -%}
                 {% if not current_user.is_collecting(post) -%}
@@ -220,13 +220,20 @@ MIT License
 {% endmacro %}
 
 {% macro username(user, class="", style="", size="100%", link=True, badge=True) %} {# Style must be nothing or end with ";" #}
-    <a style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
+    {% if link %}
+        <a style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
             {{ user.load_username_style() }}
             margin-bottom: 0 !important;"
-        {% if link %}
             href="{{ url_for('user.profile', username=user.username) }}"
-        {% endif %} class="{{ class }}"
-    >{{ user.username }}</a>
+            class="{{ class }}"
+        >{{ user.username }}</a>
+    {% else %}
+        <span style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
+            {{ user.load_username_style() }}
+            margin-bottom: 0 !important;"
+            class="{{ class }}"
+        >{{ user.username }}</span>
+    {% endif %}
     {% if badge %}
         {% if user.is_administrator() %}
             <img src="https://img.shields.io/badge/admin-d24" style="margin:.5em;">
@@ -328,6 +335,11 @@ MIT License
             </h4>
         {% endif %}
         <div class="post-container">
+            {% if post.author.username == post.title %}
+                <small class="text-warning">
+                    <i class="bi bi-star-fill"></i>&nbsp;Description
+                </small>
+            {% endif %}
             <div class="post-content">{{ post.content | striptags | truncate(220) }}</div>
         </div>
         <div>
