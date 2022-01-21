@@ -556,3 +556,9 @@ MIT License
         </span>
     </li>
 {% endmacro %}
+
+{% macro stats_card(name, value) %}
+    <tr>
+        <td>{{ name }}</td><td>{{ value }}</td>
+    </tr>
+{% endmacro %}
