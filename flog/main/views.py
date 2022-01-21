@@ -146,9 +146,10 @@ def full_post(id: int):
         if replied_id:
             replied_comment = Comment.query.get_or_404(replied_id)
             kwargs["replied_comment"] = replied_comment
-        post.author.clicks += 1
-        post.author.clicks_today += 1
-        db.session.commit()
+        if post.author:
+            post.author.clicks += 1
+            post.author.clicks_today += 1
+            db.session.commit()
         return render_template("main/full_post.html", **kwargs)
     else:
         flash(_("The author has set this post to invisible."))
