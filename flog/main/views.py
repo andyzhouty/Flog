@@ -273,7 +273,7 @@ def pick(id: int):
         if post.author:
             post.author.experience += 20
         flash(_("Picked post %(id)d", id=id))
-    if (post.title == post.author.username):
+    if post.title == post.author.username:
         flash("You cannot pick a user's description.")
     return redirect_back()
 
