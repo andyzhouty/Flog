@@ -30,13 +30,15 @@ from ..notifications import (
     push_transposting_to_column_notification,
 )
 from .forms import ColumnForm, PostForm, CommentForm
+from ..auth.forms import LoginForm
 from . import main_bp
 
 
 @main_bp.route("/")
 def main():
     if not (current_user.is_authenticated or request.args.get("force", False)):
-        return render_template("main/not_authorized.html")
+        form = LoginForm()
+        return render_template("main/not_authorized.html", form=form)
     page = request.args.get("page", 1, type=int)
     if current_user.is_administrator():
         pagination = Post.query.order_by(Post.timestamp.desc()).paginate(

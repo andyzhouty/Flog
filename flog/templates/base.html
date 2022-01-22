@@ -49,9 +49,11 @@ MIT License
                     {{ render_nav_item('main.main', _('Main')) }}
                     {{ render_nav_item('feedback.feedback', _('Feedback')) }}
                     {{ render_nav_item('others.about_us', _('About Us')) }}
-                    <li>
-                        <a class="btn btn-outline-light" href="{{ url_for('shop.shop_index') }}">{{ _("Flog BetaShop") }}</a>
-                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li>
+                            <a class="btn btn-outline-light" href="{{ url_for('shop.shop_index') }}">{{ _("Flog BetaShop") }}</a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <ul class="nav navbar-nav align-items-center">
                     {% if current_user.is_authenticated %}

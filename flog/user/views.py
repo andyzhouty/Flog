@@ -90,6 +90,9 @@ def profile(username):
     description = Post.query.filter(
         and_(Post.author == user, Post.title == user.username)
     )
+    user.clicks += 1
+    user.clicks_today += 1
+    db.session.commit()
     return render_template(
         "user/user_profile.html",
         user=user,

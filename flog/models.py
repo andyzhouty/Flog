@@ -833,6 +833,9 @@ class User(db.Model, UserMixin):
             return style
         return ""
 
+    def word_count(self):
+        return sum([len(post.content) for post in self.posts])
+
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
