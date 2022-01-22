@@ -5,15 +5,15 @@ MIT License
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% block page_content %}
-<div class="jumbotron bg-dark row container d-flex">
+<div class="jumbotron bg-white row container d-flex">
     <div class="col-md-12 col-lg-7 mb-md-4 mt-md-4 mb-lg-2 mt-lg-2">
         <img src="https://camo.githubusercontent.com/6269749c321b40036f147e8e7d5e0f6ef97fc6fb6a2855e851064faa5045a76a/68747470733a2f2f692e6c6f6c692e6e65742f323032312f31302f31372f4a617079543337586b6e7a6f4851532e706e67">
-        <h1 class="display-3 text-white"><b>Flog:</b></h1>
-        <h1 class="display-4 text-white">{{ _("A blog website built for convenience.") }}</h1>
+        <h1 class="display-3"><b>Flog:</b></h1>
+        <h1 class="display-4">{{ _("A blog website built for convenience.") }}</h1>
     </div>
-    <div class="col-md-12 col-lg-5 rounded p-4 mt-4 text-white">
+    <div class="col-md-12 col-lg-5 rounded p-4 mt-4 bg-light" style="box-shadow: 0 0 6px #6c757d;">
         <b>{{ _("Already have an account? Log in to meet us online.") }}</b>
-        <p class="mb-3"><i class="bi bi-question-circle"></i>&nbsp;{{ _("A newcomer here? You can ") }}<a href="{{ url_for('auth.register') }}" class="link text-primary">{{ _("Join Now!") }}</a></p>
+        <p class="mb-3"><i class="bi bi-question-circle"></i>&nbsp;{{ _("A newcomer here? You can ") }}<a href="{{ url_for('auth.register') }}" class="link text-primary">{{ _("Join Now!") }}</a> {{ _("or") }} <a href="{{ url_for('main.main', force=True) }}" class="link text-primary">{{ _("View Posts Directly") }}</a></p>
         {{ render_form(form, action=url_for("auth.login")) }}
     </div>
 </div>
