@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-01-22 08:50+0800\n"
+"POT-Creation-Date: 2022-01-22 16:07+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -184,12 +184,12 @@ msgid "About me"
 msgstr "关于自己"
 
 #: flog/admin/forms.py:49 flog/templates/main/_sidebar.html:31
-#: flog/templates/main/_sidebar.html:99
+#: flog/templates/main/_sidebar.html:100
 msgid "Coins"
 msgstr "硬币"
 
 #: flog/admin/forms.py:50 flog/templates/main/_sidebar.html:32
-#: flog/templates/main/_sidebar.html:100
+#: flog/templates/main/_sidebar.html:101
 msgid "Experience"
 msgstr "经验值"
 
@@ -434,107 +434,107 @@ msgstr "专栏名称"
 msgid "Posts to add (optional)"
 msgstr "你想把哪些文章加入这个专栏（可选）？"
 
-#: flog/main/views.py:86
+#: flog/main/views.py:88
 msgid "Your post has been added"
 msgstr "你的文章发表成功"
 
-#: flog/main/views.py:115
+#: flog/main/views.py:117
 msgid "Blocked users cannot post a comment!"
 msgstr "被封禁的用户不能发评论！"
 
-#: flog/main/views.py:118 flog/templates/main/_comments.html:84
+#: flog/main/views.py:120 flog/templates/main/_comments.html:84
 msgid "You cannot comment a private post!"
 msgstr "你不能评论私有的文章!"
 
-#: flog/main/views.py:136
+#: flog/main/views.py:138
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:155
+#: flog/main/views.py:157
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:200
+#: flog/main/views.py:202
 #, python-format
 msgid "Post id %(id)d deleted"
 msgstr "ID为%(id)d的文章已被删除"
 
-#: flog/main/views.py:224
+#: flog/main/views.py:226
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:247
+#: flog/main/views.py:249
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:249
+#: flog/main/views.py:251
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:251
+#: flog/main/views.py:253
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:254
+#: flog/main/views.py:256
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:266
+#: flog/main/views.py:268
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:279
+#: flog/main/views.py:281
 #, python-format
 msgid "Picked post %(id)d"
 msgstr "加精了ID为%(id)d的文章"
 
-#: flog/main/views.py:294
+#: flog/main/views.py:296
 #, python-format
 msgid "Unpicked post %(id)d"
 msgstr "取精了ID为%(id)d的文章"
 
-#: flog/main/views.py:345
+#: flog/main/views.py:347
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
-#: flog/main/views.py:390
+#: flog/main/views.py:392
 msgid "You can't add others' posts to your column!"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:395
+#: flog/main/views.py:397
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
-#: flog/main/views.py:420
+#: flog/main/views.py:422
 #, python-format
 msgid "Topped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:431
+#: flog/main/views.py:433
 #, python-format
 msgid "Untopped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:451
+#: flog/main/views.py:453
 msgid "You can't request others' posts to the column"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:453 flog/main/views.py:475 flog/main/views.py:501
-#: flog/main/views.py:520
+#: flog/main/views.py:455 flog/main/views.py:477 flog/main/views.py:503
+#: flog/main/views.py:522
 msgid "The post is already in the column."
 msgstr "这篇文章已经在专栏里了。"
 
-#: flog/main/views.py:459
+#: flog/main/views.py:461
 msgid "Your request has been submitted to the manager of the column."
 msgstr "你的请求被专栏的管理人通过了。"
 
-#: flog/main/views.py:472
+#: flog/main/views.py:474
 msgid "You are not the manager of the column."
 msgstr "你没有权限管理此专栏。"
 
-#: flog/main/views.py:482
+#: flog/main/views.py:484
 msgid "Your request has been submitted to the column"
 msgstr "你的反馈已经发送给站长了！"
 
@@ -1030,16 +1030,20 @@ msgid "Total posts"
 msgstr "你的文章数量"
 
 #: flog/templates/main/_sidebar.html:97
+msgid "Total word count"
+msgstr "你发布的总字数"
+
+#: flog/templates/main/_sidebar.html:98
 msgid "Total columns"
 msgstr "你的专栏数量"
 
-#: flog/templates/main/_sidebar.html:98
+#: flog/templates/main/_sidebar.html:99
 msgid "Total comments"
 msgstr "你的评论数量"
 
-#: flog/templates/main/_sidebar.html:101
+#: flog/templates/main/_sidebar.html:102
 msgid "Coined Post"
-msgstr "编辑文章"
+msgstr "你投币的文章"
 
 #: flog/templates/main/collections.html:26
 msgid "You don't have any collections"
@@ -1081,21 +1085,29 @@ msgstr "写文章"
 msgid "New Post"
 msgstr "撰写新的文章"
 
-#: flog/templates/main/not_authorized.html:10
+#: flog/templates/main/not_authorized.html:12
 msgid "A blog website built for convenience."
 msgstr "一个方便的博客网站"
 
-#: flog/templates/main/not_authorized.html:13
+#: flog/templates/main/not_authorized.html:15
 msgid "Already have an account? Log in to meet us online."
 msgstr "已经有账户？请登录。"
 
-#: flog/templates/main/not_authorized.html:14
+#: flog/templates/main/not_authorized.html:16
 msgid "A newcomer here? You can "
 msgstr "没有账户？你可以"
 
-#: flog/templates/main/not_authorized.html:14
+#: flog/templates/main/not_authorized.html:16
 msgid "Join Now!"
 msgstr "加入我们"
+
+#: flog/templates/main/not_authorized.html:16
+msgid "or"
+msgstr "或者"
+
+#: flog/templates/main/not_authorized.html:16
+msgid "View Posts Directly"
+msgstr "直接查看用户的博客"
 
 #: flog/templates/main/notifications.html:11 flog/templates/shop/main.html:28
 msgid "All"
@@ -1299,13 +1311,6 @@ msgstr "一个新的验证邮件已经发送，请查收"
 #~ msgid "Author: "
 #~ msgstr "作者："
 
-#~ msgid "post(s) in all"
-#~ msgstr ""
-
-#~ msgid "Welcome to special 404 page -- coffin dance!"
-#~ msgstr "你查找的页面被黑人抬走了！"
-
-# python-format
 #~ msgid ""
 #~ "Yes, and you discovered the "
 #~ "<b>description post</b>! So now I can"
@@ -1319,13 +1324,4 @@ msgstr "一个新的验证邮件已经发送，请查收"
 #~ msgstr ""
 #~ "恭喜你发现了<b>「自我介绍」文章</b>！你现在可以在作者的<a href=\"%s\" "
 #~ "class=\"link\">个人主页</a>看到这篇文章。只要写一篇标题为你的用户名（%s），你就可以在主页里写一份详细的自我介绍！"
-
-#~ msgid "Coined posts"
-#~ msgstr "你投币的文章"
-
-#~ msgid "or"
-#~ msgstr "或者"
-
-#~ msgid "View Posts Directly"
-#~ msgstr "直接查看用户的博客"
 

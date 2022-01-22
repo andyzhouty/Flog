@@ -56,7 +56,7 @@ def main():
         "main/main.html",
         pagination=pagination,
         posts=posts,
-        notifications=notifications,
+        notifications=notifications
     )
 
 
