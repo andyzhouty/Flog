@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-01-21 10:10+0800\n"
+"POT-Creation-Date: 2022-01-22 08:50+0800\n"
 "PO-Revision-Date: 2020-11-27 19:59+0800\n"
 "Last-Translator: \n"
 "Language: zh\n"
@@ -183,11 +183,13 @@ msgstr "位置"
 msgid "About me"
 msgstr "关于自己"
 
-#: flog/admin/forms.py:49
+#: flog/admin/forms.py:49 flog/templates/main/_sidebar.html:31
+#: flog/templates/main/_sidebar.html:99
 msgid "Coins"
 msgstr "硬币"
 
-#: flog/admin/forms.py:50
+#: flog/admin/forms.py:50 flog/templates/main/_sidebar.html:32
+#: flog/templates/main/_sidebar.html:100
 msgid "Experience"
 msgstr "经验值"
 
@@ -448,91 +450,91 @@ msgstr "你不能评论私有的文章!"
 msgid "Comment published!"
 msgstr "评论发表成功！"
 
-#: flog/main/views.py:151
+#: flog/main/views.py:155
 msgid "The author has set this post to invisible."
 msgstr "这篇文章的作者已经把该文章设为不可见了。"
 
-#: flog/main/views.py:196
+#: flog/main/views.py:200
 #, python-format
 msgid "Post id %(id)d deleted"
 msgstr "ID为%(id)d的文章已被删除"
 
-#: flog/main/views.py:220
+#: flog/main/views.py:224
 msgid "Edit Succeeded!"
 msgstr "编辑成功！"
 
-#: flog/main/views.py:243
+#: flog/main/views.py:247
 msgid "Post collected."
 msgstr "文章已收藏。"
 
-#: flog/main/views.py:245
+#: flog/main/views.py:249
 msgid "Already collected."
 msgstr "你已经收藏过了该文章。"
 
-#: flog/main/views.py:247
+#: flog/main/views.py:251
 msgid "You cannot collect your own post."
 msgstr "你不能收藏你自己的文章。"
 
-#: flog/main/views.py:250
+#: flog/main/views.py:254
 msgid ""
 "The author has set this post to invisible. So you cannot collect this "
 "post."
 msgstr "这篇文章的作者已经把这篇文章设为不可见的了，所以你无法收藏这篇文章。"
 
-#: flog/main/views.py:262
+#: flog/main/views.py:266
 msgid "Post uncollected."
 msgstr "文章已取消收藏。"
 
-#: flog/main/views.py:275
+#: flog/main/views.py:279
 #, python-format
 msgid "Picked post %(id)d"
 msgstr "加精了ID为%(id)d的文章"
 
-#: flog/main/views.py:290
+#: flog/main/views.py:294
 #, python-format
 msgid "Unpicked post %(id)d"
 msgstr "取精了ID为%(id)d的文章"
 
-#: flog/main/views.py:341
+#: flog/main/views.py:345
 msgid "Enter keyword about post or user."
 msgstr "搜索文章标题或用户名"
 
-#: flog/main/views.py:386
+#: flog/main/views.py:390
 msgid "You can't add others' posts to your column!"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:391
+#: flog/main/views.py:395
 msgid "Your column was successfully created."
 msgstr "你的专栏已创建"
 
-#: flog/main/views.py:416
+#: flog/main/views.py:420
 #, python-format
 msgid "Topped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:427
+#: flog/main/views.py:431
 #, python-format
 msgid "Untopped column <%(name)s>"
 msgstr "置顶了专栏<%(name)s>"
 
-#: flog/main/views.py:447
+#: flog/main/views.py:451
 msgid "You can't request others' posts to the column"
 msgstr "你不可以把其他人的文章加入到你的专栏！"
 
-#: flog/main/views.py:449 flog/main/views.py:471 flog/main/views.py:497
-#: flog/main/views.py:516
+#: flog/main/views.py:453 flog/main/views.py:475 flog/main/views.py:501
+#: flog/main/views.py:520
 msgid "The post is already in the column."
 msgstr "这篇文章已经在专栏里了。"
 
-#: flog/main/views.py:455
+#: flog/main/views.py:459
 msgid "Your request has been submitted to the manager of the column."
 msgstr "你的请求被专栏的管理人通过了。"
 
-#: flog/main/views.py:468
+#: flog/main/views.py:472
 msgid "You are not the manager of the column."
 msgstr "你没有权限管理此专栏。"
 
-#: flog/main/views.py:478
+#: flog/main/views.py:482
 msgid "Your request has been submitted to the column"
 msgstr "你的反馈已经发送给站长了！"
 
@@ -548,54 +550,54 @@ msgstr "主页"
 msgid "About Us"
 msgstr "关于我们"
 
-#: flog/templates/base.html:53
+#: flog/templates/base.html:54
 msgid "Flog BetaShop"
 msgstr "头像框商店"
 
-#: flog/templates/base.html:61
+#: flog/templates/base.html:63
 msgid "Search user, post, group or column"
 msgstr "搜索用户、文章、群组或专栏"
 
-#: flog/templates/base.html:74
+#: flog/templates/base.html:76
 msgid "Your Profile"
 msgstr "你的主页"
 
-#: flog/templates/base.html:76 flog/templates/macros.html:263
-#: flog/templates/user/edit_profile.html:7
+#: flog/templates/base.html:78 flog/templates/macros.html:263
+#: flog/templates/main/_sidebar.html:36 flog/templates/user/edit_profile.html:7
 #: flog/templates/user/edit_profile.html:9
 #: flog/templates/user/user_profile.html:62
 msgid "Edit Profile"
 msgstr "编辑账户信息"
 
-#: flog/templates/base.html:78
+#: flog/templates/base.html:80
 msgid "Log out"
 msgstr "注销"
 
-#: flog/templates/base.html:82
+#: flog/templates/base.html:84
 msgid "Resend Confirmation Email"
 msgstr "重新发送邮箱验证邮件"
 
-#: flog/templates/base.html:87 flog/templates/user/change_password.html:4
+#: flog/templates/base.html:89 flog/templates/user/change_password.html:4
 msgid "Change Password"
 msgstr "更改密码"
 
-#: flog/templates/base.html:91
+#: flog/templates/base.html:93
 msgid "Delete Your Account"
 msgstr "删除你的账户"
 
-#: flog/templates/base.html:95
+#: flog/templates/base.html:97
 msgid "Article Tools"
 msgstr "写作工具"
 
-#: flog/templates/base.html:112
+#: flog/templates/base.html:114
 msgid "Log in / Register"
 msgstr "登录 / 注册"
 
-#: flog/templates/base.html:118
+#: flog/templates/base.html:120
 msgid "Theme"
 msgstr "样式选择"
 
-#: flog/templates/base.html:132
+#: flog/templates/base.html:134
 msgid "Language"
 msgstr "语言选择"
 
@@ -688,17 +690,17 @@ msgstr "已删除的Flog用户"
 msgid "Read More"
 msgstr "阅读更多"
 
-#: flog/templates/macros.html:350 flog/templates/main/full_post.html:42
+#: flog/templates/macros.html:350 flog/templates/main/full_post.html:44
 msgid "This post belongs to"
 msgstr "这篇文章属于"
 
 #: flog/templates/macros.html:353 flog/templates/macros.html:358
-#: flog/templates/main/full_post.html:45 flog/templates/main/full_post.html:50
+#: flog/templates/main/full_post.html:47 flog/templates/main/full_post.html:52
 #: flog/templates/main/search.html:37
 msgid "Column"
 msgstr "专栏"
 
-#: flog/templates/macros.html:356 flog/templates/main/full_post.html:48
+#: flog/templates/macros.html:356 flog/templates/main/full_post.html:50
 msgid "and"
 msgstr "和"
 
@@ -922,90 +924,122 @@ msgstr "以管理员身份编辑账户信息"
 msgid "DELETE [ADMIN]"
 msgstr "[管理员]删除文章"
 
-#: flog/templates/main/_sidebar.html:25
+#: flog/templates/main/_sidebar.html:21
+msgid "Logged in as"
+msgstr "已登录"
+
+#: flog/templates/main/_sidebar.html:27
+msgid "Visits Today"
+msgstr "今日访问量"
+
+#: flog/templates/main/_sidebar.html:28
+msgid "Visits in Total"
+msgstr "总访问量"
+
+#: flog/templates/main/_sidebar.html:35 flog/templates/main/_sidebar.html:74
+msgid "Personal Profile"
+msgstr "个人信息"
+
+#: flog/templates/main/_sidebar.html:44
 msgid "Quick Actions"
 msgstr "快捷操作"
 
-#: flog/templates/main/_sidebar.html:27
+#: flog/templates/main/_sidebar.html:46
 msgid "Your images"
 msgstr "查看你的图片"
 
-#: flog/templates/main/_sidebar.html:28 flog/templates/main/collections.html:7
+#: flog/templates/main/_sidebar.html:47 flog/templates/main/collections.html:7
 #: flog/templates/main/picked.html:7
 msgid "Your collections"
 msgstr "查看你收藏的文章"
 
-#: flog/templates/main/_sidebar.html:32
+#: flog/templates/main/_sidebar.html:51
 msgid "Post Actions"
 msgstr "文章操作"
 
-#: flog/templates/main/_sidebar.html:34
+#: flog/templates/main/_sidebar.html:53
 msgid "Write a new post"
 msgstr "撰写新的文章"
 
-#: flog/templates/main/_sidebar.html:35
+#: flog/templates/main/_sidebar.html:54
 msgid "Manage your posts"
 msgstr "管理你的文章"
 
-#: flog/templates/main/_sidebar.html:39
+#: flog/templates/main/_sidebar.html:58
 msgid "Group Actions"
 msgstr "群组操作"
 
-#: flog/templates/main/_sidebar.html:41
+#: flog/templates/main/_sidebar.html:60
 msgid "Create a new group"
 msgstr "创建新的群组"
 
-#: flog/templates/main/_sidebar.html:42
+#: flog/templates/main/_sidebar.html:61
 msgid "Join a group"
 msgstr "加入一个群组"
 
-#: flog/templates/main/_sidebar.html:43
+#: flog/templates/main/_sidebar.html:62
 msgid "Manage your groups"
 msgstr "管理你的群组"
 
-#: flog/templates/main/_sidebar.html:47
+#: flog/templates/main/_sidebar.html:66
 msgid "Explore"
 msgstr "发现"
 
-#: flog/templates/main/_sidebar.html:49
+#: flog/templates/main/_sidebar.html:68
 msgid "Explore users"
 msgstr "发现用户"
 
-#: flog/templates/main/_sidebar.html:50
+#: flog/templates/main/_sidebar.html:69
 msgid "Explore groups"
 msgstr "发现群组"
 
-#: flog/templates/main/_sidebar.html:51
+#: flog/templates/main/_sidebar.html:70
 msgid "Enjoy the picked posts"
 msgstr "查看精选集"
 
-#: flog/templates/main/_sidebar.html:55
-msgid "Personal Profile"
-msgstr "个人信息"
-
-#: flog/templates/main/_sidebar.html:57
+#: flog/templates/main/_sidebar.html:76
 msgid "View your profile"
 msgstr "查看你的个人信息"
 
-#: flog/templates/main/_sidebar.html:58
+#: flog/templates/main/_sidebar.html:77
 msgid "Edit your profile"
 msgstr "编辑你的个人信息"
 
-#: flog/templates/main/_sidebar.html:62
+#: flog/templates/main/_sidebar.html:81
 msgid "Column Actions"
 msgstr "专栏操作"
 
-#: flog/templates/main/_sidebar.html:64
+#: flog/templates/main/_sidebar.html:83
 msgid "Create a column"
 msgstr "创建新的专栏"
 
-#: flog/templates/main/_sidebar.html:65
+#: flog/templates/main/_sidebar.html:84
 msgid "See all columns"
 msgstr "查看所有专栏"
 
-#: flog/templates/main/_sidebar.html:69
+#: flog/templates/main/_sidebar.html:91
 msgid "Stats"
 msgstr "统计信息"
+
+#: flog/templates/main/_sidebar.html:95
+msgid "Total clicks"
+msgstr "你的访问量"
+
+#: flog/templates/main/_sidebar.html:96
+msgid "Total posts"
+msgstr "你的文章数量"
+
+#: flog/templates/main/_sidebar.html:97
+msgid "Total columns"
+msgstr "你的专栏数量"
+
+#: flog/templates/main/_sidebar.html:98
+msgid "Total comments"
+msgstr "你的评论数量"
+
+#: flog/templates/main/_sidebar.html:101
+msgid "Coined Post"
+msgstr "编辑文章"
 
 #: flog/templates/main/collections.html:26
 msgid "You don't have any collections"
@@ -1047,21 +1081,21 @@ msgstr "写文章"
 msgid "New Post"
 msgstr "撰写新的文章"
 
-#: flog/templates/main/not_authorized.html:9
+#: flog/templates/main/not_authorized.html:10
 msgid "A blog website built for convenience."
 msgstr "一个方便的博客网站"
 
-#: flog/templates/main/not_authorized.html:11
+#: flog/templates/main/not_authorized.html:13
+msgid "Already have an account? Log in to meet us online."
+msgstr "已经有账户？请登录。"
+
+#: flog/templates/main/not_authorized.html:14
+msgid "A newcomer here? You can "
+msgstr "没有账户？你可以"
+
+#: flog/templates/main/not_authorized.html:14
 msgid "Join Now!"
 msgstr "加入我们"
-
-#: flog/templates/main/not_authorized.html:12
-msgid "or"
-msgstr "或者"
-
-#: flog/templates/main/not_authorized.html:13
-msgid "View Posts Directly"
-msgstr "直接查看用户的博客"
 
 #: flog/templates/main/notifications.html:11 flog/templates/shop/main.html:28
 msgid "All"
@@ -1251,11 +1285,11 @@ msgstr "你还没有关注该用户。"
 msgid "User unfollowed."
 msgstr "你取消关注了这个用户。"
 
-#: flog/user/views.py:125 flog/user/views.py:155
+#: flog/user/views.py:134 flog/user/views.py:164
 msgid "Password Changed"
 msgstr "你的密码已更改"
 
-#: flog/user/views.py:143
+#: flog/user/views.py:152
 msgid "A confirmation email has been sent."
 msgstr "一个新的验证邮件已经发送，请查收"
 
@@ -1285,4 +1319,13 @@ msgstr "一个新的验证邮件已经发送，请查收"
 #~ msgstr ""
 #~ "恭喜你发现了<b>「自我介绍」文章</b>！你现在可以在作者的<a href=\"%s\" "
 #~ "class=\"link\">个人主页</a>看到这篇文章。只要写一篇标题为你的用户名（%s），你就可以在主页里写一份详细的自我介绍！"
+
+#~ msgid "Coined posts"
+#~ msgstr "你投币的文章"
+
+#~ msgid "or"
+#~ msgstr "或者"
+
+#~ msgid "View Posts Directly"
+#~ msgstr "直接查看用户的博客"
 
