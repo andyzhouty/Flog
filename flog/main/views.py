@@ -48,7 +48,11 @@ def main():
             .order_by(Post.timestamp.desc())
             .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
         )
-    notifications = Notification.query.with_parent(current_user) if current_user.is_authenticated else None
+    notifications = (
+        Notification.query.with_parent(current_user)
+        if current_user.is_authenticated
+        else None
+    )
     posts = pagination.items
     return render_template(
         "main/main.html",
