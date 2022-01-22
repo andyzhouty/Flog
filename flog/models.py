@@ -840,6 +840,10 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
+    
+    @property
+    def id(self):
+        return -1
 
 
 login_manager.anonymous_user = AnonymousUser

@@ -220,27 +220,29 @@ MIT License
 {% endmacro %}
 
 {% macro username(user, class="", style="", size="100%", link=True, badge=True) %} {# Style must be nothing or end with ";" #}
-    {% if link %}
-        <a style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
-            {{ user.load_username_style() }}
-            margin-bottom: 0 !important;"
-            href="{{ url_for('user.profile', username=user.username) }}"
-            class="{{ class }}"
-        >{{ user.username }}</a>
-    {% else %}
-        <span style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
-            {{ user.load_username_style() }}
-            margin-bottom: 0 !important;"
-            class="{{ class }}"
-        >{{ user.username }}</span>
-    {% endif %}
-    {% if badge %}
-        {% if user.is_administrator() %}
-            <img src="https://img.shields.io/badge/admin-d24" style="margin:.5em;">
-        {% elif user.can(Permission.MODERATE) %}
-            <img src="https://img.shields.io/badge/moderator-eb3" style="margin:.5em;">
+    {% if user.is_authenticated %}
+        {% if link %}
+            <a style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
+                {{ user.load_username_style() }}
+                margin-bottom: 0 !important;"
+                href="{{ url_for('user.profile', username=user.username) }}"
+                class="{{ class }}"
+            >{{ user.username }}</a>
+        {% else %}
+            <span style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
+                {{ user.load_username_style() }}
+                margin-bottom: 0 !important;"
+                class="{{ class }}"
+            >{{ user.username }}</span>
         {% endif %}
-        {{ level_badge(user) }}
+        {% if badge %}
+            {% if user.is_administrator() %}
+                <img src="https://img.shields.io/badge/admin-d24" style="margin:.5em;">
+            {% elif user.can(Permission.MODERATE) %}
+                <img src="https://img.shields.io/badge/moderator-eb3" style="margin:.5em;">
+            {% endif %}
+            {{ level_badge(user) }}
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
