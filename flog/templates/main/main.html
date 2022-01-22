@@ -19,10 +19,12 @@ MIT License
         <div class="col-md-8 mt-lg-4">
             <div class="m-lg-4 row"></div>
                 <div class="page-header mb-lg-4 ml-2">
+                    {% if current_user.is_authenticated %}
                     <h1 class="display-4">
                         {{ _("Welcome,") }}<br>
                         <b>{{ role_of(current_user) }} {{ username(current_user, link=False, badge=False) }}</b>
                     </h1>
+                    {% endif %}
                 </div>
                 <div class="m-4
                 {% if notification_count %}
