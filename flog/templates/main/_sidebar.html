@@ -95,7 +95,7 @@ MIT License
                         {{ stats_card(_("Total clicks"), current_user.clicks//2) }}
                         {{ stats_card(_("Total posts"), current_user.posts.__len__()) }}
                         {{ stats_card(_("Total word count"), current_user.word_count()) }}
-                        {{ stats_card(_("Total columns"), current_user.posts.__len__()) }}
+                        {{ stats_card(_("Total columns"), current_user.columns.__len__()) }}
                         {{ stats_card(_("Total comments"), current_user.comments.__len__()) }}
                         {{ stats_card(_("Coins"), current_user.coins | round(2)) }}
                         {{ stats_card(_("Experience"), current_user.experience) }}
