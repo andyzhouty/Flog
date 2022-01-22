@@ -15,24 +15,26 @@ MIT License
     </a>
     <hr>
     {% if current_user.is_authenticated %}
-        <h4 class="mt-4">Account</h4>
-        <div class="card mb-3 d-flex flex-wrap justify-content-between">
-            <small class="mt-4 ml-4 mb-0">Logged in as</small>
-            <div class="d-flex flex-fill mb-0" style="padding-left: 20px;">
-                {{ avatar_username(current_user, 44, "125%", False, True) }}
-            </div>
-            <p class="text-muted ml-4 mb-1">{{ current_user.about_me }}</p>
-            <div class="d-flex mb-1 ml-4 mr-4 mt-2 p-2 row bg-light rounded outline">
-                <div class="col-6 align-items-center mb-n4">Visits Today<br><h3>{{ current_user.clicks_today // 2 }}</h3></div>
-                <div class="col-6 align-items-center mb-n4">Visits in Total<br><h3>{{ current_user.clicks // 2 }}</h3></div>
-            </div>
-            <div class="d-flex mt-0 mb-2 mr-4 ml-4 p-2 row bg-dark rounded">
-                <div class="col-6 align-items-center text-white mb-n4">Coins<br><h3>{{ current_user.coins | round(2) }}</h3></div>
-                <div class="col-6 align-items-center text-white mb-n4">Experience<br><h3>{{ current_user.experience }}</h3></div>
-            </div>
-            <div class="d-flex">
-                <a class="btn btn-primary btn-block mt-3 ml-3 mr-3 mb-1 align-center" href="{{ current_user.profile_url() }}"><i class="bi bi-person"></i>&nbsp;&nbsp;{{ _("Personal Profile") }}</a>
-                <a class="btn btn-outline-primary btn-block mt-1 ml-3 mb-3 mr-3 align-center" href="{{ url_for('user.edit_profile') }}"><i class="bi bi-pencil-fill"></i>&nbsp;&nbsp;{{ _("Edit Profile") }}</a>
+        <h4 class="mt-4">Account<button data-toggle="collapse" data-target="#account" class="btn btn-sm btn-primary float-right d-none d-lg-block"><b>—</b></button></h4>
+        <div class="collapse show" id="account">
+            <div class="card mb-3 d-flex flex-wrap justify-content-between">
+                <small class="mt-4 ml-4 mb-0">Logged in as</small>
+                <div class="d-flex flex-fill mb-0" style="padding-left: 20px;">
+                    {{ avatar_username(current_user, 44, "125%", False, True) }}
+                </div>
+                <p class="text-muted ml-4 mb-1">{{ current_user.about_me }}</p>
+                <div class="d-flex mb-1 ml-4 mr-4 mt-2 p-2 row bg-light rounded outline">
+                    <div class="col-6 align-items-center mb-n4">Visits Today<br><h3>{{ current_user.clicks_today // 2 }}</h3></div>
+                    <div class="col-6 align-items-center mb-n4">Visits in Total<br><h3>{{ current_user.clicks // 2 }}</h3></div>
+                </div>
+                <div class="d-flex mt-0 mb-2 mr-4 ml-4 p-2 row bg-dark rounded">
+                    <div class="col-6 align-items-center text-white mb-n4">Coins<br><h3>{{ current_user.coins | round(2) }}</h3></div>
+                    <div class="col-6 align-items-center text-white mb-n4">Experience<br><h3>{{ current_user.experience }}</h3></div>
+                </div>
+                <div class="d-flex">
+                    <a class="btn btn-primary btn-block mt-3 ml-3 mr-3 mb-1 align-center" href="{{ current_user.profile_url() }}"><i class="bi bi-person"></i>&nbsp;&nbsp;{{ _("Personal Profile") }}</a>
+                    <a class="btn btn-outline-primary btn-block mt-1 ml-3 mb-3 mr-3 align-center" href="{{ url_for('user.edit_profile') }}"><i class="bi bi-pencil-fill"></i>&nbsp;&nbsp;{{ _("Edit Profile") }}</a>
+                </div>
             </div>
         </div>
         <hr>
