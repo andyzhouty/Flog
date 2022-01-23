@@ -39,7 +39,10 @@ from . import main_bp
 def before_request():
     ban_ip_list = os.getenv("BAN_IP_LIST", "").split(":")
     if request.remote_addr in ban_ip_list:
-        return render_template("errors/error.html", error_message="Your ip is banned"), 403
+        return (
+            render_template("errors/error.html", error_message="Your ip is banned"),
+            403,
+        )
 
 
 @main_bp.route("/")
