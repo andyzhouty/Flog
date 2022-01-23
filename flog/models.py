@@ -842,14 +842,14 @@ class User(db.Model, UserMixin):
             return [
                 post
                 for post in user.posts
-                if (datetime.utcnow() - post.timestamp < timedelta(days=7))
+                if (datetime.utcnow() - post.timestamp < timedelta(days=21))
             ]
 
         def _get_recc(user):
             return [
                 comment
                 for comment in user.comments
-                if (datetime.utcnow() - comment.timestamp < timedelta(days=7))
+                if (datetime.utcnow() - comment.timestamp < timedelta(days=21))
             ]
 
         posts, comments = _get_recp(user=self), _get_recc(user=self)
@@ -860,62 +860,55 @@ class User(db.Model, UserMixin):
         ) / 3
 
         def _get_recp_count(user):
-            return sum(
-                [len(p.content) for p in _get_recp(user)]
-            )
+            return sum([len(p.content) for p in _get_recp(user)])
+
         def _get_recc_count(user):
-            return sum(
-                [len(c.body) for c in _get_recc(user)]
-            )
+            return sum([len(c.body) for c in _get_recc(user)])
+
         def _get_recp_coins(user):
-            return sum(
-                [p.coins for p in _get_recp(user)]
-            )
+            return sum([p.coins for p in _get_recp(user)])
+
         def _get_recn(user):
-            return [post
+            return [
+                post
                 for post in user.coined_posts
-                if (datetime.utcnow() - post.timestamp < timedelta(15))
+                if (datetime.utcnow() - post.timestamp < timedelta(40))
             ]
+
         def _get_recn_cc(user):
-            return sum(
-                [p.coins for p in _get_recn(user)]
-            )
-        pc, cc, tc, tc_ = _get_recp_count(self), _get_recc_count(self), _get_recp_coins(self), _get_recn_cc(self)
+            return sum([p.coins for p in _get_recn(user)])
+
+        pc, cc, tc, tc_ = (
+            _get_recp_count(self),
+            _get_recc_count(self),
+            _get_recp_coins(self),
+            _get_recn_cc(self),
+        )
         try:
-            v1 = pc / max(
-                [_get_recp_count(user) for user in User.query.all()]
-            )
+            v1 = pc / max([_get_recp_count(user) for user in User.query.all()])
         except DivisionByZero:
             v1 = 0
         try:
-            v2 = cc / max(
-                [_get_recc_count(user) for user in User.query.all()]
-            )
+            v2 = cc / max([_get_recc_count(user) for user in User.query.all()])
         except DivisionByZero:
             v2 = 0
         try:
-            v3 = tc / max(
-                [_get_recp_coins(user) for user in User.query.all()]
-            )
+            v3 = tc / max([_get_recp_coins(user) for user in User.query.all()])
         except DivisionByZero:
             v3 = 0
         try:
-            v4 = tc_ / max(
-                [_get_recn_cc(user) for user in User.query.all()]
-            )
+            v4 = tc_ / max([_get_recn_cc(user) for user in User.query.all()])
         except DivisionByZero:
             v4 = 0
 
-        from math import sqrt
-        s2 = sqrt(2)
+        pi = 3.141592653589793
+        s2 = 1.4142135623730951
+        return (
+            (v1 * pi / 2 + v2 * pi / 2 + v3 * pi / 2 + v4 * pi / 4 + v5 * pi / 4)
+            * 200
+            / (4 * s2)
+        ).__round__(2)
 
-        return ((
-            v1 * v2 / 2 +
-            v2 * v3 / 2 +
-            v3 * v4 / 2 +
-            v4 * v5 * s2 / 4 +
-            v5 * v1 * s2 / 4
-        ) * 100 / (3 + s2)).__round__(2) + 25
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
