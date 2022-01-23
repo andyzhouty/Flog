@@ -29,11 +29,13 @@ def edit_profile():
         return redirect(url_for("admin.edit_profile", id=current_user.id))
     form = EditProfileForm()
     if form.validate_on_submit():
+        post_desc = Post.query.filter_by(title=current_user.username)
         current_user.username = form.username.data
         current_user.name = form.name.data
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
         current_user.custom_avatar_url = form.custom_avatar_url.data
+        post_desc.title = form.username.data
         db.session.add(current_user._get_current_object())
         db.session.commit()
         flash(_("Your profile has been updated!"), "success")
