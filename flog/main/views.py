@@ -2,6 +2,7 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
+import os
 from datetime import datetime
 from flask import (
     render_template,
@@ -32,6 +33,13 @@ from ..notifications import (
 from .forms import ColumnForm, PostForm, CommentForm
 from ..auth.forms import LoginForm
 from . import main_bp
+
+
+@main_bp.before_app_request
+def before_request():
+    ban_ip_list = os.getenv("BAN_IP_LIST", "").split(":")
+    if request.remote_addr in ban_ip_list:
+        return render_template("errors/error.html", error_message="Your ip is banned"), 403
 
 
 @main_bp.route("/")
