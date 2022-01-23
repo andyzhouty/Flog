@@ -905,7 +905,7 @@ class User(db.Model, UserMixin):
         s2 = 1.4142135623730951
         return (
             (v1 * pi / 2 + v2 * pi / 2 + v3 * pi / 2 + v4 * pi / 4 + v5 * pi / 4)
-            * 200
+            * 100
             / (4 * s2)
         ).__round__(2)
 
