@@ -913,7 +913,7 @@ class User(db.Model, UserMixin):
 
     def ping_update_ai(self):
         now = datetime.utcnow()
-        sl = self.last_update or datetime(2000, 1, 1, 0, 0, 0, 0)
+        sl = datetime.utcfromtimestamp(self.last_update) or datetime(2000, 1, 1, 0, 0, 0, 0)
         if now >= datetime(
             year=sl.year, month=sl.month, day=sl.day, hour=(sl.hour // 12 + 1) * 12
         ):
