@@ -2,7 +2,6 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from decimal import DivisionByZero
 import os
 import hashlib
 from datetime import datetime, timedelta
@@ -613,6 +612,9 @@ class User(db.Model, UserMixin):
     clicks = db.Column(db.Integer(), default=0)
     clicks_today = db.Column(db.Integer(), default=0)
 
+    alpha_index = db.Column(db.Integer(), default=0)
+    last_update = db.Column(db.DateTime(), default=datetime(2000, 1, 1, 0, 0, 0, 0))
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
@@ -886,19 +888,19 @@ class User(db.Model, UserMixin):
         )
         try:
             v1 = pc / max([_get_recp_count(user) for user in User.query.all()])
-        except DivisionByZero:
+        except ZeroDivisionError:
             v1 = 0
         try:
             v2 = cc / max([_get_recc_count(user) for user in User.query.all()])
-        except DivisionByZero:
+        except ZeroDivisionError:
             v2 = 0
         try:
             v3 = tc / max([_get_recp_coins(user) for user in User.query.all()])
-        except DivisionByZero:
+        except ZeroDivisionError:
             v3 = 0
         try:
             v4 = tc_ / max([_get_recn_cc(user) for user in User.query.all()])
-        except DivisionByZero:
+        except ZeroDivisionError:
             v4 = 0
 
         pi = 3.141592653589793
@@ -908,6 +910,15 @@ class User(db.Model, UserMixin):
             * 100
             / (4 * s2)
         ).__round__(2)
+
+    def ping_update_ai(self):
+        now = datetime.utcnow()
+        sl = self.last_update or datetime(2000, 1, 1, 0, 0, 0, 0)
+        if now >= datetime(
+            year=sl.year, month=sl.month, day=sl.day, hour=(sl.hour // 12 + 1) * 12
+        ):
+            self.alpha_index = self.get_alpha()
+            self.last_update = now
 
 
 class AnonymousUser(AnonymousUserMixin):
