@@ -29,17 +29,11 @@ MIT License
 {% endmacro %}
 
 {% macro role_of(user) %}
-    {% if user.is_administrator() -%}
-        {{ _("Administrator") }}
-    {% elif user.can(Permission.MODERATE) -%}
-        {{ _("Moderator") }}
-    {% else -%}
-        {{ _("User") }}
-    {%- endif %}
+    {{ _("User") }}
 {% endmacro %}
 
 {% macro render_user_role(user) %}
-    <span class="{% if user.is_administrator() %} text-danger {% elif user.can(Permission.MODERATE) %} text-warning {% elif user.locked %} text-muted {% endif %}">
+    <span class="text-muted">
         {{ user.username }}
     </span>
 {% endmacro %}
@@ -160,21 +154,14 @@ MIT License
                 </form>
                 {% endif %}
             {% endif %}
-            {% if current_user.is_administrator() or post.author == current_user
+            {% if post.author == current_user
                   and can_edit -%}
                 <a class="link-action" href="{{ url_for('main.edit_post', id=post.id) }}">
                     <i class="bi-pencil-square"></i>
                     {{ _("Edit") }}
                 </a>
             {%- endif %}
-            {% if post.author -%}
-                {% set post_author_can_moderate = post.author.can(Permission.MODERATE) %}
-            {% else -%}
-                {% set post_author_can_moderate = False %}
-            {%- endif %}
-            {% if current_user.can(Permission.MODERATE)  and not post_author_can_moderate
-                or current_user.is_administrator()
-                or post.author == current_user
+            {% if post.author == current_user
                 and can_delete -%}
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -236,11 +223,6 @@ MIT License
             >{{ user.username }}</span>
         {% endif %}
         {% if badge %}
-            {% if user.is_administrator() %}
-                <img src="https://img.shields.io/badge/admin-d24" style="margin:.5em;">
-            {% elif user.can(Permission.MODERATE) %}
-                <img src="https://img.shields.io/badge/moderator-eb3" style="margin:.5em;">
-            {% endif %}
             {{ level_badge(user) }}
         {% endif %}
     {% endif %}
@@ -256,47 +238,6 @@ MIT License
 {% macro user_card(user, group=None) %}
     <li class="list-group-item d-flex">
         {{ avatar_username(user, avatar_size=40, username_size="150%") }}
-        {% if not group %}
-        <span class="text-white align-items-end flex-column ml-auto">
-            {% if current_user.is_administrator() -%}
-                <a class="btn btn-sm btn-outline-secondary flex-fill"
-                   href="{{ url_for('admin.edit_profile', id=user.id) }}">
-                <i class="bi-pencil-square"></i>
-                {{ _("Edit Profile") }}
-            </a>
-                <form class="form-inline" method="POST" action="{{ url_for('admin.delete_account', id=user.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-sm btn-outline-danger flex-fill"
-                        onclick="return confirm('{{ _('Are you sure?') }}');">
-                    <i class="bi-trash"></i>
-                    {{ _("DELETE") }}
-                </button>
-            </form>
-            {%- endif %}
-            {% if current_user.is_administrator() or
-              (current_user.can(Permission.MODERATE) and not user.can(Permission.MODERATE)) -%}
-                {% if not user.blocked %}
-                    <form class="form-inline" method="POST" action="{{ url_for('admin.block_user', user_id=user.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-sm btn-outline-dark flex-fill"
-                                onclick="return confirm('{{ _('Are you sure?') }}');">
-                            <i class="bi-lock"></i>
-                            {{ _("LOCK") }}
-                        </button>
-                    </form>
-                {% else %}
-                    <form class="form-inline" method="POST"
-                          action="{{ url_for('admin.unblock_user', user_id=user.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-sm btn-outline-dark flex-fill"
-                                onclick="return confirm('{{ _('Are you sure?') }}');">
-                            <i class="bi-unlock"></i>
-                            {{ _("UNLOCK") }}
-                        </button>
-                    </form>
-                {% endif %}
-            {%- endif %}
-        {% endif %}
         {% if group and current_user == group.manager -%}
             <div class="align-items-end flex-column ml-auto">
             <form class="form-inline" method="GET" action="{{ url_for('group.set_manager', user_id=user.id, group_id=group.id) }}">

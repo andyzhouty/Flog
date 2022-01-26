@@ -4,8 +4,7 @@ Copyright(c) 2021 Andy Zhou
 """
 from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.fields.core import BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import (
     DataRequired,
     EqualTo,

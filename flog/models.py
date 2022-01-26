@@ -5,6 +5,8 @@ Copyright (c) 2020 Andy Zhou
 import os
 import hashlib
 from datetime import datetime, timedelta
+from djask.auth.abstract import AbstractUser
+from djask.db.models import Model
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, url_for
 from flask_login import UserMixin
@@ -518,19 +520,10 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            "User": [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE],
-            "Moderator": [
+            "User": [
                 Permission.FOLLOW,
                 Permission.COMMENT,
-                Permission.WRITE,
-                Permission.MODERATE,
-            ],
-            "Administrator": [
-                Permission.FOLLOW,
-                Permission.COMMENT,
-                Permission.WRITE,
-                Permission.MODERATE,
-                Permission.ADMIN,
+                Permission.WRITE
             ],
             "LOCKED": [Permission.FOLLOW],
         }
@@ -547,7 +540,7 @@ class Role(db.Model):
         db.session.commit()
 
 
-class User(db.Model, UserMixin):
+class User(AbstractUser, Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256))
     username = db.Column(db.String(32), unique=True, index=True)
@@ -618,8 +611,6 @@ class User(db.Model, UserMixin):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config["FLOG_ADMIN_EMAIL"]:
-                self.role = Role.query.filter_by(name="Administrator").first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
@@ -637,9 +628,6 @@ class User(db.Model, UserMixin):
 
     def can(self, perm) -> bool:
         return self.role is not None and self.role.has_permission(perm)
-
-    def is_administrator(self):
-        return self.can(Permission.ADMIN)
 
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
@@ -925,8 +913,6 @@ class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
         return False
 
-    def is_administrator(self):
-        return False
 
     @property
     def id(self):

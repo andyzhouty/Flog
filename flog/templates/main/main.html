@@ -50,7 +50,7 @@ MIT License
             <div class="m-4"></div>
             <ul class="list-group">
             {% for post in posts %}
-                {% if ((not post.private) or post.author == current_user or current_user.is_administrator()) and post.title != post.author.username %}
+                {% if ((not post.private) or post.author == current_user) and post.title != post.author.username %}
                     {{ post_card(post) }}
                 {% endif %}
             {% endfor %}

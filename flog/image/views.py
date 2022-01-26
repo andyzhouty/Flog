@@ -44,16 +44,11 @@ def upload():
 @login_required
 def manage():
     page = request.args.get("page", 1, int)
-    if not current_user.is_administrator():
-        pagination = (
-            Image.query.with_parent(current_user)
-            .order_by(Image.timestamp.desc())
-            .paginate(page, per_page=current_app.config["IMAGES_PER_PAGE"])
-        )
-    else:
-        pagination = Image.query.order_by(Image.timestamp.desc()).paginate(
-            page, per_page=current_app.config["IMAGES_PER_PAGE"]
-        )
+    pagination = (
+        Image.query.with_parent(current_user)
+        .order_by(Image.timestamp.desc())
+        .paginate(page, per_page=current_app.config["IMAGES_PER_PAGE"])
+    )
     images = pagination.items
     return render_template("image/manage.html", pagination=pagination, images=images)
 
@@ -62,7 +57,7 @@ def manage():
 @login_required
 def toggle_visibility(id: int):
     image = Image.query.get(id)
-    if image.author != current_user and not current_user.is_administrator():
+    if image.author != current_user:
         abort(403)
     image.private = not image.private
     db.session.commit()
@@ -74,7 +69,7 @@ def toggle_visibility(id: int):
 @login_required
 def delete(id: int):
     image = Image.query.get(id)
-    if image.author != current_user and not current_user.is_administrator():
+    if image.author != current_user:
         abort(403)
     filename = image.filename
     try:

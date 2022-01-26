@@ -69,7 +69,6 @@ class PostAPI(MethodView):
         post = Post.query.get_or_404(post_id)
         if (
             (not post.private)
-            or g.current_user.is_administrator()
             or (post.author == g.current_user)
         ):
             return jsonify(post_schema(post))

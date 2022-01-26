@@ -51,16 +51,11 @@ def main():
         form = LoginForm()
         return render_template("main/not_authorized.html", form=form)
     page = request.args.get("page", 1, type=int)
-    if current_user.is_administrator():
-        pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
-            page, per_page=current_app.config["POSTS_PER_PAGE"]
-        )
-    else:
-        pagination = (
-            Post.query.filter(or_(~Post.private, Post.author_id == current_user.id))
-            .order_by(Post.timestamp.desc())
-            .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
-        )
+    pagination = (
+        Post.query.filter(or_(~Post.private, Post.author_id == current_user.id))
+        .order_by(Post.timestamp.desc())
+        .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
+    )
     notifications = (
         Notification.query.with_parent(current_user)
         if current_user.is_authenticated
@@ -116,7 +111,6 @@ def full_post(id: int):
     if (
         (not post.private)
         or post.author == current_user
-        or current_user.is_administrator()
     ):
         page = request.args.get("page", 1, type=int)
         per_page = current_app.config["COMMENTS_PER_PAGE"]
@@ -211,7 +205,7 @@ def manage_posts():
 @permission_required(Permission.WRITE)
 def delete_post(id):
     post = Post.query.get(id)
-    if not (current_user.is_administrator() or current_user == post.author):
+    if current_user != post.author:
         abort(403)
     post.delete()
     flash(_("Post id %(id)d deleted", id=id), "success")
@@ -226,7 +220,7 @@ def delete_post(id):
 def edit_post(id):
     current_app.config["CKEDITOR_PKG_TYPE"] = "standard"
     post = Post.query.get(id)
-    if not (current_user.is_administrator() or current_user == post.author):
+    if current_user != post.author:
         abort(403)
     form = PostForm()
     form.columns.choices = [(column.id, column.name) for column in current_user.columns]
@@ -371,11 +365,6 @@ def search():
             category.capitalize(), name_key[category], q
         )
     )
-    if not current_user.is_administrator():
-        if category == "post":
-            query = query.filter(or_(~Post.private, Post.author == current_user))
-        elif category == "group":
-            query = query.filter(or_(~Group.private, Group in current_user.groups))
     results_count = query.count()
     pagination = query.paginate(page, per_page)
 

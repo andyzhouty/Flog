@@ -5,13 +5,13 @@ Copyright(c) 2021 Andy Zhou
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from apiflask import APIFlask
+from djask import Djask
 from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
     babel,
-    bootstrap,
+    bootstrap4,
     ckeditor,
     compress,
     csrf,
@@ -29,7 +29,6 @@ from .models import Post, Feedback, Role, Permission, User, Notification, Messag
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
-from .admin import admin_bp
 from .ajax import ajax_bp
 from .api.v1 import api_v1
 from .api.v2 import api_v2
@@ -50,7 +49,9 @@ from .user import user_bp
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_CONFIG", "development")
-    app = APIFlask("flog")
+    app = Djask("flog", config={
+        "AUTH_MODEL": User
+    })
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
@@ -111,12 +112,11 @@ def register_extensions(app: Flask) -> None:
     share.init_app(app)
 
 
-def register_blueprints(app: APIFlask) -> None:
+def register_blueprints(app: Djask) -> None:
     app.register_blueprint(main_bp)
     app.register_blueprint(others_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(ajax_bp, url_prefix="/ajax")
-    app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(api_v1, url_prefix="/api/v1")
     app.register_blueprint(api_v2, url_prefix="/api/v2")
     app.register_blueprint(api_v3, url_prefix="/api/v3")

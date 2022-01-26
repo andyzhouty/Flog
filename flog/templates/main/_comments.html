@@ -28,9 +28,6 @@
                         <span>{{ _("Deleted Flog User") }}</span>
                     {% endif %}
                 </h5>
-                {% if comment.author and comment.author.is_administrator() %}
-                <span class="badge badge-danger">{{ _("Admin") }}</span>
-                {% endif %}
                 {% if comment.author == post.author %}
                 <span class="badge badge-primary">{{ _("Author") }}</span>
                 {% endif %}
@@ -48,7 +45,7 @@
             <p class="mb-1">{{ comment.body | safe }}</p>
             {% if current_user.is_authenticated %}
                 <div class="d-flex justify-content-end">
-                    {% if current_user.is_administrator() or current_user == comment.author %}
+                    {% if current_user == comment.author %}
                     <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">

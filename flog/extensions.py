@@ -4,10 +4,8 @@ Copyright(c) 2021 Andy Zhou
 """
 from flask import request
 from flask.globals import current_app
-from flask_babel import Babel
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap4
 from flask_ckeditor import CKEditor
-from flask_compress import Compress
 from flask_login import LoginManager, current_user
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -16,15 +14,10 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_share import Share
-from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import CSRFProtect
 
 babel = Babel()
-bootstrap = Bootstrap()
+bootstrap4 = Bootstrap4()
 ckeditor = CKEditor()
-compress = Compress()
-csrf = CSRFProtect()
-db = SQLAlchemy()
 limiter = Limiter(
     default_limits=["17280 per day", "1440 per hour"], key_func=get_remote_address
 )

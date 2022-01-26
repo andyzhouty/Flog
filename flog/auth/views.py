@@ -10,14 +10,13 @@ from . import auth_bp
 from .forms import DeleteAccountForm, LoginForm, RegisterationForm
 from ..models import User, db
 from ..emails import send_email
+import os
 
 
 @auth_bp.before_app_request
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
-        for user in User.query.all():
-            user.ping_update_ai()
 
 
 @auth_bp.route("/register/", methods=["GET", "POST"])

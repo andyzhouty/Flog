@@ -74,6 +74,7 @@ flask-compress = "*"
 apiflask = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
+djask = "*"
 
 [pipenv]
 allow_prereleases = true
