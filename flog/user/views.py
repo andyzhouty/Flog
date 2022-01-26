@@ -13,7 +13,7 @@ from .forms import (
     PasswordChangeForm,
     ValidateEmailForm,
 )
-from ..models import db, User, Permission, Post
+from ..models import db, User, Post
 from ..decorators import permission_required
 from ..utils import redirect_back
 from ..notifications import (
@@ -50,7 +50,7 @@ def edit_profile():
 
 @user_bp.route("/follow/<username>/", methods=["POST"])
 @login_required
-@permission_required(Permission.FOLLOW)
+@permission_required
 def follow(username):
     user = User.query.filter_by(username=username).first_or_404()
     if current_user.is_following(user):
@@ -64,7 +64,7 @@ def follow(username):
 
 @user_bp.route("/unfollow/<username>/", methods=["POST"])
 @login_required
-@permission_required(Permission.FOLLOW)
+@permission_required
 def unfollow(username):
     user = User.query.filter_by(username=username).first()
     if not current_user.is_following(user):

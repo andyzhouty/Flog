@@ -9,7 +9,6 @@ from djask.auth.abstract import AbstractUser
 from djask.db.models import Model
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, url_for
-from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
@@ -234,14 +233,13 @@ coin_table = db.Table(
 )
 
 
-class Belong(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
+class Belong(Model):
     owner_id = db.Column(
-        db.Integer(),
+        db.Integer,
         db.ForeignKey("user.id"),
     )
     goods_id = db.Column(
-        db.Integer(),
+        db.Integer,
     )
     expires = db.Column(db.DateTime)
 
@@ -255,20 +253,20 @@ class Belong(db.Model):
         return delta
 
 
-class Collect(db.Model):
+class Collect(Model):
     """Collect Model"""
 
-    collector_id = db.Column(db.Integer(), db.ForeignKey("user.id"), primary_key=True)
-    collected_id = db.Column(db.Integer(), db.ForeignKey("post.id"), primary_key=True)
+    collector_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    collected_id = db.Column(db.Integer, db.ForeignKey("post.id"))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     collector = db.relationship("User", back_populates="collections", lazy="joined")
     collected = db.relationship("Post", back_populates="collectors", lazy="joined")
 
 
-class Follow(db.Model):
+class Follow(Model):
     follower_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     follower = db.relationship(
         "User", foreign_keys=[follower_id], back_populates="following", lazy="joined"
@@ -281,13 +279,12 @@ class Follow(db.Model):
         return f"<Follow follower: '{self.follower}' following: '{self.followed}'"
 
 
-class Post(db.Model):
+class Post(Model):
     """
     A model for posts
     """
 
     # initialize columns
-    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), index=True)
     author = db.relationship("User", back_populates="posts")
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -325,8 +322,7 @@ class Post(db.Model):
         )
 
 
-class Column(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Column(Model):
     name = db.Column(db.String(128), unique=True)
     posts = db.relationship(
         "Post", secondary=column_post_table, back_populates="columns"
@@ -350,7 +346,7 @@ class Column(db.Model):
         )
 
 
-class Comment(db.Model):
+class Comment(Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.UnicodeText)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
@@ -371,8 +367,7 @@ class Comment(db.Model):
         db.session.commit()
 
 
-class Feedback(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Feedback(Model):
     body = db.Column(db.String(200))
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     author = db.relationship("User", back_populates="feedbacks")
@@ -386,8 +381,7 @@ class Feedback(db.Model):
         db.session.commit()
 
 
-class Notification(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Notification(Model):
     message = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
@@ -403,8 +397,7 @@ class Notification(db.Model):
         db.session.commit()
 
 
-class Image(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Image(Model):
     filename = db.Column(db.String(512), unique=True)
 
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -431,16 +424,7 @@ class Image(db.Model):
         db.session.commit()
 
 
-class Permission:
-    FOLLOW = 1
-    COMMENT = 2
-    WRITE = 4
-    MODERATE = 8
-    ADMIN = 16
-
-
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Group(Model):
     name = db.Column(db.String(128), unique=True)
     members = db.relationship(
         "User", secondary=group_user_table, back_populates="groups"
@@ -474,8 +458,7 @@ class Group(db.Model):
         return Group.query.get(data.get("group_id"))
 
 
-class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Message(Model):
     body = db.Column(db.Text)
     group_id = db.Column(db.Integer, db.ForeignKey("group.id"))
     group = db.relationship("Group", back_populates="messages")
@@ -484,77 +467,14 @@ class Message(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
 
-class Role(db.Model):
-    __tablename__ = "roles"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    default = db.Column(db.Boolean, default=False, index=True)
-    permissions = db.Column(db.Integer)
-    users = db.relationship("User", back_populates="role")
-
-    def __init__(self, **kwargs):
-        super(Role, self).__init__(**kwargs)
-        if self.permissions is None:
-            self.permissions = 0
-
-    def __repr__(self):
-        return f"<Role: {self.name}>"
-
-    def add_permission(self, perm):
-        if not self.has_permission(perm):
-            self.permissions += perm
-
-    def remove_permission(self, perm):
-        if self.has_permission(perm):
-            self.permissions -= perm
-
-    def reset_permissions(self):
-        self.permissions = 0
-
-    def has_permission(self, perm):
-        """
-        Check if a single permission is in a combined permission
-        """
-        return self.permissions & perm == perm
-
-    @staticmethod
-    def insert_roles():
-        roles = {
-            "User": [
-                Permission.FOLLOW,
-                Permission.COMMENT,
-                Permission.WRITE
-            ],
-            "LOCKED": [Permission.FOLLOW],
-        }
-        default_role = "User"
-        for r in roles:
-            role = Role.query.filter_by(name=r).first()
-            if role is None:
-                role = Role(name=r)
-            role.reset_permissions()
-            for perm in roles[r]:
-                role.add_permission(perm)
-            role.default = role.name == default_role
-            db.session.add(role)
-        db.session.commit()
-
-
 class User(AbstractUser, Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(256))
-    username = db.Column(db.String(32), unique=True, index=True)
-    password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     posts = db.relationship("Post", back_populates="author")
-    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
-    role = db.relationship("Role", back_populates="users")
     feedbacks = db.relationship("Feedback", back_populates="author")
     avatar_hash = db.Column(db.String(32))
 
     locked = db.Column(db.Boolean, default=False)
 
-    name = db.Column(db.String(64))
     location = db.Column(db.String(64))
     about_me = db.Column(db.Text)
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -609,10 +529,8 @@ class User(AbstractUser, Model):
     last_update = db.Column(db.DateTime(), default=datetime(2000, 1, 1, 0, 0, 0, 0))
 
     def __init__(self, **kwargs):
+        print(self.id)
         super(User, self).__init__(**kwargs)
-        if self.role is None:
-            if self.role is None:
-                self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = self.gravatar_hash()
         self.follow(self)
@@ -620,14 +538,9 @@ class User(AbstractUser, Model):
     def __repr__(self):
         return f"<User '{self.username}'>"
 
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password) -> bool:
         return check_password_hash(self.password_hash, password)
-
-    def can(self, perm) -> bool:
-        return self.role is not None and self.role.has_permission(perm)
 
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
@@ -738,15 +651,11 @@ class User(AbstractUser, Model):
     def in_group(self, group) -> bool:
         return self in group.members
 
-    def lock(self) -> bool:
+    def lock(self):
         self.locked = True
-        self.role = Role.query.filter_by(name="LOCKED").first()
-        db.session.commit()
 
-    def unlock(self) -> bool:
+    def unlock(self):
         self.locked = False
-        self.role = Role.query.filter_by(name="User").first()
-        db.session.commit()
 
     def level(self) -> int:
         if self.experience < 100:

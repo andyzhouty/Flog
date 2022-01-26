@@ -27,7 +27,6 @@ from flog.models import (
     User,
     Post,
     Comment,
-    Permission,
     Column,
     Image,
     Notification,
@@ -188,7 +187,7 @@ class PostAPI(MethodView):
             abort(403, "the post is private")
         return post
 
-    @permission_required(Permission.WRITE)
+    @permission_required
     @can_edit("post")
     @input(PostInSchema(partial=True))
     @output(PostOutSchema)
@@ -202,7 +201,7 @@ class PostAPI(MethodView):
         db.session.commit()
         return post
 
-    @permission_required(Permission.WRITE)
+    @permission_required
     @can_edit("post")
     @output({}, 204)
     def delete(self, post_id: int):
@@ -212,7 +211,7 @@ class PostAPI(MethodView):
 
 @api_v3.route("/post/add", endpoint="post_create")
 class PostAddAPI(MethodView):
-    @permission_required(Permission.WRITE)
+    @permission_required
     @input(PostInSchema)
     @output(PostOutSchema)
     def post(self, data):
@@ -273,7 +272,7 @@ class CommentAPI(MethodView):
     def get(self, comment_id: int):
         return Comment.query.get_or_404(comment_id)
 
-    @permission_required(Permission.COMMENT)
+    @permission_required
     @can_edit("comment")
     @input(CommentInSchema(partial=True))
     @output(CommentOutSchema)
@@ -292,7 +291,7 @@ class CommentAPI(MethodView):
         db.session.commit()
         return comment
 
-    @permission_required(Permission.COMMENT)
+    @permission_required
     @can_edit("comment")
     @output({}, 204)
     def delete(self, comment_id: int):
@@ -302,7 +301,7 @@ class CommentAPI(MethodView):
 
 @api_v3.route("/comment/add", endpoint="add_comment")
 class CommentAddAPI(MethodView):
-    @permission_required(Permission.COMMENT)
+    @permission_required
     @input(CommentInSchema)
     @output(CommentOutSchema)
     def post(self, data):
@@ -338,7 +337,7 @@ class ColumnAPI(MethodView):
         column = Column.query.get_or_404(column_id)
         return column
 
-    @permission_required(Permission.WRITE)
+    @permission_required
     @can_edit("column")
     @input(ColumnInSchema(partial=True))
     @output(ColumnOutSchema)
@@ -356,7 +355,7 @@ class ColumnAPI(MethodView):
         db.session.commit()
         return column
 
-    @permission_required(Permission.WRITE)
+    @permission_required
     @can_edit("column")
     @output({}, 204)
     def delete(self, column_id):
@@ -367,7 +366,7 @@ class ColumnAPI(MethodView):
 
 @api_v3.route("/column/create", endpoint="add_column")
 class ColumnAddAPI(MethodView):
-    @permission_required(Permission.WRITE)
+    @permission_required
     @input(ColumnInSchema)
     @output(ColumnOutSchema)
     def post(self, data):

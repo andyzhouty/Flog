@@ -14,7 +14,7 @@ def can_edit(permission_type: str):
             if g.current_user is not None:
                 if args[1] is not None:
                     permitted = check_permission(permission_type, args[1])
-                if g.current_user.is_administrator():
+                if g.current_user.is_admin:
                     permitted = True
             if not permitted:
                 abort(403)
@@ -40,15 +40,12 @@ def check_permission(permission_type: str, model_id: int) -> bool:
     return permitted
 
 
-def permission_required(permission):
-    def decorator(f):
-        @wraps(f)
-        @auth.login_required
-        def decorated_function(*args, **kwargs):
-            if (g.get("current_user") is None) or (not g.current_user.can(permission)):
-                abort(403)
-            return f(*args, **kwargs)
-
-        return decorated_function
+def permission_required(f):
+    @wraps(f)
+    @auth.login_required
+    def decorator(*args, **kwargs):
+        if (g.get("current_user") is None) or g.current_user.locked:
+            abort(403)
+        return f(*args, **kwargs)
 
     return decorator

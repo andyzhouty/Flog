@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 import json
 from flask import url_for
 from random import randint
-from flog.models import Comment, Notification, Post, User, Role
+from flog.models import Comment, Notification, Post, User
 from flog.notifications import (
     push_collect_notification,
     push_comment_notification,

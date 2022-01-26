@@ -10,7 +10,6 @@ from .models import (
     Post,
     Feedback,
     User,
-    Role,
     Comment,
     Notification,
     Group,
@@ -36,7 +35,6 @@ def users(count: int = 10) -> None:
             confirmed=True,
         )
         user.set_password("123456")
-        user.role = Role.query.filter_by(name="User").first()
         db.session.add(user)
     db.session.commit()
 
@@ -100,14 +98,13 @@ def feedbacks(count: int = 10) -> None:
 
 def follows(count: int = 100) -> None:
     """Generates fake follow relationships"""
-    admin_role = Role.query.filter_by(name="Administrator").first()
-    admin = User.query.filter_by(role=admin_role).first()
+    admin = User.query.filter_by(is_admin=True).first()
     for _ in range(count):
         user1 = User.query.get(randint(1, User.query.count()))
         user2 = User.query.get(randint(1, User.query.count()))
         if not (user1 and user2):
             continue
-        if user1.role != admin_role and admin:
+        if not user1.is_admin and admin:
             user1.follow(admin)
         elif not admin and user1 != user2:
             user1.follow(user2)
@@ -117,8 +114,7 @@ def notifications(count: int, receiver: User = None) -> None:
     """Generates fake notifications"""
     for _ in range(count):
         if receiver is None:
-            admin_role = Role.query.filter_by(name="Administrator").first()
-            admin = User.query.filter_by(role=admin_role).first()
+            admin = User.query.filter_by(is_admin=True).first()
             receiver = admin
         notification = Notification(
             message=fake.sentence(),

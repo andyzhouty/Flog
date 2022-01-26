@@ -6,16 +6,14 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 from djask import Djask
+from djask.extensions import db
 from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
     babel,
-    bootstrap4,
+    bootstrap,
     ckeditor,
-    compress,
-    csrf,
-    db,
     limiter,
     login_manager,
     ma,
@@ -25,7 +23,7 @@ from .extensions import (
     share,
 )
 from flask_babel import lazy_gettext as _l
-from .models import Post, Feedback, Role, Permission, User, Notification, Message, Group
+from .models import Post, Feedback, User, Notification, Message, Group
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
@@ -93,18 +91,10 @@ def register_logger(app: Flask):
 
 def register_extensions(app: Flask) -> None:
     babel.init_app(app)
-    bootstrap.init_app(app)
     ckeditor.init_app(app)
-    compress.init_app(app)
-    csrf.init_app(app)
-    csrf.exempt(api_v1)
-    csrf.exempt(api_v2)
-    csrf.exempt(api_v3)
-    db.init_app(app)
     limiter.init_app(app)
     login_manager.login_view = "auth.login"
     login_manager.login_message = _l("Please log in to access this page")
-    login_manager.init_app(app)
     ma.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
@@ -135,13 +125,10 @@ def register_blueprints(app: Djask) -> None:
 def register_context(app: Flask) -> None:
     @app.shell_context_processor
     def make_shell_context():
-        Role.insert_roles()
         return dict(
             db=db,
             Post=Post,
             Feedback=Feedback,
-            Permission=Permission,
-            Role=Role,
             User=User,
             Message=Message,
             Group=Group,
@@ -159,7 +146,6 @@ def register_context(app: Flask) -> None:
         return dict(
             posts=posts,
             feedbacks=feedbacks,
-            Permission=Permission,
             current_app=app,
             notification_count=notification_count,
             allowed_tags=allowed_tags,

@@ -14,7 +14,7 @@
     <div class="col-lg-8">
         <div class="basic-profile">
             {{ username(user, size="150%", link=False) }}
-            {% if current_user.can(Permission.MODERATE) or user == current_user %}
+            {% if current_user.is_admin or user == current_user %}
                 <div class="d-flex">
                     <div class="mr-2">{{ static_file("svg", "svg/pi-empty.svg", width=20, height=20) }}</div>
                     <div>{{ user.coins | round(2) }}</div>

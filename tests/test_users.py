@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from random import randint
 from faker import Faker
 from flask import current_app, request
-from flog.models import db, Role, User, Group
+from flog.models import db, User, Group
 from flog.extensions import mail
 from .conftest import Testing
 
@@ -64,7 +64,6 @@ class UserTestCase(Testing):
         user = User(
             name="abcd", username="abcd", email="test@example.com", confirmed=True
         )
-        user.role = Role.query.filter_by(name="User").first()
         user.set_password("123456")
         db.session.add(user)
         db.session.commit()
@@ -118,12 +117,8 @@ class UserTestCase(Testing):
     def test_follow(self):
 
         self.login()
-        admin = User.query.filter_by(
-            role=Role.query.filter_by(name="Administrator").first()
-        ).first()
-        user = User.query.filter_by(
-            role=Role.query.filter_by(name="User").first()
-        ).first()
+        self.admin = User.query.filter_by(is_admin=True).first()
+        user = User.query.filter_by(is_admin=False).first()
         data = self.client.post(
             f"/follow/{user.username}", follow_redirects=True
         ).get_data(as_text=True)
@@ -186,22 +181,3 @@ class UserTestCase(Testing):
         response = self.client.post(f"/admin/block/{user.id}/")
         assert response.status_code == 403
         self.logout()
-
-        moderator = User(
-            name="moderator",
-            username="moderator",
-            email="moderator@example.com",
-            confirmed=True,
-            role=Role.query.filter_by(name="Moderator").first(),
-        )
-        moderator.set_password("secr3t")
-        db.session.add(moderator)
-        db.session.commit()
-        self.login("moderator", "secr3t")
-        response = self.client.post(f"/admin/block/{user.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert user.locked
-
-        response = self.client.post(f"/admin/unblock/{user.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert not user.locked

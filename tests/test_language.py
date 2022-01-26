@@ -3,7 +3,7 @@ MIT License
 Copyright (c) 2020 Andy Zhou
 """
 
-from flog.models import db, User, Role, Post
+from flog.models import db, User, Post
 from .conftest import Testing
 
 

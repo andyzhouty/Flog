@@ -2,9 +2,11 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
+from djask.extensions import db, csrf, bootstrap
 from flask import request
 from flask.globals import current_app
-from flask_bootstrap import Bootstrap4
+from flask_babel import Babel
+from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_login import LoginManager, current_user
 from flask_limiter import Limiter
@@ -16,7 +18,6 @@ from flask_moment import Moment
 from flask_share import Share
 
 babel = Babel()
-bootstrap4 = Bootstrap4()
 ckeditor = CKEditor()
 limiter = Limiter(
     default_limits=["17280 per day", "1440 per hour"], key_func=get_remote_address

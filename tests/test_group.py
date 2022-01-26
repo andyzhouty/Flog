@@ -1,6 +1,6 @@
 import random
 
-from flog.models import db, User, Role, Group, Notification, Message
+from flog.models import db, User, Group, Notification, Message
 
 
 from .conftest import Testing

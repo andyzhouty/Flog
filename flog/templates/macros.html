@@ -135,7 +135,7 @@ MIT License
                     </a>
                 {%- endif %}
             {%- endif %}
-            {% if current_user.can(Permission.MODERATE) %}
+            {% if current_user.is_admin %}
                 {% if not post.picked or post.private %}
                     <form class="form-inline" method="POST" action="{{ url_for('main.pick', id=post.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -343,7 +343,7 @@ MIT License
             {{ _("Created") }} {{ moment(column.timestamp).fromNow(refresh=True) }}
     </h4>
     <div>
-    {% if current_user.can(Permission.MODERATE) %}
+    {% if current_user.is_admin %}
         {% if not column.topped %}
         <form method="POST" action="{{ url_for('main.top_column', id=column.id) }}">
             <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">

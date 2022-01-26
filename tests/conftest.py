@@ -9,7 +9,7 @@ from base64 import b64encode
 from flog import create_app
 from flog import fakes
 from flog.fakes import fake
-from flog.models import db, Role, User, Notification
+from flog.models import db, User, Notification
 
 
 class Base(unittest.TestCase):
@@ -24,7 +24,6 @@ class Base(unittest.TestCase):
             os.mkdir(self.app.config["UPLOAD_DIRECTORY"])
         db.drop_all()
         db.create_all()
-        Role.insert_roles()
         self.admin = User(
             name=self.app.config["FLOG_ADMIN"],
             username=self.app.config["FLOG_ADMIN"],
@@ -32,10 +31,9 @@ class Base(unittest.TestCase):
             confirmed=True,
         )
         self.admin.set_password(self.app.config["FLOG_ADMIN_PASSWORD"])
-        self.admin.role = Role.query.filter_by(name="Administrator").first()
+        self.admin.is_admin = True
         db.session.add(self.admin)
         db.session.commit()
-        Role.insert_roles()
         fakes.users(5)
         fakes.posts(5)
         fakes.comments(5)
@@ -124,9 +122,7 @@ class Base(unittest.TestCase):
     def send_notification(self) -> None:
         """Send notifications for test user"""
         self.login()
-        admin = User.query.filter_by(
-            role=Role.query.filter_by(name="Administrator").first()
-        ).first()
+        admin = User.query.filter_by(is_admin=True).first()
         notification = Notification(message="test", receiver=admin)
         db.session.add(notification)
         db.session.commit()
