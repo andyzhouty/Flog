@@ -4,15 +4,7 @@ Copyright (c) 2020 Andy Zhou
 """
 from datetime import date, datetime
 from flog import db
-from flog.models import (
-    User,
-    Post,
-    Notification,
-    Group,
-    Message,
-    Column,
-    AnonymousUser
-)
+from flog.models import User, Post, Notification, Group, Message, Column, AnonymousUser
 from .conftest import Testing
 
 

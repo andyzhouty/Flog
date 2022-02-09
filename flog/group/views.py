@@ -19,7 +19,9 @@ from ..notifications import (
 @group_bp.route("/all/")
 @login_required
 def all():
-    return render_template("user/groups.html", groups=Group.query.filter(~Group.private).all())
+    return render_template(
+        "user/groups.html", groups=Group.query.filter(~Group.private).all()
+    )
 
 
 @group_bp.route("/create/", methods=["GET", "POST"])

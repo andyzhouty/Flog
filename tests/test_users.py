@@ -135,4 +135,3 @@ class UserTestCase(Testing):
         assert "Password Changed" in data
         assert request.path == "/"
         assert user.verify_password("abcd1234")
-

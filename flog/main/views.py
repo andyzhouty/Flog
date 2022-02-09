@@ -40,9 +40,17 @@ def before_request():
     ban_ip_list = os.getenv("BAN_IP_LIST", "").split(":")
     ban_username_list = os.getenv("BAN_USERNAME_LIST", "").split(":")
     if request.remote_addr in ban_ip_list:
-        return render_template("errors/error.html", error_message="Your ip is banned"), 403
+        return (
+            render_template("errors/error.html", error_message="Your ip is banned"),
+            403,
+        )
     if current_user.is_authenticated and current_user.username in ban_username_list:
-        return render_template("errors/error.html", error_message="Your username is banned"), 403
+        return (
+            render_template(
+                "errors/error.html", error_message="Your username is banned"
+            ),
+            403,
+        )
 
 
 @main_bp.route("/")
@@ -108,10 +116,7 @@ def full_post(id: int):
         if id > 1 and id < Post.query.order_by(Post.id.desc()).all()[0].id:
             return render_template("errors/404_post_deleted.html"), 404
         abort(404)
-    if (
-        (not post.private)
-        or post.author == current_user
-    ):
+    if (not post.private) or post.author == current_user:
         page = request.args.get("page", 1, type=int)
         per_page = current_app.config["COMMENTS_PER_PAGE"]
         pagination = (

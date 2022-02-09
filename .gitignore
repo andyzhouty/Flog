@@ -133,8 +133,7 @@ doc_deploy.sh
 images/
 
 # tailwindcss use
-node-modules/
-package-lock.json
+node_modules/
 tailwind.config.js
 
 # git patch

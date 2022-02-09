@@ -67,10 +67,7 @@ class PostAPI(MethodView):
     def get(self, post_id: int):
         """Get Post"""
         post = Post.query.get_or_404(post_id)
-        if (
-            (not post.private)
-            or (post.author == g.current_user)
-        ):
+        if (not post.private) or (post.author == g.current_user):
             return jsonify(post_schema(post))
         else:
             return forbidden("The post is private!")

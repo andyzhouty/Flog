@@ -21,15 +21,11 @@ def get_post_data(data: dict, validation_error: ValueError()) -> tuple:
 
 
 def can_edit_post(post: Post) -> bool:
-    return g.current_user is not None and (
-        g.current_user == post.author
-    )
+    return g.current_user is not None and (g.current_user == post.author)
 
 
 def can_edit_profile(user: User) -> bool:
-    return g.current_user is not None and (
-        g.current_user == user
-    )
+    return g.current_user is not None and (g.current_user == user)
 
 
 def get_current_user():

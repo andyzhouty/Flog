@@ -5,6 +5,7 @@ from .errors import unauthorized
 
 auth = HTTPBasicAuth()
 
+
 @auth.verify_password
 def verify_password_or_token(username_or_token, password):
 

@@ -326,7 +326,7 @@ class Column(db.Model):
 
     @property
     def topped(self):
-        return sum([post.coins for post in self.posts])>=40
+        return sum([post.coins for post in self.posts]) >= 40
 
     def delete(self):
         db.session.delete(self)
@@ -459,7 +459,6 @@ class User(AbstractUser, Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     posts = db.relationship("Post", back_populates="author")
-    feedbacks = db.relationship("Feedback", back_populates="author")
     avatar_hash = db.Column(db.String(32))
 
     locked = db.Column(db.Boolean, default=False)
@@ -775,7 +774,9 @@ class User(AbstractUser, Model):
 
     def ping_update_ai(self):
         now = datetime.utcnow()
-        sl = datetime.utcfromtimestamp(self.last_update) or datetime(2000, 1, 1, 0, 0, 0, 0)
+        sl = datetime.utcfromtimestamp(self.last_update) or datetime(
+            2000, 1, 1, 0, 0, 0, 0
+        )
         if now >= datetime(
             year=sl.year, month=sl.month, day=sl.day, hour=(sl.hour // 12 + 1) * 12
         ):
@@ -786,7 +787,6 @@ class User(AbstractUser, Model):
 class AnonymousUser(AnonymousUserMixin):
     def can(self, perm):
         return False
-
 
     @property
     def id(self):
