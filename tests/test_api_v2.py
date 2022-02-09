@@ -254,21 +254,6 @@ class APIV2TestCase(Testing):
         assert response.status_code == 204
         assert Comment.query.get(comment_id) is None
 
-    def test_follow(self):
-        self.register()
-        user = User.query.filter_by(username="test").first()
-        user2 = User.query.filter(User.username != "test").first()
-        response = self.client.get(
-            f"/api/v2/user/follow/{user2.id}/", headers=self.get_api_v2_headers()
-        )
-        assert response.status_code == 204
-        assert user.is_following(user2)
-        response = self.client.get(
-            f"/api/v2/user/unfollow/{user2.id}/", headers=self.get_api_v2_headers()
-        )
-        assert response.status_code == 204
-        assert not user.is_following(user2)
-
     def test_collect(self):
         self.register()
         user = User.query.filter_by(username="test").first()
@@ -329,20 +314,3 @@ class APIV2TestCase(Testing):
         assert response.status_code == 200
         comments = response.get_json()
         assert comments[0].get("body") == "comment content"
-
-        # register a user and follow it
-        u2 = User.query.filter(User.username != "test").first()
-        user = User.query.get(user_id)
-        user.follow(u2)
-
-        response = self.client.get(
-            f"/api/v2/user/{user_id}/following/", headers=self.get_api_v2_headers()
-        )
-        following = response.get_json()
-        assert following[0].get("username") == u2.username
-
-        response = self.client.get(
-            f"/api/v2/user/{u2.id}/followers/", headers=self.get_api_v2_headers()
-        )
-        u2_followers = response.get_json()
-        assert "test" in [u["username"] for u in u2_followers]

@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import post_card, render_user_role, follow_area, static_file, level_badge, username, avatar with context %}
+{% from 'macros.html' import post_card, render_user_role, static_file, level_badge, username, avatar with context %}
 {% set locale = 'en_US' if not current_user.locale else current_user.locale %}
 {% block title %}
     Flog - {{ user.username }}
@@ -14,21 +14,21 @@
     <div class="col-lg-8">
         <div class="basic-profile">
             {{ username(user, size="150%", link=False) }}
-            {% if current_user.can(Permission.MODERATE) or user == current_user %}
+            {% if user == current_user %}
                 <div class="d-flex">
                     <div class="mr-2">{{ static_file("svg", "svg/pi-empty.svg", width=20, height=20) }}</div>
                     <div>{{ user.coins | round(2) }}</div>
                 </div>
-                <div class="d-flex">
-                    <div id="current-level-full">
-                        <div id="current-level-progress" data-experience="{{ user.experience }}" data-level="{{ user.level() }}">
-                        </div>
+            {% endif %}
+            <div class="d-flex">
+                <div id="current-level-full">
+                    <div id="current-level-progress" data-experience="{{ user.experience }}" data-level="{{ user.level() }}">
                     </div>
                 </div>
-            {% endif %}
+            </div>
             {% if user.name or user.location %}
             <p>
-                {% if user.name and current_user.can(Permission.MODERATE) %}{{ user.name }}{% endif %}
+                {{ user.name }}
                 {% if user.location %}
                     {{ _("from") }} <a href="http://bing.com/maps/?q={{ user.location }}">
                         {{ user.location }}
@@ -47,17 +47,11 @@
                 {{ _('Last seen') }} {{ moment(user.last_seen).fromNow() }}
                 {% endif %}
             </p>
-            {{ follow_area(user) }}
-            <p>
-                {% if user != current_user %} {{ _("This user has") }}
-                {% else %}{{ _("You have") }}
-                {% endif %}{{ ngettext('%(num)s follower', '%(num)s followers', __num=user.followers.count()-1) }}
-            </p>
             {% if user == current_user %}
                 <a class="btn btn-outline-primary" href="{{ url_for('user.edit_profile', id=user.id) }}">
                     {{ _("Edit Profile") }}
                 </a>
-            {% if not current_user == user %}
+            {% else %}
                 <a class="btn btn-outline-primary" href="{{ url_for('group.invite_user', user_id=user.id) }}">
                     {{ _("Invite this user to your group.") }}
                 </a>

@@ -5,7 +5,7 @@ Copyright (c) 2020 Andy Zhou
 from random import randint
 from faker import Faker
 from flask import current_app, request
-from flog.models import db, Role, User, Group
+from flog.models import db, User, Group
 from flog.extensions import mail
 from .conftest import Testing
 
@@ -64,7 +64,6 @@ class UserTestCase(Testing):
         user = User(
             name="abcd", username="abcd", email="test@example.com", confirmed=True
         )
-        user.role = Role.query.filter_by(name="User").first()
         user.set_password("123456")
         db.session.add(user)
         db.session.commit()
@@ -89,21 +88,6 @@ class UserTestCase(Testing):
         assert user.custom_avatar_url == data["custom_avatar_url"]
         self.logout()
 
-        self.login()
-        response = self.client.get("/profile/edit/")
-        assert response.status_code == 302
-        response = self.client.get("/profile/edit/", follow_redirects=True)
-        response2 = self.client.get("/admin/user/1/profile/edit/")
-        assert response.get_data(as_text=True) == response2.get_data(as_text=True)
-        self.logout()
-
-        user = User(
-            name="xyz", username="xyz", email="test@example.com", confirmed=False
-        )
-        user.set_password("secret")
-        db.session.add(user)
-        db.session.commit()
-
     def test_delete_account(self):
         self.login()
         user_count = User.query.count()
@@ -114,30 +98,6 @@ class UserTestCase(Testing):
         )
         assert response.status_code == 200
         assert User.query.count() == user_count - 1
-
-    def test_follow(self):
-
-        self.login()
-        admin = User.query.filter_by(
-            role=Role.query.filter_by(name="Administrator").first()
-        ).first()
-        user = User.query.filter_by(
-            role=Role.query.filter_by(name="User").first()
-        ).first()
-        data = self.client.post(
-            f"/follow/{user.username}", follow_redirects=True
-        ).get_data(as_text=True)
-        assert "User followed." in data
-        assert self.admin.is_following(user)
-        data = self.client.post(
-            f"/follow/{user.username}", follow_redirects=True
-        ).get_data(as_text=True)
-        assert "Already followed" in data
-        data = self.client.post(
-            f"/unfollow/{user.username}", follow_redirects=True
-        ).get_data(as_text=True)
-        assert "User unfollowed." in data
-        assert not self.admin.is_following(user)
 
     def test_all_users(self):
         self.login()
@@ -176,32 +136,3 @@ class UserTestCase(Testing):
         assert request.path == "/"
         assert user.verify_password("abcd1234")
 
-    def test_block_user(self):
-        user = User(name="xyz", username="xyz", email="test@example.com")
-        user.set_password("secret")
-        db.session.add(user)
-        db.session.commit()
-
-        self.login("xyz", "secret")
-        response = self.client.post(f"/admin/block/{user.id}/")
-        assert response.status_code == 403
-        self.logout()
-
-        moderator = User(
-            name="moderator",
-            username="moderator",
-            email="moderator@example.com",
-            confirmed=True,
-            role=Role.query.filter_by(name="Moderator").first(),
-        )
-        moderator.set_password("secr3t")
-        db.session.add(moderator)
-        db.session.commit()
-        self.login("moderator", "secr3t")
-        response = self.client.post(f"/admin/block/{user.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert user.locked
-
-        response = self.client.post(f"/admin/unblock/{user.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert not user.locked

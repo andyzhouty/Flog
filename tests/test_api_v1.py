@@ -242,21 +242,6 @@ class APIV1TestCase(Testing):
         assert response.status_code == 204
         assert Comment.query.get(comment_id) is None
 
-    def test_follow(self):
-        self.register()
-        user = User.query.filter_by(username="test").first()
-        user2 = User.query.filter(User.username != "test").first()
-        response = self.client.get(
-            f"/api/v1/user/follow/{user2.id}/", headers=self.get_api_v1_headers()
-        )
-        assert response.status_code == 204
-        assert user.is_following(user2)
-        response = self.client.get(
-            f"/api/v1/user/unfollow/{user2.id}/", headers=self.get_api_v1_headers()
-        )
-        assert response.status_code == 204
-        assert not user.is_following(user2)
-
     def test_collect(self):
         self.register()
         user = User.query.filter_by(username="test").first()

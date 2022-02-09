@@ -7,10 +7,10 @@
 POST /api/v2/oauth/token/ with your username and your password in **multipart/form-data**.
 
 Example:
-| Key      | Value       |
-| -------- | ----------- |
+| Key | Value |
+| - | - |
 | username | kevin-romes |
-| password | abcd123456  |
+| password | abcd123456 |
 
 If your credentials are correct, it should return an access_token, the
 expiration time(an hour) and the token type (bearer).
@@ -33,27 +33,27 @@ and v2 ONLY supports Bearer Token.
 
 ## User operations
 
-- /api/v2/user/*int:user_id*/:  
-  - **GET**: Returns user schema (json):  
+- /api/v2/user/*int:user_id*/:
+  - **GET**: Returns user schema (json):
 
     Returns:
-    - id: int  
+    - id: int
       User ID
-    - url: str  
+    - url: str
       Show current url
-    - kind: 'User'  
+    - kind: 'User'
       Show that the return value is 'User' kind
-    - username: str  
+    - username: str
       The user's username
-    - member_since: str  
+    - member_since: str
       The user's registration time
-    - last_seen: str  
+    - last_seen: str
       The user's last login time
-    - name: str  
+    - name: str
       The user's name
-    - location: str  
+    - location: str
       The user's location(set by user)
-    - about_me: str  
+    - about_me: str
       The user's about_me(set by user)
 
     Example Value:
@@ -75,60 +75,42 @@ and v2 ONLY supports Bearer Token.
 
     - **PUT**: Updates user profile (only json is accepted)
 
-        Arguments(optional):
-          - username : str
-          - name: str
-          - location: str
-          - about_me: str
+      Arguments(optional):
+        - username : str
+        - name: str
+        - location: str
+        - about_me: str
 
-        Json like this is accepted:
+      Json like this is accepted:
 
-        ```json
-        {
-            "username": "example",
-            "name": "Example",
-            "location": "NY City, USA",
-            "about_me": "Hello, World!"
-        }
-        ```
+      ```json
+      {
+          "username": "example",
+          "name": "Example",
+          "location": "NY City, USA",
+          "about_me": "Hello, World!"
+      }
+      ```
 
-        Status: **204**
+      Status: **204**
 
-    - **DELETE**: Deletes current user  
-        Example Value: `User 1 deleted.`  
+    - **DELETE**: Deletes current user
+        Example Value: `User 1 deleted.`
         Status: **200**
 
 ## Collecting a post
 
-URL: /api/v2/*any(collect,uncollect)*/*int:post_id*/  
-Method: **GET**  
-Status: *200*  
-Returns: str  
+URL: /api/v2/*any(collect,uncollect)*/*int:post_id*/
+Method: **GET**
+Status: *200*
+Returns: str
 Example:`Post id 12 collected.`
-
-## Following another person
-
-URL: /api/v2/*any(follow,unfollow)*/*int:user_id*/
-Method: **GET**  
-Status: **204**  
-
-## Check one's followers
-
-URL: /api/v2/user/*int:user_id*/followers/  
-Method: **GET**  
-Status: **200**
-
-## Check one's following
-
-URL: /api/v2/user/*int:user_id*/following/  
-Method: **GET**  
-Status: **200**
 
 ## Check one's posts
 
-URL: /api/v2/user/*int:user_id*/posts/  
-Method: **GET**  
-Status: **200**  
+URL: /api/v2/user/*int:user_id*/posts/
+Method: **GET**
+Status: **200**
 Example:
 
 ```json
@@ -166,9 +148,9 @@ Example:
 
 ## Check one's comments
 
-URL: /api/v2/user/*int:user_id*/comments/  
-Method: **GET**  
-Status: **200**  
+URL: /api/v2/user/*int:user_id*/comments/
+Method: **GET**
+Status: **200**
 Example:
 
 ```json

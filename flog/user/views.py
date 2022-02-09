@@ -13,20 +13,13 @@ from .forms import (
     PasswordChangeForm,
     ValidateEmailForm,
 )
-from ..models import db, User, Permission, Post
-from ..decorators import permission_required
-from ..utils import redirect_back
-from ..notifications import (
-    push_follow_notification,
-)
+from ..models import db, User, Post
 from ..emails import send_email
 
 
 @user_bp.route("/profile/edit/", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    if current_user.is_administrator():
-        return redirect(url_for("admin.edit_profile", id=current_user.id))
     form = EditProfileForm()
     if form.validate_on_submit():
         post_desc = Post.query.filter_by(title=current_user.username)
@@ -46,33 +39,6 @@ def edit_profile():
     form.about_me.data = current_user.about_me
     form.custom_avatar_url.data = current_user.custom_avatar_url
     return render_template("user/edit_profile.html", form=form)
-
-
-@user_bp.route("/follow/<username>/", methods=["POST"])
-@login_required
-@permission_required(Permission.FOLLOW)
-def follow(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    if current_user.is_following(user):
-        flash(_("Already followed."), "info")
-        return redirect_back()
-    current_user.follow(user)
-    push_follow_notification(follower=current_user, receiver=user)
-    flash(_("User followed."), "success")
-    return redirect_back()
-
-
-@user_bp.route("/unfollow/<username>/", methods=["POST"])
-@login_required
-@permission_required(Permission.FOLLOW)
-def unfollow(username):
-    user = User.query.filter_by(username=username).first()
-    if not current_user.is_following(user):
-        flash(_("Not following yet."), "info")
-        return redirect_back()
-    current_user.unfollow(user)
-    flash(_("User unfollowed."), "info")
-    return redirect_back()
 
 
 @user_bp.route("/user/<username>/")
@@ -102,16 +68,6 @@ def profile(username):
         post_pagination=post_pagination,
         description=description.first(),
     )
-
-
-@user_bp.route("/user/<username>/followers/")
-def followers(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    page = request.args.get("page", 1, type=int)
-    pagination = user.followers.paginate(
-        page, per_page=current_app.config["USERS_PER_PAGE"]
-    )
-    return render_template("user/followers.html", pagination=pagination, user=user)
 
 
 @user_bp.route("/user/all/")

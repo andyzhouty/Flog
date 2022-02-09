@@ -16,16 +16,15 @@ def register_commands(app: Flask, db):  # noqa: C901
     @app.cli.command()
     def create_admin():
         """Create administrator account"""
-        from .models import Role, User
+        from .models import User
 
-        admin_role = Role.query.filter_by(name="Administrator").first()
         username = app.config["FLOG_ADMIN"]
         email = app.config["FLOG_ADMIN_EMAIL"]
         password = app.config["FLOG_ADMIN_PASSWORD"]
         if User.query.filter_by(email=email).count() == 0:
             admin = User(username=username, email=email, name=username, confirmed=True)
             admin.set_password(password)
-            admin.role = admin_role
+            admin.is_admin = True
             db.session.add(admin)
             db.session.commit()
         else:
@@ -36,8 +35,6 @@ def register_commands(app: Flask, db):  # noqa: C901
     @app.cli.command()
     @click.option("--users", default=20, help="Generates fake users")
     @click.option("--posts", default=20, help="Generates fake posts")
-    @click.option("--feedbacks", default=20, help="Generates fake feedbacks")
-    @click.option("--follows", default=20, help="Generates fake follows")
     @click.option("--comments", default=20, help="Generates fake comments")
     @click.option("--notifications", default=5, help="Generates fake notifications")
     @click.option("--groups", default=20, help="Generates fake groups")
@@ -46,8 +43,6 @@ def register_commands(app: Flask, db):  # noqa: C901
     def forge(
         users,
         posts,
-        feedbacks,
-        follows,
         comments,
         notifications,
         groups,
@@ -56,14 +51,10 @@ def register_commands(app: Flask, db):  # noqa: C901
     ):
         """Generates fake data"""
         from . import fakes as fake
-        from .models import Role
 
-        Role.insert_roles()
         fake.users(users)
         fake.posts(posts)
         fake.comments(comments)
-        fake.feedbacks(feedbacks)
-        fake.follows(follows)
         fake.notifications(notifications)
         fake.groups(groups)
         fake.columns(columns)
@@ -90,13 +81,6 @@ def register_commands(app: Flask, db):  # noqa: C901
             # so I have to init the database like this.
             db.create_all()
             stamp()
-        from .models import User, Role
-
-        # insert roles
-        Role.insert_roles()
-        # add self-follows
-        for user in User.query.all():
-            user.follow(user)
         if os.system("pybabel compile -d flog/translations"):
             raise RuntimeError("Error: Compiling failed.")
 

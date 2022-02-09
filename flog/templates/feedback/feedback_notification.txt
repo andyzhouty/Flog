@@ -1,9 +1,0 @@
-{#
-Copyright (c) 2020 Andy Zhou
-MIT License
-#}
-{{ _('Hello, Admin!') }}
-{{ _('A new feedback was added just now!') }}
-{{ _('Feedbacker') }}: {{ author }}
-{{ _('Feedback Content') }}: {{ content[:50] }}...
-{{ _('If it is a junk one, please delete it immediately!') }}

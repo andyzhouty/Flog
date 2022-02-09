@@ -27,19 +27,6 @@ def with_receiver_locale(f):
 
 
 @with_receiver_locale
-def push_follow_notification(follower, receiver):
-    """
-    Push a notification when someone is followed by another user.
-    """
-    message = _(
-        """User <a href="%(profile_url)s">%(username)s</a> followed you.""",
-        profile_url=url_for("user.profile", username=follower.username),
-        username=follower.username,
-    )
-    Notification(message=message, receiver=receiver).push()
-
-
-@with_receiver_locale
 def push_comment_notification(comment, receiver, page=1):
     """
     Push a notification when a post has a new comment or

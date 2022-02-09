@@ -1,6 +1,6 @@
 import random
 
-from flog.models import db, User, Role, Group, Notification, Message
+from flog.models import db, User, Group, Notification, Message
 
 
 from .conftest import Testing
@@ -152,9 +152,6 @@ class GroupTestCase(Testing):
         response = self.client.get("/group/all/")
         assert g1.name not in response.get_data(as_text=True)
         self.logout()
-        self.login()  # login as administrator
-        response = self.client.get("/group/all/")
-        assert g1.name in response.get_data(as_text=True)
 
     def test_kick_out(self):
         self.register()

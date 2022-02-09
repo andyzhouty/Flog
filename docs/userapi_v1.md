@@ -86,8 +86,3 @@ Method: **GET**
 Status: *200*  
 Returns: str  
 Example:`Post id 12 collected.`
-
-## Following another person
-URL: /api/v1/*any(follow,unfollow)*/*int:user_id*/
-Method: **GET**  
-Status: **204**  

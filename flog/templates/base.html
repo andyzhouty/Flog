@@ -1,6 +1,6 @@
 {#
-Copyright (c) 2020 Andy Zhou
-MIT License
+    Copyright (c) 2020 Andy Zhou
+    MIT License
 #}
 {% from 'bootstrap/nav.html' import render_nav_item %}
 {% from 'macros.html' import static_file, change_theme, avatar %}
@@ -17,79 +17,181 @@ MIT License
             {% set theme = request.cookies.get('theme', 'default') %}
             {{ static_file('icon', 'favicon/favicon.svg') }}
             {{ static_file('icon', 'favicon/favicon.ico') }}
-            {% if theme == 'default' %}
-                {{ static_file('css', '//cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', local=False) }}
-            {% else %}
-                {{ static_file('css', '//cdn.jsdelivr.net/npm/bootswatch@4.5.3/dist/%s/bootstrap.min.css' % theme, local=False) }}
-            {% endif %}
+            {{ static_file('css', 'css/output.css') }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css', local=False) }}
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
             {{ static_file('css', 'css/common.css') }}
-            {% if theme in ['darkly', 'cyborg', 'slate'] %}
-                {{ static_file('css', 'css/dark.css') }}
-            {% else %}
-                {{ static_file('css', 'css/light.css') }}
-            {% endif %}
         {% endblock styles %}
+        <script>
+            function theme_identify() {
+                if (localStorage.theme === 'dark'
+                    || (
+                        !('theme' in localStorage)
+                        && window.matchMedia('(prefers-color-scheme: dark)').matches
+                    )
+                ) {
+                    document.documentElement.classList.add('dark')
+                    $("#change-theme").addClass("bi-moon-fill")
+                    $("#change-theme").removeClass("bi-sun-fill")
+                    $("#change-theme-btn").addClass("hover:bg-purple-500")
+                    $("#change-theme-btn").removeClass("hover:bg-yellow-300")
+                } else {
+                    document.documentElement.classList.remove('dark')
+                    $("#change-theme").addClass("bi-sun-fill")
+                    $("#change-theme").removeClass("bi-moon-fill")
+                    $("#change-theme-btn").addClass("hover:bg-yellow-300")
+                    $("#change-theme-btn").removeClass("hover:bg-purple-500")
+                }
+            }
+            theme_identify()
+
+            function theme_toggle() {
+                themes = ["light", "dark"]
+                localStorage.theme = themes[(
+                    themes.indexOf(
+                        localStorage.theme
+                    ) + 1) % 2]
+                theme_identify()
+            }
+
+        </script>
     {% endblock head %}
 </head>
-<body>
+<body class="bg-white dark:bg-gray-900">
 <div class="image-box"><img src="#" id="image-large" style="display: none"></div>
 <div class="content">
-    {% block navbar %}
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-flex align-items-center">
-            <a class="navbar-brand" href="/">Flog</a>
-            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                    data-target="#collapse" aria-controls="collapse" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+<nav class="bg-blue-600 dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div class="relative flex items-center justify-between h-16">
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+            <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
             </button>
-            <div class="collapse navbar-collapse" id="collapse">
-                <ul class="navbar-nav mr-auto align-items-center">
-                    {{ render_nav_item('main.main', _('Main')) }}
-                    {{ render_nav_item('feedback.feedback', _('Feedback')) }}
-                    {{ render_nav_item('others.about_us', _('About Us')) }}
-                    {% if current_user.is_authenticated %}
-                        <li>
-                            <a class="btn btn-outline-light" href="{{ url_for('shop.shop_index') }}">{{ _("Flog BetaShop") }}</a>
-                        </li>
+        </div>
+        <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+            <div class="flex-shrink-0 flex items-center">
+            <img class="block h-8 w-auto" src="{{ url_for('static', filename='favicon/favicon.svg') }}">
+            </div>
+            <div class="hidden sm:block sm:ml-6">
+            <div class="flex space-x-4">
+                <a href="{{ url_for('main.main') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{ _("Main") }}</a>
+                <a href="{{ url_for('others.about_us') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("About Us") }}</a>
+                <a href="{{ url_for('shop.shop_index') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("Flog BetaShop") }}</a>
+            </div>
+            </div>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <button id="change-theme-btn" href="{{ url_for('notification.show') }}" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white" onclick="theme_toggle()">
+                <span class="sr-only">Change theme</span>
+                <i id="change-theme" class="bi bi-sun-fill"></i>
+            </button>
+        {% if current_user.is_authenticated %}
+            {% if current_user.locale %}
+                <a id="change-theme-btn" href="
+                    {% if current_user.locale == 'zh_Hans_CN' %}
+                        {{ url_for('language.set_locale', locale='en_US') }}
+                    {% else %}
+                        {{ url_for('language.set_locale', locale='zh_Hans_CN') }}
                     {% endif %}
-                </ul>
+                    <" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                    <span>
+                    {% if current_user.locale == "zh_Hans_CN" %}
+                        中
+                    {% else %}
+                        En
+                    {% endif %}
+                    </span>
+                </a>
+            {% else %}
+                <a id="change-theme-btn" href="{{ url_for('language.set_locale', locale='en_US') }}" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                    <span>En</span>
+                </a>
+            {% endif %}
+        {% if notification_count == 0 %}
+            <a href="{{ url_for('notification.show') }}" type="button" class="dark:hover:bg-gray-700 hover:bg-blue-400 py-1 px-2 ml-2 rounded-full text-white dark:text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+            <span class="sr-only">View notifications</span>
+                <i class="bi bi-bell-fill"></i>
+            </a>
+        {% else %}
+            <button type="button" class="bg-white p-1 rounded-full text-blue-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                <span class="sr-only">View notifications</span>
+                <i class="bi bi-bell"></i>
+            </button>
+        {% endif %}
+            <div class="ml-3 relative">
+            <div>
+                <button id="profile-btn" type="button" class="bg-transparent flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                <span class="sr-only">Open user menu</span>
+                <img class="h-8 w-8 rounded-full" src="{{ current_user.avatar_url() }}" alt="">
+                </button>
+            </div>
+    
+            <div id="profile-dropdown">
+                <div id="profile-items" class="dropdown origin-top-right hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-600" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
+                <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-600" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+                <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-600" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                </div>
+            </div>
+            </div>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    
+    <div class="sm:hidden" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+        <a href="{{ url_for('main.main') }}" class="dropdown-item text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("Main") }}</a>
+        <a href="{{ url_for('others.about_us') }}" class="dropdown-item text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("About Us") }}</a>
+        <a href="{{ url_for('shop.shop_index') }}" class="dropdown-item text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("Flog BetaShop") }}</a>
+        </div>
+    </div>
+    </nav>
+    
+    {% block search_bar %}
+    <form class="my-2 my-lg-0" action="{{ url_for('main.search') }}">
+        <input type="text" name="q" class="mr-sm-1 rounded"
+                placeholder="{{ _('Search user, post, group or column') }}"
+                id="search-text" required>
+        <button class="btn btn-light my-2 my-sm-0 rounded" type="submit" id="search-submit">
+            <span class="bi-search"></span>
+        </button>
+    </form>
+{% endblock %}
+    {#
+        <!--
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-flex align-items-center">
                 <ul class="nav navbar-nav align-items-center">
                     {% if current_user.is_authenticated %}
-                        {% block search_bar %}
-                            <form class="form-inline my-2 my-lg-0" action="{{ url_for('main.search') }}">
-                                <input type="text" name="q" class="form-control mr-sm-1 rounded"
-                                       placeholder="{{ _('Search user, post, group or column') }}"
-                                       id="search-text" required>
-                                <button class="btn btn-light my-2 my-sm-0 rounded" type="submit" id="search-submit">
-                                    <span class="bi-search"></span>
-                                </button>
-                            </form>
-                        {% endblock %}
                         <li class="nav-item dropdown">
                             <button class="btn nav-link dropdown-toggle d-flex justify-content-start align-items-center" href="#" data-toggle="dropdown" id="account">
                                 {{ avatar(current_user) }}
                             </button>
                             <div class="dropdown-menu">
                                 <a href="{{ url_for('user.profile', username=current_user.username) }}" class="dropdown-item"
-                                   id="see-profile-link">{{ _("Your Profile") }}</a>
+                                    id="see-profile-link">{{ _("Your Profile") }}</a>
                                 <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item"
-                                   id="edit-profile-link">{{ _("Edit Profile") }}</a>
+                                    id="edit-profile-link">{{ _("Edit Profile") }}</a>
                                 <a href="{{ url_for('auth.logout') }}" class="dropdown-item"
-                                   id="logout-link">{{ _("Log out") }}</a>
+                                    id="logout-link">{{ _("Log out") }}</a>
                                 {% if not current_user.confirmed %}
                                     <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item"
-                                       id="resend-confirmation-link">
+                                        id="resend-confirmation-link">
                                         {{ _("Resend Confirmation Email") }}
                                     </a>
                                 {% endif %}
                                 <a href="{{ url_for('user.change_password') }}" class="dropdown-item"
-                                   id="change-password-link">
+                                    id="change-password-link">
                                     {{ _("Change Password") }}
                                 </a>
                                 <a href="{{ url_for('auth.delete_account') }}"
-                                   class="dropdown-item text-white bg-danger">
+                                    class="dropdown-item text-white bg-danger">
                                     {{ _("Delete Your Account") }}
                                 </a>
                                 <hr />
@@ -102,8 +204,8 @@ MIT License
                             <a href="{{ url_for('notification.show', filter='unread') }}" class="nav-link">
                                 <span class="bi-bell-fill"></span>
                                 <span id="notification-badge" class="badge badge-notification badge-danger"
-                                      data-href="{{ url_for('ajax.notification_count') }}"
-                                      style="{% if notification_count == 0 %}display: none{% endif %}">
+                                        data-href="{{ url_for('ajax.notification_count') }}"
+                                        style="{% if notification_count == 0 %}display: none{% endif %}">
                                 {{ notification_count }}
                             </span>
                             </a>
@@ -111,7 +213,7 @@ MIT License
                     {% else %}
                         <li class="nav-item">
                             <a href="{{ url_for('auth.login') }}"
-                               class="nav-link btn btn-success text-light">{{ _("Log in / Register") }}</a>
+                                class="nav-link btn btn-success text-light">{{ _("Log in / Register") }}</a>
                         </li>
                     {% endif %}
                     <li class="nav-item dropdown">
@@ -122,7 +224,7 @@ MIT License
                         <div class="dropdown-menu">
                             {% for theme_name, display_name in config.BOOTSTRAP_THEMES.items() %}
                                 <a class="dropdown-item"
-                                   href="{{ url_for('others.change_theme', theme_name=theme_name, next=request.full_path) }}">
+                                    href="{{ url_for('others.change_theme', theme_name=theme_name, next=request.full_path) }}">
                                     {{ display_name }}
                                 </a>
                             {% endfor %}
@@ -136,7 +238,7 @@ MIT License
                         <div class="dropdown-menu">
                             {% for language, display_name in config.LOCALES.items() %}
                                 <a class="dropdown-item"
-                                   href="{{ url_for('language.set_locale', locale=language) }}">
+                                    href="{{ url_for('language.set_locale', locale=language) }}">
                                     {{ display_name }}
                                 </a>
                             {% endfor %}
@@ -187,7 +289,8 @@ MIT License
             </div>
         </div>
     {% endblock %}
-    <footer class="footer p-4 mt-5 w-100">
+    -->#}
+    <footer class="footer p-4 mt-5 w-100 dark:text-gray-300 text-sm">
         &copy; Copyright 2022 Andy Zhou
     </footer>
 </div>
@@ -199,7 +302,6 @@ MIT License
     {{ moment.include_moment(local_js='//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js') }}
     {{ moment.locale(auto_detect=True) }}
     {{ static_file('js', 'js/script.js') }}
-    {{ static_file('js', 'js/feedback.js') }}
     {% if current_app.config['FLASK_CONFIG'] == 'production' %}
         <script>
             $(document).ready(function () {
@@ -210,13 +312,24 @@ MIT License
         </script>
     {% endif %}
     <script>
-        var is_authenticated = false;
+        let is_authenticated = false;
         {% if current_user.is_authenticated %}
             is_authenticated = true;
         {% endif %}
         if (is_authenticated) {
             setInterval(update_notifications_count, 30000);
         }
+    </script>
+    <script>
+        $("#profile-items").hide();
+        $("#profile-items").removeClass("hidden");
+        $(document).ready(
+            function(){
+                $("#profile-btn").click(function(e){
+                    $("#profile-items").toggle();
+                });
+            }
+        )
     </script>
 {% endblock scripts %}
 </body>

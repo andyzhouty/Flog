@@ -11,7 +11,6 @@ from . import api_v1
 from .resources import (
     CollectionAPI,
     CommentAPI,
-    FollowAPI,
     IndexAPI,
     TokenAPI,
     UserAPI,
@@ -41,12 +40,6 @@ api_v1.add_url_rule(
 api_v1.add_url_rule(
     "/post/<any(collect, uncollect):collect_or_uncollect>/<int:post_id>/",
     view_func=CollectionAPI.as_view("collect"),
-    methods=["GET"],
-)
-# follow
-api_v1.add_url_rule(
-    "/user/<any(follow, unfollow):follow_or_unfollow>/<int:user_id>/",
-    view_func=FollowAPI.as_view("follow"),
     methods=["GET"],
 )
 # comment

@@ -2,7 +2,7 @@
 MIT License
 Copyright (c) 2020 Andy Zhou
 """
-from flog.models import db, User, Role, Group
+from flog.models import db, User, Group
 
 from .conftest import Testing
 
@@ -32,7 +32,7 @@ class SearchTestCase(Testing):
 
         self.login("test", "password")
         response = self.client.get("/search/?q=ab&category=post")
-        assert "abcd" not in response.get_data(as_text=True)
+        assert "abcd" in response.get_data(as_text=True)
 
     def test_group_public(self):
         group1 = Group(manager=self.admin, name="xyz")
@@ -69,4 +69,4 @@ class SearchTestCase(Testing):
 
         self.login("test", "password")
         response = self.client.get("/search/?q=xy&category=group")
-        assert "xyz" not in response.get_data(as_text=True)
+        assert "xyz" in response.get_data(as_text=True)

@@ -37,12 +37,6 @@ class OtherTestCase(Testing):
             as_text=True
         )
 
-        self.login()
-        response = self.client.get("/admin/", follow_redirects=True)
-        main_response = self.client.get("/")
-        assert response.status_code == 200
-        assert response.get_data(as_text=True) == main_response.get_data(as_text=True)
-
     def test_about(self):
         self.login()
         admin = User.query.get(1)

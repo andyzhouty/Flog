@@ -21,7 +21,7 @@ from flog.decorators import permission_required
 from flog.extensions import csrf
 
 # User and Group are necessary for line 328
-from ..models import Permission, db, Post, Comment, User, Group, Column, Notification
+from ..models import db, Post, Comment, User, Group, Column, Notification
 from ..utils import redirect_back, clean_html
 from ..notifications import (
     push_coin_notification,
@@ -72,7 +72,7 @@ def main():
 
 @main_bp.route("/write/", endpoint="write", methods=["GET", "POST"])
 @login_required
-@permission_required(Permission.WRITE)
+@permission_required
 def create_post():
     current_app.config["CKEDITOR_PKG_TYPE"] = "standard"
     form = PostForm()
@@ -122,7 +122,7 @@ def full_post(id: int):
         form = CommentForm()
 
         if form.validate_on_submit():
-            if not current_user.can(Permission.COMMENT):
+            if not current_user.can:
                 flash(_("Blocked users cannot post a comment!"))
                 return redirect_back()
             if post.private:
@@ -169,7 +169,7 @@ def full_post(id: int):
 
 @main_bp.route("/reply/comment/<int:comment_id>/")
 @login_required
-@permission_required(Permission.COMMENT)
+@permission_required
 def reply_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     return redirect(
@@ -180,7 +180,7 @@ def reply_comment(comment_id):
 
 @main_bp.route("/comment/delete/<int:comment_id>/", methods=["POST"])
 @login_required
-@permission_required(Permission.COMMENT)
+@permission_required
 def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     comment.delete()
@@ -189,7 +189,7 @@ def delete_comment(comment_id):
 
 @main_bp.route("/post/manage/")
 @login_required
-@permission_required(Permission.WRITE)
+@permission_required
 def manage_posts():
     page = request.args.get("page", 1, type=int)
     pagination = (
@@ -202,7 +202,7 @@ def manage_posts():
 
 @main_bp.route("/post/delete/<int:id>/", methods=["POST"])
 @login_required
-@permission_required(Permission.WRITE)
+@permission_required
 def delete_post(id):
     post = Post.query.get(id)
     if current_user != post.author:
@@ -216,7 +216,7 @@ def delete_post(id):
 
 @main_bp.route("/post/edit/<int:id>/", methods=["GET", "POST"])
 @login_required
-@permission_required(Permission.WRITE)
+@permission_required
 def edit_post(id):
     current_app.config["CKEDITOR_PKG_TYPE"] = "standard"
     post = Post.query.get(id)
@@ -275,34 +275,6 @@ def uncollect_post(id: int):
     post = Post.query.get_or_404(id)
     current_user.uncollect(post)
     flash(_("Post uncollected."), "info")
-    return redirect_back()
-
-
-@main_bp.route("/post/pick/<int:id>/", methods=["POST"])
-@permission_required(Permission.MODERATE)
-def pick(id: int):
-    post = Post.query.get_or_404(id)
-    if not post.picked and (post.title != post.author.username):
-        post.picked = True
-        db.session.commit()
-        if post.author:
-            post.author.experience += 20
-        flash(_("Picked post %(id)d", id=id))
-    if post.title == post.author.username:
-        flash("You cannot pick a user's description.")
-    return redirect_back()
-
-
-@main_bp.route("/post/unpick/<int:id>/", methods=["POST"])
-@permission_required(Permission.MODERATE)
-def unpick(id: int):
-    post = Post.query.get_or_404(id)
-    if post.picked:
-        post.picked = False
-        db.session.commit()
-        if post.author:
-            post.author.experience -= 20
-        flash(_("Unpicked post %(id)d", id=id))
     return redirect_back()
 
 
@@ -381,7 +353,7 @@ def search():
 
 @main_bp.route("/column/create/", methods=["GET", "POST"])
 @login_required
-@permission_required(Permission.WRITE)
+@permission_required
 def create_column():
     form = ColumnForm()
     form.posts.choices = [
@@ -414,28 +386,6 @@ def view_column(id: int):
         .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
     )
     return render_template("main/column.html", column=column, pagination=pagination)
-
-
-@main_bp.route("/column/top/<int:id>/", methods=["POST"])
-@login_required
-@permission_required(Permission.MODERATE)
-def top_column(id: int):
-    column = Column.query.get_or_404(id)
-    column.topped = True
-    db.session.commit()
-    flash(_("Topped column <%(name)s>", name=column.name))
-    return redirect_back()
-
-
-@main_bp.route("/column/untop/<int:id>/", methods=["POST"])
-@login_required
-@permission_required(Permission.MODERATE)
-def untop_column(id: int):
-    column = Column.query.get_or_404(id)
-    column.topped = False
-    db.session.commit()
-    flash(_("Untopped column <%(name)s>", name=column.name))
-    return redirect_back()
 
 
 @main_bp.route("/column/all/")

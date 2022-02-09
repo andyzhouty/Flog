@@ -15,7 +15,6 @@ from .resources import (
     TokenAPI,
     PostAPI,
     NotificationAPI,
-    FollowAPI,
     CommentAPI,
     ImageAPI,
     CollectionAPI,
@@ -44,12 +43,6 @@ api_v2.add_url_rule(
 api_v2.add_url_rule(
     "/post/<any(collect,uncollect):collect_or_uncollect>/<int:post_id>/",
     view_func=CollectionAPI.as_view("collect"),
-    methods=["GET"],
-)
-# follow
-api_v2.add_url_rule(
-    "/user/<any(follow,unfollow):follow_or_unfollow>/<int:user_id>/",
-    view_func=FollowAPI.as_view("follow"),
     methods=["GET"],
 )
 # comment
@@ -92,18 +85,6 @@ def comments_of_a_post(post_id: int):
 def posts_of_an_author(user_id: int):
     user = User.query.get_or_404(user_id)
     return jsonify([post_schema(p) for p in user.posts])
-
-
-@api_v2.route("/user/<int:user_id>/followers/")
-def followers(user_id: int):
-    user = User.query.get_or_404(user_id)
-    return jsonify([user_schema(f.follower) for f in user.followers])
-
-
-@api_v2.route("/user/<int:user_id>/following/")
-def following(user_id: int):
-    user = User.query.get_or_404(user_id)
-    return jsonify([user_schema(f.followed) for f in user.following])
 
 
 @api_v2.route("/user/<int:user_id>/comments/")

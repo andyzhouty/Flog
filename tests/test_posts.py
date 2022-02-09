@@ -125,18 +125,6 @@ class PostTestCase(Testing):
         data = self.get_response_and_data_of_post(post_not_private.id)[1]
         assert post_not_private.content in data
 
-        # test if admin users can see other users' private postss
-        post_private = Post.query.filter(
-            Post.author != self.admin, Post.private
-        ).first()
-        while post_private is None:
-            fakes.posts(5)
-            post_private = Post.query.filter(
-                Post.author != self.admin, Post.private
-            ).first()
-        data = self.get_response_and_data_of_post(post_private.id)[1]
-        assert post_private.content in data
-
         self.logout()
 
         self.register("john", "john", "123456", "john@example.com")
@@ -331,20 +319,7 @@ class ColumnTestCase(Testing):
         response = self.client.get("/column/all/")
         assert response.status_code == 200
         assert col_name in response.get_data(as_text=True)
-
-        response = self.client.post(f"/column/top/{column.id}/", follow_redirects=True)
-        assert response.status_code == 403
         self.logout()
-
-        self.login()
-        response = self.client.post(f"/column/top/{column.id}/", follow_redirects=True)
-        assert response.status_code == 200
-        assert column.topped
-        response = self.client.post(
-            f"/column/untop/{column.id}/", follow_redirects=True
-        )
-        assert response.status_code == 200
-        assert not column.topped
 
     def test_request_post_to_column(self):
         notification_count = Notification.query.count()

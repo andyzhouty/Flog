@@ -5,11 +5,10 @@ Copyright (c) 2020 Andy Zhou
 import json
 from flask import url_for
 from random import randint
-from flog.models import Comment, Notification, Post, User, Role
+from flog.models import Comment, Notification, Post, User
 from flog.notifications import (
     push_collect_notification,
     push_comment_notification,
-    push_follow_notification,
 )
 from flog.utils import lower_username, is_safe_url
 
@@ -37,17 +36,13 @@ class NotificationTestCase(Testing):
         push_collect_notification(collector, receiver, post)
 
         assert Notification.query.count() == 1
-        follower = collector
-        push_follow_notification(follower, receiver)
-
-        assert Notification.query.count() == 2
         random_comment_id = randint(1, Comment.query.count())
         comment = Comment.query.get(random_comment_id)
         while not comment.post:
             random_comment_id = randint(1, Comment.query.count())
             comment = Comment.query.get(random_comment_id)
         push_comment_notification(comment, receiver)
-        assert Notification.query.count() == 3
+        assert Notification.query.count() == 2
 
     def test_notifications(self):
         self.login()

@@ -43,7 +43,6 @@ that took me into the wonderful world of Flask.
 
 - Login / Register (requires email verification) / Logout / Delete Account
 - Collect  
-- Follow  
 - Write  
 - Comment  
 - Notifications

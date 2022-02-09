@@ -10,10 +10,8 @@ from flog.models import (
     Notification,
     Group,
     Message,
-    Follow,
     Column,
-    AnonymousUser,
-    Permission,
+    AnonymousUser
 )
 from .conftest import Testing
 
@@ -47,12 +45,6 @@ class ModelTestCase(Testing):
         post = Post()
         user.collect(post)
         assert user.is_collecting(post)
-
-    def test_follow(self):
-        user1 = User()
-        user2 = User()
-        user1.follow(user2)
-        assert user1.is_following(user2)
 
     def test_notification(self):
         user = User()
@@ -91,16 +83,6 @@ class ModelTestCase(Testing):
         user.custom_avatar_url = "https://example.com/test.png"
         assert user.avatar_url() == "https://example.com/test.png"
 
-    def test_print_layout(self):
-        user1 = User()
-        user2 = User()
-        assert user1.role.__repr__() == "<Role: User>"
-        user1.follow(user2)
-        assert user1.is_following(user2)
-
-        f = Follow.query.with_parent(user1).first()
-        assert f.__repr__() == f"<Follow follower: '{user1}' following: '{user2}'"
-
     def test_delete_column(self):
         user = User()
         column = Column()
@@ -113,7 +95,6 @@ class ModelTestCase(Testing):
 
     def test_anonymous_permissions(self):
         anonym_user = AnonymousUser()
-        assert not anonym_user.can(Permission.COMMENT)
         assert not anonym_user.is_administrator()
 
     def test_group_messages(self):

@@ -132,5 +132,10 @@ doc_deploy.sh
 # user uploads
 images/
 
-# whooshee data
-whooshee/
+# tailwindcss use
+node-modules/
+package-lock.json
+tailwind.config.js
+
+# git patch
+*.patch

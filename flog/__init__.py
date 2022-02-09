@@ -6,12 +6,14 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 from djask import Djask
+from djask.extensions import db
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
     babel,
-    bootstrap4,
+    bootstrap,
     ckeditor,
     compress,
     csrf,
@@ -22,10 +24,9 @@ from .extensions import (
     mail,
     migrate,
     moment,
-    share,
 )
 from flask_babel import lazy_gettext as _l
-from .models import Post, Feedback, Role, Permission, User, Notification, Message, Group
+from .models import Post, User, Notification, Message, Group
 from .settings import config
 from .errors import register_error_handlers
 from .commands import register_commands
@@ -35,7 +36,6 @@ from .api.v2 import api_v2
 from .api.v3 import api_v3
 from .auth import auth_bp
 from .group import group_bp
-from .feedback import feedback_bp
 from .image import image_bp
 from .language import language_bp
 from .main import main_bp
@@ -49,9 +49,8 @@ from .user import user_bp
 def create_app(config_name=None) -> Flask:
     if config_name is None:
         config_name = os.getenv("FLASK_CONFIG", "development")
-    app = Djask("flog", config={
-        "AUTH_MODEL": User
-    })
+    app = Djask("flog", config={"AUTH_MODEL": User})
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_host=1)
     register_config(app, config_name)
     register_logger(app)
     register_extensions(app)
@@ -109,7 +108,6 @@ def register_extensions(app: Flask) -> None:
     mail.init_app(app)
     migrate.init_app(app, db)
     moment.init_app(app)
-    share.init_app(app)
 
 
 def register_blueprints(app: Djask) -> None:
@@ -123,7 +121,6 @@ def register_blueprints(app: Djask) -> None:
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(group_bp, url_prefix="/group")
     app.register_blueprint(image_bp, url_prefix="/image")
-    app.register_blueprint(feedback_bp, url_prefix="/feedback")
     app.register_blueprint(language_bp, url_prefix="/language")
     app.register_blueprint(notification_bp, url_prefix="/notification")
     app.register_blueprint(shop_bp, url_prefix="/shop")
@@ -135,13 +132,9 @@ def register_blueprints(app: Djask) -> None:
 def register_context(app: Flask) -> None:
     @app.shell_context_processor
     def make_shell_context():
-        Role.insert_roles()
         return dict(
             db=db,
             Post=Post,
-            Feedback=Feedback,
-            Permission=Permission,
-            Role=Role,
             User=User,
             Message=Message,
             Group=Group,
@@ -150,7 +143,6 @@ def register_context(app: Flask) -> None:
     @app.context_processor
     def make_template_context():
         posts = Post.query.order_by(Post.timestamp.desc()).all()
-        feedbacks = Feedback.query.order_by(Feedback.timestamp.desc()).all()
         allowed_tags = " ".join(app.config["FLOG_ALLOWED_TAGS"])
         if current_user.is_authenticated:
             notification_count = Notification.query.with_parent(current_user).count()
@@ -158,8 +150,6 @@ def register_context(app: Flask) -> None:
             notification_count = None
         return dict(
             posts=posts,
-            feedbacks=feedbacks,
-            Permission=Permission,
             current_app=app,
             notification_count=notification_count,
             allowed_tags=allowed_tags,

@@ -258,27 +258,12 @@ class Belong(db.Model):
 class Collect(db.Model):
     """Collect Model"""
 
-    collector_id = db.Column(db.Integer(), db.ForeignKey("user.id"), primary_key=True)
-    collected_id = db.Column(db.Integer(), db.ForeignKey("post.id"), primary_key=True)
+    collector_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
+    collected_id = db.Column(db.Integer(), db.ForeignKey("post.id"))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     collector = db.relationship("User", back_populates="collections", lazy="joined")
     collected = db.relationship("Post", back_populates="collectors", lazy="joined")
-
-
-class Follow(db.Model):
-    follower_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey("user.id"), primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    follower = db.relationship(
-        "User", foreign_keys=[follower_id], back_populates="following", lazy="joined"
-    )
-    followed = db.relationship(
-        "User", foreign_keys=[followed_id], back_populates="followers", lazy="joined"
-    )
-
-    def __repr__(self):
-        return f"<Follow follower: '{self.follower}' following: '{self.followed}'"
 
 
 class Post(db.Model):
@@ -300,7 +285,6 @@ class Post(db.Model):
     columns = db.relationship(
         "Column", secondary=column_post_table, back_populates="posts"
     )
-    picked = db.Column(db.Boolean, default=False)
     coins = db.Column(db.Integer, default=0)
     coiners = db.relationship(
         "User", secondary=coin_table, back_populates="coined_posts"
@@ -311,6 +295,10 @@ class Post(db.Model):
 
     def __repr__(self) -> str:
         return f"<Post {self.title}>"
+
+    @property
+    def picked(self):
+        return self.coins > 7
 
     def delete(self):
         db.session.delete(self)
@@ -335,7 +323,10 @@ class Column(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    topped = db.Column(db.Boolean, default=False)
+
+    @property
+    def topped(self):
+        return sum([post.coins for post in self.posts])>=40
 
     def delete(self):
         db.session.delete(self)
@@ -367,21 +358,6 @@ class Comment(db.Model):
 
     def delete(self):
         """Delete comment"""
-        db.session.delete(self)
-        db.session.commit()
-
-
-class Feedback(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(200))
-    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    author = db.relationship("User", back_populates="feedbacks")
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-
-    def __repr__(self):
-        return f"<Feedback {self.body[:10]}...>"
-
-    def delete(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -431,14 +407,6 @@ class Image(db.Model):
         db.session.commit()
 
 
-class Permission:
-    FOLLOW = 1
-    COMMENT = 2
-    WRITE = 4
-    MODERATE = 8
-    ADMIN = 16
-
-
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
@@ -484,62 +452,6 @@ class Message(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
 
-class Role(db.Model):
-    __tablename__ = "roles"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    default = db.Column(db.Boolean, default=False, index=True)
-    permissions = db.Column(db.Integer)
-    users = db.relationship("User", back_populates="role")
-
-    def __init__(self, **kwargs):
-        super(Role, self).__init__(**kwargs)
-        if self.permissions is None:
-            self.permissions = 0
-
-    def __repr__(self):
-        return f"<Role: {self.name}>"
-
-    def add_permission(self, perm):
-        if not self.has_permission(perm):
-            self.permissions += perm
-
-    def remove_permission(self, perm):
-        if self.has_permission(perm):
-            self.permissions -= perm
-
-    def reset_permissions(self):
-        self.permissions = 0
-
-    def has_permission(self, perm):
-        """
-        Check if a single permission is in a combined permission
-        """
-        return self.permissions & perm == perm
-
-    @staticmethod
-    def insert_roles():
-        roles = {
-            "User": [
-                Permission.FOLLOW,
-                Permission.COMMENT,
-                Permission.WRITE
-            ],
-            "LOCKED": [Permission.FOLLOW],
-        }
-        default_role = "User"
-        for r in roles:
-            role = Role.query.filter_by(name=r).first()
-            if role is None:
-                role = Role(name=r)
-            role.reset_permissions()
-            for perm in roles[r]:
-                role.add_permission(perm)
-            role.default = role.name == default_role
-            db.session.add(role)
-        db.session.commit()
-
-
 class User(AbstractUser, Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256))
@@ -547,8 +459,6 @@ class User(AbstractUser, Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     posts = db.relationship("Post", back_populates="author")
-    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
-    role = db.relationship("Role", back_populates="users")
     feedbacks = db.relationship("Feedback", back_populates="author")
     avatar_hash = db.Column(db.String(32))
 
@@ -564,21 +474,6 @@ class User(AbstractUser, Model):
     locale = db.Column(db.String(16))
 
     columns = db.relationship("Column", back_populates="author")
-
-    following = db.relationship(
-        "Follow",
-        foreign_keys=[Follow.follower_id],
-        back_populates="follower",
-        lazy="dynamic",
-        cascade="all",
-    )
-    followers = db.relationship(
-        "Follow",
-        foreign_keys=[Follow.followed_id],
-        back_populates="followed",
-        lazy="dynamic",
-        cascade="all",
-    )
 
     comments = db.relationship("Comment", back_populates="author", cascade="all")
     notifications = db.relationship(
@@ -605,23 +500,19 @@ class User(AbstractUser, Model):
     clicks = db.Column(db.Integer(), default=0)
     clicks_today = db.Column(db.Integer(), default=0)
 
-    alpha_index = db.Column(db.Integer(), default=0)
-    last_update = db.Column(db.DateTime(), default=datetime(2000, 1, 1, 0, 0, 0, 0))
-
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
-        if self.role is None:
-            if self.role is None:
-                self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = self.gravatar_hash()
-        self.follow(self)
 
     def __repr__(self):
         return f"<User '{self.username}'>"
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+
+    def is_administrator(self):
+        return self.is_admin
 
     def verify_password(self, password) -> bool:
         return check_password_hash(self.password_hash, password)
@@ -711,21 +602,6 @@ class User(AbstractUser, Model):
             Collect.query.with_parent(self).filter_by(collected_id=post.id).first()
         ) is not None
 
-    def follow(self, user):
-        if not self.is_following(user):
-            follow = Follow(follower=self, followed=user)
-            db.session.add(follow)
-            db.session.commit()
-
-    def unfollow(self, user):
-        follow = self.following.filter_by(followed_id=user.id).first()
-        if follow:
-            db.session.delete(follow)
-            db.session.commit()
-
-    def is_following(self, user):
-        return self.following.filter_by(followed_id=user.id).first() is not None
-
     def profile_url(self):
         return url_for("user.profile", username=self.username)
 
@@ -738,14 +614,12 @@ class User(AbstractUser, Model):
     def in_group(self, group) -> bool:
         return self in group.members
 
-    def lock(self) -> bool:
+    def lock(self):
         self.locked = True
-        self.role = Role.query.filter_by(name="LOCKED").first()
         db.session.commit()
 
-    def unlock(self) -> bool:
+    def unlock(self):
         self.locked = False
-        self.role = Role.query.filter_by(name="User").first()
         db.session.commit()
 
     def level(self) -> int:

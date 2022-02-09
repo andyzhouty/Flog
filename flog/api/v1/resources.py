@@ -141,20 +141,6 @@ class CollectionAPI(MethodView):
             return f"Post id {post.id} uncollected.", 200
 
 
-class FollowAPI(MethodView):
-    """API for following operations."""
-
-    decorators = [auth.login_required]
-
-    def get(self, follow_or_unfollow: str, user_id: int) -> "204":
-        user = User.query.get_or_404(user_id)
-        if follow_or_unfollow == "follow":
-            g.current_user.follow(user)
-        else:
-            g.current_user.unfollow(user)
-        return "", 204
-
-
 class CommentAPI(MethodView):
     """API for comments."""
 
