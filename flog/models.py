@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from djask.auth.abstract import AbstractUser
 from djask.db.models import Model
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, url_for
+from flask import current_app, url_for, abort
 from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -234,8 +234,7 @@ coin_table = db.Table(
 )
 
 
-class Belong(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
+class Belong(Model):
     owner_id = db.Column(
         db.Integer(),
         db.ForeignKey("user.id"),
@@ -255,18 +254,7 @@ class Belong(db.Model):
         return delta
 
 
-class Collect(db.Model):
-    """Collect Model"""
-
-    collector_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
-    collected_id = db.Column(db.Integer(), db.ForeignKey("post.id"))
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-
-    collector = db.relationship("User", back_populates="collections", lazy="joined")
-    collected = db.relationship("Post", back_populates="collectors", lazy="joined")
-
-
-class Post(db.Model):
+class Post(Model):
     """
     A model for posts
     """
@@ -276,7 +264,6 @@ class Post(db.Model):
     title = db.Column(db.String(128), index=True)
     author = db.relationship("User", back_populates="posts")
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    collectors = db.relationship("Collect", back_populates="collected", cascade="all")
     comments = db.relationship("Comment", back_populates="post")
     content = db.Column(db.UnicodeText)
     private = db.Column(db.Boolean, default=False)
@@ -312,9 +299,27 @@ class Post(db.Model):
             "main.approve_column", post_id=self.id, column_id=column_id, _external=True
         )
 
+    def add_coin(self, coin_num: int, current_user):
+        if coin_num not in (1, 2,):
+            return "Invalid coin!"
+        if self.author == current_user:  # pragma: no cover
+            return "You can't coin yourself."
+        if self in current_user.coined_posts:
+            return "Invalid coin!"
+        amount = coin_num
+        if current_user.coins < amount:
+            return "Not enough coins."
+        current_user.coined_posts.append(self)
+        current_user.coins -= amount
+        current_user.experience += amount * 10
+        self.coins += amount
+        if self.author:
+            self.author.coins += amount / 4
+            self.author.experience += amount * 10
+        db.session.commit()
 
-class Column(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+
+class Column(Model):
     name = db.Column(db.String(128), unique=True)
     posts = db.relationship(
         "Post", secondary=column_post_table, back_populates="columns"
@@ -327,7 +332,7 @@ class Column(db.Model):
     @property
     def topped(self):
         return sum([post.coins for post in self.posts]) >= 40
-
+  
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -341,7 +346,7 @@ class Column(db.Model):
         )
 
 
-class Comment(db.Model):
+class Comment(Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.UnicodeText)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
@@ -362,8 +367,7 @@ class Comment(db.Model):
         db.session.commit()
 
 
-class Notification(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Notification(Model):
     message = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
@@ -379,8 +383,7 @@ class Notification(db.Model):
         db.session.commit()
 
 
-class Image(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Image(Model):
     filename = db.Column(db.String(512), unique=True)
 
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -407,8 +410,7 @@ class Image(db.Model):
         db.session.commit()
 
 
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Group(Model):
     name = db.Column(db.String(128), unique=True)
     members = db.relationship(
         "User", secondary=group_user_table, back_populates="groups"
@@ -442,14 +444,19 @@ class Group(db.Model):
         return Group.query.get(data.get("group_id"))
 
 
-class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Message(Model):
     body = db.Column(db.Text)
     group_id = db.Column(db.Integer, db.ForeignKey("group.id"))
     group = db.relationship("Group", back_populates="messages")
     author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     author = db.relationship("User", back_populates="sent_messages")
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
+
+Collect = db.Table("collect",
+    db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+)
 
 
 class User(AbstractUser, Model):
@@ -469,7 +476,8 @@ class User(AbstractUser, Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    collections = db.relationship("Collect", back_populates="collector", cascade="all")
+    collections = db.relationship("Post", secondary=Collect, backref=db.backref("collectors"))
+
     locale = db.Column(db.String(16))
 
     columns = db.relationship("Column", back_populates="author")
@@ -517,7 +525,7 @@ class User(AbstractUser, Model):
         return check_password_hash(self.password_hash, password)
 
     def can(self, perm) -> bool:
-        return self.role is not None and self.role.has_permission(perm)
+        return not self.locked
 
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
@@ -534,6 +542,7 @@ class User(AbstractUser, Model):
         last_seen_day = datetime(
             self.last_seen.year, self.last_seen.month, self.last_seen.day
         )
+        self.coins = (self.coins or 3.0) # maybe this account is processed
         if now - last_seen_day >= timedelta(days=1):
             self.coins += 1
             self.clicks_today = 0
@@ -584,22 +593,16 @@ class User(AbstractUser, Model):
 
     def collect(self, post):
         if not self.is_collecting(post):
-            collect = Collect(collector=self, collected=post)
-            db.session.add(collect)
+            self.collections.append(post)
             db.session.commit()
 
     def uncollect(self, post):
-        collect = (
-            Collect.query.with_parent(self).filter_by(collected_id=post.id).first()
-        )
-        if collect:
-            db.session.delete(collect)
+        if post in self.collections:
+            self.collections.remove(post)
             db.session.commit()
 
     def is_collecting(self, post):
-        return (
-            Collect.query.with_parent(self).filter_by(collected_id=post.id).first()
-        ) is not None
+        return (post in self.collections)
 
     def profile_url(self):
         return url_for("user.profile", username=self.username)
@@ -791,6 +794,13 @@ class AnonymousUser(AnonymousUserMixin):
     @property
     def id(self):
         return -1
+
+    @property
+    def is_admin(self):
+        return False
+
+    def is_administrator(self):
+        return False
 
 
 login_manager.anonymous_user = AnonymousUser

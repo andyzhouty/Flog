@@ -120,7 +120,6 @@ def columns(count: int) -> None:
     top = Column.query.get(randint(1, Column.query.count()))
     while top is None:
         top = Column.query.get(randint(1, Column.query.count()))
-    top.topped = True
     db.session.commit()
 
 

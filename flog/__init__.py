@@ -15,7 +15,6 @@ from .extensions import (
     babel,
     bootstrap,
     ckeditor,
-    compress,
     csrf,
     db,
     limiter,
@@ -94,7 +93,6 @@ def register_extensions(app: Flask) -> None:
     babel.init_app(app)
     bootstrap.init_app(app)
     ckeditor.init_app(app)
-    compress.init_app(app)
     csrf.init_app(app)
     csrf.exempt(api_v1)
     csrf.exempt(api_v2)

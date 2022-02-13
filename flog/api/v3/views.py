@@ -32,6 +32,7 @@ from flog.models import (
     Notification,
     Group,
 )
+from flog.extensions import csrf
 from flog.utils import clean_html, get_image_path_and_url
 from . import api_v3
 from .decorators import can_edit, permission_required
@@ -248,21 +249,9 @@ class PostCoinAPI(MethodView):
     @output(PostOutSchema)
     def post(self, post_id, data):
         post = Post.query.get_or_404(post_id)
-        if post.author == g.current_user:  # pragma: no cover
-            abort(400, "You cannot coin your own post.")
-        if post in g.current_user.coined_posts:
-            abort(400, "Already coined the post")
-        amount = data["amount"]
-        post.coins += amount
-        if g.current_user.coins < amount:
-            abort(400, "Not enough coins")
-        g.current_user.coined_posts.append(post)
-        g.current_user.coins -= amount
-        g.current_user.experience += amount * 10
-        if post.author:
-            post.author.coins += amount / 4
-            post.author.experience += amount * 10
-        db.session.commit()
+        message = post.add_coin(data["amount"], g.current_user)
+        if message:
+            abort(400, message)
         return post
 
 

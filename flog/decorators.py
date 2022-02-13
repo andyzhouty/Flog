@@ -7,14 +7,11 @@ from flask import abort, current_app
 from flask_login import current_user, login_required
 
 
-def permission_required(perm=None):
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if current_user.locked:
-                abort(403)
-            return f(*args, **kwargs)
+def permission_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.locked:
+            abort(403)
+        return f(*args, **kwargs)
 
-        return decorated_function
-
-    return decorator
+    return decorated_function

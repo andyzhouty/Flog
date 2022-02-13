@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import user_card, post_card, group_card, column_card with context %}
-{% block title %}Flog - Seach: {{ q }}{% endblock %}
+{% from 'macros.html' import user_card, post_card_js, coin_script, group_card, column_card with context %}
+{% block title %}Flog - Search: {{ q }}{% endblock %}
+{% block scripts %}
+    {{ coin_script() }}
+    <script>{{ post_card_js }}</script>
+{% endblock %}
 {% block search_bar %}
-    <form class="form-inline my-2 my-lg-0" action="{{ url_for('main.search', category=category) }}">
-        <input type="text" name="q" class="form-control mr-sm-1"
-                placeholder="{{ _('Search user, post or group') }}"
-            required>
-        <input type="hidden" name="category" value="{{ category }}">
-        <button class="btn btn-light my-2 my-sm-0" type="submit">
-            <span class="bi-search"></span>
-        </button>
-    </form>
+    <div class="sm:hidden flex-3 flex items-center justify-center sm:items-stretch sm:justify-start">
+        <form action="{{ url_for('main.search', category=category) }}">
+            <input type="text" name="q" class="mr-sm-1 rounded-md px-2 py-1 ml-4 border-gray-600 dark:border-none text-black dark:text-gray-100 focus:border-none dark:bg-gray-500 focus:bg-white focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-700 focus:ring-indigo-600 outline-none"
+                    placeholder=""
+                    id="search-text" required value="{{ q }}">
+            <input type="hidden" name="category" value="{{ category }}">
+            <button class="bg-gray-700 dark:bg-indigo-600 my-2 my-sm-0 rounded-md px-3 py-1 text-white dark:hover:bg-indigo-500 hover:bg-gray-600  focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-700 focus:ring-indigo-600" type="submit" id="search-submit">
+                <span class="bi-search"></span>
+            </button>
+        </form>
+    </div>
 {% endblock %}
 {% block page_content %}
     <div class="page-header">
@@ -44,6 +50,7 @@
                     {{ results_count }}
                     {{ ngettext('result', 'results', __num=results|length) }}
                 </h5>
+                <div id="post-container"></div>
                 {% for item in results %}
                     {% if category == 'user' %}
                         {{ user_card(item) }}
@@ -52,7 +59,30 @@
                     {% elif category == 'column' %}
                         {{ column_card(item) }}
                     {% else %}
-                        {{ post_card(item) }}
+                        post_card(
+                            post_id={{ item.id }},
+                            title="{{ item.title }}",
+                            {% if post.author %}
+                                author="{{ item.author.username }}",
+                            {% else %}
+                                author="",
+                            {% endif %}
+                            avatar="{{ item.author.avatar_url() }}",
+                            avatar_style="{{ item.author.load_avatar_style() }}",
+                            fromnow='{{ moment(item.timestamp).fromNow(refresh=True) }}',
+                            content="{{ item.content | striptags | truncate(220) }}",
+                            columns=[
+                                {% for column in item.columns %}
+                                    "{{ column.name }}",
+                                {% endfor %}
+                            ],
+                            coins={{ item.coins }},
+                            {% if item.private %}
+                                private=true,
+                            {% else %}
+                                private=false,
+                            {% endif %}
+                        )
                     {% endif %}
                 {% endfor %}
                 {{ render_pagination(pagination) }}

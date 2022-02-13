@@ -2,10 +2,9 @@
     Copyright (c) 2020 Andy Zhou
     MIT License
 #}
-{% from 'bootstrap/nav.html' import render_nav_item %}
 {% from 'macros.html' import static_file, change_theme, avatar %}
 <!DOCTYPE html>
-<html>
+<html class="h-full">
 <head>
     {% block head %}
         <title>{% block title %}Flog{% endblock title %}</title>
@@ -22,6 +21,9 @@
             {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
             {{ static_file('css', 'css/common.css') }}
         {% endblock styles %}
+        {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', local=False) }}
+        {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
+        {{ static_file('js', '//unpkg.com/axios/dist/axios.min.js', local=False) }}
         <script>
             function theme_identify() {
                 if (localStorage.theme === 'dark'
@@ -33,14 +35,14 @@
                     document.documentElement.classList.add('dark')
                     $("#change-theme").addClass("bi-moon-fill")
                     $("#change-theme").removeClass("bi-sun-fill")
-                    $("#change-theme-btn").addClass("hover:bg-purple-500")
+                    $("#change-theme-btn").addClass("hover:bg-indigo-500")
                     $("#change-theme-btn").removeClass("hover:bg-yellow-300")
                 } else {
                     document.documentElement.classList.remove('dark')
                     $("#change-theme").addClass("bi-sun-fill")
                     $("#change-theme").removeClass("bi-moon-fill")
                     $("#change-theme-btn").addClass("hover:bg-yellow-300")
-                    $("#change-theme-btn").removeClass("hover:bg-purple-500")
+                    $("#change-theme-btn").removeClass("hover:bg-indigo-500")
                 }
             }
             theme_identify()
@@ -55,39 +57,118 @@
             }
 
         </script>
+        <script>
+            function from_now(array) {
+                if (array[0] == 0) {
+                    if (array[1] == 0) {
+                        if (array[2] == 0) {
+                            if(array[3] < 30) {
+                                return '{{ _("a few seconds ago") }}'
+                            } else {
+                                return ' 30 {{ _(" seconds ago") }}'
+                            }
+                        } else if (array[2] == 1) {
+                            return ' 1 {{ _(" minute ") }}{{ _("ago") }}'
+                        } else {
+                            return ' ' + array[2] + ' {{ _(" minutes ") }}{{ _("ago") }}'
+                        }
+                    } else if (array[1] == 1) {
+                        if (array[2] == 0) {
+                            return ' 1 {{ _(" hour ") }}{{ _("ago") }}'
+                        } else if (array[2] == 1) {
+                            return ' 1 {{ _(" hour ") }}1{{ _(" minute ") }}{{ _("ago") }}'
+                        } else {
+                            return ' 1 {{ _(" hour ") }} ' + array[2] + ' {{ _(" minutes ") }} {{ _("ago") }}'
+                        }
+                    } else if (array[1]<=12) {
+                        if (array[2] == 0) {
+                            return ' ' + array[1] + ' {{ _(" hours ") }}{{ _("ago") }}'
+                        } else if (array[2] == 1) {
+                            return ' ' + array[1] + ' {{ _(" hours ") }} 1 {{ _(" minute ") }}{{ _("ago") }}'
+                        } else {
+                            return ' ' + array[1] + ' {{ _(" hours ") }} ' + array[2] + ' {{ _(" minutes ") }}{{ _("ago") }}'
+                        }
+                    } else {
+                        return ' ' +  array[1] + ' {{ _(" hours ") }}{{ _("ago") }}'
+                    }
+                } else if (array[0] == 1) {
+                    return ' 1 {{ _(" day ") }}{{ _("ago") }}'
+                } else if (array[0]<=30) {
+                    return ' ' + array[0] + ' {{ _(" days ") }}{{ _("ago") }}'
+                } else if (array[0]>=31 && array[0]<=60) {
+                    return ' 1 {{ _(" month ") }}{{ _("ago") }}'
+                } else if (array[0]>=61 && array[0]<=365) {
+                    return ' ' + Math.floor(array[0] / 30.4167) + ' {{ _(" months ") }}{{ _("ago") }}'
+                } else if (array[0]>=366 && array[0]<=396) {
+                    return ' 1 {{ _(" year ") }}{{ _("ago") }}'
+                } else if (array[0]>=397 && array[0]<=730) {
+                    return ' 1 {{ _(" year ") }}{% if current_user.locale == "zh_Hans_CN" %}零{% endif %}' + Math.floor(array[0] / 30.4167) % 12 + '{{ _(" months ") }}{{ _("ago") }}'
+                } else if (Math.floor(array[0] / 30.4167) % 12 != 0) {
+                    return ' ' + Math.floor(array[0] / 365) + ' {{ _(" years ") }}{% if current_user.locale == "zh_Hans_CN" %}零{% endif %} ' + Math.floor(array[0] / 30.4167) % 12 + (Math.floor(array[0] / 30.4167) % 12 != 1 ? ' {{ _(" months ") }}' : ' {{ _(" month ") }}') + '{{ _("ago") }}'
+                } else {
+                    return ' ' + Math.floor(array[0] / 365) + ' {{ _(" years ") }}{{ _("ago") }}'
+                }
+            }
+        </script>
     {% endblock head %}
 </head>
-<body class="bg-white dark:bg-gray-900">
+<body class="bg-gray-100 dark:bg-gray-900 h-full
+{% block classes %}
+{% endblock %}
+">
+{######## For tailwindcss use ########
+<div class="hidden bg-red-200 bg-yellow-200 bg-green-200 bg-blue-200 bg-indigo-200
+            dark:bg-red-800 dark:bg-yellow-800 dark:bg-green-800 dark:bg-blue-800 dark:bg-indigo-200
+            text-red-200 text-yellow-200 text-green-200 text-blue-200 text-indigo-200
+            dark:text-red-800 dark:text-yellow-800 dark:text-green-800 dark:text-blue-800 dark:text-indigo-200
+            text-red-500 dark:text-red-400
+"></div>
+######################################}
 <div class="image-box"><img src="#" id="image-large" style="display: none"></div>
-<div class="content">
-<nav class="bg-blue-600 dark:bg-gray-800">
+<nav class="bg-indigo-600 dark:bg-gray-800">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
-            <span class="sr-only">Open main menu</span>
-            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+        <div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
+            <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" id="mobile-btn">
+                <span class="sr-only">Open main menu</span>
+                <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
             </button>
         </div>
-        <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex-1 flex items-center justify-center lg:items-stretch lg:justify-start">
             <div class="flex-shrink-0 flex items-center">
             <img class="block h-8 w-auto" src="{{ url_for('static', filename='favicon/favicon.svg') }}">
             </div>
-            <div class="hidden sm:block sm:ml-6">
+            <div class="hidden lg:block sm:ml-6">
             <div class="flex space-x-4">
-                <a href="{{ url_for('main.main') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{ _("Main") }}</a>
-                <a href="{{ url_for('others.about_us') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("About Us") }}</a>
-                <a href="{{ url_for('shop.shop_index') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("Flog BetaShop") }}</a>
+                <a href="{{ url_for('main.main') }}" class="px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{ _("Main") }}</a>
+                <a href="{{ url_for('others.about_us') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("About Us") }}</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('shop.shop_index') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("Flog BetaShop") }}</a>
+                {% endif %}
             </div>
             </div>
         </div>
+        {% if current_user.is_authenticated %}
+            {% block search_bar %}
+            <div class="flex-2 flex items-center justify-center md:items-stretch md:justify-start hidden lg:block">
+                <form action="{{ url_for('main.search') }}">
+                    <input type="text" name="q" class="mr-sm-1 rounded-md px-2 py-1 ml-4 border-gray-600 dark:border-none text-black dark:text-gray-100 focus:border-none dark:bg-gray-500 focus:bg-white focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-700 focus:ring-indigo-600 outline-none"
+                            placeholder=""
+                            id="search-text" required>
+                    <button class="bg-gray-700 dark:bg-indigo-600 my-2 my-sm-0 rounded-md px-3 py-1 text-white dark:hover:bg-indigo-500 hover:bg-gray-600  focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-700 focus:ring-indigo-600" type="submit" id="search-submit">
+                        <span class="bi-search"></span>
+                    </button>
+                </form>
+            </div>
+            {% endblock %}
+        {% endif %}
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button id="change-theme-btn" href="{{ url_for('notification.show') }}" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white" onclick="theme_toggle()">
+            <button id="change-theme-btn" type="button" class="text-white dark:text-gray-300 py-1 px-2 mx-1 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white" onclick="theme_toggle()">
                 <span class="sr-only">Change theme</span>
                 <i id="change-theme" class="bi bi-sun-fill"></i>
             </button>
@@ -99,7 +180,7 @@
                     {% else %}
                         {{ url_for('language.set_locale', locale='zh_Hans_CN') }}
                     {% endif %}
-                    <" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                    " type="button" class="text-white dark:text-gray-300 py-1 px-2 mx-1 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white">
                     <span>
                     {% if current_user.locale == "zh_Hans_CN" %}
                         中
@@ -109,24 +190,20 @@
                     </span>
                 </a>
             {% else %}
-                <a id="change-theme-btn" href="{{ url_for('language.set_locale', locale='en_US') }}" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                <a id="change-theme-btn" href="{{ url_for('language.set_locale', locale='en_US') }}" type="button" class="text-white dark:text-gray-300 py-1 px-2 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white">
                     <span>En</span>
                 </a>
             {% endif %}
-        {% if notification_count == 0 %}
-            <a href="{{ url_for('notification.show') }}" type="button" class="dark:hover:bg-gray-700 hover:bg-blue-400 py-1 px-2 ml-2 rounded-full text-white dark:text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
-            <span class="sr-only">View notifications</span>
-                <i class="bi bi-bell-fill"></i>
-            </a>
-        {% else %}
-            <button type="button" class="bg-white p-1 rounded-full text-blue-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+            <a href="{{ url_for('notification.show') }}" type="button" class="dark:hover:bg-gray-700 hover:bg-indigo-400 py-1 px-2 ml-2 rounded-full text-white dark:text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                <span class="flex h-5 w-5 animate-bounce">
+                    <span class="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-green-400 dark:bg-red-400 opacity-80"></span>
+                    <span class="relative inline-flex rounded-full h-5 w-5 bg-green-400 dark:bg-red-400 text-white text-sm"></span>
+                </span>
                 <span class="sr-only">View notifications</span>
-                <i class="bi bi-bell"></i>
-            </button>
-        {% endif %}
+            </a>
             <div class="ml-3 relative">
             <div>
-                <button id="profile-btn" type="button" class="bg-transparent flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 dark:focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                <button id="profile-btn" type="button" class="bg-transparent flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <img class="h-8 w-8 rounded-full" src="{{ current_user.avatar_url() }}" alt="">
                 </button>
@@ -134,120 +211,41 @@
     
             <div id="profile-dropdown">
                 <div id="profile-items" class="dropdown origin-top-right hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-600" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-                <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-600" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-                <a href="#" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-blue-600" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                <a href="{{ current_user.profile_url() }}" class="block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Your Profile") }}</a>
+                <a href="{{ url_for('user.edit_profile') }}" class="block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-1">{{ _("Edit Profile") }}</a>
+                <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-2">{{ _("Sign Out") }}</a>
                 </div>
             </div>
             </div>
-            {% endif %}
+        {% endif %}
         </div>
         </div>
     </div>
     
-    <div class="sm:hidden" id="mobile-menu">
+    <div class="lg:hidden hidden" id="mobile-menu">
+        {% if current_user.is_authenticated %}
+            {% block search_bar_2 %}
+            <div class="w-full items-center justify-center sm:items-stretch sm:justify-start">
+                <form action="{{ url_for('main.search') }}" class="w-full">
+                    <input type="text" name="q" class="mr-sm-1 rounded-md px-2 py-1 ml-4 border-gray-600 dark:border-none text-black dark:text-gray-100 focus:border-none dark:bg-gray-500 focus:bg-white focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-700 focus:ring-indigo-600 outline-none"
+                            placeholder=""
+                            id="search-text" required>
+                    <button class="bg-gray-700 dark:bg-indigo-600 my-2 my-sm-0 rounded-md px-3 py-1 text-white dark:hover:bg-indigo-500 hover:bg-gray-600  focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-gray-700 focus:ring-indigo-600" type="submit" id="search-submit">
+                        <span class="bi-search"></span>
+                    </button>
+                </form>
+            </div>
+            {% endblock %}
+        {% endif %}
         <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="{{ url_for('main.main') }}" class="dropdown-item text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("Main") }}</a>
-        <a href="{{ url_for('others.about_us') }}" class="dropdown-item text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("About Us") }}</a>
-        <a href="{{ url_for('shop.shop_index') }}" class="dropdown-item text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("Flog BetaShop") }}</a>
+        <a href="{{ url_for('main.main') }}" class="dropdown-item text-gray-300 hover:bg-indigo-400 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("Main") }}</a>
+        <a href="{{ url_for('others.about_us') }}" class="dropdown-item text-gray-300 hover:bg-indigo-400 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("About Us") }}</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('shop.shop_index') }}" class="dropdown-item text-gray-300 hover:bg-indigo-400 hover:text-white block px-3 py-2 rounded-md text-base font-medium">{{ _("Flog BetaShop") }}</a>
+        {% endif %}
         </div>
     </div>
     </nav>
-    
-    {% block search_bar %}
-    <form class="my-2 my-lg-0" action="{{ url_for('main.search') }}">
-        <input type="text" name="q" class="mr-sm-1 rounded"
-                placeholder="{{ _('Search user, post, group or column') }}"
-                id="search-text" required>
-        <button class="btn btn-light my-2 my-sm-0 rounded" type="submit" id="search-submit">
-            <span class="bi-search"></span>
-        </button>
-    </form>
-{% endblock %}
-    {#
-        <!--
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary d-flex align-items-center">
-                <ul class="nav navbar-nav align-items-center">
-                    {% if current_user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <button class="btn nav-link dropdown-toggle d-flex justify-content-start align-items-center" href="#" data-toggle="dropdown" id="account">
-                                {{ avatar(current_user) }}
-                            </button>
-                            <div class="dropdown-menu">
-                                <a href="{{ url_for('user.profile', username=current_user.username) }}" class="dropdown-item"
-                                    id="see-profile-link">{{ _("Your Profile") }}</a>
-                                <a href="{{ url_for('user.edit_profile') }}" class="dropdown-item"
-                                    id="edit-profile-link">{{ _("Edit Profile") }}</a>
-                                <a href="{{ url_for('auth.logout') }}" class="dropdown-item"
-                                    id="logout-link">{{ _("Log out") }}</a>
-                                {% if not current_user.confirmed %}
-                                    <a href="{{ url_for('auth.resend_confirmation') }}" class="dropdown-item"
-                                        id="resend-confirmation-link">
-                                        {{ _("Resend Confirmation Email") }}
-                                    </a>
-                                {% endif %}
-                                <a href="{{ url_for('user.change_password') }}" class="dropdown-item"
-                                    id="change-password-link">
-                                    {{ _("Change Password") }}
-                                </a>
-                                <a href="{{ url_for('auth.delete_account') }}"
-                                    class="dropdown-item text-white bg-danger">
-                                    {{ _("Delete Your Account") }}
-                                </a>
-                                <hr />
-                                <a class="dropdown-item" data-toggle="modal" data-target="#tools">
-                                    {{ _("Article Tools") }} <span class="badge bg-danger text-white">New</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('notification.show', filter='unread') }}" class="nav-link">
-                                <span class="bi-bell-fill"></span>
-                                <span id="notification-badge" class="badge badge-notification badge-danger"
-                                        data-href="{{ url_for('ajax.notification_count') }}"
-                                        style="{% if notification_count == 0 %}display: none{% endif %}">
-                                {{ notification_count }}
-                            </span>
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{{ url_for('auth.login') }}"
-                                class="nav-link btn btn-success text-light">{{ _("Log in / Register") }}</a>
-                        </li>
-                    {% endif %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                            <i class="bi-palette"></i>
-                            {{ _("Theme") }}
-                        </a>
-                        <div class="dropdown-menu">
-                            {% for theme_name, display_name in config.BOOTSTRAP_THEMES.items() %}
-                                <a class="dropdown-item"
-                                    href="{{ url_for('others.change_theme', theme_name=theme_name, next=request.full_path) }}">
-                                    {{ display_name }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
-                            <span class="bi-translate"></span>
-                            {{ _("Language") }}
-                        </a>
-                        <div class="dropdown-menu">
-                            {% for language, display_name in config.LOCALES.items() %}
-                                <a class="dropdown-item"
-                                    href="{{ url_for('language.set_locale', locale=language) }}">
-                                    {{ display_name }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    {% endblock navbar %}
     {% block flashed_messages %}
         {% for message in get_flashed_messages(with_categories=True) %}
             {% if message[0] != 'message' and message[0] %}
@@ -256,81 +254,58 @@
                 {% set category = 'info' %}
             {% endif %}
             {% set message_content = message[1] %}
-            <div class="alert alert-{{ category }}" class="close">
-                <button type="button" class="close" data-dismiss="alert">&times;
-                </button>
+            <div class="w-full bg-{{ category }}-200 dark:bg-{{ category }}-800 m-0 text-{{ category }}-800 dark:text-{{ category }}-200 py-2 pl-3">
                 {{ message_content }}
             </div>
         {% endfor %}
     {% endblock flashed_messages %}
     {% block content %}
         <div id="toast"></div>
-        <div class="container" style="margin-top:20px;">
+        <div class="w-full">
             {% block page_content %}{% endblock %}
         </div>
-        <div class="modal model-lg fade" id="tools" tabindex="-1" aria-labelledby="toolslabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="toolslabel">Article Tools</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body row container">
-                        <h5 class="col-12">Formulae Tools</h5>
-                        <p class="col-12">Type in a formula with TeX, we will generate a text for you to <b>copy + clip</b> to the editor's <b>Source Code Mode</b>.</p>
-                        <iframe src="/tools/tex" class="col-12" style="border: 0; height: 440px;">Your browser does not support <b>iframe</b>!</iframe>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     {% endblock %}
-    -->#}
-    <footer class="footer p-4 mt-5 w-100 dark:text-gray-300 text-sm">
-        &copy; Copyright 2022 Andy Zhou
+    <footer class="footer w-full bg-gray-200 dark:bg-gray-800 py-3" style="padding:auto; text-align:center;">
+        <a class="text-gray-400 dark:text-gray-600 text-sm hover:text-gray-400 dark:hover:text-gray-600" href="https://github.com/floggers/" target="_blank">by the floggers@github (2022)</a>
     </footer>
-</div>
-{% block scripts %}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', local=False) }}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js', local=False) }}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js', local=False) }}
-    {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
-    {{ moment.include_moment(local_js='//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js') }}
-    {{ moment.locale(auto_detect=True) }}
-    {{ static_file('js', 'js/script.js') }}
-    {% if current_app.config['FLASK_CONFIG'] == 'production' %}
-        <script>
-            $(document).ready(function () {
-                if (window.navigator._selenium || window.navigator.webdriver) {
-                    document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
-                }
-            })
-        </script>
-    {% endif %}
+{% if current_app.config['FLASK_CONFIG'] == 'production' %}
     <script>
-        let is_authenticated = false;
-        {% if current_user.is_authenticated %}
-            is_authenticated = true;
-        {% endif %}
-        if (is_authenticated) {
-            setInterval(update_notifications_count, 30000);
-        }
-    </script>
-    <script>
-        $("#profile-items").hide();
-        $("#profile-items").removeClass("hidden");
-        $(document).ready(
-            function(){
-                $("#profile-btn").click(function(e){
-                    $("#profile-items").toggle();
-                });
+        $(document).ready(function () {
+            if (window.navigator._selenium || window.navigator.webdriver) {
+                document.getElementsByTagName('body')[0].innerHTML = 'F**k You spider';
             }
-        )
+        })
     </script>
+{% endif %}
+{{ moment.include_moment(local_js='//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js') }}
+{{ moment.locale(auto_detect=True) }}
+{{ static_file('js', 'js/script.js') }}
+<script>
+    let is_authenticated = false;
+    {% if current_user.is_authenticated %}
+        is_authenticated = true;
+    {% endif %}
+    if (is_authenticated) {
+        setInterval(update_notifications_count, 30000);
+    }
+</script>
+<script>
+    $("#profile-items").hide()
+    $("#mobile-menu").hide()
+    $("#profile-items").removeClass("hidden")
+    $("#mobile-menu").removeClass("hidden")
+    $(document).ready(() => {
+        $("#profile-btn").click(() => {
+            $("#profile-items").toggle()
+        })
+    })
+    $(document).ready(() => {
+        $("#mobile-btn").click(() => {
+            $("#mobile-menu").slideToggle("fast")
+        })
+    })
+</script>
+{% block scripts %}
 {% endblock scripts %}
 </body>
 </html>

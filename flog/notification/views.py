@@ -43,5 +43,5 @@ def read_all():
     for notification in current_user.notifications:
         db.session.delete(notification)
     db.session.commit()
-    flash(_("All notifications are read."), "success")
+    flash(_("All notifications are read."), "green")
     return redirect_back()

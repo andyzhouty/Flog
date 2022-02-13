@@ -1,10 +1,41 @@
 {% extends 'base.html' %}
-{% from 'macros.html' import post_card with context %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'macros.html' import post_card_js, coin_script with context %}
+{% block scripts %}
+    {{ coin_script() }}
+    <script>{{ post_card_js() }}</script>
+{% endblock %}
 {% block page_content %}
     <h1 class="display-3">{{ column.name }}</h1>
-    {% for post in pagination.items %}
-        {{ post_card(post) }}
-    {% endfor %}
+    <div id="post-container"></div>
+    <script>
+        {% for post in pagination.items %}
+            {% if ((not post.private) or post.author == current_user) and post.title != post.author.username %}
+                post_card(
+                    post_id={{ post.id }},
+                    title="{{ post.title }}",
+                    {% if post.author %}
+                        author="{{ post.author.username }}",
+                    {% else %}
+                        author="",
+                    {% endif %}
+                    avatar="{{ post.author.avatar_url() }}",
+                    avatar_style="{{ post.author.load_avatar_style() }}",
+                    fromnow='{{ moment(post.timestamp).fromNow(refresh=True) }}',
+                    content="{{ post.content | striptags | truncate(220) }}",
+                    columns=[
+                        {% for column in post.columns %}
+                            "{{ column.name }}",
+                        {% endfor %}
+                    ],
+                    coins={{ post.coins }},
+                    {% if post.private %}
+                        private=true,
+                    {% else %}
+                        private=false,
+                    {% endif %}
+                )
+            {% endif %}
+        {% endfor %}
+    </script>
     {{ render_pagination(pagination) }}
 {% endblock %}

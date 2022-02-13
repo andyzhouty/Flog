@@ -43,7 +43,7 @@ def register():
         )
         flash(
             _("A confirmation email has been sent to you by email! You can now login!"),
-            "info",
+            "blue",
         )
         return redirect(url_for("auth.login"))
     return render_template("auth/register.html", form=form)
@@ -51,32 +51,35 @@ def register():
 
 @auth_bp.route("/login/", methods=["GET", "POST"])
 def login():
+    next_url = request.args.get("next")
+    if next_url is None or next_url.startswith("/"):
+        next_url = url_for("main.main")
     if current_user.is_authenticated:
-        return redirect(url_for("main.main"))
-    form = LoginForm()
-    if form.validate_on_submit():
+        return redirect(next_url)
+    if request.method == "POST":
         user_by_username = User.query.filter_by(
-            username=form.username_or_email.data
+            username=request.form["user"]
         ).first()
         user_by_email = User.query.filter_by(
-            email=form.username_or_email.data.lower()
+            email=request.form["user"].lower()
         ).first()
-        user = user_by_username if user_by_username is not None else user_by_email
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
-            next_url = request.args.get("next")
-            if next_url is None or next_url.startswith("/"):
-                next_url = url_for("main.main")
-            return redirect(next_url)
-        flash(_("Invalid username or password!"), "danger")
-    return render_template("auth/login.html", form=form)
+        user = user_by_username or user_by_email
+        if user is not None:
+            if user.verify_password(
+                request.form["password"]
+            ):
+                login_user(user, True)
+                return redirect(next_url)
+            flash(_("Invalid username or password!"), "red")
+        flash(_("Invalid username or password!"), "red")
+    return render_template("auth/login.html")
 
 
 @auth_bp.route("/logout/")
 @login_required
 def logout():
     logout_user()
-    flash(_("You have been logged out."), "info")
+    flash(_("You have been logged out."), "blue")
     return redirect(url_for("main.main"))
 
 
@@ -87,9 +90,9 @@ def confirm(token):
         return redirect(url_for("main.main"))
     if current_user.confirm(token):
         db.session.commit()
-        flash(_("You have confirmed your account. Thanks !"), "success")
+        flash(_("You have confirmed your account. Thanks !"), "green")
     else:
-        flash(_("The confirmation link is invalid or has expired"), "warning")
+        flash(_("The confirmation link is invalid or has expired"), "yellow")
     return redirect(url_for("main.main"))
 
 
@@ -104,7 +107,7 @@ def resend_confirmation():
         user=current_user,
         token=token,
     )
-    flash(_("A new confirmation email has been sent to you by email"), "info")
+    flash(_("A new confirmation email has been sent to you by email"), "blue")
     return redirect(url_for("main.main"))
 
 
@@ -117,8 +120,8 @@ def delete_account():
             username = current_user.username
             current_user.delete()
             current_app.logger.info(f"User {username} deleted.")
-            flash(_("Your account has been deleted"), "info")
+            flash(_("Your account has been deleted"), "blue")
         else:
-            flash(_("Your password is invalid!"), "warning")
+            flash(_("Your password is invalid!"), "yellow")
         return redirect(url_for("main.main"))
     return render_template("auth/delete_account.html", form=form)

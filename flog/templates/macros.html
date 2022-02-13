@@ -22,10 +22,7 @@ MIT License
 {% endmacro %}
 
 {% macro render_timestamp(timestamp) %}
-    <span data-toggle="tooltip" data-placement="top" data-delay="500"
-          data-timestamp="{{ timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
-        {{ moment(timestamp).fromNow(refresh=True) }}
-    </span>
+    <span>{{ moment(timestamp).fromNow(refresh=True) }}</span>
 {% endmacro %}
 
 {% macro role_of(user) %}
@@ -44,73 +41,198 @@ MIT License
     </span>
 {% endmacro %}
 
+{% macro coin_script() %}
+    <script>
+        function coins_loading(id) {
+            let target = document.getElementById("btn-post-" + id)
+            target.innerHTML = '<svg class="animate-spin ml-1 mr-3 my-1 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">\n<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>\n<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\n</svg><span class="text-sm my-1">Coining...</span>'
+        }
+        function coin(id, coins) {
+            div = document.getElementById("btn-post-" + id)
+            content = div.innerHTML
+            function back(delay = 1.5) {
+                setTimeout(() => {
+                    div.innerHTML = content
+                }, delay * 1000)
+            }
+            coins_loading(id=id)
+            axios({
+                method: "post",
+                url: "/ajax/post/" + id + "/coin/" + coins + "/",
+                headers: {
+                    "Accept": "application/json",
+                },
+                timeout: 30000,
+                validateStatus: function (status) {
+                    return ([200, 400, 500].indexOf(status) + 1) ? true : false
+                },
+            }).catch(error => {
+                if (error.request) {
+                    div.innerHTML = '<span class="text-yellow-500 dark:text-yellow-400 px-2 py-1">Request time out.</span>'
+                    back()
+                } else {
+                    div.innerHTML = '<span class="text-red-500 dark:text-red-400 px-2 py-1">' + error.message + '</span>'
+                    back()
+                }
+            }).then(function (response) {
+                if (response.status == 200) {
+                    div.innerHTML = '<span class="text-green-500 dark:text-green-400 px-2 py-1 text-sm">Success!</span>'
+                } else if (response.status == 500) {
+                    div.innerHTML = '<span class="text-red-500 dark:text-red-400 px-2 py-1 text-sm">Something went wrong.</span>'
+                    back()
+                } else {
+                    div.innerHTML = '<span class="text-red-500 dark:text-red-400 px-2 py-1 text-sm">' + response.data.message + '</span>'
+                    back()
+                }
+            })
+        }
+    </script>
+{% endmacro %}
+
+
+{% macro collect_script() %}
+    <script>
+        function collect_loading(id) {
+            let target = document.getElementById("btn-collect-" + id)
+            let target$ = $("#btn-collect-" + id)
+            target$.addClass("animate-pulse")
+            target.setAttribute("href", "javascript:void(0)")
+            target.innerHTML = 'Hang on...'
+        }
+        function collect(id) {
+            let target = document.getElementById("btn-collect-" + id)
+            let target$ = $("#btn-collect-" + id)
+            collect_loading(id=id)
+            axios({
+                method: "post",
+                url: "/ajax/post/" + id + "/collect/",
+                headers: {
+                    "Accept": "application/json",
+                },
+                timeout: 30000,
+                validateStatus: function (status) {
+                    return ([200, 400].indexOf(status) + 1) ? true : false
+                },
+            }).catch(error => {
+                if (error.request) {
+                    alert("Collecting failed: Request Time Out.")
+                    target.innerHTML = ('<i class="bi bi-star"></i>&nbsp;{{ _("Collect") }}')
+                    target.setAttribute("href", "javascript:collect(" + id + ")")
+                } else {
+                    alert(error.message)
+                }
+            }).then(function (response) {
+                if (response.status == 200) {
+                    target.innerHTML = ('<i class="bi bi-star-fill"></i>&nbsp;{{ _("Uncollect") }}')
+                    target.setAttribute("href", "javascript:uncollect(" + id + ")")
+                    target$.removeClass("btn-inactivated")
+                    target$.addClass("btn-activated")
+                } else if (response.status == 400) {
+                    target.innerHTML = ('<i class="bi bi-star"></i>&nbsp;{{ _("Collect") }}')
+                    target.setAttribute("href", "javascript:collect(" + id + ")")
+                } else {
+                    alert("Collecting: failed: Something went wrong with our server.")
+                }
+            })
+            target$.removeClass("animate-pulse")
+        }
+        function uncollect(id) {
+            let target = document.getElementById("btn-collect-" + id)
+            let target$ = $("#btn-collect-" + id)
+            collect_loading(id=id)
+            axios({
+                method: "post",
+                url: "/ajax/post/" + id + "/uncollect/",
+                headers: {
+                    "Accept": "application/json",
+                },
+                timeout: 30000,
+                validateStatus: function (status) {
+                    return ([200, 400].indexOf(status) + 1) ? true : false
+                },
+            }).catch(error => {
+                if (error.request) {
+                    alert("Collecting failed: Request Time Out.")
+                    target.innerHTML = ('<i class="bi bi-star-fill"></i>&nbsp;{{ _("Uncollect") }}')
+                    target.setAttribute("href", "javascript:uncollect(" + id + ")")
+                } else {
+                    alert(error.message)
+                }
+            }).then(function (response) {
+                if (response.status == 200) {
+                    target$.removeClass("btn-activated")
+                    target$.addClass("btn-inactivated")
+                    target.innerHTML = ('<i class="bi bi-star"></i>&nbsp;{{ _("Collect") }}')
+                    target.setAttribute("href", "javascript:collect(" + id + ")")
+                } else if (response.status == 400) {
+                    target.innerHTML = ('<i class="bi bi-star-fill"></i>&nbsp;{{ _("Unollect") }}')
+                    target.setAttribute("href", "javascript:uncollect(" + id + ")")
+                } else {
+                    alert("Collecting: failed: Something went wrong with our server.")
+                }
+            })
+            target$.removeClass("animate-pulse")
+        }
+    </script>
+{% endmacro %}
+
 {% macro post_actions(post, can_edit=True, can_delete=True, show_collectors=None, collectors=0) %}
     {% if current_user.is_authenticated and post.title != post.author.username %}
-        <div class="d-flex justify-content-start align-items-center">
+        <div class="flex justify-start items-center my-2">
+            <div id="btn-post-{{ post.id }}" class="flex bg-gray-100 dark:bg-gray-600 py-1 px-2 rounded-md"
+                style="
+                    transition: width 2s !important;
+                    -webkit-transition: width 2s !important;
+                    -moz-transition: width 2s !important;
+                    -o-transition: width 2s !important;">
+                {% if post.author == current_user %}
+                    <p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm mr-3 flex" href="javascript:void(0)">
+                        <img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">
+                        {{ post.coins }}
+                    </p>
+                {% else %}
+                    {% if not post in current_user.coined_posts -%}
+                        <p class="rounded-sm px-2 py-1 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex">
+                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">
+                            <span id="coins-post-{{ post.id }}" class="mr-1 hover:text-gray-900 dark:hover:text-gray-100">{{ post.coins }}</span>
+                        </p>
+                        <button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"
+                            onclick="
+                                coin({{ post.id }}, 1)
+                            "
+                        >+1</button>
+                        <button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"
+                            onclick="
+                                coin({{ post.id }}, 2)
+                            "
+                        >+2</button>
+                    {% else -%}
+                        <p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-blue-500 dark:text-blue-300 text-sm mr-3 flex">
+                            <img src="{{ url_for('static', filename='svg/pi-activated.svg') }}" class="h-5 w-5 mx-1">
+                            {{ post.coins }}
+                        </p>
+                    {%- endif %}
+                {%- endif %}
+            </div>
             {% if post.author != current_user -%}
                 {% if not current_user.is_collecting(post) -%}
-                    <a class="btn-action" href="{{ url_for('main.collect_post', id=post.id) }}">
-                        <i class="bi-star-fill"></i>
+                    <a class="btn-inactivated" href="{{ url_for('main.collect_post', id=post.id) }}">
+                        <i class="bi-star"></i>
                         {{ _("Collect") }}
                         {{ post.collectors | length }}
                     </a>
                 {% else -%}
-                    <a class="btn-action-activated" href="{{ url_for('main.uncollect_post', id=post.id) }}" style="background-color: var(--orange);">
-                        <i class="bi-bookmark-x-fill"></i>
+                    <a class="btn-activated" href="{{ url_for('main.uncollect_post', id=post.id) }}" style="background-color: var(--orange);">
+                        <i class="bi-star-fill"></i>
                         {{ _("Uncollect") }}
                         {{ post.collectors | length }}
                     </a>
                 {%- endif %}
             {%- endif %}
-            {% if post.author == current_user %}
-                <a class="link-action" href="javascript:void(0)">
-                    {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
-                    {{ post.coins }}
-                </a>
-            {% endif %}
-            {% if post.author != current_user %}
-                {% if not post in current_user.coined_posts -%}
-                    <a class="link-action link-coin" href="javascript:void(0)" data-toggle="modal" data-target="#coin{{ post.id }}">
-                        {{ static_file("svg", "svg/pi.svg", width=15, height=15) }}
-                        {{ post.coins }}
-                    </a>
-                    <div class="modal fade" id="coin{{ post.id }}">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">{{ _("How many coins?") }}</h4>
-                                    <a class="close text-right" href="javascript:void(0)" data-dismiss="modal">&times;</a>
-                                </div>
-                                <div id="coinForm" data-post-id="{{ post.id }}" data-error-message="{{ _('Please select how many coins you want to give out.') }}">
-                                    <div class="modal-body d-flex">
-                                        <button id="coinOne{{ post.id }}" class="btn flex-fill coin-option coin-one mr-1" name="coins" value="1">
-                                            <span class="coin-text">1 coin</span><br>
-                                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" type="image/svg+xml" class="coin-one-img">
-                                        </button>
-                                        <button id="coinTwo{{ post.id }}" class="btn flex-fill coin-option coin-two ml-1" name="coins" value="2">
-                                            <span class="coin-text">2 coins</span><br>
-                                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" type="image/svg+xml" class="coin-two-img">
-                                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" type="image/svg+xml" class="coin-two-img">
-                                        </button>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary m-auto coin-submit">{{ _("Submit") }}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% else -%}
-                    <a class="link-action-activated">
-                        {{ static_file("svg", "svg/pi-activated.svg", width=15, height=15) }}
-                        {{ post.coins }}
-                    </a>
-                {%- endif %}
-            {%- endif %}
             {% if post.author == current_user
                   and can_edit -%}
-                <a class="link-action" href="{{ url_for('main.edit_post', id=post.id) }}">
-                    <i class="bi-pencil-square"></i>
+                <a class="btn-inactivated ml-1" href="{{ url_for('main.edit_post', id=post.id) }}">
+                    <i class="bi-pencil-square"></i>&nbsp;
                     {{ _("Edit") }}
                 </a>
             {%- endif %}
@@ -118,19 +240,11 @@ MIT License
                 and can_delete -%}
                 <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
-                        <i class="bi-trash"></i>
+                    <button class="btn-inactivated ml-1" onclick="return confirm('{{ _('Are you sure?') }}');">
+                        <i class="bi-trash"></i>&nbsp;
                         {{ _("DELETE") }}
                     </button>
                 </form>
-            {%- endif %}
-            {% if show_collectors -%}
-                <br><br>
-                {% set collectors = post.collectors | length %}
-                <p class="text-muted ml-auto">
-                    <i class="bi-star-fill"></i>
-                    {{ collectors }}
-                </p>
             {%- endif %}
         </div>
     {%- endif %}
@@ -159,7 +273,7 @@ MIT License
     </div>
 {% endmacro %}
 
-{% macro username(user, class="", style="", size="100%", link=True, badge=True) %} {# Style must be nothing or end with ";" #}
+{% macro username(user, class="", style="", size="100%", link=True, badge=True, bold=False) %} {# Style must be nothing or end with ";" #}
     {% if user.is_authenticated %}
         {% if link %}
             <a style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
@@ -181,7 +295,7 @@ MIT License
     {% endif %}
 {% endmacro %}
 
-{% macro avatar_username(user, avatar_size=30, username_size="100%", badge=True, link=True, style="", class="") %}
+{% macro avatar_username(user, avatar_size=30, username_size="100%", badge=True, link=True, style="", class="", bold=False) %}
     <div class="d-flex align-items-center">
         {{ avatar(user, size=avatar_size) }}
         {{ username(user, size=username_size, badge=badge, link=link, style=style, class=class) }}
@@ -214,35 +328,34 @@ MIT License
 {% endmacro %}
 
 {% macro post_card(post, no_author=False) %}
-    <li class="list-group-item">
-        <h3 class="flex-grow-1 post-title-small">
-            <a href="{{ post.url() }}" title="{{ post.title }} {% if post.private %}({{ _("Private") }}){% endif %}">
-                {% if post.private %}<i class="bi-eye-slash-fill"></i>{% endif %}
-                {{ post.title }}
-            </a>
-        </h3>
+    <div class="list-group-item post-card rounded-md m-3 p-3">
         {% if not no_author %}
-            <h4 class="text-muted">
-                {% if post.author %}
-                    {{ avatar_username(post.author, avatar_size=32, username_size="100%", badge=False) }}
-                {% else %}
-                    {{ _("Deleted Flog User") }}
-                {% endif %}
-            </h4>
+            {% if post.author %}
+                <div class="flex">
+                    {{ avatar(post.author, size=24) }}&nbsp;<a class="text-gray-900 dark:text-gray-100" href="{{ post.author.profile_url() }}"><b>{{ post.author.username }}</b></a>&nbsp;&nbsp;·&nbsp;&nbsp;{{ render_timestamp(post.timestamp) }}
+                </div>
+            {% else %}
+                {{ _("Deleted Flog User") }} · {{ render_timestamp(post.timestamp) }}
+            {% endif %}
         {% endif %}
+        <h4 class="mt-2">
+            <a class="text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300" href="{{ post.url() }}" title="{{ post.title }} {% if post.private %}({{ _('Private') }}){% endif %}">
+                <b>{% if post.private %}<i class="bi-eye-slash-fill"></i>&nbsp;&nbsp;&nbsp;{% endif %}
+                {{ post.title }}</b>
+            </a>
+        </h4>
         <div class="post-container">
             {% if post.author.username == post.title %}
-                <small class="text-warning">
+                <span class="text-yellow-400 text-sm">
                     <i class="bi bi-star-fill"></i>&nbsp;Description
-                </small>
+                </span>
             {% endif %}
-            <div class="post-content">{{ post.content | striptags | truncate(220) }}</div>
+            <div class="post-content text-sm">{{ post.content | striptags | truncate(220) }}</div>
         </div>
+        <hr class="mt-2 mb-1" />
         <div>
-            <a href="{{ url_for('main.full_post', id=post.id) }}"
-               style="color: var(--primary) !important;">{{ _("Read More") }}></a>
             {% if post.columns %}
-                <p class="small mb-0">
+                <p class="text-sm mt-1 text-gray-600 dark:text-gray-400">
                     {{ _("This post belongs to") }}
                     {% for column in post.columns[:-1] %}
                         <a href="{{ url_for('main.view_column', id=column.id) }}">
@@ -255,10 +368,125 @@ MIT License
                     </a>.
                 </p>
             {% endif %}
-            <div class="text-muted" style="font-size: small">{{ render_timestamp(post.timestamp) }}</div>
             {{ post_actions(post) }}
         </div>
-    </li>
+    </div>
+{% endmacro %}
+
+{% macro post_card_js() %}
+    {# javascript #}
+    {# Notice: Post content may not be truncated, but it must be processed with HTML tags. #}
+        function post_card(post_id, title, author, avatar, avatar_style, fromnow, content, columns, coins, private=false) {
+            if (avatar == "") {
+                let avatar_elem = ""
+            } else {
+                avatar_elem = (
+                    '<div style="width: 28px !important; height: 28px !important; padding: 2px; border-radius: 14px; margin: 0 !important; ' +
+                    avatar_style + '"><img src="' + avatar + '" style="width: 24px !important; height: 24px !important; border-radius: 12px;">' +
+                    '</div>'
+                )
+            }
+            let author_name = (author == "") ? '{{ _("Deleted Flog User") }}' : author
+            let coined_posts = [
+                {% for post in current_user.coined_posts %}
+                    {{ post.id }},
+                {% endfor %}
+            ]
+            let collections = [
+                {% for post in current_user.collections %}
+                    {{ post.id }},
+                {% endfor %}
+            ]
+            string = (
+                '<div class="list-group-item bg-white dark:bg-gray-700 rounded-md m-3 p-3">\n' +
+                '<div class="flex">' + avatar_elem + '&nbsp;&nbsp;<a href="/user/' + author_name + '/"><b>' + author_name + '</b></a><p>&nbsp;·&nbsp;{{ _("posted at ") }}' + fromnow + '</p></div>\n' +
+                '<h4 class="mt-2">' + '<a class="text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300" href="/post/' + post_id +
+                '/" title="' + title + (private ? "({{ _('Private') }})" : "") + '"><b>' + (private ? '<i class="bi-eye-slash-fill"></i>&nbsp;&nbsp;&nbsp;' : "") + title + '</b></a></h4>\n' +
+                '<div class="post-container">' + ((author_name == title) ? '<span class="text-yellow-400 text-sm"><i class="bi bi-star-fill"></i>&nbsp;Description</span>' : "") +
+                '<div class="post-content text-sm">' +content + '</div>' + '</div><hr class="m-1" />'
+            )
+            if (columns.length > 0) {
+                string += '<p class="text-sm mt-1 text-gray-600 dark:text-gray-400">{{ _("This post belongs to") }}'
+                for (c in columns.slice(0, columns.length - 1)) {
+                    string += (
+                        '<a href="/column/{{ _("Column") }}/">「' + column.name + '」</a>,'
+                    )
+                }
+                if (columns.length > 1) string += '{{ _("and") }}'
+                string += '<a href="/column/{{ _("Column") }}/">「' + columns[columns.length - 1] + '」</a>.</p>'
+            }
+            {% if current_user.is_authenticated %}
+                string += (
+                        '<div class="flex justify-start items-center my-2">' +
+                            '<div id="btn-post-' + post_id + '" class="flex bg-gray-100 dark:bg-gray-600 py-1 px-2 rounded-md"' +
+                                'style="' +
+                                    'transition: width 2s !important;' +
+                                    '-webkit-transition: width 2s !important;' +
+                                    '-moz-transition: width 2s !important;' +
+                                    '-o-transition: width 2s !important;">'
+                )
+                if (author_name == "{{ current_user.username }}") {
+                    string += (
+                        '<p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm mr-3 flex" href="javascript:void(0)">' +
+                            '<img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">' +
+                            post.coins +
+                        "</p>"
+                    )
+                    {% if not current_user.locked %}
+                        '<a class="btn-inactivated ml-1" href="/post/edit/' + post_id + '/">' +
+                            '<i class="bi-pencil-square"></i>&nbsp;' +
+                            '{{ _("Edit") }}' +
+                        '</a>'
+                        '<form class="form-inline" method="POST" action="/post/delete/' + post_id + '/">'+
+                            '<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">'+
+                            '<button class="btn-inactivated ml-1" onclick="return confirm(\'{{ _('Are you sure?') }}\');">'+
+                                '<i class="bi-trash"></i>&nbsp;'+
+                                '{{ _("DELETE") }}'+
+                            '</button>'+
+                        '</form>'
+                    {% endif %}
+                } else {
+                    if (coined_posts.indexOf(post_id) == -1) {
+                        string += (
+                            '<p class="rounded-sm px-2 py-1 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex">'+
+                                '<img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">' +
+                                '<span id="coins-post-' + post_id + '" class="mr-1 hover:text-gray-900 dark:hover:text-gray-100">' + coins + '</span>' +
+                            '</p>' +
+                            '<button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"' +
+                                'onclick="' +
+                                    'coin(' + post_id + ', 1)">+1</button>' +
+                            '<button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"' +
+                                'onclick="' +
+                                    'coin(' + post_id + ', 2)">+2</button>'
+                        )
+                    } else {
+                        string += (
+                            '<p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-blue-500 dark:text-blue-300 text-sm mr-3 flex">' +
+                                '<img src="{{ url_for('static', filename='svg/pi-activated.svg') }}" class="h-5 w-5 mx-1">' +
+                                coins +
+                            '</p>'
+                        )
+                    }
+                    string += "</div>"
+                    if (collections.indexOf(post_id) == -1) {
+                        string += ('<div id="div-collect-' + post_id + '"><a class="btn-inactivated" id="btn-collect-' + post_id + '" href="javascript:collect(' + post_id + ')">' +
+                            '<i class="bi-star"></i>' +
+                            '&nbsp;{{ _("Collect") }}' +
+                        '</a></div>')
+                    } else {
+                        string += ('<div id="div-collect-' + post_id + '"><a class="btn-activated" id="btn-collect-' + post_id + '" href="javascript:uncollect(' + post_id + ')">' +
+                            '<i class="bi-star-fill"></i>' +
+                            '&nbsp;{{ _("Uncollect") }}' +
+                        '</a></div>')
+                    }
+                }
+            {% endif %}
+            $("#post-container").append(string)
+        }
+{% endmacro %}
+
+{% macro post_container() %}
+    <div id="post-container"></div>
 {% endmacro %}
 
 {% macro group_card(group) %}
@@ -438,4 +666,35 @@ MIT License
     <tr>
         <td>{{ name }}</td><td>{{ value }}</td>
     </tr>
+{% endmacro %}
+
+{% macro login_form() %}
+    <form class="mt-8 space-y-6" action="/auth/login/" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="rounded-md p-3 m-auto mt-3">
+            <div class="mb-3">
+                <label for="user" class="sr-only">{{ _("Username / Email") }}</label>
+                <input id="user" name="user" type="text" required class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 bg-transparent" placeholder="{{ _('Username / Email') }}">
+            </div>
+            <div>
+                <label for="password" class="sr-only">{{ _("Password") }}</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 bg-transparent" placeholder="{{ _('Password') }}">
+            </div>
+        </div>
+
+        <div class="text-sm mx-3 mt-1 mb-2">
+            <a href="#" class="font-medium"> Forgot your password? </a>
+        </div>
+
+        <div>
+        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3">
+            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                <svg class="h-5 w-5 text-indigo-800 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+            </span>
+            Sign in
+        </button>
+        </div>
+    </form>
 {% endmacro %}

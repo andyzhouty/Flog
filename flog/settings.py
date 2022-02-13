@@ -18,6 +18,8 @@ class Base:
 
     SECRET_KEY = os.getenv("SECRET_KEY", "hard-to-guess")
 
+    SQLALCHEMY_POOL_RECYCLE = 10
+    SQLQLCHEMY_POOL_SIZE = 30
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")

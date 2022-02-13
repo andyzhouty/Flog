@@ -59,20 +59,14 @@ def main():
         form = LoginForm()
         return render_template("main/not_authorized.html", form=form)
     page = request.args.get("page", 1, type=int)
-    pagination = (
-        Post.query.filter(or_(~Post.private, Post.author_id == current_user.id))
-        .order_by(Post.timestamp.desc())
-        .paginate(page, per_page=current_app.config["POSTS_PER_PAGE"])
-    )
+    posts = Post.query.filter(or_(~Post.private, Post.author_id == current_user.id)).order_by(Post.timestamp.desc())[0:12]
     notifications = (
         Notification.query.with_parent(current_user)
         if current_user.is_authenticated
         else None
     )
-    posts = pagination.items
     return render_template(
         "main/main.html",
-        pagination=pagination,
         posts=posts,
         notifications=notifications,
     )
@@ -103,7 +97,7 @@ def create_post():
         # Add the post to the database.
         db.session.commit()
         current_app.logger.info(f"{str(post)} is added.")
-        flash(_("Your post has been added"), "success")
+        flash(_("Your post has been added"), "green")
         return redirect(url_for(".full_post", id=post.id))
     return render_template("main/new_post.html", form=form)
 
@@ -149,7 +143,7 @@ def full_post(id: int):
             db.session.commit()
             if post.author is not None and post.author != current_user:
                 push_comment_notification(comment=comment, receiver=post.author)
-            flash(_("Comment published!"), "success")
+            flash(_("Comment published!"), "green")
             return redirect(url_for("main.full_post", id=post.id))
 
         kwargs = dict(
@@ -213,7 +207,7 @@ def delete_post(id):
     if current_user != post.author:
         abort(403)
     post.delete()
-    flash(_("Post id %(id)d deleted", id=id), "success")
+    flash(_("Post id %(id)d deleted", id=id), "green")
     post_str = str(post)
     current_app.logger.info(f"{post_str} deleted.")
     return redirect(url_for("main.main"))
@@ -237,7 +231,7 @@ def edit_post(id):
         post.columns += [Column.query.get(col_id) for col_id in form.columns.data]
         db.session.commit()
         current_app.logger.info(f"Post id {id} editted.")
-        flash(_("Edit Succeeded!"), "success")
+        flash(_("Edit Succeeded!"), "green")
         return redirect(url_for("main.main"))
     form.title.data = post.title
     form.content.data = post.content
@@ -260,7 +254,7 @@ def collect_post(id):
             post=post,
             receiver=post.author,
         )
-        flash(_("Post collected."), "success")
+        flash(_("Post collected."), "green")
     elif current_user.is_collecting(post):
         flash(_("Already collected."))
     elif post.author == current_user:
@@ -279,7 +273,7 @@ def collect_post(id):
 def uncollect_post(id: int):
     post = Post.query.get_or_404(id)
     current_user.uncollect(post)
-    flash(_("Post uncollected."), "info")
+    flash(_("Post uncollected."), "blue")
     return redirect_back()
 
 
@@ -330,7 +324,7 @@ def coin_post(post_id):
 def search():
     q = request.args.get("q", "").lower()
     if q == "":
-        flash(_("Enter keyword about post or user."), "warning")
+        flash(_("Enter keyword about post or user."), "yellow")
         return redirect_back()
 
     category = request.args.get("category", "post")

@@ -274,18 +274,6 @@ class PostTestCase(Testing):
         response = self.client.post(f"/post/coin/{p.id}/", data={"coins": 2})
         assert response.status_code == 400
 
-    def test_pick_experience(self):
-        """test if picking a post will increase the author's experience"""
-        self.register()
-        self.login()
-        title = self.generate_post()["title"]
-        p = Post.query.filter_by(title=title).first()
-        self.client.post(f"/post/pick/{p.id}/")
-        assert self.admin.experience == 25
-        # test if picking a post twice will increase the author's experience twice
-        self.client.post(f"/post/pick/{p.id}/")
-        assert self.admin.experience == 25
-
 
 class ColumnTestCase(Testing):
     def setUp(self):

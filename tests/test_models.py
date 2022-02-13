@@ -35,6 +35,8 @@ class ModelTestCase(Testing):
     def test_collect(self):
         user = User()
         post = Post()
+        db.session.add(user)
+        db.session.commit()
         user.collect(post)
         assert user.is_collecting(post)
 

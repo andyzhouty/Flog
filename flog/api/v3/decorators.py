@@ -40,15 +40,12 @@ def check_permission(permission_type: str, model_id: int) -> bool:
     return permitted
 
 
-def permission_required(permission):
-    def decorator(f):
-        @wraps(f)
-        @auth.login_required
-        def decorated_function(*args, **kwargs):
-            if (g.get("current_user") is None) or (not g.current_user.can(permission)):
-                abort(403)
-            return f(*args, **kwargs)
+def permission_required(f):
+    @wraps(f)
+    @auth.login_required
+    def decorated_function(*args, **kwargs):
+        if (g.get("current_user") is None) or g.current_user.locked:
+            abort(403)
+        return f(*args, **kwargs)
 
-        return decorated_function
-
-    return decorator
+    return decorated_function

@@ -1,11 +1,13 @@
-
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import post_card, render_user_role, static_file, level_badge, username, avatar with context %}
+{% from 'macros.html' import post_card_js, coin_script, render_user_role, static_file, level_badge, username, avatar with context %}
 {% set locale = 'en_US' if not current_user.locale else current_user.locale %}
 {% block title %}
     Flog - {{ user.username }}
 {% endblock title %}
+{% block scripts %}
+    {{ coin_script() }}
+{% endblock %}
 {% block page_content %}
 <div class="row container">
     <div class="col-lg-4" style="margin-top: 3em; margin-bottom: 3em;">
@@ -78,7 +80,32 @@
         <div id="posts" class="tab-pane active">
             <ul class="list-group">
                 {% for post in post_pagination.items %}
-                    {{ post_card(post, no_author=True) }}
+                    {% if ((not post.private) or post.author == current_user) and post.title != post.author.username %}
+                        post_card(
+                            post_id={{ post.id }},
+                            title="{{ post.title }}",
+                            {% if post.author %}
+                                author="{{ post.author.username }}",
+                            {% else %}
+                                author="",
+                            {% endif %}
+                            avatar="{{ post.author.avatar_url() }}",
+                            avatar_style="{{ post.author.load_avatar_style() }}",
+                            fromnow='{{ moment(post.timestamp).fromNow(refresh=True) }}',
+                            content="{{ post.content | striptags | truncate(220) }}",
+                            columns=[
+                                {% for column in post.columns %}
+                                    "{{ column.name }}",
+                                {% endfor %}
+                            ],
+                            coins={{ post.coins }},
+                            {% if post.private %}
+                                private=true,
+                            {% else %}
+                                private=false,
+                            {% endif %}
+                        )
+                    {% endif %}
                 {% endfor %}
             </ul>
             {{ render_pagination(post_pagination) }}
