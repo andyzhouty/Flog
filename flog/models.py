@@ -9,7 +9,6 @@ from djask.auth.abstract import AbstractUser
 from djask.db.models import Model
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app, url_for, abort
-from flask_login import UserMixin
 from flask_login.mixins import AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db, login_manager
@@ -285,7 +284,7 @@ class Post(Model):
 
     @property
     def picked(self):
-        return self.coins > 7
+        return self.coins >= current_app.config["HOT_POST_COIN"]
 
     def delete(self):
         db.session.delete(self)
@@ -300,7 +299,10 @@ class Post(Model):
         )
 
     def add_coin(self, coin_num: int, current_user):
-        if coin_num not in (1, 2,):
+        if coin_num not in (
+            1,
+            2,
+        ):
             return "Invalid coin!"
         if self.author == current_user:  # pragma: no cover
             return "You can't coin yourself."
@@ -329,10 +331,13 @@ class Column(Model):
 
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
+    def coins(self):
+        return sum([post.coins for post in self.posts])
+
     @property
     def topped(self):
-        return sum([post.coins for post in self.posts]) >= 40
-  
+        return self.coins() >= current_app.config["HOT_COLUMN_COIN"]
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -453,7 +458,8 @@ class Message(Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
 
-Collect = db.Table("collect",
+Collect = db.Table(
+    "collect",
     db.Column("post_id", db.Integer, db.ForeignKey("post.id")),
     db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
 )
@@ -476,7 +482,9 @@ class User(AbstractUser, Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    collections = db.relationship("Post", secondary=Collect, backref=db.backref("collectors"))
+    collections = db.relationship(
+        "Post", secondary=Collect, backref=db.backref("collectors")
+    )
 
     locale = db.Column(db.String(16))
 
@@ -493,7 +501,6 @@ class User(AbstractUser, Model):
     managed_groups = db.relationship("Group", back_populates="manager")
     custom_avatar_url = db.Column(db.String(128), default="")
     sent_messages = db.relationship("Message", back_populates="author")
-
     coins = db.Column(db.Float, default=3)
     experience = db.Column(db.Integer, default=0)
     coined_posts = db.relationship(
@@ -506,6 +513,9 @@ class User(AbstractUser, Model):
 
     clicks = db.Column(db.Integer(), default=0)
     clicks_today = db.Column(db.Integer(), default=0)
+
+    default_status = db.Column(db.String(64), default="online")
+    # online, idle, focus, offline
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -542,7 +552,7 @@ class User(AbstractUser, Model):
         last_seen_day = datetime(
             self.last_seen.year, self.last_seen.month, self.last_seen.day
         )
-        self.coins = (self.coins or 3.0) # maybe this account is processed
+        self.coins = self.coins or 3.0  # maybe this account is processed
         if now - last_seen_day >= timedelta(days=1):
             self.coins += 1
             self.clicks_today = 0
@@ -602,7 +612,7 @@ class User(AbstractUser, Model):
             db.session.commit()
 
     def is_collecting(self, post):
-        return (post in self.collections)
+        return post in self.collections
 
     def profile_url(self):
         return url_for("user.profile", username=self.username)
@@ -785,6 +795,15 @@ class User(AbstractUser, Model):
         ):
             self.alpha_index = self.get_alpha()
             self.last_update = now
+
+    def post_count(self):
+        return len([p for p in self.posts])
+
+    def post_coins(self):
+        return sum([post.coins for post in self.posts])
+
+    def post_collects(self):
+        return sum([len(post.collectors) for post in self.posts])
 
 
 class AnonymousUser(AnonymousUserMixin):

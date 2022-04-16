@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% block page_content %}
-    <h1 class="display-3">{{ _("Create a group") }}</h1>
-    {{ render_form(form) }}
+    <div class="content-sm">
+        <div class="rounded-md bg-white dark:bg-gray-700 p-3">
+            <h2 class="m-3"><b>Create a group</b></h2>
+            <form method="post" class="m-3">
+                <input type="hidden" value="{{ csrf_token() }}">
+                <label for="group_name">
+                    <b>Group Name</b><p class="text-sm">A name for your group.</p>
+                </label>
+                <input class="form-control px-3" id="group_name" required>
+                <button type="submit" class="w-full p-2 bg-indigo-600 my-2 text-gray-100 rounded-md">Create!</button>
+            </form>
+        </div>
+    </div>
 {% endblock page_content %}

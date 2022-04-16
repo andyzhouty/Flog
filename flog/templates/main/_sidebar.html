@@ -2,98 +2,11 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% from 'macros.html' import action_card, avatar, username, stats_card %}
-<div class="md:mt-3">
-    {% if current_user.is_authenticated %}
-        <div id="account">
-            <div class="my-3 d-flex flex-wrap justify-content-between">
-                <div class="mt-3" style="margin-left: auto; margin-right: auto;">
-                    {{ avatar(current_user, size=150) }}
-                </div>
-                <p class="text-muted ml-4 mb-1">{{ current_user.about_me }}</p>
-                <div class="d-flex mt-2 mb-1 mr-4 ml-4 p-2 row bg-primary rounded">
-                    <div class="col-12 align-items-center text-white">Alpha Index<br><h3>{{ current_user.get_alpha() | round(2) }}</h3></div>
-                </div>
-                <div class="d-flex mb-1 ml-4 mr-4 mt-0 p-2 row bg-light rounded">
-                    <div class="col-lg-6 col-md-12 align-items-center mb-lg-n4">{{ _("Visits Today") }}<br><h3>{{ current_user.clicks_today // 2 }}</h3></div>
-                    <div class="col-lg-6 col-md-12 align-items-center mb-lg-n4">{{ _("Visits in Total") }}<br><h3>{{ current_user.clicks // 2 }}</h3></div>
-                </div>
-                <div class="d-flex mt-0 mb-2 mr-4 ml-4 p-2 row bg-dark rounded">
-                    <div class="col-lg-6 col-md-12 align-items-center text-white mb-lg-n4">{{ _("Coins") }}<br><h3>{{ current_user.coins | round(2) }}</h3></div>
-                    <div class="col-lg-6 col-md-12 align-items-center text-white mb-lg-n4">{{ _("Experience") }}<br><h3>{{ current_user.experience }}</h3></div>
-                </div>
-                <div class="d-flex">
-                    <a class="btn btn-primary btn-block mt-3 ml-3 mr-3 mb-1 align-center" href="{{ current_user.profile_url() }}"><i class="bi bi-person"></i>&nbsp;&nbsp;{{ _("Personal Profile") }}</a>
-                    <a class="btn btn-outline-primary btn-block mt-1 ml-3 mb-3 mr-3 align-center" href="{{ url_for('user.edit_profile') }}"><i class="bi bi-pencil-fill"></i>&nbsp;&nbsp;{{ _("Edit Profile") }}</a>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <h4>Actions<button data-toggle="collapse" data-target="#actions" class="btn btn-sm btn-primary float-right d-none d-lg-block"><b>—</b></button></h4>
-        <div class="collapse show" id="actions">
-            <div class="card d-flex flex-wrap justify-content-between rounded-0 rounded-top">
-                <div class="card-header">{{ _("Quick Actions") }}</div>
-                <div class="d-flex flex-fill">
-                    {{ action_card("bi-images", _("Your images"), url_for("image.manage")) }}
-                    {{ action_card("bi-collection", _("Your collections"), url_for("main.collected_posts")) }}
-                </div>
-            </div>
-            <div class="card d-flex flex-wrap justify-content-between rounded-0">
-                <div class="card-header">{{ _("Post Actions") }}</div>
-                <div class="d-flex flex-fill">
-                    {{ action_card("bi-vector-pen", _("Write a new post"), url_for("main.write")) }}
-                    {{ action_card("bi-files", _("Manage your posts"), url_for("main.manage_posts") )}}
-                </div>
-            </div>
-            <div class="card d-flex flex-wrap justify-content-between rounded-0">
-                <div class="card-header">{{ _("Group Actions") }}</div>
-                <div class="d-flex flex-fill">
-                    {{ action_card("bi-plus", _("Create a new group"), url_for("group.create")) }}
-                    {{ action_card("bi-person-plus", _("Join a group"), url_for("group.explore")) }}
-                    {{ action_card("bi-diagram-3-fill", _("Manage your groups"), url_for("user.groups")) }}
-                </div>
-            </div>
-            <div class="card d-flex flex-wrap justify-content-between rounded-0">
-                <div class="card-header">{{ _("Explore") }}</div>
-                <div class="d-flex flex-fill">
-                    {{ action_card("bi-people", _("Explore users"), url_for("user.all")) }}
-                    {{ action_card("bi-diagram-3", _("Explore groups"), url_for("group.all")) }}
-                    {{ action_card("bi-stars", _("Enjoy the picked posts"), url_for("main.picks")) }}
-                </div>
-            </div>
-            <div class="card d-flex flex-wrap justify-content-between rounded-0">
-                <div class="card-header">{{ _("Personal Profile") }}</div>
-                <div class="d-flex flex-fill">
-                    {{ action_card("bi-person-badge", _("View your profile"), current_user.profile_url()) }}
-                    {{ action_card("bi-pencil", _("Edit your profile"), url_for("user.edit_profile")) }}
-                </div>
-            </div>
-            <div class="card mb-3 d-flex flex-wrap justify-content-between rounded-0 rounded-bottom">
-                <div class="card-header">{{ _("Column Actions") }}</div>
-                <div class="d-flex flex-fill">
-                    {{ action_card("bi-plus", _("Create a column"), url_for("main.create_column")) }}
-                    {{ action_card("bi-journals", _("See all columns"), url_for("main.all_columns")) }}
-                </div>
-            </div>
-        </div>
-        <hr>
-        <h4>Stats<button data-toggle="collapse" data-target="#stats" class="btn btn-sm btn-primary float-right d-none d-lg-block"><b>—</b></button></h4>
-        <div class="card collapse show" id="stats">
-            <div class="card-header">{{ _("Stats") }}</div>
-            <div class="d-flex flex-fill">
-                <table>
-                    <tbody id="stat">
-                        {{ stats_card(_("Total clicks"), current_user.clicks//2) }}
-                        {{ stats_card(_("Total posts"), current_user.posts.__len__()) }}
-                        {{ stats_card(_("Total word count"), current_user.word_count()) }}
-                        {{ stats_card(_("Total columns"), current_user.columns.__len__()) }}
-                        {{ stats_card(_("Total comments"), current_user.comments.__len__()) }}
-                        {{ stats_card(_("Coins"), current_user.coins | round(2)) }}
-                        {{ stats_card(_("Experience"), current_user.experience) }}
-                        {{ stats_card(_("Coined Post"), current_user.coined_posts.__len__()) }}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% endif %}
-</div>
+{% from 'macros.html' import avatar, username %}
+{% from 'cards.html' import
+    account_card,
+    explore_card
+with context %}
+
+{{ account_card() }}
+{{ explore_card() }}

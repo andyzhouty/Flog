@@ -6,6 +6,18 @@ MIT License
 {% from 'bootstrap/form.html' import render_form %}
 {% block title %}{{ _("Delete account") }}{% endblock %}
 {% block page_content %}
-    <h1>{{ _("Before deleting your account, we need to confirm your password.") }}</h1>
-    {{ render_form(form) }}
+    <div class="content-sm">
+        <div class="mt-12 pt-12 mb-12 pb-12 mx-3 px-3 w-full">
+            <h1 class="m-3"><b>{{ _("Delete account") }}</b></h1>
+            <p class="m-3">Enter your password to continue.</p>
+            <form>
+                <div class="m-3">
+                    <label for="password" class="sr-only">{{ _("Password") }}</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="form-control" placeholder="{{ _('Password') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="bg-indigo-600 w-full rounded-md py-2 my-2" type="submit">{{ _("Delete account") }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock page_content %}

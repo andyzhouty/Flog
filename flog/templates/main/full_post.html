@@ -3,63 +3,152 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 {% extends 'base.html' %}
-{% from 'macros.html' import post_actions with context %}
+{% from 'macros.html' import coin_script, collect_script with context %}
 {% from 'bootstrap/form.html' import render_form %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% block title %} Post - 「{{ post.title }}」 by {{ post.author.username }} {% endblock %}
+{% block scripts %}
+    {{ coin_script() }}
+    {{ collect_script() }}
+{% endblock %}
 {% block page_content %}
-    <div class="row">
-        <div class="col-lg-8" style="font-size: large">
-            <div class="page-header">
-                <h1>
-                    {{ post.title }}
-                </h1>
-                <small>
-                    {{ _("Date:") }} {{ moment(post.timestamp).format('LL') }}<br>
-                    {{ _("Author:") }}
-                    {% if post.author %}
-                        <a href="{{ post.author.profile_url() }}" class="profile-popover"
-                           data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
-                            {{ post.author.username }}
-                        </a>
-                    {% else %}
-                        {{ _("Deleted Flog User") }}
-                    {% endif %}
-                </small>
-            </div>
-            <br>
-            <div id="post-content">
-                {% if post.author.username == post.title %}
-                    <div class="card mb-4">
-                        <div class="card-header">Tips</div>
-                        <div class="card-body p-4">
-                            <p>{{ _('Yes, and you discovered the <b>description post</b>! So now I can tell you the secret: You can now view this post at the <a href="%s" class="link">personal profile</a>.<br> If you write a post with a title of your username (%s), You can create a detailed description in the profile.' % (post.author.profile_url(), current_user.username)) }}</p>
+    <div class="content-3">
+        <div class="column-left">
+            {% include 'main/_sidebar.html' %}
+        </div>
+        <div class="container-p column-middle content-sm">
+            <div class="content-md">
+                <div class="page-header">
+                    <h1><b>
+                        {{ post.title }}
+                    </b></h1>
+                    <small>
+                        {{ _("Date:") }} {{ moment(post.timestamp).format('LL') }}<br>
+                        {{ _("Author:") }}
+                        {% if post.author %}
+                            <a href="{{ post.author.profile_url() }}" class="profile-popover"
+                                data-href="{{ url_for('ajax.get_profile', user_id=post.author.id) }}">
+                                {{ post.author.username }}
+                            </a>
+                        {% else %}
+                            {{ _("Deleted Flog User") }}
+                        {% endif %}
+                    </small>
+                </div>
+                <br>
+                <div id="post-content">
+                    {% if post.author.username == post.title %}
+                        <div class="mb-4 p-3">
+                            <h4>Tips</h4>
+                            <div class="p-4">
+                                <p>{{ _('Yes, and you discovered the <b>description post</b>! So now I can tell you the secret: You can now view this post at the <a href="%s" class="link">personal profile</a>.<br> If you write a post with a title of your username (%s), You can create a detailed description in the profile.' % (post.author.profile_url(), current_user.username)) }}</p>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
+                    {{ post.content | safe }}
+                    <hr class="my-3" />
+                </div>
+                {% if post.columns %}
+                    <p class="text-sm">
+                        {{ _("This post belongs to") }}
+                        {% for column in post.columns[:-1] %}
+                            <a href="{{ url_for('main.view_column', id=column.id) }}">
+                                {{ _("Column") }} 「{{ column.name }}」
+                            </a>,
+                        {% endfor %}
+                        {% if post.columns | length > 1%} {{ _("and") }}{% endif %}
+                        <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
+                            {{ _("Column") }} 「{{ post.columns[-1].name }}」
+                        </a>.
+                    </p>
                 {% endif %}
-                {{ post.content | safe }}
-            </div>
-            {% if post.columns %}
-                <p class="small">
-                    {{ _("This post belongs to") }}
-                    {% for column in post.columns[:-1] %}
-                        <a href="{{ url_for('main.view_column', id=column.id) }}">
-                            {{ _("Column") }} 「{{ column.name }}」
-                        </a>,
-                    {% endfor %}
-                    {% if post.columns | length > 1%} {{ _("and") }}{% endif %}
-                    <a href="{{ url_for('main.view_column', id=post.columns[-1].id) }}">
-                        {{ _("Column") }} 「{{ post.columns[-1].name }}」
-                    </a>.
-                </p>
-            {% endif %}
-            {{ post_actions(post, show_collectors=True) }}
-            <div class="comments" id="comments">
-                {% include 'main/_comments.html' %}
+                {% if current_user.is_authenticated %}
+                    <div id="post-actions"></div>
+                    <script>
+                        coined_posts = [
+                            {% for post in current_user.coined_posts %}
+                                {{ post.id }},
+                            {% endfor %}
+                        ]
+                        collections = [
+                            {% for post in current_user.collections %}
+                                {{ post.id }},
+                            {% endfor %}
+                        ]
+                        string = ""
+                        string += (
+                                '<div class="flex justify-start items-center my-2">' +
+                                    '<div id="btn-post-' + {{ post.id }} + '" class="flex bg-white dark:bg-gray-800 py-1 px-2 rounded-md"' +
+                                        'style="' +
+                                            'transition: width 2s !important;' +
+                                            '-webkit-transition: width 2s !important;' +
+                                            '-moz-transition: width 2s !important;' +
+                                            '-o-transition: width 2s !important;">'
+                        )
+                        if ("{{ post.author.username }}" == "{{ current_user.username }}") {
+                            string += (
+                                '<p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm mr-3 flex" href="javascript:void(0)">' +
+                                    '<img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">' +
+                                    post.coins +
+                                "</p>"
+                            )
+                            {% if not current_user.locked %}
+                                '<a class="btn-inactivated ml-1" href="/post/edit/' + {{ post.id }} + '/">' +
+                                    '<i class="bi-pencil-square"></i>&nbsp;' +
+                                    '{{ _("Edit") }}' +
+                                '</a>'
+                                '<form class="form-inline" method="POST" action="/post/delete/' + {{ post.id }} + '/">'+
+                                    '<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">'+
+                                    '<button class="btn-inactivated ml-1" onclick="return confirm(\'{{ _('Are you sure?') }}\');">'+
+                                        '<i class="bi-trash"></i>&nbsp;'+
+                                        '{{ _("DELETE") }}'+
+                                    '</button>'+
+                                '</form>'
+                            {% endif %}
+                        } else {
+                            if (coined_posts.indexOf({{ post.id }}) == -1) {
+                                string += (
+                                    '<p class="rounded-sm px-2 py-1 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex">'+
+                                        '<img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">' +
+                                        '<span id="coins-post-' + {{ post.id }} + '" class="mr-1 hover:text-gray-900 dark:hover:text-gray-100">' + {{ post.coins }} + '</span>' +
+                                    '</p>' +
+                                    '<button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"' +
+                                        'onclick="' +
+                                            'coin(' + {{ post.id }} + ', 1)">+1</button>' +
+                                    '<button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"' +
+                                        'onclick="' +
+                                            'coin(' + {{ post.id }} + ', 2)">+2</button>'
+                                )
+                            } else {
+                                string += (
+                                    '<p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-blue-500 dark:text-blue-300 text-sm mr-3 flex">' +
+                                        '<img src="{{ url_for('static', filename='svg/pi-activated.svg') }}" class="h-5 w-5 mx-1">' +
+                                        {{ post.coins }} +
+                                    '</p>'
+                                )
+                            }
+                            string += "</div>"
+                            if (collections.indexOf({{ post.id }}) == -1) {
+                                string += ('<div id="div-collect-' + {{ post.id }} + '"><a class="btn-inactivated" id="btn-collect-' + {{ post.id }} + '" href="javascript:collect(' + {{ post.id }} + ')">' +
+                                    '<i class="bi-star"></i>' +
+                                    '&nbsp;{{ _("Collect") }}' +
+                                '</a></div>')
+                            } else {
+                                string += ('<div id="div-collect-' + {{ post.id }} + '"><a class="btn-activated" id="btn-collect-' + {{ post.id }} + '" href="javascript:uncollect(' + {{ post.id }} + ')">' +
+                                    '<i class="bi-star-fill"></i>' +
+                                    '&nbsp;{{ _("Uncollect") }}' +
+                                '</a></div>')
+                            }
+                        }
+                        document.getElementById("post-actions").innerHTML=string
+                    </script>
+                {% endif %}
+                <div class="comments" id="comments">
+                    {% include 'main/_comments.html' %}
+                </div>
+                {{ ckeditor.load() }}
+                {{ ckeditor.config(custom_config="width: 'auto'; height: 30;") }}
             </div>
         </div>
-        {% include 'main/_sidebar.html' %}
     </div>
-    {{ ckeditor.load() }}
-    {{ ckeditor.config(custom_config="width: 'auto'; height: 30;") }}
 {% endblock page_content %}

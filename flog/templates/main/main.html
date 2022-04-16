@@ -2,124 +2,103 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% extends 'base.html' %}
+{% extends 'main/main_base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
 {% from 'macros.html' import post_card, coin_script, role_of, username, coin_script, collect_script, post_container, post_card_js with context %}
 {% block title %}{{ _("Main") }}{% endblock %}
-{% block scripts %}
-    {{ super() }}
-    {{ coin_script() }}
-    {{ collect_script() }}
-    <script>
-        {{ post_card_js() }}
-    </script>
-{% endblock scripts %}
-{% block page_content %}
-    <div class="content-4">
-        <div class="column-left">
-            {% include 'main/_sidebar.html' %}
+{% block main_content %}
+    <div class="column-middle content-2xl">
+        <div id="post-container" class="cards-container">
+            <h3 class="mx-3 mt-8"><b>{{ _("Recent Posts") }}</b></h3>
         </div>
-        <div class="column-middle">
-            <div class="lg:mb-4 ml-2 mt-3 mb-1">
-                {% if current_user.is_authenticated %}
-                <h1>
-                    Hi there,<br><b>
-                    {{ current_user.username }}
-                </b></h1>
-                {% endif %}
-            </div>
-            <div id="post-container">
-            </div>
-            <div class="w-full p-3" id="loader-control">
-                <button id="loader-button" onclick="load_posts(posts_get[posts_get.length - 1])">More...</button>
-            </div>
-            <div id="posts-endline" class="w-full p-3 hidden" style="text-align: center">
-                No posts left under me!
-                <hr class="m-3" />
-            </div>
-            <div id="post-loader">
-                <div class="bg-white dark:bg-gray-700 rounded-md m-3 p-3">
-                    <div class="flex">
-                        <div class="loader loader-avatar"></div>
-                        <div class="loader loader-username"></div>
-                    </div>
-                    <div class="loader loader-title"></div>
-                    <div class="loader loader-content-1"></div>
-                    <div class="loader loader-content-2"></div>
-                    <div class="loader loader-content-3"></div>
+        <div class="w-full p-3" id="loader-control">
+            <button id="loader-button" onclick="load_posts(posts_get[posts_get.length - 1])">More...</button>
+        </div>
+        <div id="posts-endline" class="w-full p-3 hidden" style="text-align: center">
+            No posts left under me!
+            <hr class="m-3" />
+        </div>
+        <div id="post-loader">
+            <div class="bg-white dark:bg-gray-700 rounded-md m-3 p-3">
+                <div class="flex">
+                    <div class="loader loader-avatar"></div>
+                    <div class="loader loader-username"></div>
                 </div>
-                <div class="bg-white dark:bg-gray-700 rounded-md m-3 p-3">
-                    <div class="flex">
-                        <div class="loader loader-avatar"></div>
-                        <div class="loader loader-username"></div>
-                    </div>
-                    <div class="loader loader-title"></div>
-                    <div class="loader loader-content-1"></div>
-                    <div class="loader loader-content-2"></div>
-                    <div class="loader loader-content-3"></div>
-                </div>
+                <div class="loader loader-title"></div>
+                <div class="loader loader-content-1"></div>
+                <div class="loader loader-content-2"></div>
+                <div class="loader loader-content-3"></div>
             </div>
-            <script>
-                posts_get = []
-                function load_posts(id) {
-                    $("#loader-control").addClass("hidden")
-                    $("#post-loader").removeClass("hidden")
-                    axios({
-                        method: "get",
-                        url: "/ajax/get_posts/" + id + "/",
-                        headers: {
-                            "Accept": "application/json",
-                        },
-                        timeout: 30000,
-                        validateStatus: function (status) {
-                            return ([200, 404].indexOf(status) + 1) ? true : false
-                        },
-                    }).catch(error => {
-                        if (error.request) {
-                            alert("Post loading failed: Request Time Out.")
-                        } else {
-                            alert(error.message)
+            <div class="bg-white dark:bg-gray-700 rounded-md m-3 p-3">
+                <div class="flex">
+                    <div class="loader loader-avatar"></div>
+                    <div class="loader loader-username"></div>
+                </div>
+                <div class="loader loader-title"></div>
+                <div class="loader loader-content-1"></div>
+                <div class="loader loader-content-2"></div>
+                <div class="loader loader-content-3"></div>
+            </div>
+        </div>
+        <script>
+            posts_get = []
+            function load_posts(id) {
+                $("#loader-control").addClass("hidden")
+                $("#post-loader").removeClass("hidden")
+                axios({
+                    method: "get",
+                    url: "/ajax/get_posts/" + id + "/",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                    timeout: 30000,
+                    validateStatus: function (status) {
+                        return ([200, 404].indexOf(status) + 1) ? true : false
+                    },
+                }).catch(error => {
+                    if (error.request) {
+                        alert("Post loading failed: Request Time Out.")
+                    } else {
+                        alert(error.message)
+                    }
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        let posts = response.data.message
+                        for (i in posts) {
+                            post = posts[i]
+                            post_card(
+                                post_id=post.id,
+                                title=post.title,
+                                author=post.author,
+                                avatar=post.avatar,
+                                avatar_style=post.avatar_style,
+                                fromnow=from_now(post.timestamp),
+                                content=post.content,
+                                columns=post.columns,
+                                coins=post.coins,
+                                private=post.private
+                            )
+                            posts_get.push(post.id)
                         }
-                    }).then(function (response) {
-                        if (response.status == 200) {
-                            let posts = response.data.message
-                            for (i in posts) {
-                                post = posts[i]
-                                post_card(
-                                    post_id=post.id,
-                                    title=post.title,
-                                    author=post.author,
-                                    avatar=post.avatar,
-                                    avatar_style=post.avatar_style,
-                                    fromnow=from_now(post.timestamp),
-                                    content=post.content,
-                                    columns=post.columns,
-                                    coins=post.coins,
-                                    private=post.private
-                                )
-                                posts_get.push(post.id)
-                            }
-                            if (posts.length == 12) {
-                                $("#loader-control").removeClass("hidden")
-                            } else {
-                                $("#posts-endline").removeClass("hidden")
-                            }
-                        } else if (response.status == 404) {
-                            if (posts_get[posts_get.indexOf(id) - 1]) {
-                                load_posts(posts_get[posts_get.indexOf(id) - 1])
-                            }
+                        if (posts.length == 12) {
                             $("#loader-control").removeClass("hidden")
                         } else {
-                            alert("Post loading failed: Something went wrong with our server.")
-                            $("#loader-control").removeClass("hidden")
+                            $("#posts-endline").removeClass("hidden")
                         }
-                    })
-                    $("#post-loader").addClass("hidden")
-                }
-                load_posts(0)
-            </script>
-        </div>
-        <div class="column-right"></div>
+                    } else if (response.status == 404) {
+                        if (posts_get[posts_get.indexOf(id) - 1]) {
+                            load_posts(posts_get[posts_get.indexOf(id) - 1])
+                        }
+                        $("#loader-control").removeClass("hidden")
+                    } else {
+                        alert("Post loading failed: Something went wrong with our server.")
+                        $("#loader-control").removeClass("hidden")
+                    }
+                })
+                $("#post-loader").addClass("hidden")
+            }
+            load_posts(0)
+        </script>
     </div>
 {% endblock %}
 

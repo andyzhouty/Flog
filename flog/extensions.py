@@ -2,7 +2,8 @@
 MIT License
 Copyright(c) 2021 Andy Zhou
 """
-from djask.extensions import db, csrf, bootstrap, login_manager
+from djask.admin import Admin
+from djask.extensions import login_manager, csrf, db
 from flask import request
 from flask.globals import current_app
 from flask_babel import Babel
@@ -15,6 +16,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_moment import Moment
 
+admin_ext = Admin()
 babel = Babel()
 ckeditor = CKEditor()
 limiter = Limiter(

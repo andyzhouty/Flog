@@ -19,6 +19,8 @@ def shop_index():
                 )
                 for i in range(len(current_user.load_belongings()))
             }
+        else:
+            goods = {i + 1: items(i + 1) for i in range(items(0, "len") - 1)}
     else:
         goods = {i + 1: items(i + 1) for i in range(items(0, "len") - 1)}
     return render_template("shop/main.html", goods=goods, filter=filter_)
@@ -34,7 +36,7 @@ def buy(id):
             owner_id=current_user.id, goods_id=id
         ).first()
         if not belong or belong.load_expiration_delta().seconds > 0:
-            if items(id).exp <= current_user.experience:
+            if items(id).exp <= current_user.experience and current_user.experience >= 200:
                 if items(id).price <= current_user.coins:
                     ownership = Belong(
                         owner_id=current_user.id,
@@ -42,6 +44,7 @@ def buy(id):
                         expires=items(id).expires + datetime.utcnow(),
                     )
                     current_user.coins -= items(id).price
+                    current_user.experience -= 200
                     db.session.add(ownership)
                     db.session.commit()
                     flash("Success! Use it and check out!")

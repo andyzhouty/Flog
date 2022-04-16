@@ -3,17 +3,20 @@ Copyright (c) 2021 Andy Zhou
 MIT License
 #}
 {% extends 'base.html' %}
-{% from 'macros.html' import group_card with context %}
+{% from 'macros.html' import group_card, render_pagination with context %}
 {% block title %}{{ _("Groups") }} {% endblock %}
 {% block page_content %}
-    <div class="row">
-        <div class="col-md-8">
-            <ul class="list-group">
-                {% for group in groups %}
-                    {{ group_card(group) }}
-                {% endfor %}
-            </ul>
+    <div class="content-4">
+        <div class="column-left">
+            {% include 'main/_sidebar.html' %}
         </div>
-        {% include 'main/_sidebar.html' %}
+        <div class="column-middle">
+            <h1 class="ml-3"><b>Groups</b></h1>
+            {% for group in groups %}
+                {{ group_card(group) }}
+            {% endfor %}
+            <hr class="my-3" />
+            {{ render_pagination(count=count, from_=from_, to_=to_, page=page, max_page=max_page) }}
+        </div>
     </div>
 {% endblock page_content %}

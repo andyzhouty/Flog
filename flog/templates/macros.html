@@ -176,80 +176,6 @@ MIT License
     </script>
 {% endmacro %}
 
-{% macro post_actions(post, can_edit=True, can_delete=True, show_collectors=None, collectors=0) %}
-    {% if current_user.is_authenticated and post.title != post.author.username %}
-        <div class="flex justify-start items-center my-2">
-            <div id="btn-post-{{ post.id }}" class="flex bg-gray-100 dark:bg-gray-600 py-1 px-2 rounded-md"
-                style="
-                    transition: width 2s !important;
-                    -webkit-transition: width 2s !important;
-                    -moz-transition: width 2s !important;
-                    -o-transition: width 2s !important;">
-                {% if post.author == current_user %}
-                    <p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm mr-3 flex" href="javascript:void(0)">
-                        <img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">
-                        {{ post.coins }}
-                    </p>
-                {% else %}
-                    {% if not post in current_user.coined_posts -%}
-                        <p class="rounded-sm px-2 py-1 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex">
-                            <img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">
-                            <span id="coins-post-{{ post.id }}" class="mr-1 hover:text-gray-900 dark:hover:text-gray-100">{{ post.coins }}</span>
-                        </p>
-                        <button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"
-                            onclick="
-                                coin({{ post.id }}, 1)
-                            "
-                        >+1</button>
-                        <button class="rounded-full px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 text-sm mr-3 flex"
-                            onclick="
-                                coin({{ post.id }}, 2)
-                            "
-                        >+2</button>
-                    {% else -%}
-                        <p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-blue-500 dark:text-blue-300 text-sm mr-3 flex">
-                            <img src="{{ url_for('static', filename='svg/pi-activated.svg') }}" class="h-5 w-5 mx-1">
-                            {{ post.coins }}
-                        </p>
-                    {%- endif %}
-                {%- endif %}
-            </div>
-            {% if post.author != current_user -%}
-                {% if not current_user.is_collecting(post) -%}
-                    <a class="btn-inactivated" href="{{ url_for('main.collect_post', id=post.id) }}">
-                        <i class="bi-star"></i>
-                        {{ _("Collect") }}
-                        {{ post.collectors | length }}
-                    </a>
-                {% else -%}
-                    <a class="btn-activated" href="{{ url_for('main.uncollect_post', id=post.id) }}" style="background-color: var(--orange);">
-                        <i class="bi-star-fill"></i>
-                        {{ _("Uncollect") }}
-                        {{ post.collectors | length }}
-                    </a>
-                {%- endif %}
-            {%- endif %}
-            {% if post.author == current_user
-                  and can_edit -%}
-                <a class="btn-inactivated ml-1" href="{{ url_for('main.edit_post', id=post.id) }}">
-                    <i class="bi-pencil-square"></i>&nbsp;
-                    {{ _("Edit") }}
-                </a>
-            {%- endif %}
-            {% if post.author == current_user
-                and can_delete -%}
-                <form class="form-inline" method="POST" action="{{ url_for('main.delete_post', id=post.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn-inactivated ml-1" onclick="return confirm('{{ _('Are you sure?') }}');">
-                        <i class="bi-trash"></i>&nbsp;
-                        {{ _("DELETE") }}
-                    </button>
-                </form>
-            {%- endif %}
-        </div>
-    {%- endif %}
-{% endmacro %}
-
 {% macro avatar(user, class="", style="", size=40) %} {# Style must be nothing or end with ";" #}
     <div style="
         width: {{ size + size // 5 }}px !important;
@@ -281,7 +207,7 @@ MIT License
                 margin-bottom: 0 !important;"
                 href="{{ url_for('user.profile', username=user.username) }}"
                 class="{{ class }}"
-            >{{ user.username }}</a>
+            ><b class="{{ class }}">{{ user.username }}</b></a>
         {% else %}
             <span style="font-size: {{ size }}; text-decoration: none; margin-left: .5em;{{ style }}
                 {{ user.load_username_style() }}
@@ -296,35 +222,44 @@ MIT License
 {% endmacro %}
 
 {% macro avatar_username(user, avatar_size=30, username_size="100%", badge=True, link=True, style="", class="", bold=False) %}
-    <div class="d-flex align-items-center">
+    <div class="flex items-center">
         {{ avatar(user, size=avatar_size) }}
         {{ username(user, size=username_size, badge=badge, link=link, style=style, class=class) }}
     </div>
 {% endmacro %}
 
 {% macro user_card(user, group=None) %}
-    <li class="list-group-item d-flex">
-        {{ avatar_username(user, avatar_size=40, username_size="150%") }}
+    <div class="list-group-item p-3 rounded-md bg-white m-3 dark:bg-gray-700 shadow-xl">
+        {{ avatar_username(user, avatar_size=24, badge=False) }}
+        {% if user.description %}
+            <p class="text-sm mt-3">{{ user.about_me }}</p>
+        {% endif %}
+        {% if current_user.locale == "zh_Hans_CN" %}
+            <span class="mt-3">{{ user.post_count() }} 篇文章 · 收到 {{ user.post_coins() }} 枚硬币 · 被收藏 {{ user.post_collects() }} 次</span>
+        {% else %}
+            <span class="mt-3">{{ user.post_count() }} {{ ngettext("post", "posts", __num=user.post_count()) }} · received {{ user.post_coins() }} {{ ngettext("coin", "coins", __num=user.post_coins()) }} · collected {{ user.post_collects() }} {{ ngettext("time", "times", __num=user.post_collects()) }}</span>
+        {% endif %}
         {% if group and current_user == group.manager -%}
-            <div class="align-items-end flex-column ml-auto">
-            <form class="form-inline" method="GET" action="{{ url_for('group.set_manager', user_id=user.id, group_id=group.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-sm btn-outline-warning flex-fill">
-                    <i class="bi-kanban"></i>SET AS MANAGER
-                </button>
-            </form>
+            <hr class="my-3" />
             {% if user != current_user %}
-            <form class="form-inline" method="POST" action="{{ url_for('group.kick_out', user_id=user.id, group_id=group.id) }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button class="btn btn-sm btn-outline-danger flex-fill" onclick="return confirm('{{ _('Are you sure?') }}');">
-                    <i class="bi-person-x"></i>KICK OUT
-                </button>
-            </form>
+                <div class="align-items-end flex-column ml-auto">
+                    <form class="form-inline" method="GET" action="{{ url_for('group.set_manager', user_id=user.id, group_id=group.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn-inactivated">
+                            <i class="bi-kanban"></i>Set as manager
+                        </button>
+                    </form>
+                    <form class="form-inline" method="POST" action="{{ url_for('group.kick_out', user_id=user.id, group_id=group.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn-red" onclick="return confirm('{{ _('Are you sure?') }}');">
+                            <i class="bi-person-x"></i>KICK OUT
+                        </button>
+                    </form>
+                </div>
             {% endif %}
-            </div>
         {% endif %}
     </span>
-    </li>
+    </div>
 {% endmacro %}
 
 {% macro post_card(post, no_author=False) %}
@@ -381,8 +316,8 @@ MIT License
                 let avatar_elem = ""
             } else {
                 avatar_elem = (
-                    '<div style="width: 28px !important; height: 28px !important; padding: 2px; border-radius: 14px; margin: 0 !important; ' +
-                    avatar_style + '"><img src="' + avatar + '" style="width: 24px !important; height: 24px !important; border-radius: 12px;">' +
+                    '<div style="width: 32px !important; height: 32px !important; padding: 3px !important; border-radius: 16px; margin: 0 !important; ' +
+                    avatar_style + '"><img src="' + avatar + '" style="width: 26px !important; height: 26px !important; border-radius: 13px;">' +
                     '</div>'
                 )
             }
@@ -398,53 +333,51 @@ MIT License
                 {% endfor %}
             ]
             string = (
-                '<div class="list-group-item bg-white dark:bg-gray-700 rounded-md m-3 p-3">\n' +
-                '<div class="flex">' + avatar_elem + '&nbsp;&nbsp;<a href="/user/' + author_name + '/"><b>' + author_name + '</b></a><p>&nbsp;·&nbsp;{{ _("posted at ") }}' + fromnow + '</p></div>\n' +
+                '<div class="bg-white dark:bg-gray-700 rounded-md m-3 p-6 shadow-xl">\n' +
+                '<div class="flex items-center">' + avatar_elem + '&nbsp;&nbsp;<a href="/user/' + author_name + '/" class="text-normal"><b>' + author_name + '</b></a><p>&nbsp;·&nbsp;{{ _("posted ") }}' + fromnow + '</p></div>\n' +
                 '<h4 class="mt-2">' + '<a class="text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300" href="/post/' + post_id +
                 '/" title="' + title + (private ? "({{ _('Private') }})" : "") + '"><b>' + (private ? '<i class="bi-eye-slash-fill"></i>&nbsp;&nbsp;&nbsp;' : "") + title + '</b></a></h4>\n' +
                 '<div class="post-container">' + ((author_name == title) ? '<span class="text-yellow-400 text-sm"><i class="bi bi-star-fill"></i>&nbsp;Description</span>' : "") +
-                '<div class="post-content text-sm">' +content + '</div>' + '</div><hr class="m-1" />'
+                '<div class="post-content text-sm">' +content + '</div>' + '</div><hr class="my-3" />'
             )
             if (columns.length > 0) {
-                string += '<p class="text-sm mt-1 text-gray-600 dark:text-gray-400">{{ _("This post belongs to") }}'
+                string += '<p class="text-sm mt-1 text-gray-600 dark:text-gray-400">{{ _("This post belongs to") }} '
                 for (c in columns.slice(0, columns.length - 1)) {
                     string += (
-                        '<a href="/column/{{ _("Column") }}/">「' + column.name + '」</a>,'
+                        '<a href="/column/' + columns[c].id + '/">{{ _("Column") }}「' + columns[c].name + '」</a>,'
                     )
                 }
-                if (columns.length > 1) string += '{{ _("and") }}'
-                string += '<a href="/column/{{ _("Column") }}/">「' + columns[columns.length - 1] + '」</a>.</p>'
+                if (columns.length > 1) string += ' {{ _("and") }} '
+                string += '<a href="/column/' + columns[columns.length - 1].id + '/">{{ _("Column") }}「' + columns[columns.length - 1].name + '」</a>.</p>'
             }
             {% if current_user.is_authenticated %}
                 string += (
                         '<div class="flex justify-start items-center my-2">' +
-                            '<div id="btn-post-' + post_id + '" class="flex bg-gray-100 dark:bg-gray-600 py-1 px-2 rounded-md"' +
+                            '<div id="btn-post-' + post_id + '" class="flex bg-gray-100 dark:bg-gray-600 py-1 px-2 rounded-md shadow-inner"' +
                                 'style="' +
                                     'transition: width 2s !important;' +
                                     '-webkit-transition: width 2s !important;' +
                                     '-moz-transition: width 2s !important;' +
                                     '-o-transition: width 2s !important;">'
                 )
-                if (author_name == "{{ current_user.username }}") {
+                if (author == "{{ current_user.username }}") {
                     string += (
                         '<p class="rounded-sm px-2 py-1 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm mr-3 flex" href="javascript:void(0)">' +
                             '<img src="{{ url_for('static', filename='svg/pi.svg') }}" class="h-5 w-5 mx-1">' +
                             post.coins +
-                        "</p>"
-                    )
-                    {% if not current_user.locked %}
-                        '<a class="btn-inactivated ml-1" href="/post/edit/' + post_id + '/">' +
-                            '<i class="bi-pencil-square"></i>&nbsp;' +
-                            '{{ _("Edit") }}' +
-                        '</a>'
+                        "</p></div>"+
+                        '<a class="btn-inactivated ml-1 text-blue-500" href="/post/edit/' + post_id + '/">' +
+                            '<i class="bi-pencil-square text-blue-500"></i>&nbsp;' +
+                            '<span class="text-blue-500">{{ _("Edit") }}</span>' +
+                        '</a>'+
                         '<form class="form-inline" method="POST" action="/post/delete/' + post_id + '/">'+
                             '<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">'+
-                            '<button class="btn-inactivated ml-1" onclick="return confirm(\'{{ _('Are you sure?') }}\');">'+
-                                '<i class="bi-trash"></i>&nbsp;'+
-                                '{{ _("DELETE") }}'+
+                            '<button class="btn-inactivated ml-1 text-red-500" onclick="return confirm(\'{{ _('Are you sure?') }}\');">'+
+                                '<i class="bi-trash text-red-500"></i>&nbsp;'+
+                                '<span class="text-red-500">{{ _("DELETE") }}</span>'+
                             '</button>'+
                         '</form>'
-                    {% endif %}
+                    )
                 } else {
                     if (coined_posts.indexOf(post_id) == -1) {
                         string += (
@@ -490,28 +423,26 @@ MIT License
 {% endmacro %}
 
 {% macro group_card(group) %}
-    <li class="list-group-item">
-        <h3>{{ _("Group name:" ) }} {{ group.name }}
-            {% if group.private %}
-                <span class="badge badge-dark">
-                    {{ _("Private") }}
-                </span>
-            {% endif %}
-        </h3>
-        <h4>{{ _("Manager: ") }}
-            <a href="{{ group.manager.profile_url() }}"
-               class="text-muted profile-popover"
-               data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
-                {{ group.manager.username }}
-            </a>
-        </h4>
-        <h4>
-            <i class="bi-info"></i>
+    <div class="rounded-md bg-white dark:bg-gray-700 m-3 p-3 shadow-xl">
+        <div class="my-1 py-2">
             <a href="{{ url_for('group.info', id=group.id) }}">
-                {{ _("Group Info") }}
+                <h4 style="margin:0"><b>{{ group.name }}
+                    {% if group.private %}
+                        <span class="badge badge-dark">
+                            {{ _("Private") }}
+                        </span>
+                    {% endif %}
+                </b></h4>
             </a>
-        </h4>
-    </li>
+            <p>{{ _("Manager: ") }}
+                <a href="{{ group.manager.profile_url() }}"
+                    class="text-muted profile-popover"
+                    data-href="{{ url_for('ajax.get_profile', user_id=group.manager.id) }}">
+                    {{ group.manager.username }}
+                </a> · {{ group.members.__len__() }} members
+            </p>
+        </div>
+    </div>
 {% endmacro %}
 
 {% macro column_card(column, extra_classes="") %}
@@ -571,95 +502,105 @@ MIT License
 {% endmacro %}
 
 {% macro shop_card(user, id, goods) %}
-    <li class="list-group-item d-flex">
-        <div class="d-flex align-items-center">
+    <div class="grid grid-cols-3 bg-white dark:bg-gray-800 rounded-md shadow-lg p-4">
+        <div class="md:flex items-center col-span-2 md:col-span-3 md:mx-auto my-8">
             <div style="
-                width: 44px !important;
-                height: 44px !important;
-                padding: 4px;
-                border-radius: 22px;
+                width: 64px !important;
+                height: 64px !important;
+                padding: 5px;
+                border-radius: 32px;
                 {{ goods[id].style }}
             ">
                 <img
                     src="{{ user.avatar_url() }}"
                     style="
-                        width: 36px !important;
-                        height: 36px !important;
-                        border-radius: 18px;
+                        width: 54px !important;
+                        height: 54px !important;
+                        border-radius: 27px;
                     "
                     data-href="{{ url_for('ajax.get_profile', user_id=user.id) }}"
                     alt="identicon"
                 >
             </div>
-            <h3 style="{{ goods[id].text_style }}">
-                <strong>&nbsp;&nbsp;&nbsp;{{ goods[id]["name"] }}</strong>
-            </h3>
+            <p class="items-center my-auto text-2xl md:ml-3">
+                <strong style="{{ goods[id].text_style }}">{{ goods[id]["name"] }}</strong>
+            </p>
         </div>
-        <span class="text-white align-items-end flex-column ml-auto">
-            {% if id not in user.load_belongings_id() %}
-                {% if goods[id].expires.__str__()[:2] != "99" %}
-                    {% if goods[id].price != 0 %}
-                        <span class="
-                            {% if user.coins>=goods[id].price %}
-                                text-success
-                            {% else %}
-                                text-danger
-                            {% endif %}
-                        ">({{ user.coins.__float__() }} / {{ goods[id].price.__float__() }})</span>
-                    {% endif %}
-                    <span class="text-muted">
-                    {% if goods[id].price == 0 %}
-                        free
-                    {% else %}
-                        {{ goods[id].price }}pi
-                    {% endif %}
-                    / {{ goods[id].expires.__str__()[:7] }}</span>
+        <div class="col-span-3 p-4 mb-4 grid grid-cols-3 shadow-lg rounded-md dark:bg-gray-700">
+            <div class="col-span-2">
+                Expires
+            </div>
+            <div style="text-align: right;">
+                {% if goods[id].expires.__str__()[:2] == "99" %}
+                    /
                 {% else %}
-                    {% if goods[id].price != 0 %}
-                        <span class="
-                            {% if user.coins>=goods[id].price %}
-                                text-success
-                            {% else %}
-                                text-danger
-                            {% endif %}
-                        ">({{ user.coins.__float__() }} / {{ goods[id].price.__float__() }})</span>
-                    {% endif %}
-                    <span class="text-muted">
-                    {% if goods[id].price == 0 %}
-                        free
-                    {% else %}
-                        {{ goods[id].price.__float__() }}pi
-                    {% endif %}
-                    for lifetime</span>
+                    <b>{{ goods[id].expires.__str__() }}</b>
                 {% endif %}
-                <br><span class="text-muted">
-                    <span class="
-                        {% if user.experience>=goods[id].exp %}
-                            text-primary
+            </div>
+            <div class="col-span-2">
+                EXP cost
+            </div>
+            <div style="text-align: right;">
+                <b
+                    class="
+                        {% if current_user.experience < 200 %}
+                            text-red-500
                         {% else %}
-                            text-warning
+                            text-emerald-500
                         {% endif %}
-                    ">({{ user.experience }} / {{ goods[id].exp }})</span>&nbsp;Required Exp: {{ goods[id].exp }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <a class="btn btn-sm btn-primary flex-fill
+                    "
+                >200</b>
+            </div>
+            <div class="col-span-2">
+                EXP required
+            </div>
+            <div style="text-align: right;">
+                {% if goods[id].exp != 0 %}
+                    <b
+                        class="
+                            {% if current_user.experience < goods[id].exp %}
+                                text-red-500
+                            {% else %}
+                                text-emerald-500
+                            {% endif %}
+                        "
+                >{{ goods[id].exp }}</b>
+                {% else %}
+                    /
+                {% endif %}
+            </div>
+        </div>
+        <span class="col-span-2">Price: <b
+                    class="
+                        {% if current_user.coins < goods[id].price %}
+                            text-red-500
+                        {% else %}
+                            text-emerald-500
+                        {% endif %}
+                    "
+                >{{ goods[id].price }}</b></span>
+        <span class="text-white flex-column ml-auto col-span-1">
+            {% if id not in user.load_belongings_id() %}
+                <a class="py-2 px-3 shadow-lg bg-white dark:bg-gray-700 rounded-md"
                     {% if user.coins < goods[id].price or user.experience < goods[id].exp %}
-                        disabled
-                    {% endif %}
-                "
-                    href="{{ url_for('shop.buy', id=id) }}">
-                    <b>Buy</b>
+                        style="opacity: .6"
+                    {% else %}
+                        href="{{ url_for('shop.buy', id=id) }}"
+                    {% endif %}>
+                    <span class="text-indigo-600">Buy</span>
                 </a>
             {% elif id == user.avatar_style_id %}
-                <a class="btn btn-sm btn-success flex-fill disabled">
-                    <b>In Use</b>
+                <a style="opacity: .6;" class="py-2 px-3 bg-indigo-600 shadow-lg rounded-md">
+                    <span class="text-white">In Use</span>
                 </a>
             {% else %}
-                <a class="btn btn-sm btn-success flex-fill"
+                <a class="py-2 px-3 bg-indigo-600 shadow-lg rounded-md"
                     href="{{ url_for('shop.use', id=id) }}">
-                    <b>Use</b>
+                    <span class="text-white">Apply</span>
                 </a>
             {% endif %}
         </span>
-    </li>
+    </div>
 {% endmacro %}
 
 {% macro stats_card(name, value) %}
@@ -669,27 +610,23 @@ MIT License
 {% endmacro %}
 
 {% macro login_form() %}
-    <form class="mt-8 space-y-6" action="/auth/login/" method="POST">
+    <form class="space-y-6" action="/auth/login/" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="rounded-md p-3 m-auto mt-3">
             <div class="mb-3">
                 <label for="user" class="sr-only">{{ _("Username / Email") }}</label>
-                <input id="user" name="user" type="text" required class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 bg-transparent" placeholder="{{ _('Username / Email') }}">
+                <input id="user" name="user" type="text" required class="form-control" placeholder="{{ _('Username / Email') }}">
             </div>
             <div>
                 <label for="password" class="sr-only">{{ _("Password") }}</label>
-                <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 bg-transparent" placeholder="{{ _('Password') }}">
+                <input id="password" name="password" type="password" autocomplete="current-password" required class="form-control" placeholder="{{ _('Password') }}">
             </div>
         </div>
 
-        <div class="text-sm mx-3 mt-1 mb-2">
-            <a href="#" class="font-medium"> Forgot your password? </a>
-        </div>
-
         <div>
-        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3">
+        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigogo-500 mr-3">
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                <svg class="h-5 w-5 text-indigo-800 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <svg class="h-5 w-5 text-indigo-700 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                 </svg>
             </span>
@@ -697,4 +634,99 @@ MIT License
         </button>
         </div>
     </form>
+{% endmacro %}
+
+{% macro render_pagination_btn(page, active=False) %}
+    {% if active %}
+        <a href="javascript:void(0)" class="pagination-active"> {{ page }} </a>
+    {% else %}
+        <a href="?page={{ page }}" class="pagination-inactive"> {{ page }} </a>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_pagination(count, from_, to_, page, max_page) %}
+    <div class="pagination bg-white dark:bg-gray-700 mx-3 rounded-md p-3">
+        <div class="pagination-log">
+            <p class="text-sm text-gray-700">
+                Showing
+                <b>{{ from_ }}</b>
+                to
+                <b>{{ to_ }}</b>
+                of
+                <b>{{ count }}</b>
+                results
+            </p>
+        </div>
+        <div>
+            <div class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                <a href="
+                    {% if page != 1 %}
+                        ?page={{ page - 1 }}
+                    {% else %}
+                        javascript:void(0)
+                    {% endif %}
+                    " class="pagination-inactive">
+                    <span class="sr-only">Previous</span>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                {% if page <= 4 %}
+                    {% for p in range(page+1) %}
+                        {% if page == p + 1 %}
+                            {{ render_pagination_btn(p + 1, active=True) }}
+                        {% else %}
+                            {{ render_pagination_btn(p + 1) }}
+                        {% endif %}
+                    {% endfor %}
+                    {% if page >= max_page - 3 %}
+                        {% for p in range(page-2, max_page) %}
+                            {% if page == p + 1 %}
+                                {{ render_pagination_btn(p + 1, active=True) }}
+                            {% else %}
+                                {{ render_pagination_btn(p + 1) }}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span class="pagination-nothing"> ... </span>
+                        {{ render_pagination_btn(max_page) }}
+                    {% endif %}
+                {% else %}
+                    {{ render_pagination_btn(1) }}
+                    <span class="pagination-nothing"> ... </span>
+                    {% if page >= max_page - 3 %}
+                        {% for p in range(page-2, max_page) %}
+                            {% if page == p + 1 %}
+                                {{ render_pagination_btn(p + 1, active=True) }}
+                            {% else %}
+                                {{ render_pagination_btn(p + 1) }}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for p in range(page-2, page+1) %}
+                            {% if page == p + 1 %}
+                                {{ render_pagination_btn(p + 1, active=True) }}
+                            {% else %}
+                                {{ render_pagination_btn(p + 1) }}
+                            {% endif %}
+                        {% endfor %}
+                        <span class="pagination-nothing"> ... </span>
+                        {{ render_pagination_btn(max_page) }}
+                    {% endif %}
+                {% endif %}
+                <a href="
+                    {% if page != max_page %}
+                        ?page={{ page + 1 }}
+                    {% else %}
+                        javascript:void(0)
+                    {% endif %}
+                    " class="pagination-inactive">
+                    <span class="sr-only">Next</span>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
 {% endmacro %}

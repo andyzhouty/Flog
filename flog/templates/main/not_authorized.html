@@ -5,15 +5,40 @@ MIT License
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% from 'macros.html' import login_form %}
+{% block scripts %}
+    <script>
+        function get_wallpaper() {
+            axios({
+                method: "get",
+                url: "https://bing.biturl.top", // without route "/"
+                timeout: 30000,
+                validateStatus: function (status) {
+                    return (status == 200)
+                },
+            }).then((response) => {
+                console.log(response)
+            })
+        }
+    </script>
+{% endblock %}
+{% block classes %}
+    wallpaper
+{% endblock %}
 {% block page_content %}
-<div class="bg-gray-100 dark:bg-gray-900 flex content-3 max-w-7xl mx-auto">
-    <div class="col-md-12 col-lg-7 mb-md-4 mt-md-4 mb-lg-2 mt-lg-2 column-middle">
-        <img src="https://camo.githubusercontent.com/6269749c321b40036f147e8e7d5e0f6ef97fc6fb6a2855e851064faa5045a76a/68747470733a2f2f692e6c6f6c692e6e65742f323032312f31302f31372f4a617079543337586b6e7a6f4851532e706e67">
-        <h1 class="mb-3 mt-4 text-lg"><b>Flog:</b></h1>
-        <h1>{{ _("A blog website built for convenience.") }}</h1>
+    <div class="w-full m-mobile">
+        <div class="lg:grid lg:grid-cols-3 rounded-lg p-none card-margin-lg w-full max-w-6xl mx-auto shadow-xl">
+            <div class="lg:col-span-2 lg:rounded-l-xl bg-bing p-8">
+                <img class="hidden lg:block img-36" src="https://camo.githubusercontent.com/6269749c321b40036f147e8e7d5e0f6ef97fc6fb6a2855e851064faa5045a76a/68747470733a2f2f692e6c6f6c692e6e65742f323032312f31302f31372f4a617079543337586b6e7a6f4851532e706e67">
+                <h1 class="mt-4 title" style="text-shadow:0 0 3px #999"><b class="mtitle">Flog:</b></h1>
+                <p class="mtitle sub" style="text-shadow:0 0 3px #999">{{ _("A blog website built for convenience.") }}</p>
+            </div>
+            <div class="lg:rounded-r-xl bg-white dark:bg-gray-800 column-right-still py-12 px-8">
+                <div class=" m-none h-full">
+                    <h2 class="ml-3"><b>Sign in</b></h2>
+                    {{ login_form() }}
+                    <p class="text-sm mt-1">Wallpaper from <a href="https://bing.com">Microsoft Bing</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="column-right-still p-5">
-        {{ login_form() }}
-    </div>
-</div>
 {% endblock %}

@@ -7,5 +7,11 @@ MIT License
     {{ error_message }}
 {% endblock title %}
 {% block page_content %}
-    <h1>{{ error_message }}</h1>
+    <div class="content-sm">
+        <div class="w-full" style="margin-bottom:6rem">
+            <h1 style="text-align:center; font-size:250%"><b>{{ error_message }}</b></h1>
+            <h2>Why {{ error_message }}?</h2>
+                <p>{{ error_description }}</p>
+        </div>
+    </div>
 {% endblock page_content %}

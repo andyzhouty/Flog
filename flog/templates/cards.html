@@ -1,0 +1,117 @@
+{% from 'macros.html' import avatar, username %}
+
+{% macro account_card() %}
+<div class="md:mt-3 px-3 pt-4 pb-8 m-3 rounded-md bg-white dark:bg-gradient-to-r dark:from-indigo-600 dark:to-indigo-500 shadow-xl">
+    <h3 class="ml-3"><b class="text-gray-900 dark:text-gray-100">
+        <i class="text-gray-900 dark:text-gray-100 bi bi-credit-card-2-front-fill"></i>&nbsp;Account
+    </b></h3>
+    {% if current_user.is_authenticated %}
+        <div class="w-full items-center p-4 flex">
+            {{ avatar(user=current_user, size=40) }}
+            <div>
+                <p class="m-2 text-xl"><b>{{ current_user.username }}</b><span class="text-gray-400 dark:text-indigo-200"> #{{ current_user.id }}</span></p>
+            </div>
+        </div>
+        <div class="p-4 mt-6 w-full items-center bg-gray-100 dark:bg-indigo-700 shadow-inner rounded-md grid grid-cols-3 gap-2">
+            <p class="col-span-2">Visits Today</p>
+            <p class="text-2xl" style="text-align: right;"><b>{{ current_user.clicks_today }}</b></p>
+            <p class="col-span-2">Alpha Index</p>
+            <p class="text-2xl" style="text-align: right;"><b>{{ current_user.get_alpha() }}</b></p>
+        </div>
+        <button class="w-full bg-indigo-500 dark:bg-white text-white dark:text-indigo-600 rounded-md py-2 shadow-xl mt-6 font-bold" onclick="window.location.href='{{ current_user.profile_url() }}'">{{ _("Personal Profile") }}</button>
+    {% else %}
+        <p class="ml-3">You haven't got an account yet!</p>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro explore_card() %}
+<div class="md:mt-3 px-3 py-6 bg-gradient-to-r from-orange-500 to-orange-400 dark:from-teal-600 dark:to-teal-500 dark:bg-indigo-600 m-3 rounded-md shadow-xl">
+    <h3 class="ml-3"><b class="text-gray-100"><i class="text-white bi bi-binoculars"></i>&nbsp;Explore</b></h3>
+    {% if current_user.is_authenticated %}
+        <div id="explore-posts"></div>
+        <script>
+            function explore_posts() {
+                document.getElementById("explore-posts").innerHTML = '\
+                <div class="w-full p-3 text-white items-center flex mx-auto">\
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">\
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="#fff" stroke-width="4"></circle>\
+                        <path class="opacity-75" fill="#fff" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>\
+                    </svg>\
+                    <p class="text-white">\
+                        Loading...\
+                    </p>\
+                </div>'
+                axios({
+                    method: "get",
+                    url: "/ajax/get_posts/hot_posts/",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                    timeout: 30000,
+                    validateStatus: function (status) {
+                        return (status == 200)
+                    },
+                }).catch(error => {
+                    if (error.request) {
+                        document.getElementById("explore-posts").innerHTML = (
+                            '<span class="text-yellow-600 dark:text-yellow-400">Oh, no! Something went wrong when we tried to get the best for you.</span>'
+                        )
+                    } else {
+                        alert(error.message)
+                    }
+                }).then((response) => { // when response.status == 200
+                    posts = response.data.posts
+                    columns = response.data.columns
+                    let string = ""
+                    for (i in posts) {
+                        post = posts[i]
+                        string += '\
+                        <div class="px-3 py-3 my-1 mx-1 rounded-md">\
+                            <p class="text-sm"><a href="/user/'+ post.author +'/"><b class="text-gray-100">'+ post.author +'</b></a>&nbsp;<span class="text-gray-100">{{ _("posted ") }}'+ from_now(post.timestamp) +'</span></p>\
+                            <p><a href="/post/'+ post.id +'/"><b class="text-gray-100">'+ post.title +'</b></a></p>\
+                            <p class="text-sm text-gray-100">'+ post.collectors +' {{ _("collectors") }} · '+ post.coins +' {{ _("coins") }}</p>\
+                        </div>\ '
+                    }
+                    for (i in columns) {
+                        column = columns[i]
+                        string += '\
+                        <div class="px-3 py-3 my-1 mx-1 rounded-md">\
+                            <p class="text-sm"><a href="/user/'+ column.author +'/" class="text-gray-100"><b>'+ post.author +'</b></a></p>\
+                            <p><a href="/column/'+ column.id +'/" class="text-normal"><span class="text-sm">{{ _("Column") }}</span><b>「'+ column.name +'」</b></a></p>\
+                            <p class="text-sm">'+ column.collects +' {{ _("collects") }} · '+ column.coins +' {{ _("coins") }} · '+ column.posts +' {{ _("posts") }}</p>\
+                        </div>\ '
+                    }
+                    if (string == "") {
+                        string = "<p>It is very quiet here. Maybe you can go and post something.</p>"
+                    }
+                    document.getElementById("explore-posts").innerHTML = string
+                })
+            }
+            explore_posts()
+        </script>
+        <a href="javascript:explore_posts()" id="btn-explore-change" class="ml-3 mb-3 text-white hover:text-white dark:text-white dark:hover:text-white"><i class="bi bi-arrow-repeat text-white"></i>&nbsp;Refresh</a>
+    {% else %}
+        <p class="text-white m-3">Sign in to explore the community!</p>
+        <button class="w-full bg-white text-orange-500 dark:text-emerald-500 rounded-md py-1 shadow-xl" onclick="window.location.replace('{{ url_for("auth.login") }}')">Sign in</button>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro announcement_card() %}
+<div class="rounded-md m-3 p-6 bg-rose-500 dark:bg-gradient-to-r dark:from-violet-500 dark:to-purple-500 shadow-xl max-h-96 overflow-auto">
+    <h3><b class="text-gray-100"><i class="bi bi-broadcast-pin text-gray-100"></i>&nbsp;Announcement</b></h3>
+    <p class="mt-3 text-gray-100">
+        {% for line in announcement_content %}
+            {{ line }}<br />
+        {% endfor %}
+    </p>
+</div>
+{% endmacro %}
+
+{% macro online_card() %}
+<div class="rounded-md m-3 p-6 bg-lime-500 dark:bg-lime-400 dark:bg-gradient-to-r dark:from-sky-500 dark:to-sky-400 shadow-xl max-h-96 overflow-auto">
+    <h3><b class="text-white"><i class="text-white bi bi-globe"></i>&nbsp;Users</b></h3>
+</div>
+{% endmacro %}
+

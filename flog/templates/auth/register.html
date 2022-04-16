@@ -4,8 +4,188 @@ MIT License
 #}
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
-{% block title %} Flog - {{ _("Register") }} {% endblock %}
+{% block title %} Flog - Sign up {% endblock %}
+{% block scripts %}
+<script>
+    function validate_register_username() {
+        let username = document.forms["register-form"]["username"].value;
+        if (username == null || username == "") {
+            $("#username").removeClass("form-control")
+            $("#username").removeClass("form-control-success")
+            $("#username").addClass("form-control-error")
+            $("#username-error").removeClass("hidden")
+            $("#username-success").addClass("hidden")
+            document.getElementById("username-error").innerHTML = "Username cannot be empty."
+            return false;
+        } else {
+            $("#username").removeClass("form-control")
+            $("#username").removeClass("form-control-error")
+            $("#username").addClass("form-control-success")
+            $("#username-error").addClass("hidden")
+            $("#username-success").removeClass("hidden")
+            document.getElementById("username-success").innerHTML = "Nice job!"
+            return true;
+        }
+    }
+    function is_email(string) {
+        pos_at = string.indexOf("@")
+        pos_dot = string.indexOf(".")
+        if (pos_at == -1) {
+            return false
+        } else if (pos_dot - pos_at <= 1) {
+            return false
+        }
+        return true
+    }
+    function validate_register_email() {
+        let email = document.forms["register-form"]["email"].value;
+        if (!is_email(email)) {
+            $("#email").removeClass("form-control")
+            $("#email").removeClass("form-control-success")
+            $("#email").addClass("form-control-error")
+            $("#email-error").removeClass("hidden")
+            $("#email-success").addClass("hidden")
+            document.getElementById("email-error").innerHTML = "This e-mail address is not valid."
+            return false;
+        } else {
+            $("#email").removeClass("form-control")
+            $("#email").removeClass("form-control-error")
+            $("#email").addClass("form-control-success")
+            $("#email-error").addClass("hidden")
+            $("#email-success").removeClass("hidden")
+            document.getElementById("email-success").innerHTML = "Nice job!"
+            return true;
+        }
+    }
+    function validate_register_name() {
+        let name = document.forms["register-form"]["name"].value;
+        if (name == null || name == "") {
+            $("#name").removeClass("form-control")
+            $("#name").removeClass("form-control-success")
+            $("#name").addClass("form-control-error")
+            $("#name-error").removeClass("hidden")
+            $("#name-success").addClass("hidden")
+            document.getElementById("name-error").innerHTML = "Definitely, you need a name."
+            return false;
+        } else {
+            $("#name").removeClass("form-control")
+            $("#name").removeClass("form-control-error")
+            $("#name").addClass("form-control-success")
+            $("#name-error").addClass("hidden")
+            $("#name-success").removeClass("hidden")
+            document.getElementById("name-success").innerHTML = "Nice job!"
+            return true;
+        }
+    }
+    function validate_register_password() {
+        let password = document.forms["register-form"]["password"].value;
+        if (password == null || password == "") {
+            $("#password").removeClass("form-control")
+            $("#password").removeClass("form-control-success")
+            $("#password").addClass("form-control-error")
+            $("#password-error").removeClass("hidden")
+            $("#password-success").addClass("hidden")
+            document.getElementById("password-error").innerHTML = "You must give your account a password."
+            return false;
+        } else {
+            $("#password").removeClass("form-control")
+            $("#password").removeClass("form-control-error")
+            $("#password").addClass("form-control-success")
+            $("#password-error").addClass("hidden")
+            $("#password-success").removeClass("hidden")
+            document.getElementById("password-success").innerHTML = "Nice job!"
+            return true;
+        }
+    }
+    function validate_register_cpassword() {
+        let cpassword = document.forms["register-form"]["cpassword"].value;
+        if (cpassword != document.forms["register-form"]["password"].value) {
+            $("#cpassword").removeClass("form-control")
+            $("#cpassword").removeClass("form-control-success")
+            $("#cpassword").addClass("form-control-error")
+            $("#cpassword-error").removeClass("hidden")
+            $("#cpassword-success").addClass("hidden")
+            document.getElementById("cpassword-error").innerHTML = "Make sure you have typed the same password."
+            return false;
+        } else {
+            $("#cpassword").removeClass("form-control")
+            $("#cpassword").removeClass("form-control-error")
+            $("#cpassword").addClass("form-control-success")
+            $("#cpassword-error").addClass("hidden")
+            $("#cpassword-success").removeClass("hidden")
+            document.getElementById("cpassword-success").innerHTML = "Nice job!"
+            return true;
+        }
+    }
+    function validate_register_form() {
+        email = validate_register_email()
+        username = validate_register_username()
+        name_ = validate_register_name()
+        password = validate_register_password()
+        cpassword = validate_register_cpassword()
+        if (!username) document.getElementById("username").focus()
+        else if (!email) document.getElementById("email").focus()
+        else if (!name_) document.getElementById("name").focus()
+        else if (!password) document.getElementById("password").focus()
+        else if (!cpassword) document.getElementById("cpassword").focus()
+        return (username && email && name_ && password && cpassword)
+    }
+</script>
+{% endblock %}
 {% block page_content %}
-    <h1 class="display-4">{{ _("Register") }}</h1>
-    {{ render_form(form) }}
+    <div class="w-full px-3">
+        <div class="card-single-content content-sm bg-white dark:bg-gray-800 rounded-2xl" id="register-form">
+            <h1><b>Sign up</b></h1>
+            <p>Please fill out the forms with your personal information to create an account.</p>
+            <form id="register-form" name="register-form" method="post" onsubmit="return validate_register_form()" novalidate>
+                <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+                <hr class="my-3" />
+                <h2>Basic</h2>
+                <p>These are your basic information after registration.</p>
+                <div class="content-2 py-2">
+                    <label for="username" class="mt-3"><b><span class="text-indigo">* </span>Username</b><br><span class="text-sm">The unique name of your account here.</span></label>
+                    <div>
+                        <input id="username" name="username" type="text" required class="form-control" placeholder="Username" onblur="validate_register_username()">
+                        <span style="font-size:60%" class="validator-error hidden" id="username-error"></span>
+                        <span style="font-size:60%" class="validator-success hidden" id="username-success"></span>
+                    </div>
+                    <label for="email" class="mt-3"><b><span class="text-indigo">* </span>Email Address</b><br><span class="text-sm">We will contact you via email.</span></label>
+                    <div>
+                        <input id="email" name="email" type="email" required class="form-control" placeholder="someone@example.com" onblur="validate_register_email()">
+                        <span style="font-size:60%" class="validator-error hidden" id="email-error"></span>
+                        <span style="font-size:60%" class="validator-success hidden" id="email-success"></span>
+                    </div>
+                    <label for="name" class="mt-3"><b><span class="text-indigo">* </span>Name</b><br><span class="text-sm">Tell us what your name is.</span></label>
+                    <div>
+                        <input id="name" name="name" type="text" required class="form-control" placeholder="e.g. Linus Torvalds, 李辉, 宫本茂" onblur="validate_register_name()">
+                        <span style="font-size:60%" class="validator-error hidden" id="name-error"></span>
+                        <span style="font-size:60%" class="validator-success hidden" id="name-success"></span>
+                    </div>
+                    <label for="password" class="mt-3"><b><span class="text-indigo">* </span>Password</b><br><span class="text-sm">Don't tell anyone.</span></label>
+                    <div>
+                        <input id="password" name="password" type="password" required class="form-control" placeholder="Password" onblur="validate_register_password();validate_register_cpassword()">
+                        <span style="font-size:60%" class="validator-error hidden" id="password-error"></span>
+                        <span style="font-size:60%" class="validator-success hidden" id="password-success"></span>
+                    </div>
+                    <label for="cpassword" class="mt-3"><b><span class="text-indigo">* </span>Confirm Password</b><br><span class="text-sm">Type your password again.</span></label>
+                    <div>
+                        <input id="cpassword" name="cpassword" type="password" required class="form-control" placeholder="Confirm Password" onblur="validate_register_cpassword()">
+                        <span style="font-size:60%" class="validator-error hidden" id="cpassword-error"></span>
+                        <span style="font-size:60%" class="validator-success hidden" id="cpassword-success"></span>
+                    </div>
+                </div>
+                <hr class="my-3" />
+                <h2>Others</h2>
+                <div class="py-2">
+                    <label for="location" class="mt-3"><b>Location</b><br><span class="text-sm" id="username-validator">Your home or some place else.</span></label>
+                    <input id="location" name="location" type="text" class="form-control my-3" placeholder="e.g. Antarctica, “中国 上海 世界路 8 号”">
+                    <label for="avatar" class="mt-3"><b>Avatar URL</b><br><span class="text-sm" id="avatar-validator">The image URL of your avatar. Make sure browsers can read it.</span></label>
+                    <input id="avatar" name="avatar" type="text" class="form-control my-3" placeholder="Avatar URL">
+                    <label for="about-me" class="mt-3"><b>About Me</b><br><span class="text-sm" id="about-me-validator">Describe yourself.</span></label>
+                    <input id="about-me" name="about-me" type="text" class="form-control my-3" placeholder="About Me">
+                    <button type="submit" class="submit">Sign up</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock page_content %}

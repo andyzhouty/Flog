@@ -1,81 +1,77 @@
+{% from 'macros.html' import avatar %}
+
 {% if not post.private %}
     <h3 class="d-flex justify-content-between">
         <div>
         {{ comments|length }}
         {{ ngettext('comment', 'comments', __num=comments|length) }}
         </div>
-        <small>
-            <a href="{{ url_for('main.full_post', id=post.id, page=pagination.pages or 1) }}#comments">
-                {{ _("latest") }}
-            </a>
-        </small>
     </h3>
-    {% if current_user.is_authenticated %}
-        {{ render_form(form) }}
-    {% endif %}
     {% if comments %}
-        <ul class="list-group">
         {% for comment in pagination.items %}
-            <li class="list-group-item list-group-item-action flex-column">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">
-                    {% if comment.author != None %}
-                        <a href="{{ comment.author.profile_url() }}" target="_blank">
-                            <img class="avatar" src="{{ comment.author.avatar_url() }}">
-                            {{ comment.author.username }}
-                        </a>
-                    {% else %}
-                        <span>{{ _("Deleted Flog User") }}</span>
-                    {% endif %}
-                </h5>
-                {% if comment.author == post.author %}
-                <span class="badge badge-primary">{{ _("Author") }}</span>
-                {% endif %}
-                <small data-toggle="tooltip" data-placement="top" data-delag="500"
-                    data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
-                    {{ moment(comment.timestamp).fromNow() }}
-                </small>
-            </div>
-            {% if comment.replied %}
-            <div class="alert alert-dark reply-body bg-dark-gray">
-                {{ comment.replied.author.username }}:<br>
-                {{ comment.replied.body | safe }}
-            </div>
-            {% endif %}
-            <p class="mb-1">{{ comment.body | safe }}</p>
-            {% if current_user.is_authenticated %}
-                <div class="d-flex justify-content-end">
-                    {% if current_user == comment.author %}
-                    <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                        <button class="btn btn-sm btn-danger" onclick="return confirm('{{ _('Are you sure?') }}');">
-                            <i class="bi-trash"></i>
-                            {{ _("DELETE") }}
-                        </button>
-                    </form>
-                    {% endif %}
-                    <a class="btn btn-light btn-sm" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
-                        <i class="bi-reply"></i>
-                        {{ _("Reply") }}
-                    </a>
+            <div class="flex my-3">
+                <div class="p-3">
+                    {{ avatar(comment.author, size=32) }}
                 </div>
-            {% endif %}
-            </li>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-md my-1 w-full">
+                    <div class="d-flex w-100 justify-content-between">
+                        <p class="mb-1">
+                            {% if comment.author != None %}
+                                <a href="{{ comment.author.profile_url() }}" target="_blank" class="text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300"><b>
+                                    {{ comment.author.username }}
+                                </b></a>
+                            {% else %}
+                                <span>{{ _("Deleted Flog User") }}</span>
+                            {% endif %}
+                            · {{ moment(comment.timestamp).fromNow() }}
+                        </p>
+                    </div>
+                    {% if comment.replied %}
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-md p-2">
+                        <b>{{ comment.replied.author.username }}:</b><br>
+                        {{ comment.replied.body | safe | truncate(80) }}
+                    </div>
+                    {% endif %}
+                    <p class="my-3">{{ comment.body | safe }}</p>
+                    {% if current_user.is_authenticated %}
+                        <div class="flex content-end my-3">
+                            {% if current_user == comment.author %}
+                            <form class="form-inline" method="POST" action="{{ url_for('main.delete_comment', comment_id=comment.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button onclick="return confirm('{{ _('Are you sure?') }}');" class="mx-3">
+                                    <i class="bi-trash"></i>
+                                    {{ _("DELETE") }}
+                                </button>
+                            </form>
+                            {% endif %}
+                            <a class="mx-3" href="{{ url_for('main.reply_comment', comment_id=comment.id, author=comment.replied.author) }}">
+                                <i class="bi-reply"></i>
+                                {{ _("Reply") }}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         {% endfor %}
         </ul>
-        {{ render_pagination(pagination) }}
-        {% if request.args.get('reply') and current_user.is_authenticated %}
-            <div class="alert alert-dark" id="reply-comment-form">
-                <i class="bi-mail-reply"></i>{{ _("Reply to") }}
-                <b>{{ replied_comment.author.username }}</b>:
-                <a class="float-right btn btn-light btn-sm" href="{{ post.url() }}">
-                    <i class="bi-x"></i>
-                </a>
+        {% if current_user.is_authenticated %}
+            {% if request.args.get('reply') %}
+                <div class="bg-white dark:bg-gray-700 p-3 rounded-md" id="reply-comment-form">
+                    <i class="bi-mail-reply"></i>{{ _("Reply to") }}
+                    <b>{{ replied_comment.author.username }}</b>:
+                    <a class="float-right text-sm" href="{{ post.url() }}">
+                        Cancel
+                    </a><br>
+                    <div class="bg-gray-100 dark:bg-gray-800 p-3 my-2 rounded-md">{{ replied_comment.body | safe | truncate(80) }}</div>
+                    {{ render_form(form) }}
+                </div>
+            {% else %}
                 {{ render_form(form) }}
-            </div>
+            {% endif %}
         {% endif %}
     {% else %}
         {{ _("No comments yet.") }}
+        {{ render_form(form) }}
     {% endif %}
 {% else %}
     {{ _("You cannot comment a private post!") }}

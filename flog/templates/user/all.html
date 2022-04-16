@@ -3,20 +3,21 @@ Copyright (c) 2020 Andy Zhou
 MIT License
 #}
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
-{% from 'macros.html' import user_card with context %}
+{% from 'macros.html' import user_card, render_pagination with context %}
 {% block title %}{{ _("All users") }} {% endblock %}
 {% block page_content %}
-<div class="row">
-    <div class="col-lg-8">
-        <ul class="list-group">
-            {% for user in pagination.items %}
-                {{ user_card(user) }}
-            {% endfor %}
-        </ul>
+<div class="content-4">
+    <div class="column-left">
+        {% include 'main/_sidebar.html' %}
     </div>
-    {% include 'main/_sidebar.html' %}
-    {{ render_pagination(pagination) }}
+    <div class="column-middle content-2xl">
+        <h1 class="mx-3"><b>All Users</b></h1>
+        {% for user in pagination %}
+            {{ user_card(user) }}
+        {% endfor %}
+        <hr class="my-3" />
+        {{ render_pagination(count=user_count, from_=from_, to_=to_, page=page, max_page=max_page) }}
+    </div>
     {% if current_app.testing %}
         <p style="display: none">{{ user_count }}</p>
     {% endif %}

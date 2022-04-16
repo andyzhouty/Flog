@@ -1,0 +1,104 @@
+{#
+    Copyright (c) 2020 Andy Zhou
+    MIT License
+    #}
+    {% extends 'base.html' %}
+    {% from 'macros.html' import coin_script, collect_script with context %}
+    {% from 'bootstrap/form.html' import render_form %}
+    {% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block title %} All Posts {% endblock %}
+    {% block scripts %}
+        <script>
+            function load_post_list(y, m) {
+                axios({
+                    method: "get",
+                    url: "/ajax/get_posts/" + y + "/" + m + "/",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                    timeout: 30000,
+                    validateStatus: function (status) {
+                        return (status == 200)
+                    },
+                }).catch(error => {
+                    if (error.request) {
+                        document.getElementById("posts-" + y + "-" + m).innerHTML = (
+                            "Uh-oh. Something went wrong when we try to load the posts for you."
+                        )
+                    } else {
+                        alert(error.message)
+                    }
+                }).then(response => {
+                    posts = response.data.posts
+                    document.getElementById("posts-" + y + "-" + m + "-1").innerHTML = ""
+                    for (i in posts.slice(0, Math.floor(posts.length / 2)+1)) {
+                        post = posts[i]
+                        $("#posts-"+y+"-"+m+"-1").append(
+                            {% if current_user.locale == "zh_Hans_CN" %}
+                                '<li class="flex">\
+                                    <span class="text-muted text-sm flex-grow">' + m + "月" + post.day + '日</span>&nbsp;&nbsp;&nbsp;<a href="/user/' + post.author + '/"><b class="text-gray-900 dark:text-gray-100">' + post.author + '</b></a>&nbsp;&nbsp;<a href="' + post.id + '">' + post.title + '</a>\
+                                </li>'
+                            {% else %}
+                                '<li class="flex">'+m+"."+post.day+ '</span>&nbsp;&nbsp;&nbsp;<a href="/user/' + post.author + '/"><b class="text-gray-900 dark:text-gray-100">' + post.author + '</b></a>&nbsp;&nbsp;<a href="' + post.id + '">' + post.title + '</a>\
+                                </li>'
+                            {% endif %}
+                        )
+                    }
+                    for (i in posts.slice(Math.floor(posts.length / 2)+1, posts.length)) {
+                        post = posts.slice(Math.floor(posts.length / 2)+1, posts.length)[i]
+                        $("#posts-"+y+"-"+m+"-2").append(
+                            {% if current_user.locale == "zh_Hans_CN" %}
+                                '<li class="flex flex-wrap">\
+                                    <span class="text-muted text-sm flex-grow">' + m + "月" + post.day + '日</span>&nbsp;&nbsp;&nbsp;<a href="/user/' + post.author + '/"><b class="text-gray-900 dark:text-gray-100">' + post.author + '</b></a>&nbsp;&nbsp;<a href="' + post.id + '">' + post.title + '</a>\
+                                </li>'
+                            {% else %}
+                                '<li class="flex flex-wrap">'+m+"."+post.day+ '</span>&nbsp;&nbsp;&nbsp;<a href="/user/' + post.author + '/"><b class="text-gray-900 dark:text-gray-100">' + post.author + '</b></a>&nbsp;&nbsp;<a href="' + post.id + '">' + post.title + '</a>\
+                                </li>'
+                            {% endif %}
+                        )
+                    }
+                })
+            }
+        </script>
+        <script>
+            {% for date in dates %}
+                load_post_list({{ date[0] }}, {{ date[1] }})
+            {% endfor %}
+        </script>
+    {% endblock %}
+    {% block page_content %}
+        <div class="content-4">
+            <div class="column-left">
+                {% include 'main/_sidebar.html' %}
+            </div>
+            <div class="col-span-3 m-4">
+                <div>
+                    <h1 class="ml-3"><b>All Posts</b></h1>
+                    {% for date in dates %}
+                        <div class="px-3 py-1 mx-3 my-3 rounded-md bg-white dark:bg-gray-700">
+                            {% if current_user.locale == "zh_Hans_CN" %}
+                                <h4 class="mb-3"><b>{{ date[0] }} 年 {{ date[1] }} 月</b></h4>
+                            {% else %}
+                                <h4 class="mb-3"><b>{{ months[date[1] - 1] }}, {{ date[0] }}</b></h4>
+                            {% endif %}
+                            <div class="two-row-list w-full mb-3">
+                                <ul id="posts-{{ date[0] }}-{{ date[1] }}-1">
+                                    <div class="flex w-full">
+                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <p>
+                                            Loading...
+                                        </p>
+                                    </div>
+                                </ul>
+                                <ul id="posts-{{ date[0] }}-{{ date[1] }}-2"></ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endblock page_content %}
+    

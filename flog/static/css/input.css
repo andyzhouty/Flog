@@ -15,7 +15,7 @@ nav * {
     @apply transition-all;
 }
 nav a, nav button {
-    @apply text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-blue-400 hover:text-white transition-all
+    @apply text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white transition-all
 }
 .dropdown {
     @apply bg-white dark:bg-gray-700 transition-all;
@@ -24,25 +24,31 @@ nav a, nav button {
     @apply hover:bg-gray-100 dark:hover:bg-gray-600 focus:ring-2 focus:ring-indigo-600 text-gray-900 dark:text-gray-100 hover:text-gray-900 dark:hover:text-gray-100 transition-all;
 }
 .content-4 {
-    @apply grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 w-full gap-0 mt-0
+    @apply grid grid-cols-2 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 w-full gap-0 mt-0;
 }
 .content-3 {
-    @apply grid grid-cols-2 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 w-full gap-0 mt-0
+    @apply grid grid-cols-2 lg:grid-cols-3 sm:grid-cols-2 w-full gap-0 mt-0;
 }
 .column-left {
-    @apply bg-white dark:bg-black p-3 sr-only lg:not-sr-only
+    @apply p-3 sr-only lg:not-sr-only
+}
+a.text-normal {
+    @apply text-gray-900 dark:text-gray-100 hover:text-indigo-800 dark:hover:text-indigo-200
 }
 .column-right {
-    @apply bg-gray-100 dark:bg-gray-900 p-3 sr-only xl:not-sr-only
+    @apply p-3 sr-only xl:not-sr-only
+}
+.content-2 {
+    @apply grid grid-cols-1 xl:grid-cols-2 w-full gap-2 mt-0
 }
 .content-3 .column-right-still {
-    @apply bg-gray-100 dark:bg-gray-900 p-3 col-span-2 lg:col-span-1
+    @apply p-3 col-span-2 lg:col-span-1
 }
 .content-4 .column-right-still {
-    @apply bg-gray-100 dark:bg-gray-900 p-3 col-span-2 xl:col-span-1
+    @apply p-3 col-span-2 xl:col-span-1
 }
 .column-middle {
-    @apply bg-gray-100 dark:bg-gray-900 p-3 col-span-2
+    @apply p-3 col-span-2
 }
 .post-card {
     @apply bg-white dark:bg-gray-700
@@ -51,51 +57,14 @@ nav a, nav button {
 body a {
     text-decoration: none;
 }
-
-@font-face {
-    font-family: sf-pro-display;
-    src: url(/static/fonts/spdm.woff2);
-    font-weight: 400
-}
-@font-face {
-    font-family: sf-pro-display;
-    src: url(/static/fonts/spdr.woff2);
-    font-weight: 600
-}
-@font-face {
-    font-family: sf-pro-display;
-    src: url(/static/fonts/spds.woff2);
-    font-weight: 800
-}
-@font-face {
-    font-family: sf-pro-text;
-    src: url(/static/fonts/sptr.woff2);
-    font-weight: 400
-}
-@font-face {
-    font-family: sf-pro-text;
-    src: url(/static/fonts/spts.woff2);
-    font-weight: 600
-}
-@font-face {
-    font-family: pf;
-    src: url(/static/fonts/pfr.ttf);
-    font-weight: 400
-}
-@font-face {
-    font-family: pf;
-    src: url(/static/fonts/pfs.ttf);
-    font-weight: 600
-}
-
 html * {
-    font-family: sf-pro-text, pf;
+    font-family: -apple-system, BlinkMacSystemFont, "Clear Sans", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif;
 }
-h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: sf-pro-display, sf-pro-text, pf;
+code, pre, font, kbd {
+    font-family: SF-Mono, Consolas, 'Courier New', Courier, monospace
 }
 h1, h2, h3, h4, h5, h6 {
-    font-weight: 600
+    @apply mt-6
 }
 h1 {
     font-size: 220%;
@@ -163,7 +132,7 @@ img.icon {
 }
 
 .card-single-content {
-    @apply py-12 px-4 sm:px-6 lg:px-8 my-4 sm:my-8
+    @apply py-12 px-4 sm:px-6 lg:px-8 my-4 sm:my-8 rounded-lg
 }
 
 .loader {
@@ -187,7 +156,138 @@ img.icon {
 .loader-content-3 {
     @apply w-1/3 h-4 rounded my-2
 }
+.-rounded-l-2xl {
+    @apply rounded-l-none rounded-t-xl !important;
+    @apply xl:rounded-t-none xl:rounded-l-2xl !important;
+}
+.-rounded-r-2xl {
+    @apply rounded-r-none rounded-b-xl !important;
+    @apply xl:rounded-b-none xl:rounded-r-2xl !important;
+}
 
 #loader-button {
     @apply bg-white w-full hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-600 text-indigo-600 text-center p-2 rounded-md transition-all
+}
+.container-p {
+    @apply px-8
+}
+.content-sm {
+    @apply w-full max-w-3xl lg:mx-auto py-8 sm:py-8 lg:py-12 xl:py-16
+}
+.content-md {
+    @apply w-full max-w-4xl xl:mx-auto py-8 sm:py-8 lg:py-12 xl:py-16
+}
+.content-lg {
+    @apply w-full max-w-5xl xl:mx-auto py-8 sm:py-8 lg:py-12 xl:py-16
+}
+.content-xl {
+    @apply w-full max-w-6xl xl:mx-auto py-8 sm:py-8 lg:py-12 xl:py-16
+}
+.content-2xl {
+    @apply w-full max-w-7xl xl:mx-auto py-8 sm:py-8 lg:py-12 xl:py-16
+}
+.m-mobile {
+    @apply px-8 sm:px-12 lg:px-16 xl:px-0;
+}
+.text-muted {
+    @apply text-gray-500
+}
+#greetings {
+    @apply lg:mb-4 ml-2 mt-12 lg:mt-16 mb-1
+}
+#about {
+    @apply py-10 w-full max-w-3xl mx-auto
+}
+
+.mtitle {
+    @apply text-gray-100 !important;
+}
+.p-none {
+    @apply p-0 !important
+}
+.m-none {
+    @apply m-0 !important
+}
+.card-left {
+    @apply pt-16 pb-10 pl-8 pt-8
+}
+.two-row-list {
+    @apply grid-cols-1 xl:grid-cols-2 xl:flex
+}
+.bg-bing {
+    @apply bg-indigo-600;
+    background-image:url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=zh-CN');background-position:center;
+}
+.pagination {
+    @apply sm:flex-1 sm:flex sm:items-center sm:justify-between
+}
+.pagination > div.pagination-log {
+    @apply hidden sm:flex-1 sm:flex
+}
+.pagination-active {
+    @apply z-10 bg-indigo-50 dark:bg-indigo-900 border-indigo-400 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium
+}
+.pagination-inactive {
+    @apply bg-transparent border-gray-300 dark:border-gray-600 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-600 relative inline-flex items-center px-4 py-2 border text-sm
+}
+.pagination-nothing {
+    @apply bg-transparent border-gray-300 dark:border-gray-600 text-gray-300 dark:text-gray-600 relative inline-flex items-center px-4 py-2 border text-sm
+}
+
+.two-row-list > *, .two-row-list > * + * {
+    @apply w-full m-0 lg:m-4 xl:m-8 2xl:m-16
+}
+
+.card-margin-lg {
+    @apply my-28
+}
+
+.img-36 {
+    @apply w-36 h-36
+}
+
+@media screen and (min-width: 1024px) {
+    .title {
+        font-size: 400%
+    }
+    .sub {
+        font-size: 250%
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .title {
+        font-size: 250%
+    }
+    .sub {
+        font-size: 150%
+    }
+}
+
+.text-indigo {
+    @apply text-indigo-600 dark:text-indigo-400;
+}
+
+.form-control {
+    @apply mt-3 relative block w-full py-3 border border-gray-300 dark:border-gray-500 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 bg-transparent;
+}
+.form-control-success {
+    @apply mt-3 relative block w-full py-3 border border-green-600 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 bg-transparent;
+}
+.form-control-error {
+    @apply mt-3 relative block w-full py-3 border border-red-600 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 bg-transparent;
+}
+
+.submit {
+    @apply py-2 px-3 w-full bg-indigo-600 dark:bg-indigo-600 text-gray-100 rounded-md
+}
+.validator-error {
+    @apply text-red-600 font-bold !important
+}
+.validator-success {
+    @apply text-green-600 font-bold !important
+}
+
+.cards-container {
+    @apply bg-gray-50 dark:bg-gray-800 py-6 px-3 rounded-md !important
 }
