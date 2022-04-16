@@ -36,7 +36,10 @@ def buy(id):
             owner_id=current_user.id, goods_id=id
         ).first()
         if not belong or belong.load_expiration_delta().seconds > 0:
-            if items(id).exp <= current_user.experience and current_user.experience >= 200:
+            if (
+                items(id).exp <= current_user.experience
+                and current_user.experience >= 200
+            ):
                 if items(id).price <= current_user.coins:
                     ownership = Belong(
                         owner_id=current_user.id,

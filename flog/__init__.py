@@ -64,7 +64,9 @@ def register_config(app: Flask, config_name: str):
     app.config.from_object(config[config_name])
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
-    app.jinja_env.globals["announcement_content"] = os.getenv("ANNOUNCEMENT_CONTENT", "").split(":::")
+    app.jinja_env.globals["announcement_content"] = os.getenv(
+        "ANNOUNCEMENT_CONTENT", ""
+    ).split(":::")
     app.jinja_env.globals["announcement_title"] = os.getenv("ANNOUNCEMENT_TITLE", "")
 
 

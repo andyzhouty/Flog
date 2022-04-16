@@ -66,10 +66,7 @@ def main():
         else None
     )
     return render_template(
-        "main/main.html",
-        posts=posts,
-        notifications=notifications,
-        target=target
+        "main/main.html", posts=posts, notifications=notifications, target=target
     )
 
 

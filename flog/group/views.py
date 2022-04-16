@@ -29,10 +29,10 @@ def all():
         "user/groups.html",
         groups=pagination,
         max_page=(count - 1) // per_page + 1,
-        from_=(per_page * (page - 1))+1,
+        from_=(per_page * (page - 1)) + 1,
         to_=min(per_page * page, count),
         page=page,
-        count=count
+        count=count,
     )
 
 

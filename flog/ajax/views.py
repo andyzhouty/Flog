@@ -145,10 +145,9 @@ def read_notification(id):
 def get_hot_posts():
     posts = [
         post
-        for post in Post.query.filter(and_(
-            Post.coins >= current_app.config["HOT_POST_COIN"],
-            ~Post.private
-        )).order_by(Post.timestamp.desc())
+        for post in Post.query.filter(
+            and_(Post.coins >= current_app.config["HOT_POST_COIN"], ~Post.private)
+        ).order_by(Post.timestamp.desc())
     ]
     columns = [column for column in Column.query.all() if column.topped]
     if len(posts) > 15:
@@ -229,7 +228,11 @@ def get_status(id: int):
 @limiter.exempt
 def get_all_status():
     users = User.query.all()
-    return {u.id: get_status(u.id)["status"] for u in users if get_status(u.id)["status"] != "offline"}
+    return {
+        u.id: get_status(u.id)["status"]
+        for u in users
+        if get_status(u.id)["status"] != "offline"
+    }
 
 
 @ajax_bp.route("/ping_status/")
@@ -238,4 +241,3 @@ def ping_status():
     current_user.last_seen = datetime.utcnow()
     db.session.commit()
     return {"message": "ok"}
-
