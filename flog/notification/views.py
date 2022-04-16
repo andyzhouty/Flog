@@ -15,26 +15,8 @@ from . import notification_bp
 def show():
     page = request.args.get("page", 1, type=int)
     per_page = current_app.config["NOTIFICATIONS_PER_PAGE"]
-    notifications = Notification.query.with_parent(current_user)
-    pagination = notifications.order_by(Notification.timestamp.desc()).paginate(
-        page, per_page
-    )
-    notifications = pagination.items
-    return render_template(
-        "main/notifications.html", pagination=pagination, notifications=notifications
-    )
-
-
-@notification_bp.route("/read/<int:id>/", methods=["POST"])
-@login_required
-def read(id: int):
-    # delete notifications directly after reading it
-    notification = Notification.query.get_or_404(id)
-    if notification.receiver != current_user:
-        abort(403)
-    db.session.delete(notification)
-    db.session.commit()
-    return redirect_back()
+    notifications = [n for n in Notification.query.with_parent(current_user)]
+    return render_template("main/notifications.html", notifications=notifications)
 
 
 @notification_bp.route("/read/all/", methods=["POST"])

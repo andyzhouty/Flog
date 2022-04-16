@@ -12,8 +12,8 @@ from flask import Flask
 from flask.logging import default_handler
 from flask_login import current_user
 from .extensions import (
+    admin_ext,
     babel,
-    bootstrap,
     ckeditor,
     csrf,
     db,
@@ -64,6 +64,10 @@ def register_config(app: Flask, config_name: str):
     app.config.from_object(config[config_name])
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
+    app.jinja_env.globals["announcement_content"] = os.getenv(
+        "ANNOUNCEMENT_CONTENT", ""
+    ).split(":::")
+    app.jinja_env.globals["announcement_title"] = os.getenv("ANNOUNCEMENT_TITLE", "")
 
 
 def register_logger(app: Flask):
@@ -90,8 +94,8 @@ def register_logger(app: Flask):
 
 
 def register_extensions(app: Flask) -> None:
+    admin_ext.init_app(app)
     babel.init_app(app)
-    bootstrap.init_app(app)
     ckeditor.init_app(app)
     csrf.init_app(app)
     csrf.exempt(api_v1)

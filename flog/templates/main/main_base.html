@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ coin_script() }}
+    {{ collect_script() }}
+    <script>
+        {{ post_card_js() }}
+    </script>
+{% endblock scripts %}
+{% block page_content %}
+    <div class="content-4">
+        <div class="column-left">
+            {% include 'main/_sidebar.html' %}
+            <div class="xl:sr-only">
+                {% include 'main/_right_sidebar.html' %}
+            </div>
+        </div>
+        <div class="column-middle content-2xl">
+            {% block main_content %}
+            {% endblock %}
+        </div>
+        <div class="column-right">
+            {% include 'main/_right_sidebar.html' %}
+        </div>
+    </div>
+    <div class="lg:sr-only md:grid md:grid-cols-2">
+        <div>
+            {% include 'main/_sidebar_mini.html' %}
+        </div>
+        <div>
+            {% include 'main/_right_sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}

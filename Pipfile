@@ -75,6 +75,8 @@ apiflask = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
 djask = "*"
+flask-oauthlib = "*"
+github-flask = "*"
 
 [pipenv]
 allow_prereleases = true

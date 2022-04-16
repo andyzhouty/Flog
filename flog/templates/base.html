@@ -2,7 +2,7 @@
     Copyright (c) 2020 Andy Zhou
     MIT License
 #}
-{% from 'macros.html' import static_file, change_theme, avatar %}
+{% from 'macros.html' import static_file, change_theme, avatar, avatar_username %}
 <!DOCTYPE html>
 <html class="h-full">
 <head>
@@ -17,13 +17,12 @@
             {{ static_file('icon', 'favicon/favicon.svg') }}
             {{ static_file('icon', 'favicon/favicon.ico') }}
             {{ static_file('css', 'css/output.css') }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css', local=False) }}
-            {{ static_file('css', '//cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css', local=False) }}
+            {{ static_file('css', 'css/bootstrap-icons.css') }}
             {{ static_file('css', 'css/common.css') }}
         {% endblock styles %}
-        {{ static_file('js', '//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', local=False) }}
-        {{ static_file('js', '//cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js', local=False) }}
-        {{ static_file('js', '//unpkg.com/axios/dist/axios.min.js', local=False) }}
+        {{ static_file('js', 'js/jquery.min.js') }}
+        {{ static_file('js', 'js/axios.min.js') }}
+        {{ static_file('js', 'js/online.js') }}
         <script>
             function theme_identify() {
                 if (localStorage.theme === 'dark'
@@ -78,7 +77,7 @@
                         } else if (array[2] == 1) {
                             return ' 1 {{ _(" hour ") }}1{{ _(" minute ") }}{{ _("ago") }}'
                         } else {
-                            return ' 1 {{ _(" hour ") }} ' + array[2] + ' {{ _(" minutes ") }} {{ _("ago") }}'
+                            return ' 1 {{ _(" hour ") }} ' + array[2] + ' {{ _(" minutes ") }}{{ _("ago") }}'
                         }
                     } else if (array[1]<=12) {
                         if (array[2] == 0) {
@@ -110,20 +109,14 @@
                 }
             }
         </script>
+        {% block scripts %}
+        {% endblock scripts %}
     {% endblock head %}
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 h-full
 {% block classes %}
 {% endblock %}
 ">
-{######## For tailwindcss use ########
-<div class="hidden bg-red-200 bg-yellow-200 bg-green-200 bg-blue-200 bg-indigo-200
-            dark:bg-red-800 dark:bg-yellow-800 dark:bg-green-800 dark:bg-blue-800 dark:bg-indigo-200
-            text-red-200 text-yellow-200 text-green-200 text-blue-200 text-indigo-200
-            dark:text-red-800 dark:text-yellow-800 dark:text-green-800 dark:text-blue-800 dark:text-indigo-200
-            text-red-500 dark:text-red-400
-"></div>
-######################################}
 <div class="image-box"><img src="#" id="image-large" style="display: none"></div>
 <nav class="bg-indigo-600 dark:bg-gray-800">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -145,7 +138,7 @@
             </div>
             <div class="hidden lg:block sm:ml-6">
             <div class="flex space-x-4">
-                <a href="{{ url_for('main.main') }}" class="px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{ _("Main") }}</a>
+                <a href="{{ url_for('main.main') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">{{ _("Main") }}</a>
                 <a href="{{ url_for('others.about_us') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("About Us") }}</a>
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('shop.shop_index') }}" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">{{ _("Flog BetaShop") }}</a>
@@ -168,7 +161,7 @@
             {% endblock %}
         {% endif %}
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button id="change-theme-btn" type="button" class="text-white dark:text-gray-300 py-1 px-2 mx-1 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white" onclick="theme_toggle()">
+            <button id="change-theme-btn" type="button" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white py-1 px-2 mx-1 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white" onclick="theme_toggle()">
                 <span class="sr-only">Change theme</span>
                 <i id="change-theme" class="bi bi-sun-fill"></i>
             </button>
@@ -180,7 +173,7 @@
                     {% else %}
                         {{ url_for('language.set_locale', locale='zh_Hans_CN') }}
                     {% endif %}
-                    " type="button" class="text-white dark:text-gray-300 py-1 px-2 mx-1 rounded-full hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white">
+                    " type="button" class="text-white dark:text-gray-300 dark:hover:bg-gray-700 hover:bg-indigo-400 hover:text-white py-1 px-2 mx-1 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white">
                     <span>
                     {% if current_user.locale == "zh_Hans_CN" %}
                         中
@@ -195,33 +188,67 @@
                 </a>
             {% endif %}
             <a href="{{ url_for('notification.show') }}" type="button" class="dark:hover:bg-gray-700 hover:bg-indigo-400 py-1 px-2 ml-2 rounded-full text-white dark:text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset- focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white">
-                <span class="flex h-5 w-5 animate-bounce">
-                    <span class="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-green-400 dark:bg-red-400 opacity-80"></span>
-                    <span class="relative inline-flex rounded-full h-5 w-5 bg-green-400 dark:bg-red-400 text-white text-sm"></span>
-                </span>
+                {% if notification_count != 0 %}
+                    <span class="flex h-5 w-5 animate-bounce">
+                        <span class="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-green-400 dark:bg-red-400 opacity-80"></span>
+                        <span class="relative inline-flex rounded-full h-5 w-5 bg-green-400 dark:bg-red-400 text-white text-sm"></span>
+                    </span>
+                {% else %}
+                    <span class="flex h-5 w-5">
+                        <span class="absolute inline-flex h-5 w-5 rounded-full bg-green-400 dark:bg-red-400 opacity-80"></span>
+                    </span>
+                {% endif %}
                 <span class="sr-only">View notifications</span>
             </a>
             <div class="ml-3 relative">
             <div>
                 <button id="profile-btn" type="button" class="bg-transparent flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-600 dark:focus:ring-offset-gray-800 focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full" src="{{ current_user.avatar_url() }}" alt="">
+                {{ avatar(user=current_user, size=32) }}
                 </button>
             </div>
-    
+
             <div id="profile-dropdown">
-                <div id="profile-items" class="dropdown origin-top-right hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <a href="{{ current_user.profile_url() }}" class="block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Your Profile") }}</a>
-                <a href="{{ url_for('user.edit_profile') }}" class="block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-1">{{ _("Edit Profile") }}</a>
-                <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-2">{{ _("Sign Out") }}</a>
+                <div id="profile-items" class="dropdown origin-top-right hidden absolute right-0 mt-2 w-48 rounded-md shadow-2xl py-2 px-1 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                    <div class="px-4 py-2">{{ avatar_username(current_user, badge=False) }}</div>
+                    <div style="max-height: 14rem;overflow:auto;" class="p-2">
+                        <a href="{{ current_user.profile_url() }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Your Profile") }}</a>
+                        <a href="{{ url_for('auth.logout') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-2">{{ _("Sign Out") }}</a>
+                        <a href="{{ url_for('user.edit_profile') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-1" style="color: #eebb22">{{ _("Edit Profile") }}</a>
+                        <a href="javascript:if(confirm('{{ _('Are you sure?') }}')){window.location.href = '{{ url_for('auth.delete_account') }}'}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0" style="color: #dd2244">{{ _("Delete Account") }}</a>
+                        <hr class="mx-1 my-3" />
+                        <a href="{{ url_for('main.write') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Write a new post") }}</a>
+                        <a href="{{ url_for('main.manage_posts') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Manage your posts") }}</a>
+                        <hr class="mx-1 my-3" />
+                        <a href="{{ url_for('user.all') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Explore Users") }}</a>
+                        <a href="{{ url_for('main.main', target='posts') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Explore Posts") }}</a>
+                        <a href="{{ url_for('group.all') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Explore Groups") }}</a>
+                        <a href="{{ url_for('main.all_columns') }}" class="block p-2 text-sm" role="menuitem" tabindex="-1" id="user-menu-item-0">{{ _("Explore Columns") }}</a>
+                    </div>
                 </div>
             </div>
             </div>
+<script>
+    $("#profile-items").hide()
+    $("#mobile-menu").hide()
+    $("#profile-items").removeClass("hidden")
+    $("#mobile-menu").removeClass("hidden")
+    $(document).ready(() => {
+        $("#profile-btn").click(() => {
+            $("#profile-items").toggle()
+        })
+    })
+    $(document).ready(() => {
+        $("#mobile-btn").click(() => {
+            $("#mobile-menu").slideToggle("fast")
+        })
+    })
+</script>
         {% endif %}
         </div>
         </div>
     </div>
-    
+
     <div class="lg:hidden hidden" id="mobile-menu">
         {% if current_user.is_authenticated %}
             {% block search_bar_2 %}
@@ -251,22 +278,23 @@
             {% if message[0] != 'message' and message[0] %}
                 {% set category = message[0] %}
             {% else %}
-                {% set category = 'info' %}
+                {% set category = 'indigo' %}
             {% endif %}
             {% set message_content = message[1] %}
             <div class="w-full bg-{{ category }}-200 dark:bg-{{ category }}-800 m-0 text-{{ category }}-800 dark:text-{{ category }}-200 py-2 pl-3">
                 {{ message_content }}
             </div>
+            {# <div class="dark:bg-indigo-800 dark:bg-red-800 dark:bg-blue-800 dark:bg-green-800 dark:bg-yellow-800"></div> #}
         {% endfor %}
     {% endblock flashed_messages %}
     {% block content %}
         <div id="toast"></div>
         <div class="w-full">
-            {% block page_content %}{% endblock %}
+        {% block page_content %}{% endblock %}
         </div>
     {% endblock %}
-    <footer class="footer w-full bg-gray-200 dark:bg-gray-800 py-3" style="padding:auto; text-align:center;">
-        <a class="text-gray-400 dark:text-gray-600 text-sm hover:text-gray-400 dark:hover:text-gray-600" href="https://github.com/floggers/" target="_blank">by the floggers@github (2022)</a>
+    <footer class="footer w-full py-3" style="padding:auto; text-align:center;">
+        <a class="text-gray-400 dark:text-gray-600 text-sm hover:text-gray-400 dark:hover:text-gray-600" href="https://github.com/orgs/flog-team/" target="_blank">by the floggers@github (2022)</a>
     </footer>
 {% if current_app.config['FLASK_CONFIG'] == 'production' %}
     <script>
@@ -277,9 +305,6 @@
         })
     </script>
 {% endif %}
-{{ moment.include_moment(local_js='//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js') }}
-{{ moment.locale(auto_detect=True) }}
-{{ static_file('js', 'js/script.js') }}
 <script>
     let is_authenticated = false;
     {% if current_user.is_authenticated %}
@@ -289,23 +314,11 @@
         setInterval(update_notifications_count, 30000);
     }
 </script>
+{{ static_file('js', 'js/script.js') }}
 <script>
-    $("#profile-items").hide()
-    $("#mobile-menu").hide()
-    $("#profile-items").removeClass("hidden")
-    $("#mobile-menu").removeClass("hidden")
-    $(document).ready(() => {
-        $("#profile-btn").click(() => {
-            $("#profile-items").toggle()
-        })
-    })
-    $(document).ready(() => {
-        $("#mobile-btn").click(() => {
-            $("#mobile-menu").slideToggle("fast")
-        })
-    })
+    ping_online()
 </script>
-{% block scripts %}
-{% endblock scripts %}
+{{ moment.include_moment(local_js='//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js') }}
+{{ moment.locale(auto_detect=True) }}
 </body>
 </html>

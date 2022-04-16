@@ -2,7 +2,7 @@
 MIT License
 Copyright (c) 2021 Andy Zhou
 """
-from flask import render_template, flash, abort, request
+from flask import render_template, flash, abort, request, current_app
 from flask_babel import _
 from flask_login import login_required, current_user
 from . import group_bp
@@ -19,8 +19,20 @@ from ..notifications import (
 @group_bp.route("/all/")
 @login_required
 def all():
+    per_page = current_app.config["USERS_PER_PAGE"]
+    page = request.args.get("page", 1, type=int)
+    pagination = Group.query.filter(~Group.private).all()[
+        (per_page * (page - 1)) : (per_page * page)
+    ]
+    count = Group.query.count()
     return render_template(
-        "user/groups.html", groups=Group.query.filter(~Group.private).all()
+        "user/groups.html",
+        groups=pagination,
+        max_page=(count - 1) // per_page + 1,
+        from_=(per_page * (page - 1)) + 1,
+        to_=min(per_page * page, count),
+        page=page,
+        count=count,
     )
 
 

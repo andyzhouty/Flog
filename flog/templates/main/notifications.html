@@ -2,36 +2,56 @@
 Copyright (c) 2020 Andy Zhou
 MIT License
 #}
-{% extends 'base.html' %}
-{% block page_content %}
-    <div class="nav nav-pills" role="tablist">
-        <a class="nav-item nav-link {% if request.args.get('filter') != 'unread' %}active{% endif %}"
-           href="{{ url_for('notification.show', filter='all') }}">
-           <i class="bi-inbox"></i>
-           {{ _("All") }}
-        </a>
-        <form method="POST" action="{{ url_for('notification.read_all') }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button class="btn btn-sm btn-light">
-                <i class="bi-envelope-open-fill"></i>
-                {{ _("Mark all as read") }}
-            </button>
-        </form>
-    </div>
-    <ul class="list-group">
-        {% for notification in notifications %}
-            <li class="list-group-item d-flex">
-                <div class="p-2 flex-grow-1">
-                    {{ _(notification.message) | safe }}
+{% extends 'main/main_base.html' %}
+{% block scripts %}
+<script>
+    function read_notification(id) {
+        axios({
+            method: "get",
+            url: "/ajax/notifications/read/" + id + "/",
+            headers: {
+                "Accept": "application/json",
+            },
+            timeout: 30000,
+            validateStatus: function (status) {
+                return (status == 200 || status == 404)
+            },
+        }).catch(error => {
+            if (error.request) {
+                alert("Marking failed: Request Time Out.")
+            } else {
+                alert(error.message)
+            }
+        }).then(function (response) {
+            $("#notification-" + id).slideUp(500)
+        })
+    }
+</script>
+{% endblock %}
+{% block main_content %}
+    <div class="column-middle">
+        <div class="p-3"><h1><b>{{ _("Notifications") }}</b></h1></div>
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="p-3 bg-white dark:bg-gray-700 m-3 rounded-md" id="notification-{{ notification.id }}">
+                    <div class="flex">
+                        <span class="mx-3">
+                            <b>
+                                <i class="bi bi-bell"></i>&nbsp;{{ _("Notification") }}
+                            </b>
+                        </span>
+                        <button class="ml-3 text-sm text-gray-900 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-300" onclick="read_notification({{ notification.id }})">
+                            <i class="bi-envelope-open"></i>
+                            {{ _("Mark as read") }}
+                        </button>
+                    </div>
+                    <div class="p-2">
+                        {{ _(notification.message) | safe }}
+                    </div>
                 </div>
-                <form class="form-inline p-1" method="POST" action="{{ url_for('notification.read', id=notification.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm btn-light">
-                        <i class="bi-envelope-open"></i>
-                        {{ _("Mark as read") }}
-                    </button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+            {% endfor %}
+        {% else %}
+            <p class="m-3">Aha! No notifications today. Have fun!</p>
+        {% endif %}
+    </div>
 {% endblock %}

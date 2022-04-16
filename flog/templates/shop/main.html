@@ -1,71 +1,26 @@
 {% extends 'base.html' %}
-{% from 'macros.html' import shop_card %}
+{% from 'macros.html' import shop_card with context %}
 
 {% block page_content %}
-    <h1 style="font-size: 350%">Flog BetaShop</h1>
-    <p>Your coins: {{ current_user.coins }}</p>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link
-            {% if filter == 'all' %}
-                active
-            {% endif %}
-            " href="{{ url_for('shop.shop_index') }}">{{ _("All Items") }}</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link
-            {% if filter == 'yours' %}
-                active
-            {% endif %}
-            " href="{{ url_for('shop.shop_index', filter='yours') }}">{{ _("Your own") }}</a>
-        </li>
-    </ul>
-    <div style="height: 30px;"></div>
-    <div class="row">
-        <div class="col-lg-4">
-            <ul class="nav nav-pills flex-column" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="pill" href="#all">{{ _("All") }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#classic">{{ _("Classic") }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#rare">{{ _("Rare") }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#leveled">{{ _("Leveled") }}</a>
-                </li>
-            </ul>
+    <div class="max-w-5xl px-6 mx-auto">
+        <h1 style="font-size: 250%; font-weight: 700;">Flog BetaShop</h1>
+        <p>Your coins: <b>{{ current_user.coins | round(2) }}</b></p>
+        <div class="flex mt-6 mb-4 p-2 rounded-lg bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+            <div class="flex items-center">
+                <div class="mx-3"><b>Filter</b></div>
+                {% if not filter == 'yours' %}
+                    <div class="rounded-md bg-indigo-600 text-white py-2 px-4">{{ _("All Items") }}</div>
+                    <a href="{{ url_for('shop.shop_index', filter='yours') }}"><div class="ml-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 py-2 px-4">{{ _("Your own") }}</div></a>
+                {% else %}
+                    <a href="{{ url_for('shop.shop_index', filter='all') }}"><div class="mr-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 py-2 px-4">{{ _("All Items") }}</div></a>
+                    <div class="rounded-md bg-indigo-600 text-white py-2 px-4">{{ _("Your own") }}</div>
+                {% endif %}
+            </div>
         </div>
-        <div class="col-lg-8 tab-content">
-        <div style="height: 20px;"></div>
-            <ul id="all" class="tab-pane active">
-                {% for id in goods.keys() %}
-                    {{ shop_card(user=current_user, id=id, goods=goods) }}
-                {% endfor %}
-            </ul>
-            <ul id="classic" class="tab-pane fade">
-                {% for id in goods.keys() %}
-                    {% if goods[id].category == "Classic" %}
-                        {{ shop_card(user=current_user, id=id, goods=goods) }}
-                    {% endif %}
-                {% endfor %}
-            </ul>
-            <ul id="rare" class="tab-pane fade">
-                {% for id in goods.keys() %}
-                    {% if goods[id].category == "Rare" %}
-                        {{ shop_card(user=current_user, id=id, goods=goods) }}
-                    {% endif %}
-                {% endfor %}
-            </ul>
-            <ul id="leveled" class="tab-pane fade">
-                {% for id in goods.keys() %}
-                    {% if goods[id].category == "Leveled" %}
-                        {{ shop_card(user=current_user, id=id, goods=goods) }}
-                    {% endif %}
-                {% endfor %}
-            </ul>
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-4 mt-6">
+            {% for id in goods.keys() %}
+                {{ shop_card(user=current_user, id=id, goods=goods) }}
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

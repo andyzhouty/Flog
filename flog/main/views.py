@@ -31,7 +31,6 @@ from ..notifications import (
     push_transposting_to_column_notification,
 )
 from .forms import ColumnForm, PostForm, CommentForm
-from ..auth.forms import LoginForm
 from . import main_bp
 
 
@@ -55,20 +54,19 @@ def before_request():
 
 @main_bp.route("/")
 def main():
+    target = request.args.get("target", "posts", type=str)
     if not (current_user.is_authenticated or request.args.get("force", False)):
-        form = LoginForm()
-        return render_template("main/not_authorized.html", form=form)
-    page = request.args.get("page", 1, type=int)
-    posts = Post.query.filter(or_(~Post.private, Post.author_id == current_user.id)).order_by(Post.timestamp.desc())[0:12]
+        return render_template("main/not_authorized.html")
+    posts = Post.query.filter(
+        or_(~Post.private, Post.author_id == current_user.id)
+    ).order_by(Post.timestamp.desc())[0:12]
     notifications = (
         Notification.query.with_parent(current_user)
         if current_user.is_authenticated
         else None
     )
     return render_template(
-        "main/main.html",
-        posts=posts,
-        notifications=notifications,
+        "main/main.html", posts=posts, notifications=notifications, target=target
     )
 
 
@@ -107,8 +105,6 @@ def full_post(id: int):
     current_app.config["CKEDITOR_PKG_TYPE"] = "basic"
     post = Post.query.get(id)
     if post is None:
-        if id > 1 and id < Post.query.order_by(Post.id.desc()).all()[0].id:
-            return render_template("errors/404_post_deleted.html"), 404
         abort(404)
     if (not post.private) or post.author == current_user:
         page = request.args.get("page", 1, type=int)
@@ -164,6 +160,48 @@ def full_post(id: int):
     else:
         flash(_("The author has set this post to invisible."))
         return redirect_back()
+
+
+@main_bp.route("/post/all/")
+def all_posts():
+    posts = Post.query.filter(
+        or_(~Post.private, Post.author_id == current_user.id)
+    ).order_by(Post.timestamp.desc())
+    last_post = posts[-1]
+    post_date = [
+        last_post.timestamp.year,
+        last_post.timestamp.month,
+    ]
+    now = [datetime.utcnow().year, datetime.utcnow().month]
+    dates = []
+
+    def _date_next(date: list):
+        if date[1] == 12:
+            return [date[0] + 1, 1]
+        else:
+            return [date[0], date[1] + 1]
+
+    while post_date != _date_next(now):
+        dates.append(post_date)
+        post_date = _date_next(post_date)
+    return render_template(
+        "main/all_posts.html",
+        dates=dates[::-1],
+        months=[
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ],
+    )
 
 
 @main_bp.route("/reply/comment/<int:comment_id>/")
@@ -391,9 +429,9 @@ def view_column(id: int):
 @login_required
 def all_columns():
     page = request.args.get("page", default=1, type=int)
-    pagination = Column.query.order_by(
-        Column.topped.desc(), Column.timestamp.desc()
-    ).paginate(page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False)
+    pagination = Column.query.order_by(Column.timestamp.desc()).paginate(
+        page, per_page=current_app.config["POSTS_PER_PAGE"], error_out=False
+    )
     return render_template("main/columns.html", pagination=pagination)
 
 

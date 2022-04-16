@@ -2,7 +2,7 @@
 MIT License
 Copyright (c) 2021 Andy Zhou
 """
-from flask import render_template, redirect, url_for, flash, request, current_app
+from flask import render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import current_user, login_required, login_user
 from flask_babel import _
 from sqlalchemy import and_
@@ -72,13 +72,22 @@ def profile(username):
 
 @user_bp.route("/user/all/")
 def all():
+    per_page = current_app.config["USERS_PER_PAGE"]
     page = request.args.get("page", 1, type=int)
-    pagination = User.query.order_by(User.id.desc()).paginate(
-        page, per_page=current_app.config["USERS_PER_PAGE"]
-    )
+    pagination = User.query.order_by(User.id.desc())[
+        (per_page * (page - 1)) : (per_page * page)
+    ]
     user_count = User.query.count()
+    if (per_page * (page - 1)) > user_count:
+        abort(404)
     return render_template(
-        "user/all.html", pagination=pagination, user_count=user_count
+        "user/all.html",
+        pagination=pagination,
+        user_count=user_count,
+        from_=(per_page * (page - 1)) + 1,
+        to_=min(per_page * page, user_count),
+        page=page,
+        max_page=(user_count - 1) // per_page + 1,
     )
 
 
