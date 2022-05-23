@@ -1,6 +1,9 @@
 # <img src="https://i.loli.net/2021/10/17/JapyT37XknzoHQS.png" width="50px"> Flog
 [中文版 README](./README_zh.md)
 
+Moved to [flog-api-v4](https://github.com/helloflask/flog-api-v4) and [flog-front](https://github.com/helloflask/flog-front).
+This repo has been deprecated.
+
 [![Documentation Status](https://img.shields.io/readthedocs/flog?logo=Read%20The%20Docs)](https://flog.readthedocs.io/en/latest/?badge=latest)
 [![Lint Status](https://github.com/z-t-y/Flog/actions/workflows/lint.yml/badge.svg)](https://github.com/z-t-y/Flog/actions)
 [![Build Status](https://github.com/z-t-y/Flog/actions/workflows/ci.yml/badge.svg)](https://github.com/z-t-y/Flog/actions)
